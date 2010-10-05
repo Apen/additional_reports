@@ -76,8 +76,9 @@ class tx_additionalreports_plugins implements tx_reports_Report {
 		$content .= '<form method="post" name="formplugins">';
 		$content .= '<input style="margin-right:4px;" type="radio" name="display" value="1" id="radio1"'.(($display==1||$display==null) ? ' checked="checked"' : '').'/><label for="radio1" style="margin-right:10px;">'.$GLOBALS['LANG']->getLL('pluginsmode1').'</label>';
 		$content .= '<input style="margin-right:4px;" type="radio" name="display" value="2" id="radio2"'.(($display==2) ? ' checked="checked"' : '').'/><label for="radio2" style="margin-right:10px;">'.$GLOBALS['LANG']->getLL('pluginsmode2').'</label>';
-		$content .= '<input style="margin-right:4px;" type="radio" name="display" value="3" id="radio3"'.(($display==3) ? ' checked="checked"' : '').'/><label for="radio3" style="margin-right:10px;">'.$GLOBALS['LANG']->getLL('pluginsmode3').'</label>';
 		$content .= '<input style="margin-right:4px;" type="radio" name="display" value="4" id="radio4"'.(($display==4) ? ' checked="checked"' : '').'/><label for="radio4" style="margin-right:10px;">'.$GLOBALS['LANG']->getLL('pluginsmode4').'</label>';
+		$content .= '<input style="margin-right:4px;" type="radio" name="display" value="3" id="radio3"'.(($display==3) ? ' checked="checked"' : '').'/><label for="radio3" style="margin-right:10px;">'.$GLOBALS['LANG']->getLL('pluginsmode3').'</label>';
+		$content .= '<input style="margin-right:4px;" type="radio" name="display" value="5" id="radio5"'.(($display==5) ? ' checked="checked"' : '').'/><label for="radio5" style="margin-right:10px;">'.$GLOBALS['LANG']->getLL('pluginsmode5').'</label>';
 		$content .= '<input type="submit" name="submit" value="'.$GLOBALS['LANG']->getLL('pluginssubmit').'"/>';
 		$content .= '</form>';
 	
@@ -88,6 +89,7 @@ class tx_additionalreports_plugins implements tx_reports_Report {
 			case 2 : $content .= $this->getAllCType();; break;
 			case 3 : $content .= $this->getAllUsedCType(); break;
 			case 4 : $content .= $this->getAllUsedPlugins(); break;
+			case 5 : $content .= $this->getSummary(); break;
 			default : $content .= $this->getAllPlugins(); break;
 		}
 
@@ -101,7 +103,6 @@ class tx_additionalreports_plugins implements tx_reports_Report {
 		$content .= '<td class="cell"></td>';
 		$content .= '<td class="cell">'.$GLOBALS['LANG']->getLL('extension').'</td>';
 		$content .= '<td class="cell">'.$GLOBALS['LANG']->getLL('plugin').'</td>';
-		$content .= '<td class="cell">'.$GLOBALS['LANG']->getLL('locallang').'</td>';
 		$content .= '<td class="cell">'.$GLOBALS['LANG']->getLL('eminfo').'</td>';
 		$content .= '<td class="cell">'.$GLOBALS['LANG']->getLL('used').'</td>';
 		$content .= '</tr>';
@@ -113,9 +114,8 @@ class tx_additionalreports_plugins implements tx_reports_Report {
 				$content .= '<tr class="bgColor3-20">';
 				$content .= '<td class="cell" align="center"><img src="' . $itemValue[2] . '"/></td>';
 				$content .= '<td class="cell">' . $ext[1] . '</td>';
-				$content .= '<td class="cell">' . $itemValue[1] . '</td>';
-				$content .= '<td class="cell">' . $GLOBALS['LANG']->getLLL($llfile[2],$LOCAL_LANG) . '</td>';
-				$content .= '<td class="cell"><a href="/typo3/mod/tools/em/index.php?CMD[showExt]=' . $itemValue[1] . '&SET[singleDetails]=info">Info</a></td>';
+				$content .= '<td class="cell">' . $GLOBALS['LANG']->getLLL($llfile[2],$LOCAL_LANG). ' ('. $itemValue[1] . ')</td>';
+				$content .= '<td class="cell"><a href="/typo3/mod/tools/em/index.php?CMD[showExt]=' . $itemValue[1] . '&SET[singleDetails]=info">'.$GLOBALS['LANG']->getLL('emlink').'</a></td>';
 				
 				$items = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('DISTINCT tt_content.list_type,tt_content.pid,pages.title','tt_content,pages','tt_content.pid=pages.uid AND tt_content.hidden=0 AND tt_content.deleted=0 AND pages.hidden=0 AND pages.deleted=0 AND tt_content.CType=\'list\' AND tt_content.list_type=\''.$itemValue[1].'\'','','tt_content.list_type');
 				
@@ -138,7 +138,6 @@ class tx_additionalreports_plugins implements tx_reports_Report {
 		$content .= '<tr class="bgColor2">';
 		$content .= '<td class="cell"></td>';
 		$content .= '<td class="cell">'.$GLOBALS['LANG']->getLL('ctype').'</td>';
-		$content .= '<td class="cell">'.$GLOBALS['LANG']->getLL('locallang').'</td>';
 		$content .= '<td class="cell">'.$GLOBALS['LANG']->getLL('used').'</td>';
 		$content .= '</tr>';
 	
@@ -152,8 +151,7 @@ class tx_additionalreports_plugins implements tx_reports_Report {
 					$content .= '<img src="/typo3/sysext/t3skin/icons/gfx/' . $itemValue[2] . '"/>';
 				}
 				$content .= '</td>';
-				$content .= '<td class="cell">' . $itemValue[1] . '</td>';
-				$content .= '<td class="cell">' . $GLOBALS['LANG']->getLLL($llfile[2],$LOCAL_LANG). '</td>';
+				$content .= '<td class="cell">' . $GLOBALS['LANG']->getLLL($llfile[2],$LOCAL_LANG) .' (' . $itemValue[1] . ')</td>';
 				
 				$items = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('DISTINCT tt_content.CType,tt_content.pid,pages.title','tt_content,pages','tt_content.pid=pages.uid AND tt_content.hidden=0 AND tt_content.deleted=0 AND pages.hidden=0 AND pages.deleted=0 AND tt_content.CType=\''.$itemValue[1].'\'','','tt_content.CType');
 					
@@ -233,6 +231,62 @@ class tx_additionalreports_plugins implements tx_reports_Report {
 			$content .= '<td class="cell">' . $GLOBALS['LANG']->getLLL($llfile[2],$LOCAL_LANG). ' ('. $itemValue['list_type'] . ')</td>';
 			$content .= '<td class="cell">' . $itemValue['pid'] . '</td>';
 			$content .= '<td class="cell"><a href="/typo3/db_list.php?id='.$itemValue['pid'].'">' . $itemValue['title'] . '</a></td>';
+			$content .= '</tr>';
+		
+		}
+		$content .= '</table>';
+		return $content;
+	}
+	
+	function getSummary () {
+		$plugins = array();
+		foreach ($GLOBALS['TCA']['tt_content']['columns']['list_type']['config']['items'] as $itemKey => $itemValue) {
+			if (trim($itemValue[1])!='') {
+				$plugins[$itemValue[1]] = $itemValue;
+			}
+		}
+		
+		$ctypes = array();
+		foreach ($GLOBALS['TCA']['tt_content']['columns']['CType']['config']['items'] as $itemKey => $itemValue) {
+			if ($itemValue[1]!='--div--') {
+				$ctypes[$itemValue[1]] = $itemValue;
+			}
+		}
+		
+		$itemsCount = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('COUNT( tt_content.uid ) as "nb"','tt_content,pages','tt_content.pid=pages.uid AND tt_content.hidden=0 AND tt_content.deleted=0 AND pages.hidden=0 AND pages.deleted=0');
+		$items = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('tt_content.CType,tt_content.list_type,count(*) as "nb"','tt_content,pages','tt_content.pid=pages.uid AND tt_content.hidden=0 AND tt_content.deleted=0 AND pages.hidden=0 AND pages.deleted=0','tt_content.CType,tt_content.list_type','nb DESC');
+		
+		$content = '';
+		$content .= '<table cellspacing="1" cellpadding="2" border="0" class="tx_sv_reportlist">';
+		$content .= '<tr class="bgColor2">';
+		$content .= '<td class="cell"></td>';
+		$content .= '<td class="cell">'.$GLOBALS['LANG']->getLL('content').'</td>';
+		$content .= '<td class="cell">'.$GLOBALS['LANG']->getLL('references').'</td>';
+		$content .= '<td class="cell">%</td>';
+		$content .= '</tr>';
+		foreach ($items as $itemKey => $itemValue) {
+
+			$content .= '<tr class="bgColor3-20">';
+			
+			if ($itemValue['CType']=='list') {
+				preg_match('/EXT:(.*?)\//', $plugins[$itemValue['list_type']][0],$ext);
+				preg_match('/^LLL:(EXT:.*?):(.*)/', $plugins[$itemValue['list_type']][0],$llfile);
+				$LOCAL_LANG = t3lib_div::readLLfile($llfile[1],$GLOBALS['LANG']->lang);
+				$content .= '<td class="cell" align="center"><img src="' . $plugins[$itemValue['list_type']][2] . '"/></td>';
+				$content .= '<td class="cell">' . $GLOBALS['LANG']->getLLL($llfile[2],$LOCAL_LANG). ' ('. $itemValue['list_type'] . ')</td>';
+			} else {
+				preg_match('/^LLL:(EXT:.*?):(.*)/', $ctypes[$itemValue['CType']][0],$llfile);
+				$LOCAL_LANG = t3lib_div::readLLfile($llfile[1],$GLOBALS['LANG']->lang);
+				$content .= '<td class="cell" align="center">';
+				if (is_file(PATH_site.'/typo3/sysext/t3skin/icons/gfx/' . $ctypes[$itemValue['CType']][2])) {
+					$content .= '<img src="/typo3/sysext/t3skin/icons/gfx/' . $ctypes[$itemValue['CType']][2] . '"/>';
+				}
+				$content .= '</td>';
+				$content .= '<td class="cell">' . $GLOBALS['LANG']->getLLL($llfile[2],$LOCAL_LANG) . ' (' . $itemValue['CType'] . ')</td>';
+			}
+			
+			$content .= '<td class="cell">' . $itemValue['nb'] . '</td>';
+			$content .= '<td class="cell">' . round((($itemValue['nb']*100)/$itemsCount[0]['nb']),2) . ' %</td>';
 			$content .= '</tr>';
 		
 		}
