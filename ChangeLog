@@ -1,3 +1,9 @@
+2010-10-10 CERDAN Yohann <cerdanyohann@yahoo.fr>
+	* Add hook support (need feedbacks about it)
+	* Add a status module (with informations about typo3,php,apache,mysql,crontab...)
+	* Update the locallang
+	* Refactoring HTML & PHP code
+	* Update the manual with new screenshots
 2010-10-05 CERDAN Yohann <cerdanyohann@yahoo.fr>
 	* Update the locallang
 	* Update the manual

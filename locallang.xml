@@ -38,6 +38,22 @@
 			<label index="plugins_description">List of all the plugins and contents type with informations and status for each of them. With this report you can easily know if a plugin or a content type is used on the system (and where it is used).</label>
 			<label index="xclass_title">Additional reports - XCLASS</label>
 			<label index="xclass_description">List of all the XCLASS with the name and the path for each of them.</label>
+			<label index="hooks_title">Additional reports - hooks</label>
+			<label index="hooks_description">List of all the hooks with the name and the path for each of them.</label>
+			<label index="hooks_core">Core hooks</label>
+			<label index="hooks_extension">Extension hooks (experimental)</label>
+			<label index="hooks_corefile">Core file</label>
+			<label index="hooks_name">Hook name</label>
+			<label index="hooks_file">File or class</label>
+			<label index="hooks_line">Line with the hook in the ext_localconf.php file of the extension</label>
+			<label index="status_title">Additional reports - General status</label>
+			<label index="status_description">List of all the usefull informations about your installation.</label>
+			<label index="status_sitename">Sitename</label>
+			<label index="status_version">Version</label>
+			<label index="status_path">Path</label>
+			<label index="status_im">ImageMagick</label>
+			<label index="status_loadedextensions">Loaded extensions</label>
+			<label index="status_nocrontab">No crontab</label>
 		</languageKey>
 		<languageKey index="fr" type="array">
 			<label index="noresults">Aucune donnée à afficher</label>
@@ -72,6 +88,22 @@
 			<label index="plugins_description">Liste de tous les plugins et types de contenu avec des informations pour chacun. Avec ce module, vous pouvez facilement savoir si un plugin ou un type de contenu est utilisé (et où il est utilisé).</label>
 			<label index="xclass_title">Additional reports - XCLASS</label>
 			<label index="xclass_description">Liste de toutes les XCLASS avec des informations pour chacune.</label>
+			<label index="hooks_title">Additional reports - hooks</label>
+			<label index="hooks_description">Liste de tous les hooks avec des informations pour chacun.</label>
+			<label index="hooks_core">Hooks du core</label>
+			<label index="hooks_extension">Hooks d'extension (experimental)</label>
+			<label index="hooks_corefile">Fichier du core</label>
+			<label index="hooks_name">Nom du hook</label>
+			<label index="hooks_file">Fichier ou classe</label>
+			<label index="hooks_line">Ligne contenant le hook dans le fichier ext_localconf.php de l'extension</label>
+			<label index="status_title">Additional reports - Statut général</label>
+			<label index="status_description">Liste de toutes les informations importantes de votre installation.</label>
+			<label index="status_sitename">Nom du site</label>
+			<label index="status_version">Version</label>
+			<label index="status_path">Chemin</label>
+			<label index="status_im">ImageMagick</label>
+			<label index="status_loadedextensions">Extensions chargées</label>
+			<label index="status_nocrontab">Pas de tâche planifiée</label>
 		</languageKey>
 	</data>
 </T3locallang>
