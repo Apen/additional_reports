@@ -1,14 +1,96 @@
-/* Services report styles */
-/* $Id: tx_sv_report.css 8054 2010-06-24 22:31:51Z steffenk $ */
-
 .tx_sv_reportlist td {
-	vertical-align: middle;
+    vertical-align: middle;
+}
+
+.tx_sv_reportlist td ul {
+	margin-top: 0px;
+	margin-bottom: 0px;	
 }
 
 .tx_sv_reportlist .bgColor2 td {
-	text-align: left;
-	font-weight: bold;
-	color: #fff;
+    text-align: left;
+    font-weight: bold;
+    color: #fff;
 }
 
+table.typo3-dblist tr td {
+	padding:3px 1px 3px 6px;
+}
 
+.t3-row-header {
+	background-color: #5B5B5B;
+	background-image: -moz-linear-gradient(center top , #7F7F7F 10%, #5B5B5B 100%);
+	background-repeat: repeat-x;
+	color: #FFFFFF;
+	font-size: 10px;
+	height: 20px;
+	line-height: 19px;
+	padding:1px 4px;
+}
+
+.t3-row-header:hover, .t3-row-header:hover td {
+	background-color: #5B5B5B !important;
+	background-image: -moz-linear-gradient(center top , #7F7F7F 10%, #5B5B5B 100%) !important;
+	background-repeat: repeat-x !important;
+}
+
+tr.t3-row-header td {
+	color: #FFFFFF;
+	font-size: 10px;
+	font-weight: bold;
+	line-height: 16px;
+}
+
+table.typo3-dblist tr td.c-headLine, table.typo3-dblist tr.c-headLine td {
+	border-bottom: 1px solid #CDCDCD;
+	background-color:#FFFFFF !important;
+	height:24px;
+	background-image: none !important;
+}
+
+table.typo3-dblist tr:hover td.c-headLine, table.typo3-dblist tr.c-headLine:hover td {
+	background-color:#FFFFFF;
+}
+
+table.typo3-dblist tr.db_list_normal td {
+	padding-bottom:5px;
+	padding-top:5px;
+}
+
+table.typo3-dblist tr.db_list_normal:nth-child(2n+1) td {
+	background-color:#F7F7F7;
+}
+
+table.typo3-dblist tr.db_list_normal:hover td {
+	background-color:#DEDEDE;
+}
+
+table.typo3-dblist tr td.col-icon {
+	padding-left:4px;
+	padding-right:0;
+	vertical-align:middle;
+	width:20px;
+}
+
+table.typo3-dblist tr td.typo3-message {
+	padding: 12px 12px 12px 36px;
+	width: 30px;
+	
+	background-position:10px 12px;
+	background-repeat:no-repeat;
+	border:1px solid;
+}
+
+table.typo3-dblist tr td.message-ok {
+	background-color: #CDEACA !important;
+	background-image: url("../../../typo3/sysext/t3skin/icons/gfx/ok.png");
+	border-color: #58B548;
+	color: #3B7826;
+}
+
+table.typo3-dblist tr td.message-error {
+	background-color: #F6D3CF !important;
+	background-image: url("../../../typo3/sysext/t3skin/icons/gfx/error.png");
+	border-color: #D66C68;
+	color: #AA0225;
+}
