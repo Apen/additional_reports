@@ -122,11 +122,13 @@ class tx_additionalreports_status implements tx_reports_Report {
         $content .= '</div>';
         $content .= '</div>';
         // Apache
-        $content .= '<h2 id="reportsApache" class="section-header expanded">Apache :</h2>';
-        $content .= '<div>';
-        $content .= $this->writeInformation($GLOBALS['LANG']->getLL('status_version'), apache_get_version());
-        $content .= $this->writeInformationList($GLOBALS['LANG']->getLL('status_loadedextensions'), apache_get_modules());
-        $content .= '</div>';
+		if (function_exists('apache_get_version')) {
+			$content .= '<h2 id="reportsApache" class="section-header expanded">Apache :</h2>';
+			$content .= '<div>';
+			$content .= $this->writeInformation($GLOBALS['LANG']->getLL('status_version'), apache_get_version());
+			$content .= $this->writeInformationList($GLOBALS['LANG']->getLL('status_loadedextensions'), apache_get_modules());
+			$content .= '</div>';
+		}
         // MySQL
         $content .= '<h2 id="reportsMySQL" class="section-header expanded">MySQL :</h2>';
         $content .= '<div>';
