@@ -1,3 +1,5 @@
+2010-12-23 CERDAN Yohann <cerdanyohann@yahoo.fr>
+	* Bugfix : test if the apache_get_version function exist
 2010-10-10 CERDAN Yohann <cerdanyohann@yahoo.fr>
 	* Add hook support (need feedbacks about it)
 	* Add a status module (with informations about typo3,php,apache,mysql,crontab...)
