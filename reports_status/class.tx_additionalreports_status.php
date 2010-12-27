@@ -136,21 +136,21 @@ class tx_additionalreports_status implements tx_reports_Report {
 		$items = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('default_character_set_name, default_collation_name', 'information_schema.schemata', 'schema_name = \'' . TYPO3_db . '\'');
 		$content .= $this->writeInformation('default_character_set_name', $items[0]['default_character_set_name']);
 		$content .= $this->writeInformation('default_collation_name', $items[0]['default_collation_name']);
-        $items = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('table_name, engine,table_collation,table_rows', 'information_schema.tables ', 'table_schema = \'' . TYPO3_db . '\'', '', 'table_name');
+        $items = $GLOBALS['TYPO3_DB']->admin_get_tables();
         $content .= '<table cellspacing="1" cellpadding="2" border="0" class="tx_sv_reportlist typo3-dblist" width="100%">';
         $content .= '<tr class="t3-row-header"><td colspan="4">TYPO3_db</td></tr>';
         $content .= '<tr class="c-headLine">';
-        $content .= '<td class="cell">table_name</td>';
-        $content .= '<td class="cell">engine</td>';
-        $content .= '<td class="cell">table_collation</td>';
-        $content .= '<td class="cell">table_rows</td>';
+        $content .= '<td class="cell">Name</td>';
+        $content .= '<td class="cell">Engine</td>';
+        $content .= '<td class="cell">Collation</td>';
+        $content .= '<td class="cell">Rows</td>';
         $content .= '</tr>';
         foreach ($items as $itemKey => $itemValue) {
             $content .= '<tr class="db_list_normal">';
-            $content .= '<td class="cell">' . $itemValue['table_name'] . '</td>';
-            $content .= '<td class="cell">' . $itemValue['engine'] . '</td>';
-            $content .= '<td class="cell">' . $itemValue['table_collation'] . '</td>';
-            $content .= '<td class="cell">' . $itemValue['table_rows'] . '</td>';
+            $content .= '<td class="cell">' . $itemKey . '</td>';
+            $content .= '<td class="cell">' . $itemValue['Engine'] . '</td>';
+            $content .= '<td class="cell">' . $itemValue['Collation'] . '</td>';
+            $content .= '<td class="cell">' . $itemValue['Rows'] . '</td>';
             $content .= '</tr>';
 
         }
