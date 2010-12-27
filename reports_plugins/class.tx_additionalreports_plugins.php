@@ -126,7 +126,7 @@ class tx_additionalreports_plugins implements tx_reports_Report {
                 $content .= '<td class="col-icon"><img src="' . $itemValue[2] . '"/></td>';
                 $content .= '<td class="cell">' . $ext[1] . '</td>';
                 $content .= '<td class="cell">' . $GLOBALS['LANG']->getLLL($llfile[2], $LOCAL_LANG) . ' (' . $itemValue[1] . ')</td>';
-                $content .= '<td class="cell"><a href="/typo3/mod/tools/em/index.php?CMD[showExt]=' . $itemValue[1] . '&SET[singleDetails]=info">' . $GLOBALS['LANG']->getLL('emlink') . '</a></td>';
+                $content .= '<td class="cell"><a href="/typo3/mod/tools/em/index.php?CMD[showExt]=' . $ext[1] . '&SET[singleDetails]=info">' . $GLOBALS['LANG']->getLL('emlink') . '</a></td>';
 
                 $items = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('DISTINCT tt_content.list_type,tt_content.pid,pages.title', 'tt_content,pages', 'tt_content.pid=pages.uid AND tt_content.hidden=0 AND tt_content.deleted=0 AND pages.hidden=0 AND pages.deleted=0 AND tt_content.CType=\'list\' AND tt_content.list_type=\'' . $itemValue[1] . '\'', '', 'tt_content.list_type');
 
