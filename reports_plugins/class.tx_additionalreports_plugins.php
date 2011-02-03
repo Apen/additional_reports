@@ -190,17 +190,23 @@ class tx_additionalreports_plugins implements tx_reports_Report {
             }
         }
 
-        $items = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('DISTINCT tt_content.CType,tt_content.pid,pages.title', 'tt_content,pages', 'tt_content.pid=pages.uid AND tt_content.hidden=0 AND tt_content.deleted=0 AND pages.hidden=0 AND pages.deleted=0 AND tt_content.CType<>\'list\'', '', 'tt_content.CType,tt_content.pid');
+        $items = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('DISTINCT tt_content.CType,tt_content.pid,tt_content.uid,pages.title', 'tt_content,pages', 'tt_content.pid=pages.uid AND tt_content.hidden=0 AND tt_content.deleted=0 AND pages.hidden=0 AND pages.deleted=0 AND tt_content.CType<>\'list\'', '', 'tt_content.CType,tt_content.pid');
         $content = '';
         $content .= '<table cellspacing="1" cellpadding="2" border="0" class="tx_sv_reportlist typo3-dblist">';
-        $content .= '<tr class="t3-row-header"><td colspan="4">';
+        $content .= '<tr class="t3-row-header"><td colspan="10">';
         $content .= $GLOBALS['LANG']->getLL('pluginsmode3');
         $content .= '</td></tr>';
         $content .= '<tr class="c-headLine">';
         $content .= '<td class="cell"></td>';
         $content .= '<td class="cell">' . $GLOBALS['LANG']->getLL('ctype') . '</td>';
         $content .= '<td class="cell">' . $GLOBALS['LANG']->getLL('pid') . '</td>';
+		$content .= '<td class="cell">' . $GLOBALS['LANG']->getLL('uid') . '</td>';
         $content .= '<td class="cell">' . $GLOBALS['LANG']->getLL('pagetitle') . '</td>';
+		$content .= '<td class="cell" align="center">DB mode</td>';
+        $content .= '<td class="cell" align="center">Page</td>';
+		if (t3lib_extMgm::isLoaded('templavoila')) {
+			$content .= '<td class="cell" align="center">Page TV</td>';
+		}
         $content .= '</tr>';
         foreach ($items as $itemKey => $itemValue) {
             preg_match('/^LLL:(EXT:.*?):(.*)/', $ctypes[$itemValue['CType']][0], $llfile);
@@ -213,8 +219,14 @@ class tx_additionalreports_plugins implements tx_reports_Report {
             $content .= '</td>';
             $content .= '<td class="cell">' . $GLOBALS['LANG']->getLLL($llfile[2], $LOCAL_LANG) . ' (' . $itemValue['CType'] . ')</td>';
             $content .= '<td class="cell">' . $itemValue['pid'] . '</td>';
-            $content .= '<td class="cell"><a href="/typo3/db_list.php?id=' . $itemValue['pid'] . '">' . $itemValue['title'] . '</a></td>';
-            $content .= '</tr>';
+            $content .= '<td class="cell">' . $itemValue['uid'] . '</td>';
+            $content .= '<td class="cell">' . $itemValue['title'] . '</td>';
+            $content .= '<td class="cell" align="center"><a target="_blank" href="/typo3/db_list.php?id=' . $itemValue['pid'] . '"><span class="t3-icon t3-icon-actions t3-icon-actions-document t3-icon-document-view"></span></a></td>';
+            $content .= '<td class="cell" align="center"><a target="_blank" href="/typo3/sysext/cms/layout/db_layout.php?id=' . $itemValue['pid'] . '"><span class="t3-icon t3-icon-actions t3-icon-actions-document t3-icon-document-view"></span></a></td>';
+            if (t3lib_extMgm::isLoaded('templavoila')) {
+				$content .= '<td class="cell" align="center"><a target="_blank" href="/typo3conf/ext/templavoila/mod1/index.php?id=' . $itemValue['pid'] . '"><span class="t3-icon t3-icon-actions t3-icon-actions-document t3-icon-document-view"></span></a></td>';
+            }
+			$content .= '</tr>';
 
         }
         $content .= '</table>';
@@ -228,10 +240,10 @@ class tx_additionalreports_plugins implements tx_reports_Report {
                 $plugins[$itemValue[1]] = $itemValue;
             }
         }
-        $items = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('DISTINCT tt_content.list_type,tt_content.pid,pages.title', 'tt_content,pages', 'tt_content.pid=pages.uid AND tt_content.hidden=0 AND tt_content.deleted=0 AND pages.hidden=0 AND pages.deleted=0 AND tt_content.CType=\'list\'', '', 'tt_content.list_type,tt_content.pid');
+        $items = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('DISTINCT tt_content.list_type,tt_content.pid,tt_content.uid,pages.title', 'tt_content,pages', 'tt_content.pid=pages.uid AND tt_content.hidden=0 AND tt_content.deleted=0 AND pages.hidden=0 AND pages.deleted=0 AND tt_content.CType=\'list\'', '', 'tt_content.list_type,tt_content.pid');
         $content = '';
         $content .= '<table cellspacing="1" cellpadding="2" border="0" class="tx_sv_reportlist typo3-dblist">';
-        $content .= '<tr class="t3-row-header"><td colspan="5">';
+        $content .= '<tr class="t3-row-header"><td colspan="10">';
         $content .= $GLOBALS['LANG']->getLL('pluginsmode4');
         $content .= '</td></tr>';
         $content .= '<tr class="c-headLine">';
@@ -239,7 +251,13 @@ class tx_additionalreports_plugins implements tx_reports_Report {
         $content .= '<td class="cell">' . $GLOBALS['LANG']->getLL('extension') . '</td>';
         $content .= '<td class="cell">' . $GLOBALS['LANG']->getLL('plugin') . '</td>';
         $content .= '<td class="cell">' . $GLOBALS['LANG']->getLL('pid') . '</td>';
+        $content .= '<td class="cell">' . $GLOBALS['LANG']->getLL('uid') . '</td>';
         $content .= '<td class="cell">' . $GLOBALS['LANG']->getLL('pagetitle') . '</td>';
+        $content .= '<td class="cell" align="center">DB mode</td>';
+        $content .= '<td class="cell" align="center">Page</td>';
+		if (t3lib_extMgm::isLoaded('templavoila')) {
+			$content .= '<td class="cell" align="center">Page TV</td>';
+		}
         $content .= '</tr>';
         foreach ($items as $itemKey => $itemValue) {
             preg_match('/EXT:(.*?)\//', $plugins[$itemValue['list_type']][0], $ext);
@@ -250,8 +268,14 @@ class tx_additionalreports_plugins implements tx_reports_Report {
             $content .= '<td class="cell">' . $ext[1] . '</td>';
             $content .= '<td class="cell">' . $GLOBALS['LANG']->getLLL($llfile[2], $LOCAL_LANG) . ' (' . $itemValue['list_type'] . ')</td>';
             $content .= '<td class="cell">' . $itemValue['pid'] . '</td>';
-            $content .= '<td class="cell"><a href="/typo3/db_list.php?id=' . $itemValue['pid'] . '">' . $itemValue['title'] . '</a></td>';
-            $content .= '</tr>';
+            $content .= '<td class="cell">' . $itemValue['uid'] . '</td>';
+            $content .= '<td class="cell">' . $itemValue['title'] . '</td>';
+            $content .= '<td class="cell" align="center"><a target="_blank" href="/typo3/db_list.php?id=' . $itemValue['pid'] . '"><span class="t3-icon t3-icon-actions t3-icon-actions-document t3-icon-document-view"></span></a></td>';
+            $content .= '<td class="cell" align="center"><a target="_blank" href="/typo3/sysext/cms/layout/db_layout.php?id=' . $itemValue['pid'] . '"><span class="t3-icon t3-icon-actions t3-icon-actions-document t3-icon-document-view"></span></a></td>';
+            if (t3lib_extMgm::isLoaded('templavoila')) {
+				$content .= '<td class="cell" align="center"><a target="_blank" href="/typo3conf/ext/templavoila/mod1/index.php?id=' . $itemValue['pid'] . '"><span class="t3-icon t3-icon-actions t3-icon-actions-document t3-icon-document-view"></span></a></td>';
+            }
+			$content .= '</tr>';
 
         }
         $content .= '</table>';
