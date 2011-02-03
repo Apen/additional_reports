@@ -18,7 +18,8 @@
 			<label index="eminfo">Extension manager</label>
 			<label index="used">Used ?</label>
 			<label index="pid">Page uid</label>
-			<label index="pagetitle">Page title (with edit link)</label>
+			<label index="uid">Content uid</label>
+			<label index="pagetitle">Page title</label>
 			<label index="pluginschoose">Choose a display mode :</label>
 			<label index="pluginsmode1">List of all the plugins</label>
 			<label index="pluginsmode2">List of all the content types</label>
@@ -68,7 +69,8 @@
 			<label index="eminfo">Gest d'extensions</label>
 			<label index="used">Utilisé ?</label>
 			<label index="pid">UID de la page</label>
-			<label index="pagetitle">Titre de la page (avec lien vers l'édition)</label>
+			<label index="uid">UID du contenu</label>
+			<label index="pagetitle">Titre de la page</label>
 			<label index="pluginschoose">Choisissez le mode d'affichage :</label>
 			<label index="pluginsmode1">Liste de tous les plugins</label>
 			<label index="pluginsmode2">Liste de tous les types de contenu</label>
