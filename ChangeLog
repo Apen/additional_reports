@@ -1,3 +1,8 @@
+2011-01-05 CERDAN Yohann <cerdanyohann@yahoo.fr>
+    * Add a typo3 page brower on the "List of used content types & "List of used plugins" view
+    * Check if the content/plugin is used in TV (non used elements)
+    * Use the jumpurl method instead of teh submit button
+    * Save the last menu you use (in the plugins section)
 2011-01-03 CERDAN Yohann <cerdanyohann@yahoo.fr>
 	* Add a link to the page module & page TV module (if TV is loaded) in the table
 2010-12-27 CERDAN Yohann <cerdanyohann@yahoo.fr>
