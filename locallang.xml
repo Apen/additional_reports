@@ -17,6 +17,7 @@
 			<label index="locallang">Locallang</label>
 			<label index="eminfo">Extension manager</label>
 			<label index="used">Used ?</label>
+			<label index="tvused">Used by templavoila ?</label>
 			<label index="pid">Page uid</label>
 			<label index="uid">Content uid</label>
 			<label index="pagetitle">Page title</label>
@@ -68,6 +69,7 @@
 			<label index="locallang">Locallang</label>
 			<label index="eminfo">Gest d'extensions</label>
 			<label index="used">Utilisé ?</label>
+			<label index="tvused">Utilisé par templavoila ?</label>
 			<label index="pid">UID de la page</label>
 			<label index="uid">UID du contenu</label>
 			<label index="pagetitle">Titre de la page</label>
