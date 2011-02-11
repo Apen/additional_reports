@@ -1,4 +1,8 @@
-2011-01-05 CERDAN Yohann <cerdanyohann@yahoo.fr>
+2011-02-11 CERDAN Yohann <cerdanyohann@yahoo.fr>
+    * Add a new view to display the available BE ajax methods
+2011-02-09 CERDAN Yohann <cerdanyohann@yahoo.fr>
+    * Add a filter to filter by plugins in the "List of used plugins" view
+2011-02-05 CERDAN Yohann <cerdanyohann@yahoo.fr>
     * Add a typo3 page brower on the "List of used content types & "List of used plugins" view
     * Check if the content/plugin is used in TV (non used elements)
     * Use the jumpurl method instead of teh submit button
