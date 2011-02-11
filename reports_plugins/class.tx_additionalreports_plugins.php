@@ -42,6 +42,7 @@ class tx_additionalreports_plugins implements tx_reports_Report
 	protected $reportObject;
 	protected $nbElementsPerPage = 15;
 	protected $display = 1;
+	protected $filtersCat = 1;
 
 	/**
 	 * Constructor for class tx_additionalreports_plugins
@@ -69,6 +70,7 @@ class tx_additionalreports_plugins implements tx_reports_Report
 		if ($sessionDisplay !== null) {
 			$this->display = $sessionDisplay;
 		}
+		$this->filtersCat = '';
 	}
 
 	/**
@@ -275,7 +277,6 @@ class tx_additionalreports_plugins implements tx_reports_Report
 
 		}
 		$content .= '</table>';
-		$content .= $pageBrowser;
 		return $content;
 	}
 
@@ -288,10 +289,33 @@ class tx_additionalreports_plugins implements tx_reports_Report
 			}
 		}
 
+		// addWhere
+		$addWhere = '';
+
+		// Plugin list for the select box
+		$getFiltersCat = t3lib_div::_GP('filtersCat');
+		$pluginsList = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
+			'DISTINCT tt_content.list_type',
+			'tt_content,pages',
+			'tt_content.pid=pages.uid AND tt_content.hidden=0 AND tt_content.deleted=0 AND pages.hidden=0 AND pages.deleted=0 AND tt_content.CType=\'list\'',
+			'',
+			'tt_content.list_type'
+		);
+		$this->filtersCat .= '<option value="all">' . $GLOBALS['LANG']->getLL('all') . '</option>';
+		foreach ($pluginsList as $pluginsElement) {
+			if (($getFiltersCat == $pluginsElement['list_type']) && ($getFiltersCat !== null)) {
+				$this->filtersCat .= '<option value="' . $pluginsElement['list_type'] . '" selected="selected">' . $pluginsElement['list_type'] . '</option>';
+				$addWhere = ' AND tt_content.list_type=\'' . $pluginsElement['list_type'] . '\'';
+			} else {
+				$this->filtersCat .= '<option value="' . $pluginsElement['list_type'] . '">' . $pluginsElement['list_type'] . '</option>';
+			}
+		}
+
+		// All items
 		$items = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
 			'DISTINCT tt_content.list_type,tt_content.pid,tt_content.uid,pages.title',
 			'tt_content,pages',
-			'tt_content.pid=pages.uid AND tt_content.hidden=0 AND tt_content.deleted=0 AND pages.hidden=0 AND pages.deleted=0 AND tt_content.CType=\'list\'',
+			'tt_content.pid=pages.uid AND tt_content.hidden=0 AND tt_content.deleted=0 AND pages.hidden=0 AND pages.deleted=0 AND tt_content.CType=\'list\'' . $addWhere,
 			'',
 			'tt_content.list_type,tt_content.pid'
 		);
@@ -304,7 +328,7 @@ class tx_additionalreports_plugins implements tx_reports_Report
 		$itemsBrowser = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
 			'DISTINCT tt_content.list_type,tt_content.pid,tt_content.uid,pages.title',
 			'tt_content,pages',
-			'tt_content.pid=pages.uid AND tt_content.hidden=0 AND tt_content.deleted=0 AND pages.hidden=0 AND pages.deleted=0 AND tt_content.CType=\'list\'',
+			'tt_content.pid=pages.uid AND tt_content.hidden=0 AND tt_content.deleted=0 AND pages.hidden=0 AND pages.deleted=0 AND tt_content.CType=\'list\'' . $addWhere,
 			'',
 			'tt_content.list_type,tt_content.pid',
 			$limit
@@ -357,7 +381,6 @@ class tx_additionalreports_plugins implements tx_reports_Report
 
 		}
 		$content .= '</table>';
-		$content .= $pageBrowser;
 		return $content;
 	}
 
@@ -446,11 +469,15 @@ class tx_additionalreports_plugins implements tx_reports_Report
 		$returnContent = '';
 
 		// Show page selector if not all records fit into one page
-		if ($totalPages > 1) {
+		if ($totalPages >= 1) {
 			$first = $previous = $next = $last = $reload = '';
 			$listURLOrig = t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'mod.php?M=tools_txreportsM1&display=' . $this->display;
 			$listURL = t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'mod.php?M=tools_txreportsM1&display=' . $this->display;
 			$listURL .= '&nbPerPage=' . $this->nbElementsPerPage;
+			$getFiltersCat = t3lib_div::_GP('filtersCat');
+			if ($getFiltersCat !== null) {
+				$listURL .= '&filtersCat=' . $getFiltersCat;
+			}
 			$currentPage = floor(($firstElementNumber + 1) / $iLimit) + 1;
 
 			// First
@@ -500,10 +527,23 @@ class tx_additionalreports_plugins implements tx_reports_Report
 			                  . sprintf($GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_mod_web_list.xml:rangeIndicator'), $firstElementNumber + 1, $lastElementNumber)
 			                  . '</span>';
 
+			// nb per page, filter and reload
+			$reload = '<input type="text" name="nbPerPage" id="nbPerPage" size="5" value="' . $this->nbElementsPerPage . '"/> / page ';
 
-			$reload = '<input type="text" name="nbPerPage" id="nbPerPage" size="5" value="' . $this->nbElementsPerPage . '"/> / page '
-			          . '<a href="#"  onClick="jumpToUrl(\'' . $listURLOrig . '&nbPerPage=\'+document.getElementById(\'nbPerPage\').value);">'
-			          . '<img width="16" height="16" title="" alt="" src="sysext/t3skin/icons/gfx/refresh_n.gif"></a>';
+			if ($getFiltersCat !== null) {
+				$reload .= '<a href="#"  onClick="jumpToUrl(\'' . $listURLOrig . '&nbPerPage=\'+document.getElementById(\'nbPerPage\').value+\'&filtersCat=' . $getFiltersCat . '\');">';
+			} else {
+				$reload .= '<a href="#"  onClick="jumpToUrl(\'' . $listURLOrig . '&nbPerPage=\'+document.getElementById(\'nbPerPage\').value);">';
+			}
+			$reload .= '<img width="16" height="16" title="" alt="" src="sysext/t3skin/icons/gfx/refresh_n.gif"></a>';
+
+			if ($this->filtersCat != '') {
+				$reload .= '<span class="bar">&nbsp;</span>';
+				$reload .= $GLOBALS['LANG']->getLL('filterByCat') . '&nbsp;<select name="filtersCat" id="filtersCat">' . $this->filtersCat . '</select>';
+				$reload .= '<a href="#"  onClick="jumpToUrl(\'' . $listURLOrig . '&nbPerPage=\'+document.getElementById(\'nbPerPage\').value+\'&filtersCat=\'+document.getElementById(\'filtersCat\').value);">';
+				$reload .= '&nbsp;<img width="16" height="16" title="" alt="" src="sysext/t3skin/icons/gfx/refresh_n.gif"></a>';
+			}
+
 
 			$content .= '<div id="typo3-dblist-pagination">'
 			            . $first . $previous
