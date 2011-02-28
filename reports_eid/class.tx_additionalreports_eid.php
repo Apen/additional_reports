@@ -81,7 +81,7 @@ class tx_additionalreports_eid implements tx_reports_Report {
         foreach ($items as $itemKey => $itemValue) {
             preg_match('/EXT:(.*?)\//', $itemValue, $ext);
             $content .= '<tr class="db_list_normal">';
-            $content .= '<td class="col-icon"><img src="' . t3lib_extMgm::extRelPath($ext[1]) . 'ext_icon.gif"/></td>';
+            $content .= '<td class="col-icon"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . t3lib_extMgm::extRelPath($ext[1]) . 'ext_icon.gif"/></td>';
             $content .= '<td class="cell">' . $ext[1] . '</td>';
             $content .= '<td class="cell">' . $itemKey . '</td>';
             $content .= '<td class="cell">' . $itemValue . '</td>';
