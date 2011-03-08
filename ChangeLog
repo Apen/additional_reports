@@ -1,5 +1,9 @@
+2011-03-08 CERDAN Yohann <cerdanyohann@yahoo.fr>
+    * Small bugfix for view icon on TYPO3 4.3
+    * Add a filter to filter by content in the "List of used content" view
+    * Bugfix : EM link was broken
 2011-02-28 CERDAN Yohann <cerdanyohann@yahoo.fr>
-	* Small bugfix ofr icons (not displayed if you have your TYPO3 installation in a subfolder).
+	* Small bugfix for icons (not displayed if you have your TYPO3 installation in a subfolder).
 2011-02-11 CERDAN Yohann <cerdanyohann@yahoo.fr>
     * Add a new view to display the available BE ajax methods
 2011-02-09 CERDAN Yohann <cerdanyohann@yahoo.fr>
