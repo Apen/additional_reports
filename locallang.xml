@@ -53,14 +53,27 @@
             <label index="hooks_name">Hook name</label>
             <label index="hooks_file">File or class</label>
             <label index="hooks_line">Line with the hook in the ext_localconf.php file of the extension</label>
-            <label index="status_title">Additional reports - General status</label>
+            <label index="status_title">Additional reports - general status</label>
             <label index="status_description">List of all the usefull informations about your installation.</label>
             <label index="status_sitename">Sitename</label>
             <label index="status_version">Version</label>
+            <label index="status_lastversion">Last version</label>
             <label index="status_path">Path</label>
             <label index="status_im">ImageMagick</label>
             <label index="status_loadedextensions">Loaded extensions</label>
             <label index="status_nocrontab">No crontab</label>
+            <label index="extensions_title">Additional reports - loaded extension list</label>
+            <label index="extensions_description">List of all the extension with informations for each of them.</label>
+            <label index="extensions_tables">Tables and fields</label>
+            <label index="extensions_tablesintegrity">Need DB update ?</label>
+            <label index="extensions_files">Modified files !!!</label>
+            <label index="extensions_filesmodified">modified(s) file(s) in this extension</label>
+            <label index="extensions_tablesmodified">table(s) in this extension</label>
+            <label index="extensions_dev">specific developpment(s)</label>
+            <label index="extensions_toupdate">extension(s) to update</label>
+            <label index="extensions_extensions">extension(s)</label>
+            <label index="extensions_ter">extension(s) from the TER</label>
+            <label index="extensions_extensionsmodified">modified extension(s)</label>
         </languageKey>
         <languageKey index="fr" type="array">
             <label index="noresults">Aucune donnée à afficher</label>
@@ -110,14 +123,27 @@
             <label index="hooks_name">Nom du hook</label>
             <label index="hooks_file">Fichier ou classe</label>
             <label index="hooks_line">Ligne contenant le hook dans le fichier ext_localconf.php de l'extension</label>
-            <label index="status_title">Additional reports - Statut général</label>
+            <label index="status_title">Additional reports - statut général</label>
             <label index="status_description">Liste de toutes les informations importantes de votre installation.</label>
             <label index="status_sitename">Nom du site</label>
             <label index="status_version">Version</label>
+            <label index="status_lastversion">Dernière version</label>
             <label index="status_path">Chemin</label>
             <label index="status_im">ImageMagick</label>
             <label index="status_loadedextensions">Extensions chargées</label>
             <label index="status_nocrontab">Pas de tâche planifiée</label>
+            <label index="extensions_title">Additional reports - liste des extensions chargées</label>
+            <label index="extensions_description">Liste de toutes les extensions avec des informations utiles pour chacune.</label>
+            <label index="extensions_tables">Tables et champs</label>
+            <label index="extensions_tablesintegrity">Mise à jour de la BD ?</label>
+            <label index="extensions_files">Fichiers modifiés !!!</label>
+            <label index="extensions_filesmodified">fichier(s) modifié(s) dans cette extension</label>
+            <label index="extensions_tablesmodified">table(s) dans cette extension</label>
+            <label index="extensions_dev">développement(s) spécifique(s)</label>
+            <label index="extensions_toupdate">extension(s) à mettre à jour</label>
+            <label index="extensions_extensions">extension(s)</label>
+            <label index="extensions_ter">extension(s) du TER</label>
+            <label index="extensions_extensionsmodified">extension(s) modifiée(s)</label>
         </languageKey>
     </data>
 </T3locallang>

@@ -3,7 +3,7 @@
 /***************************************************************
  * Extension Manager/Repository config file for ext "additional_reports".
  *
- * Auto generated 04-12-2015 14:34
+ * Auto generated 04-12-2015 14:35
  *
  * Manual updates:
  * Only the data in the array - everything else is removed by next
@@ -15,7 +15,7 @@ $EM_CONF[$_EXTKEY] = array (
 	'description' => 'Useful informations in the reports module : list of xclass, cliKeys, eID, used content type, used plugins... It can really help you during migration or new existing project (to have a global reports of the system).',
 	'category' => 'misc',
 	'shy' => 0,
-	'version' => '2.1.11',
+	'version' => '2.2.0',
 	'dependencies' => '',
 	'conflicts' => '',
 	'priority' => '',
