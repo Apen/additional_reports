@@ -75,7 +75,6 @@ table.typo3-dblist tr td.col-icon {
 table.typo3-dblist tr td.typo3-message {
 	padding: 12px 12px 12px 36px;
 	width: 30px;
-	
 	background-position:10px 12px;
 	background-repeat:no-repeat;
 	border:1px solid;
@@ -93,4 +92,8 @@ table.typo3-dblist tr td.message-error {
 	background-image: url("../../../typo3/sysext/t3skin/icons/gfx/error.png");
 	border-color: #D66C68;
 	color: #AA0225;
+}
+
+table.typo3-dblist tr td.infos {
+	background-color: #FBF6DE !important;
 }

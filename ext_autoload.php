@@ -1,6 +1,6 @@
 <?php
 
-$reports = array('eid', 'clikeys', 'plugins', 'xclass', 'hooks', 'status', 'ajax');
+$reports = array('eid', 'clikeys', 'plugins', 'xclass', 'hooks', 'status', 'ajax', 'extensions');
 $extensionPath = t3lib_extMgm::extPath('additional_reports');
 $autoload = array();
 

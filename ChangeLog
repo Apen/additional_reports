@@ -1,3 +1,5 @@
+2011-03-31 CERDAN Yohann <cerdanyohann@yahoo.fr>
+    * Add a new module to list extension with : TER update needed? database update needed? modified files? etc...
 2011-03-08 CERDAN Yohann <cerdanyohann@yahoo.fr>
     * Small bugfix for view icon on TYPO3 4.3
     * Add a filter to filter by content in the "List of used content" view
