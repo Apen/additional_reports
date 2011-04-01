@@ -74,7 +74,6 @@ class tx_additionalreports_extensions implements tx_reports_Report
 
 		$content = '';
 
-		//t3lib_div::debug(t3lib_div::int_from_ver(TYPO3_version));
 		if (t3lib_div::int_from_ver(TYPO3_version) <= 4005000) {
 			require_once($BACK_PATH . 'mod/tools/em/class.em_index.php');
 			$em = t3lib_div::makeInstance('SC_mod_tools_em_index');
@@ -221,10 +220,14 @@ class tx_additionalreports_extensions implements tx_reports_Report
 			$em->searchExtensionsXMLExact($name, '', '', TRUE, TRUE);
 			$v = $em->extensionsXML[$name]['versions'];
 		}
-		$versions = array_keys($v);
-		natsort($versions);
-		$lastversion = end($versions);
-		return $lastversion;
+		if (is_array($v)) {
+			$versions = array_keys($v);
+			natsort($versions);
+			$lastversion = end($versions);
+			return $lastversion;
+		} else {
+			return null;
+		}
 	}
 
 	protected function writeInformation($label, $value)
