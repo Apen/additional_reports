@@ -63,6 +63,8 @@ class tx_additionalreports_extensions implements tx_reports_Report
 	{
 		$content = '';
 		$this->reportObject->doc->getPageRenderer()->addCssFile(t3lib_extMgm::extRelPath('additional_reports') . 'tx_additionalreports.css');
+		$this->reportObject->doc->getPageRenderer()->addCssFile(t3lib_extMgm::extRelPath('additional_reports') . 'libs/shadowbox.css');
+		$this->reportObject->doc->getPageRenderer()->addJsFile(t3lib_extMgm::extRelPath('additional_reports') . 'libs/shadowbox.js');
 		// $content .= '<p class="help">' . $GLOBALS['LANG']->getLL('eid_description') . '</p>';
 		$content .= $this->displayEID();
 		return $content;
@@ -94,6 +96,8 @@ class tx_additionalreports_extensions implements tx_reports_Report
 			$cat = tx_em_Tools::getDefaultCategory();
 			$em->getInstExtList($path, $items, $cat, 'L');
 		}
+
+		$content .= '<script type="text/javascript">Shadowbox.init({displayNav:true,displayCounter:false,overlayOpacity:0.8});</script>';
 
 		$content .= '<table cellspacing="1" cellpadding="2" border="0" class="tx_sv_reportlist typo3-dblist">';
 		$content .= '<tr class="t3-row-header"><td colspan="7">';
@@ -153,7 +157,7 @@ class tx_additionalreports_extensions implements tx_reports_Report
 				if (!$lastVersion) {
 					$extensionsDEV++;
 					$lastVersion = '/';
-					$class = "infos";
+					$class = "specs";
 				}
 
 				$content .= '<tr class="db_list_normal">';
@@ -171,7 +175,7 @@ class tx_additionalreports_extensions implements tx_reports_Report
 				$dump_tf = '';
 				if (count($FDfile) > 0) {
 					$id = 'sql' . $extKey;
-					$dump_tf = count($FDfile) . ' ' . $GLOBALS['LANG']->getLL('extensions_tablesmodified') . '</span>  <input type="button" onclick="$(\'' . $id . '\').toggle();" value="+"/><div style="display:none;" id="' . $id . '"><br/>' . t3lib_div::view_array($FDfile) . '</div>';
+					$dump_tf = count($FDfile) . ' ' . $GLOBALS['LANG']->getLL('extensions_tablesmodified') . ' <input type="button" onclick="$(\'' . $id . '\').toggle();" value="+"/><div style="display:none;" id="' . $id . '"><br/>' . t3lib_div::view_array($FDfile) . '</div>';
 				}
 				$content .= '<td class="' . $class . '">' . $dump_tf . '</td>';
 
@@ -181,10 +185,19 @@ class tx_additionalreports_extensions implements tx_reports_Report
 					$content .= '<td class="' . $class . '" align="center">' . $GLOBALS['LANG']->getLL('no') . '</td>';
 				}
 
-				if (count($affectedFiles) > 0) {
+
+				if ((count($affectedFiles) > 0) && ($lastVersion != '/')) {
 					$extensionsModified++;
 					$id = 'files' . $extKey;
-					$content .= '<td class="' . $class . '"><span style="color:red;font-weight:bold;">' . count($affectedFiles) . ' ' . $GLOBALS['LANG']->getLL('extensions_filesmodified') . '</span>  <input type="button" onclick="$(\'' . $id . '\').toggle();" value="+"/><div style="display:none;" id="' . $id . '"><br/>' . t3lib_div::view_array($affectedFiles) . '</div></td>';
+					$content .= '<td class="' . $class . '"><span style="color:red;font-weight:bold;">' . count($affectedFiles) . ' ' . $GLOBALS['LANG']->getLL('extensions_filesmodified') . '</span>';
+					$content .= '  <input type="button" onclick="$(\'' . $id . '\').toggle();" value="+"/><div style="display:none;" id="' . $id . '">';
+					$content .= '<ul>';
+					foreach ($affectedFiles as $affectedFile) {
+						$compareURL = t3lib_div::getIndpEnv('TYPO3_SITE_URL') . ('index.php?eID=additional_reports_compareFiles&extKey=' . $extKey . '&extFile=' . $affectedFile . '&extVersion=' . $lastVersion);
+						$content .= '<li><a rel="shadowbox;height=600;width=800;" href = "' . $compareURL . '" target = "_blank" > ' . $affectedFile . '</a ></li >';
+					}
+					$content .= '</ul>';
+					$content .= '</div></td>';
 				} else {
 					$content .= '<td class="' . $class . '"></td>';
 				}
@@ -205,7 +218,7 @@ class tx_additionalreports_extensions implements tx_reports_Report
 		$addContent .= $extensionsToUpdate . ' ' . $GLOBALS['LANG']->getLL('extensions_toupdate');
 		$addContent .= '  /  ';
 		$addContent .= $extensionsModified . ' ' . $GLOBALS['LANG']->getLL('extensions_extensionsmodified');
-		$addContentItem = $this->writeInformation($GLOBALS['LANG']->getLL('pluginsmode5'), $addContent);
+		$addContentItem = $this->writeInformation($GLOBALS['LANG']->getLL('pluginsmode5') . '<br/>' . $GLOBALS['LANG']->getLL('extensions_updateter') . '', $addContent);
 
 		$content = $addContentItem . $content;
 		return $content;
