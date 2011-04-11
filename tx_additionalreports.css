@@ -97,3 +97,7 @@ table.typo3-dblist tr td.message-error {
 table.typo3-dblist tr td.infos {
 	background-color: #FBF6DE !important;
 }
+
+table.typo3-dblist tr td.specs {
+	background-color: #FFDDDD !important;
+}

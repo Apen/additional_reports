@@ -71,9 +71,10 @@
             <label index="extensions_tablesmodified">table(s) in this extension</label>
             <label index="extensions_dev">specific developpment(s)</label>
             <label index="extensions_toupdate">extension(s) to update</label>
-            <label index="extensions_extensions">extension(s)</label>
+            <label index="extensions_extensions">loaded extension(s)</label>
             <label index="extensions_ter">extension(s) from the TER</label>
             <label index="extensions_extensionsmodified">modified extension(s)</label>
+            <label index="extensions_updateter">You need to update the extension list in the Extension Manager.</label>
         </languageKey>
         <languageKey index="fr" type="array">
             <label index="noresults">Aucune donnée à afficher</label>
@@ -141,9 +142,10 @@
             <label index="extensions_tablesmodified">table(s) dans cette extension</label>
             <label index="extensions_dev">développement(s) spécifique(s)</label>
             <label index="extensions_toupdate">extension(s) à mettre à jour</label>
-            <label index="extensions_extensions">extension(s)</label>
+            <label index="extensions_extensions">extension(s) chargée(s)</label>
             <label index="extensions_ter">extension(s) du TER</label>
             <label index="extensions_extensionsmodified">extension(s) modifiée(s)</label>
+            <label index="extensions_updateter">Vous devez mettre à jour la liste des extensions dans l'Extension Manager.</label>
         </languageKey>
     </data>
 </T3locallang>
