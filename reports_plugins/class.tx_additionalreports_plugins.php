@@ -82,20 +82,30 @@ class tx_additionalreports_plugins implements tx_reports_Report
 	{
 		$content = '';
 		$this->reportObject->doc->getPageRenderer()->addCssFile(t3lib_extMgm::extRelPath('additional_reports') . 'tx_additionalreports.css');
-		$content .= '<p class="help">' . $GLOBALS['LANG']->getLL('plugins_description') . '</p>';
+		//$content .= '<p class="help">' . $GLOBALS['LANG']->getLL('plugins_description') . '</p>';
 		$content .= $this->displayPlugins();
 		return $content;
 	}
 
 	protected function displayPlugins()
 	{
-		$content = '<h3 class="uppercase">' . $GLOBALS['LANG']->getLL('pluginschoose') . '</h3>';
+		//$content = '<h3 class="uppercase">' . $GLOBALS['LANG']->getLL('pluginschoose') . '</h3>';
 		$url = t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'mod.php?M=tools_txreportsM1';
-		$content .= '<input onClick="jumpToUrl(\'' . $url . '&display=1\');" style="margin-right:4px;" type="radio" name="display" value="1" id="radio1"' . (($this->display == 1) ? ' checked="checked"' : '') . '/><label for="radio1" style="margin-right:10px;">' . $GLOBALS['LANG']->getLL('pluginsmode1') . '</label>';
-		$content .= '<input onClick="jumpToUrl(\'' . $url . '&display=2\');" style="margin-right:4px;" type="radio" name="display" value="2" id="radio2"' . (($this->display == 2) ? ' checked="checked"' : '') . '/><label for="radio2" style="margin-right:10px;">' . $GLOBALS['LANG']->getLL('pluginsmode2') . '</label>';
-		$content .= '<input onClick="jumpToUrl(\'' . $url . '&display=4\');" style="margin-right:4px;" type="radio" name="display" value="4" id="radio4"' . (($this->display == 4) ? ' checked="checked"' : '') . '/><label for="radio4" style="margin-right:10px;">' . $GLOBALS['LANG']->getLL('pluginsmode4') . '</label>';
-		$content .= '<input onClick="jumpToUrl(\'' . $url . '&display=3\');" style="margin-right:4px;" type="radio" name="display" value="3" id="radio3"' . (($this->display == 3) ? ' checked="checked"' : '') . '/><label for="radio3" style="margin-right:10px;">' . $GLOBALS['LANG']->getLL('pluginsmode3') . '</label>';
-		$content .= '<input onClick="jumpToUrl(\'' . $url . '&display=5\');" style="margin-right:4px;" type="radio" name="display" value="5" id="radio5"' . (($this->display == 5) ? ' checked="checked"' : '') . '/><label for="radio5" style="margin-right:10px;">' . $GLOBALS['LANG']->getLL('pluginsmode5') . '</label>';
+		$content = '<table>';
+		$content .= '<tr>';
+		$content .= '<td><input onClick="jumpToUrl(\'' . $url . '&display=1\');" style="margin-right:4px;" type="radio" name="display" value="1" id="radio1"' . (($this->display == 1) ? ' checked="checked"' : '') . '/><label for="radio1" style="margin-right:10px;">' . $GLOBALS['LANG']->getLL('pluginsmode1') . '</label></td>';
+		$content .= '<td><input onClick="jumpToUrl(\'' . $url . '&display=4\');" style="margin-right:4px;" type="radio" name="display" value="4" id="radio4"' . (($this->display == 4) ? ' checked="checked"' : '') . '/><label for="radio4" style="margin-right:10px;">' . $GLOBALS['LANG']->getLL('pluginsmode4') . '</label></td>';
+		$content .= '<td><input onClick="jumpToUrl(\'' . $url . '&display=6\');" style="margin-right:4px;" type="radio" name="display" value="4" id="radio4"' . (($this->display == 6) ? ' checked="checked"' : '') . '/><label for="radio4" style="margin-right:10px;">' . $GLOBALS['LANG']->getLL('pluginsmode4hidden') . '</label></td>';
+		$content .= '</tr>';
+		$content .= '<tr>';
+		$content .= '<td><input onClick="jumpToUrl(\'' . $url . '&display=2\');" style="margin-right:4px;" type="radio" name="display" value="2" id="radio2"' . (($this->display == 2) ? ' checked="checked"' : '') . '/><label for="radio2" style="margin-right:10px;">' . $GLOBALS['LANG']->getLL('pluginsmode2') . '</label></td>';
+		$content .= '<td><input onClick="jumpToUrl(\'' . $url . '&display=3\');" style="margin-right:4px;" type="radio" name="display" value="3" id="radio3"' . (($this->display == 3) ? ' checked="checked"' : '') . '/><label for="radio3" style="margin-right:10px;">' . $GLOBALS['LANG']->getLL('pluginsmode3') . '</label></td>';
+		$content .= '<td><input onClick="jumpToUrl(\'' . $url . '&display=7\');" style="margin-right:4px;" type="radio" name="display" value="3" id="radio3"' . (($this->display == 7) ? ' checked="checked"' : '') . '/><label for="radio3" style="margin-right:10px;">' . $GLOBALS['LANG']->getLL('pluginsmode3hidden') . '</label></td>';
+		$content .= '</tr>';
+		$content .= '<tr>';
+		$content .= '<td><input onClick="jumpToUrl(\'' . $url . '&display=5\');" style="margin-right:4px;" type="radio" name="display" value="5" id="radio5"' . (($this->display == 5) ? ' checked="checked"' : '') . '/><label for="radio5" style="margin-right:10px;">' . $GLOBALS['LANG']->getLL('pluginsmode5') . '</label></td>';
+		$content .= '</tr>';
+		$content .= '</table><div class="uppercase"></div>';
 
 		$content .= $this->reportObject->doc->spacer(5);
 
@@ -114,6 +124,12 @@ class tx_additionalreports_plugins implements tx_reports_Report
 				break;
 			case 5 :
 				$content .= $this->getSummary();
+				break;
+			case 6 :
+				$content .= $this->getAllUsedPlugins(true);
+				break;
+			case 7 :
+				$content .= $this->getAllUsedCType(true);
 				break;
 		}
 
@@ -197,7 +213,7 @@ class tx_additionalreports_plugins implements tx_reports_Report
 		return $content;
 	}
 
-	function getAllUsedCType()
+	function getAllUsedCType($displayHidden = false)
 	{
 		$ctypes = array();
 		foreach ($GLOBALS['TCA']['tt_content']['columns']['CType']['config']['items'] as $itemKey => $itemValue) {
@@ -208,12 +224,14 @@ class tx_additionalreports_plugins implements tx_reports_Report
 
 		// addWhere
 		$addWhere = '';
+		$addhidden = ($displayHidden === true) ? '' : ' AND tt_content.hidden=0 AND pages.hidden=0 ';
+
 		// Plugin list for the select box
 		$getFiltersCat = t3lib_div::_GP('filtersCat');
 		$pluginsList = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
 			'DISTINCT tt_content.CType',
 			'tt_content,pages',
-			'tt_content.pid=pages.uid AND tt_content.hidden=0 AND tt_content.deleted=0 AND pages.hidden=0 AND pages.deleted=0 AND tt_content.CType<>\'list\'',
+			'tt_content.pid=pages.uid AND tt_content.deleted=0 AND pages.deleted=0 ' . $addhidden . 'AND tt_content.CType<>\'list\'',
 			'',
 			'tt_content.list_type'
 		);
@@ -229,9 +247,9 @@ class tx_additionalreports_plugins implements tx_reports_Report
 
 		// All items
 		$items = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
-			'DISTINCT tt_content.CType,tt_content.pid,tt_content.uid,pages.title',
+			'DISTINCT tt_content.CType,tt_content.pid,tt_content.uid,pages.title,pages.hidden as "hiddenpages",tt_content.hidden as "hiddentt_content"',
 			'tt_content,pages',
-			'tt_content.pid=pages.uid AND tt_content.hidden=0 AND tt_content.deleted=0 AND pages.hidden=0 AND pages.deleted=0 AND tt_content.CType<>\'list\'' . $addWhere,
+			'tt_content.pid=pages.uid AND tt_content.deleted=0 AND pages.deleted=0 ' . $addhidden . 'AND tt_content.CType<>\'list\'' . $addWhere,
 			'',
 			'tt_content.CType,tt_content.pid'
 		);
@@ -241,9 +259,9 @@ class tx_additionalreports_plugins implements tx_reports_Report
 		$current = ($pointer !== null) ? intval($pointer) : 0;
 		$pageBrowser = $this->renderListNavigation(count($items), $this->nbElementsPerPage, $current);
 		$itemsBrowser = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
-			'DISTINCT tt_content.CType,tt_content.pid,tt_content.uid,pages.title',
+			'DISTINCT tt_content.CType,tt_content.pid,tt_content.uid,pages.title,pages.hidden as "hiddenpages",tt_content.hidden as "hiddentt_content"',
 			'tt_content,pages',
-			'tt_content.pid=pages.uid AND tt_content.hidden=0 AND tt_content.deleted=0 AND pages.hidden=0 AND pages.deleted=0 AND tt_content.CType<>\'list\'' . $addWhere,
+			'tt_content.pid=pages.uid AND tt_content.deleted=0 AND pages.deleted=0 ' . $addhidden . 'AND tt_content.CType<>\'list\'' . $addWhere,
 			'',
 			'tt_content.CType,tt_content.pid',
 			$limit
@@ -280,8 +298,10 @@ class tx_additionalreports_plugins implements tx_reports_Report
 			}
 			$content .= '</td>';
 			$content .= '<td class="cell">' . $GLOBALS['LANG']->getLLL($llfile[2], $LOCAL_LANG) . ' (' . $itemValue['CType'] . ')</td>';
-			$content .= '<td class="cell">' . $itemValue['pid'] . '</td>';
-			$content .= '<td class="cell">' . $itemValue['uid'] . '</td>';
+			$iconPage = ($itemValue['hiddenpages'] == 0) ? '<img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/i/pages.gif"/>' : '<img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/i/pages__h.gif"/>';
+			$iconContent = ($itemValue['hiddentt_content'] == 0) ? '<img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/i/tt_content.gif"/>' : '<img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/i/tt_content__h.gif"/>';
+			$content .= '<td class="cell">' . $iconPage . ' ' . $itemValue['pid'] . '</td>';
+			$content .= '<td class="cell">' . $iconContent . ' ' . $itemValue['uid'] . '</td>';
 			$content .= '<td class="cell">' . $itemValue['title'] . '</td>';
 			$content .= '<td class="cell" align="center"><a target="_blank" href="/typo3/db_list.php?id=' . $itemValue['pid'] . '"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/zoom.gif"/></span></a></td>';
 			$content .= '<td class="cell" align="center"><a target="_blank" href="/typo3/sysext/cms/layout/db_layout.php?id=' . $itemValue['pid'] . '"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/zoom.gif"/></span></a></td>';
@@ -299,7 +319,7 @@ class tx_additionalreports_plugins implements tx_reports_Report
 		return $content;
 	}
 
-	function getAllUsedPlugins()
+	function getAllUsedPlugins($displayHidden = false)
 	{
 		$plugins = array();
 		foreach ($GLOBALS['TCA']['tt_content']['columns']['list_type']['config']['items'] as $itemKey => $itemValue) {
@@ -309,12 +329,14 @@ class tx_additionalreports_plugins implements tx_reports_Report
 		}
 		// addWhere
 		$addWhere = '';
+		$addhidden = ($displayHidden === true) ? '' : ' AND tt_content.hidden=0 AND pages.hidden=0 ';
+
 		// Plugin list for the select box
 		$getFiltersCat = t3lib_div::_GP('filtersCat');
 		$pluginsList = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
 			'DISTINCT tt_content.list_type',
 			'tt_content,pages',
-			'tt_content.pid=pages.uid AND tt_content.hidden=0 AND tt_content.deleted=0 AND pages.hidden=0 AND pages.deleted=0 AND tt_content.CType=\'list\'',
+			'tt_content.pid=pages.uid AND tt_content.deleted=0 AND pages.deleted=0 ' . $addhidden . 'AND tt_content.CType=\'list\'',
 			'',
 			'tt_content.list_type'
 		);
@@ -329,9 +351,9 @@ class tx_additionalreports_plugins implements tx_reports_Report
 		}
 		// All items
 		$items = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
-			'DISTINCT tt_content.list_type,tt_content.pid,tt_content.uid,pages.title',
+			'DISTINCT tt_content.list_type,tt_content.pid,tt_content.uid,pages.title,pages.hidden as "hiddenpages",tt_content.hidden as "hiddentt_content"',
 			'tt_content,pages',
-			'tt_content.pid=pages.uid AND tt_content.hidden=0 AND tt_content.deleted=0 AND pages.hidden=0 AND pages.deleted=0 AND tt_content.CType=\'list\'' . $addWhere,
+			'tt_content.pid=pages.uid AND tt_content.deleted=0 AND pages.deleted=0 ' . $addhidden . 'AND tt_content.CType=\'list\'' . $addWhere,
 			'',
 			'tt_content.list_type,tt_content.pid'
 		);
@@ -341,9 +363,9 @@ class tx_additionalreports_plugins implements tx_reports_Report
 		$current = ($pointer !== null) ? intval($pointer) : 0;
 		$pageBrowser = $this->renderListNavigation(count($items), $this->nbElementsPerPage, $current);
 		$itemsBrowser = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
-			'DISTINCT tt_content.list_type,tt_content.pid,tt_content.uid,pages.title',
+			'DISTINCT tt_content.list_type,tt_content.pid,tt_content.uid,pages.title,pages.hidden as "hiddenpages",tt_content.hidden as "hiddentt_content"',
 			'tt_content,pages',
-			'tt_content.pid=pages.uid AND tt_content.hidden=0 AND tt_content.deleted=0 AND pages.hidden=0 AND pages.deleted=0 AND tt_content.CType=\'list\'' . $addWhere,
+			'tt_content.pid=pages.uid AND tt_content.deleted=0 AND pages.deleted=0 ' . $addhidden . 'AND tt_content.CType=\'list\'' . $addWhere,
 			'',
 			'tt_content.list_type,tt_content.pid',
 			$limit
@@ -379,8 +401,10 @@ class tx_additionalreports_plugins implements tx_reports_Report
 			$content .= '<td class="col-icon"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . $plugins[$itemValue['list_type']][2] . '"/></td>';
 			$content .= '<td class="cell">' . $ext[1] . '</td>';
 			$content .= '<td class="cell">' . $GLOBALS['LANG']->getLLL($llfile[2], $LOCAL_LANG) . ' (' . $itemValue['list_type'] . ')</td>';
-			$content .= '<td class="cell">' . $itemValue['pid'] . '</td>';
-			$content .= '<td class="cell">' . $itemValue['uid'] . '</td>';
+			$iconPage = ($itemValue['hiddenpages'] == 0) ? '<img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/i/pages.gif"/>' : '<img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/i/pages__h.gif"/>';
+			$iconContent = ($itemValue['hiddentt_content'] == 0) ? '<img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/i/tt_content.gif"/>' : '<img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/i/tt_content__h.gif"/>';
+			$content .= '<td class="cell">' . $iconPage . ' ' . $itemValue['pid'] . '</td>';
+			$content .= '<td class="cell">' . $iconContent . ' ' . $itemValue['uid'] . '</td>';
 			$content .= '<td class="cell">' . $itemValue['title'] . '</td>';
 			$content .= '<td class="cell" align="center"><a target="_blank" href="/typo3/db_list.php?id=' . $itemValue['pid'] . '"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/zoom.gif"/></span></a></td>';
 			$content .= '<td class="cell" align="center"><a target="_blank" href="/typo3/sysext/cms/layout/db_layout.php?id=' . $itemValue['pid'] . '"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/zoom.gif"/></span></a></td>';

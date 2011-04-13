@@ -25,7 +25,9 @@
             <label index="pluginsmode1">List of all the plugins</label>
             <label index="pluginsmode2">List of all the content types</label>
             <label index="pluginsmode3">List of used content types</label>
+            <label index="pluginsmode3hidden">List of used content types (and hidden)</label>
             <label index="pluginsmode4">List of used plugins</label>
+            <label index="pluginsmode4hidden">List of used plugins (and hidden)</label>
             <label index="pluginsmode5">Summary</label>
             <label index="all">All</label>
             <label index="filterByCat">Filter by category</label>
@@ -96,7 +98,9 @@
             <label index="pluginsmode1">Liste de tous les plugins</label>
             <label index="pluginsmode2">Liste de tous les types de contenu</label>
             <label index="pluginsmode3">Liste de tous les types de contenu utilisés</label>
+            <label index="pluginsmode3hidden">Liste de tous les types de contenu utilisés (et cachés)</label>
             <label index="pluginsmode4">Liste de tous les plugins utilisés</label>
+            <label index="pluginsmode4hidden">Liste de tous les plugins utilisés (et cachés)</label>
             <label index="pluginsmode5">Resumé</label>
             <label index="all">Tous</label>
             <label index="filterByCat">Filtrer par catégorie</label>
