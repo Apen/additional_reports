@@ -1,3 +1,6 @@
+2011-05-06 CERDAN Yohann <cerdanyohann@yahoo.fr>
+	* In extension list mode, add a shadowbox to the db part
+	* Add a ExtDirect list module (in 4.5>= only)
 2011-04-13 CERDAN Yohann <cerdanyohann@yahoo.fr>
     * In plugins and contents list, add the possibility to show hidden pages/contents
 2011-04-11 CERDAN Yohann <cerdanyohann@yahoo.fr>

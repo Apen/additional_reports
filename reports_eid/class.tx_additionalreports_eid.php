@@ -60,7 +60,6 @@ class tx_additionalreports_eid implements tx_reports_Report {
     public function getReport() {
         $content = '';
         $this->reportObject->doc->getPageRenderer()->addCssFile(t3lib_extMgm::extRelPath('additional_reports') . 'tx_additionalreports.css');
-        // $content .= '<p class="help">' . $GLOBALS['LANG']->getLL('eid_description') . '</p>';
         $content .= $this->displayEID();
         return $content;
     }
@@ -86,7 +85,6 @@ class tx_additionalreports_eid implements tx_reports_Report {
             $content .= '<td class="cell">' . $itemKey . '</td>';
             $content .= '<td class="cell">' . $itemValue . '</td>';
             $content .= '</tr>';
-
         }
         $content .= '</table>';
         return $content;

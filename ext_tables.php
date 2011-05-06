@@ -3,6 +3,9 @@ if (!defined('TYPO3_MODE')) die ('Access denied.');
 
 if (TYPO3_MODE == 'BE') {
 	$reports = array('eid', 'clikeys', 'plugins', 'xclass', 'hooks', 'status', 'ajax', 'extensions');
+	if (t3lib_div::int_from_ver(TYPO3_version) >= 4005000) {
+		$reports [] = 'extdirect';
+	}
 	foreach ($reports as $report) {
 		$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['reports'][$_EXTKEY][$report] = array(
 			'title' => 'LLL:EXT:' . $_EXTKEY . '/locallang.xml:' . $report . '_title',
