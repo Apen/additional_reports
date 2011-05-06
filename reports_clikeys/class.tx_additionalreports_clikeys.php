@@ -61,7 +61,6 @@ class tx_additionalreports_clikeys implements tx_reports_Report {
     {
         $content = '';
         $this->reportObject->doc->getPageRenderer()->addCssFile(t3lib_extMgm::extRelPath('additional_reports') . 'tx_additionalreports.css');
-        // $content .= '<p class="help">' . $GLOBALS['LANG']->getLL('clikeys_description') . '</p>';
         $content .= $this->displayCliKeys();
         return $content;
     }

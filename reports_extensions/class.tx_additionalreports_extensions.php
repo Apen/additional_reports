@@ -26,8 +26,8 @@
  * This class provides a report displaying a list of informations
  * Code inspired by EXT:dam/lib/class.tx_dam_svlist.php by Rene Fritz
  *
- * @author        CERDAN Yohann <cerdanyohann@yahoo.fr>
- * @package        TYPO3
+ * @author		CERDAN Yohann <cerdanyohann@yahoo.fr>
+ * @package		TYPO3
  */
 
 class tx_additionalreports_extensions implements tx_reports_Report
@@ -36,7 +36,7 @@ class tx_additionalreports_extensions implements tx_reports_Report
 	/**
 	 * Back-reference to the calling reports module
 	 *
-	 * @var    tx_reports_Module    $reportObject
+	 * @var	tx_reports_Module	$reportObject
 	 */
 
 	protected $reportObject;
@@ -44,7 +44,7 @@ class tx_additionalreports_extensions implements tx_reports_Report
 	/**
 	 * Constructor for class tx_additionalreports_extensions
 	 *
-	 * @param    tx_reports_Module    Back-reference to the calling reports module
+	 * @param	tx_reports_Module	Back-reference to the calling reports module
 	 */
 
 	public function __construct(tx_reports_Module $reportObject)
@@ -56,7 +56,7 @@ class tx_additionalreports_extensions implements tx_reports_Report
 	/**
 	 * This method renders the report
 	 *
-	 * @return    string    The status report as HTML
+	 * @return	string	The status report as HTML
 	 */
 
 	public function getReport()
@@ -65,7 +65,6 @@ class tx_additionalreports_extensions implements tx_reports_Report
 		$this->reportObject->doc->getPageRenderer()->addCssFile(t3lib_extMgm::extRelPath('additional_reports') . 'tx_additionalreports.css');
 		$this->reportObject->doc->getPageRenderer()->addCssFile(t3lib_extMgm::extRelPath('additional_reports') . 'libs/shadowbox.css');
 		$this->reportObject->doc->getPageRenderer()->addJsFile(t3lib_extMgm::extRelPath('additional_reports') . 'libs/shadowbox.js');
-		// $content .= '<p class="help">' . $GLOBALS['LANG']->getLL('eid_description') . '</p>';
 		$content .= $this->displayEID();
 		return $content;
 	}
@@ -98,19 +97,18 @@ class tx_additionalreports_extensions implements tx_reports_Report
 		}
 
 		$content .= '<script type="text/javascript">Shadowbox.init({displayNav:true,displayCounter:false,overlayOpacity:0.8});</script>';
-
 		$content .= '<table cellspacing="1" cellpadding="2" border="0" class="tx_sv_reportlist typo3-dblist">';
-		$content .= '<tr class="t3-row-header"><td colspan="7">';
+		$content .= '<tr class="t3-row-header"><td colspan="15">';
 		$content .= $GLOBALS['LANG']->getLL('extensions_description');
 		$content .= '</td></tr>';
 		$content .= '<tr class="c-headLine">';
 		$content .= '<td class="cell"></td>';
-		$content .= '<td class="cell" width="250">' . $GLOBALS['LANG']->getLL('extension') . '</td>';
+		$content .= '<td class="cell" width="150" colspan="2">' . $GLOBALS['LANG']->getLL('extension') . '</td>';
 		$content .= '<td class="cell" width="40" style="text-align:center;">' . $GLOBALS['LANG']->getLL('status_version') . '</td>';
 		$content .= '<td class="cell" width="40" style="text-align:center;">' . $GLOBALS['LANG']->getLL('status_lastversion') . '</td>';
-		$content .= '<td class="cell">' . $GLOBALS['LANG']->getLL('extensions_tables') . '</td>';
+		$content .= '<td class="cell" colspan="2">' . $GLOBALS['LANG']->getLL('extensions_tables') . '</td>';
 		$content .= '<td class="cell" width="80" style="text-align:center;">' . $GLOBALS['LANG']->getLL('extensions_tablesintegrity') . '</td>';
-		$content .= '<td class="cell">' . $GLOBALS['LANG']->getLL('extensions_files') . '</td>';
+		$content .= '<td class="cell" colspan="2">' . $GLOBALS['LANG']->getLL('extensions_files') . '</td>';
 		$content .= '</tr>';
 
 		$extensionsToUpdate = 0;
@@ -163,6 +161,7 @@ class tx_additionalreports_extensions implements tx_reports_Report
 				$content .= '<tr class="db_list_normal">';
 				$content .= '<td class="col-icon ' . $class . '"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . t3lib_extMgm::extRelPath($extKey) . 'ext_icon.gif"/></td>';
 				$content .= '<td class="' . $class . '">' . $extKey . '</td>';
+				$content .= '<td width="30" class="' . $class . '" align="center"><a href="#" onclick="top.goToModule(\'tools_em\', 1, \'CMD[showExt]=' . $extKey . '&SET[singleDetails]=info\')"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/zoom.gif"/></a></td>';
 				$content .= '<td class="' . $class . '" align="center">' . $itemValue['EM_CONF']['version'] . '</td>';
 
 				if (version_compare($itemValue['EM_CONF']['version'], $lastVersion, '<')) {
@@ -172,39 +171,43 @@ class tx_additionalreports_extensions implements tx_reports_Report
 					$content .= '<td class="' . $class . '" align="center">' . $lastVersion . '</td>';
 				}
 
+				// show db
 				$dump_tf = '';
 				if (count($FDfile) > 0) {
 					$id = 'sql' . $extKey;
-					$dump_tf = count($FDfile) . ' ' . $GLOBALS['LANG']->getLL('extensions_tablesmodified') . ' <input type="button" onclick="$(\'' . $id . '\').toggle();" value="+"/><div style="display:none;" id="' . $id . '"><br/>' . t3lib_div::view_array($FDfile) . '</div>';
+					$dump_tf1 = count($FDfile) . ' ' . $GLOBALS['LANG']->getLL('extensions_tablesmodified');
+					$dump_tf2 = '<input type="button" onclick="Shadowbox.open({content:\'<div>\'+$(\'' . $id . '\').innerHTML+\'</div>\',player:\'html\',title:\'' . $extKey . '\',height:600,width:800});"'
+								. ' value="+"/><div style="display:none;" id="' . $id . '">'
+								. $this->view_array($FDfile) . '</div>';
 				}
-				$content .= '<td class="' . $class . '">' . $dump_tf . '</td>';
+				$content .= '<td class="' . $class . '">' . $dump_tf1 . '</td>';
+				$content .= '<td width="30" class="' . $class . '">' . $dump_tf2 . '</td>';
 
+				// need db update
 				if (count($update_statements) > 0) {
 					$content .= '<td class="' . $class . '" align="center"><span style="color:red;font-weight:bold;">' . $GLOBALS['LANG']->getLL('yes') . '</span></td>';
 				} else {
 					$content .= '<td class="' . $class . '" align="center">' . $GLOBALS['LANG']->getLL('no') . '</td>';
 				}
 
-
+				// modified files
 				if ((count($affectedFiles) > 0) && ($lastVersion != '/')) {
 					$extensionsModified++;
 					$id = 'files' . $extKey;
 					$content .= '<td class="' . $class . '"><span style="color:red;font-weight:bold;">' . count($affectedFiles) . ' ' . $GLOBALS['LANG']->getLL('extensions_filesmodified') . '</span>';
-					$content .= '  <input type="button" onclick="$(\'' . $id . '\').toggle();" value="+"/><div style="display:none;" id="' . $id . '">';
-					$content .= '<ul>';
+					$content .= '<div style="display:none;" id="' . $id . '"><ul>';
 					foreach ($affectedFiles as $affectedFile) {
 						$compareURL = t3lib_div::getIndpEnv('TYPO3_SITE_URL') . ('index.php?eID=additional_reports_compareFiles&extKey=' . $extKey . '&extFile=' . $affectedFile . '&extVersion=' . $lastVersion);
-						$content .= '<li><a rel="shadowbox;height=600;width=800;" href = "' . $compareURL . '" target = "_blank" > ' . $affectedFile . '</a ></li >';
+						$content .= '<li><a rel="shadowbox;height=600;width=800;" href = "' . $compareURL . '" target = "_blank" title="' . $affectedFile . '" > ' . $affectedFile . '</a ></li >';
 					}
 					$content .= '</ul>';
 					$content .= '</div></td>';
+					$content .= '<td width="30" class="' . $class . '" align="center"><input type="button" onclick="$(\'' . $id . '\').toggle();" value="+"/></td>';
 				} else {
-					$content .= '<td class="' . $class . '"></td>';
+					$content .= '<td class="' . $class . '"></td><td class="' . $class . '"></td>';
 				}
-
 				$content .= '</tr>';
 			}
-
 		}
 		$content .= '</table>';
 
@@ -254,6 +257,49 @@ class tx_additionalreports_extensions implements tx_reports_Report
 				<div class="message-body"></div>
 			</div>
 		';
+	}
+
+	protected function view_array($array_in)
+	{
+		if (is_array($array_in)) {
+			$result = '
+			<table border="1" cellpadding="1" cellspacing="0" bgcolor="white" width="100%">';
+			if (count($array_in) == 0) {
+				$result .= '<tr><td><font face="Verdana,Arial" size="1"><strong>EMPTY!</strong></font></td></tr>';
+			} else {
+				foreach ($array_in as $key => $val) {
+					$result .= '<tr>
+						<td valign="top"><font face="Verdana,Arial" size="1">' . htmlspecialchars((string)$key) . '</font></td>
+						<td>';
+					if (is_array($val)) {
+						$result .= self::view_array($val);
+					} elseif (is_object($val)) {
+						$string = get_class($val);
+						if (method_exists($val, '__toString')) {
+							$string .= ': ' . (string)$val;
+						}
+						$result .= '<font face="Verdana,Arial" size="1" color="red">' . nl2br(htmlspecialchars($string)) . '<br /></font>';
+					} else {
+						if (gettype($val) == 'object') {
+							$string = 'Unknown object';
+						} else {
+							$string = (string)$val;
+						}
+						$result .= '<font face="Verdana,Arial" size="1" color="red">' . nl2br(htmlspecialchars($string)) . '<br /></font>';
+					}
+					$result .= '</td>
+					</tr>';
+				}
+			}
+			$result .= '</table>';
+		} else {
+			$result = '<table border="0" cellpadding="1" cellspacing="0" bgcolor="white">
+				<tr>
+					<td><font face="Verdana,Arial" size="1" color="red">' . nl2br(htmlspecialchars((string)$array_in)) . '<br /></font></td>
+				</tr>
+			</table>'; // Output it as a string.
+		}
+		return $result;
 	}
 
 }

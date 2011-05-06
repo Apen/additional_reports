@@ -60,7 +60,6 @@ class tx_additionalreports_ajax implements tx_reports_Report {
     public function getReport() {
         $content = '';
         $this->reportObject->doc->getPageRenderer()->addCssFile(t3lib_extMgm::extRelPath('additional_reports') . 'tx_additionalreports.css');
-        // $content .= '<p class="help">' . $GLOBALS['LANG']->getLL('ajax_description') . '</p>';
         $content .= $this->displayAjax();
         return $content;
     }
@@ -81,7 +80,6 @@ class tx_additionalreports_ajax implements tx_reports_Report {
             $content .= '<td class="cell">typo3/ajax.php?ajaxID=<strong>' . $itemKey . '</strong></td>';
             $content .= '<td class="cell">' . $itemValue . '</td>';
             $content .= '</tr>';
-
         }
         $content .= '</table>';
         return $content;
