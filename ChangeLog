@@ -1,3 +1,7 @@
+2011-05-08 CERDAN Yohann <cerdanyohann@yahoo.fr>
+	* Update some labels
+	* Bug on a label in plugins mode
+ 	* Add a german version (thanks to Stefan Galinski)
 2011-05-06 CERDAN Yohann <cerdanyohann@yahoo.fr>
 	* In extension list mode, add a shadowbox to the db part
 	* Add a ExtDirect list module (in 4.5>= only)
