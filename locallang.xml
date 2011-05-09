@@ -40,7 +40,7 @@
 			<label index="ajax_description">List of all the ajax.php methods with informations and status for each of them.</label>
 			<label index="eid_title">Additional reports - eID</label>
 			<label index="eid_description">List of all the eID with informations and status for each of them.</label>
-			<label index="extdirect_title">Additional reports - </label>
+			<label index="extdirect_title">Additional reports - ExtDirect</label>
 			<label index="extdirect_description">List of all the ExtDirect with informations and status for each of them.</label>
 			<label index="clikeys_title">Additional reports - cliKeys</label>
 			<label index="clikeys_description">List of all the cliKeys with informations and status for each of them.</label>
@@ -156,6 +156,82 @@
 			<label index="extensions_ter">extension(s) du TER</label>
 			<label index="extensions_extensionsmodified">extension(s) modifiée(s)</label>
 			<label index="extensions_updateter">Vous devez mettre à jour la liste des extensions dans l'Extension Manager.</label>
+		</languageKey>
+		<languageKey index="de" type="array">
+			<label index="ajax_description">Auflistung aller registrierten ajax.php-Methoden mit Informationen</label>
+			<label index="ajax_title">Zusatzbericht - AJAX (ajax.php)</label>
+			<label index="all">Alle</label>
+			<label index="clikeys_description">Auflistung aller vorhandenen cliKeys mit Informationen</label>
+			<label index="clikeys_title">Zusatzbericht - cliKeys</label>
+			<label index="content">Inhalt</label>
+			<label index="ctype">Inhaltstyp</label>
+			<label index="eid_description">Auflistung aller eID-Skripte mit Informationen</label>
+			<label index="eid_title">Zusatzbericht - AJAX (eID)</label>
+			<label index="eminfo">Erweiterungsmanager</label>
+			<label index="emlink">EM-Link</label>
+			<label index="extdirect_description">Auflistung aller ExtDirect-Klassen mit Informationen</label>
+			<label index="extdirect_title">Zusatzbericht - AJAX (ExtDirect)</label>
+			<label index="extension">Erweiterung</label>
+			<label index="extensions_description">Auflistung aller Erweiterungen mit Informationen</label>
+			<label index="extensions_dev">Spezifische Entwicklung(en)</label>
+			<label index="extensions_extensions">Geladene Erweiterung(en)</label>
+			<label index="extensions_extensionsmodified">Modifizierte Erweiterung(en)</label>
+			<label index="extensions_files">Modifizierte Dateien</label>
+			<label index="extensions_filesmodified">Modifizierte Dateien in dieser Erweiterung</label>
+			<label index="extensions_tables">Tabellen und Felder</label>
+			<label index="extensions_tablesintegrity">Datenbank-Aktualisierung benötigt?</label>
+			<label index="extensions_tablesmodified">DB-Tabellen in dieser Erweiterung</label>
+			<label index="extensions_ter">Erweiterung(en) aus dem TER</label>
+			<label index="extensions_title">Zusatzbericht - Geladene Erweiterungen</label>
+			<label index="extensions_toupdate">Aktualisierbare Erweiterungen</label>
+			<label index="extensions_updateter">Btte aktualisieren Sie die Erweiterungsliste, um aktuelle Daten angezeigt zu bekommen.</label>
+			<label index="filterByCat">Filtern nach Kategorie</label>
+			<label index="hooks_core">Core-Hooks</label>
+			<label index="hooks_corefile">Core-Datei</label>
+			<label index="hooks_description">Auflistung aller Hooks mit Namen und Pfad</label>
+			<label index="hooks_extension">Hooks in Erweiterungen (Experimentell)</label>
+			<label index="hooks_file">Datei oder Klasse</label>
+			<label index="hooks_line">Zeilenangabe der Hook-Registrierung in der ext_localconf.php der Erweiterung</label>
+			<label index="hooks_name">Hook-Name</label>
+			<label index="hooks_title">Zusatzbericht - Hooks</label>
+			<label index="locallang">Locallang</label>
+			<label index="name">Name</label>
+			<label index="no">Nein</label>
+			<label index="noresults">Keine Ergebnisse zum Anzeigen</label>
+			<label index="pagetitle">Seitentitel</label>
+			<label index="path">Pfad</label>
+			<label index="pid">Seiten-ID</label>
+			<label index="plugin">Plugin</label>
+			<label index="plugins_description">Eine Auflistung aller Plugins und Inhaltstypen mit Informationen. Hierdurch können Sie prüfen, welche davon auf diesem System im Einsatz bzw. wo diese
+				genutzt werden.
+			</label>
+			<label index="plugins_title">Zusatzbericht - Plugins &amp; Inhaltstypen</label>
+			<label index="pluginschoose">Anzeigemodus auswählen:</label>
+			<label index="pluginsmode1">Liste aller Plugins</label>
+			<label index="pluginsmode2">Liste aller Inhaltstypen</label>
+			<label index="pluginsmode3">Liste der benutzten Inhaltstypen</label>
+			<label index="pluginsmode3hidden">Liste der benutzten Inhaltstypen (berücksichtigt versteckte Inhalte)</label>
+			<label index="pluginsmode4">Liste der benutzten Plugins</label>
+			<label index="pluginsmode4hidden">Liste der benutzten Plugins (berücksichtigt versteckte Inhalte)</label>
+			<label index="pluginsmode5">Zusammenfassung</label>
+			<label index="pluginssubmit">Anzeigen</label>
+			<label index="references">Referenzen</label>
+			<label index="status_description">Auflistung nützlicher Informationen zum System</label>
+			<label index="status_im">ImageMagick</label>
+			<label index="status_lastversion">Letzte Version</label>
+			<label index="status_loadedextensions">Geladene Erweiterungen</label>
+			<label index="status_nocrontab">Kein Crontab</label>
+			<label index="status_path">Pfad</label>
+			<label index="status_sitename">Seitenname</label>
+			<label index="status_title">Zusatzbericht - Allgemeiner Status</label>
+			<label index="status_version">Version</label>
+			<label index="tvused">Benutzt durch TemplaVoila?</label>
+			<label index="uid">Inhalts-Id</label>
+			<label index="used">Benutzt?</label>
+			<label index="user">Backend-Benutzer</label>
+			<label index="xclass_description">Auflistung aller XCLASS-Registrierungen mit Namen und Pfad</label>
+			<label index="xclass_title">Zusatzbericht - XCLASS</label>
+			<label index="yes">Ja</label>
 		</languageKey>
 	</data>
 </T3locallang>
