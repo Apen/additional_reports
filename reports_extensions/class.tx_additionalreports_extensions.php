@@ -197,8 +197,8 @@ class tx_additionalreports_extensions implements tx_reports_Report
 					$content .= '<td class="' . $class . '"><span style="color:red;font-weight:bold;">' . count($affectedFiles) . ' ' . $GLOBALS['LANG']->getLL('extensions_filesmodified') . '</span>';
 					$content .= '<div style="display:none;" id="' . $id . '"><ul>';
 					foreach ($affectedFiles as $affectedFile) {
-						$compareURL = t3lib_div::getIndpEnv('TYPO3_SITE_URL') . ('index.php?eID=additional_reports_compareFiles&extKey=' . $extKey . '&extFile=' . $affectedFile . '&extVersion=' . $lastVersion);
-						$content .= '<li><a rel="shadowbox;height=600;width=800;" href = "' . $compareURL . '" target = "_blank" title="' . $affectedFile . '" > ' . $affectedFile . '</a ></li >';
+						$compareURL = t3lib_div::getIndpEnv('TYPO3_SITE_URL') . ('index.php?eID=additional_reports_compareFiles&extKey=' . $extKey . '&extFile=' . $affectedFile . '&extVersion=' . $itemValue['EM_CONF']['version']);
+						$content .= '<li><a rel="shadowbox;height=600;width=800;" href = "' . $compareURL . '" target = "_blank" title="' . $affectedFile . ' : ' . $itemValue['EM_CONF']['version'] . '" > ' . $affectedFile . '</a ></li >';
 					}
 					$content .= '</ul>';
 					$content .= '</div></td>';

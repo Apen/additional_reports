@@ -1,3 +1,6 @@
+2011-05-10 CERDAN Yohann <cerdanyohann@yahoo.fr>
+	* Now compare the local version of a file to the same TER version (before it was the last version)
+	* Ignore blank spaces in diff (-b option)
 2011-05-08 CERDAN Yohann <cerdanyohann@yahoo.fr>
 	* Update some labels
 	* Bug on a label in plugins mode
