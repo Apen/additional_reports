@@ -22,7 +22,7 @@ t3Diff($file1, $file2);
 function t3Diff($file1, $file2)
 {
 	$diff = t3lib_div::makeInstance('t3lib_diff');
-	$diff->diffOptions = '-u';
+	$diff->diffOptions = '-bu';
 	$sourcesDiff = $diff->getDiff(t3lib_div::getURL($file1), t3lib_div::getURL($file2));
 	$sourcesDiff[0] = $file1;
 	$sourcesDiff[1] = $file2;
