@@ -47,10 +47,9 @@ class tx_additionalreports_extdirect implements tx_reports_Report
 	 * @param	tx_reports_Module	Back-reference to the calling reports module
 	 */
 
-	public function __construct(tx_reports_Module $reportObject)
-	{
+	public function __construct(tx_reports_Module $reportObject) {
 		$this->reportObject = $reportObject;
-		$GLOBALS['LANG']->includeLLFile('EXT:additional_reports/locallang.xml');
+		tx_additionalreports_main::init();
 	}
 
 	/**
@@ -59,34 +58,9 @@ class tx_additionalreports_extdirect implements tx_reports_Report
 	 * @return	string	The status report as HTML
 	 */
 
-	public function getReport()
-	{
-		$content = '';
+	public function getReport() {
 		$this->reportObject->doc->getPageRenderer()->addCssFile(t3lib_extMgm::extRelPath('additional_reports') . 'tx_additionalreports.css');
-		$content .= $this->displayextdirect();
-		return $content;
-	}
-
-	protected function displayextdirect()
-	{
-		$content = '';
-		$items = $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ExtDirect'];
-		$content .= '<table cellspacing="1" cellpadding="2" border="0" class="tx_sv_reportlist typo3-dblist">';
-		$content .= '<tr class="t3-row-header"><td colspan="7">';
-		$content .= $GLOBALS['LANG']->getLL('extdirect_description');
-		$content .= '</td></tr>';
-		$content .= '<tr class="c-headLine">';
-		$content .= '<td class="cell">' . $GLOBALS['LANG']->getLL('name') . '</td>';
-		$content .= '<td class="cell">' . $GLOBALS['LANG']->getLL('path') . '</td>';
-		$content .= '</tr>';
-		foreach ($items as $itemKey => $itemValue) {
-			preg_match('/EXT:(.*?)\//', $itemValue, $ext);
-			$content .= '<tr class="db_list_normal">';
-			$content .= '<td class="cell">' . $itemKey . '</td>';
-			$content .= '<td class="cell">' . $itemValue . '</td>';
-			$content .= '</tr>';
-		}
-		$content .= '</table>';
+		$content = tx_additionalreports_main::displayExtDirect();
 		return $content;
 	}
 

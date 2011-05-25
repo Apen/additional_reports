@@ -37,7 +37,8 @@
 			<label index="no">No</label>
 			<label index="emlink">EM Link</label>
 			<label index="ajax_title">Additional reports - ajax</label>
-			<label index="ajax_description">List of all the ajax.php methods with informations and status for each of them.</label>
+			<label index="ajax_description">List of all the ajax.php methods with informations and status for each of them.
+			</label>
 			<label index="eid_title">Additional reports - eID</label>
 			<label index="eid_description">List of all the eID with informations and status for each of them.</label>
 			<label index="extdirect_title">Additional reports - ExtDirect</label>
@@ -45,7 +46,8 @@
 			<label index="clikeys_title">Additional reports - cliKeys</label>
 			<label index="clikeys_description">List of all the cliKeys with informations and status for each of them.</label>
 			<label index="plugins_title">Additional reports - plugins &amp; content type</label>
-			<label index="plugins_description">List of all the plugins and contents type with informations and status for each of them. With this report you can easily know if a plugin or a content
+			<label index="plugins_description">List of all the plugins and contents type with informations and status for each of
+				them. With this report you can easily know if a plugin or a content
 				type is used on the system (and where it is used).
 			</label>
 			<label index="xclass_title">Additional reports - XCLASS</label>
@@ -80,6 +82,12 @@
 			<label index="extensions_ter">extension(s) from the TER</label>
 			<label index="extensions_extensionsmodified">modified extension(s)</label>
 			<label index="extensions_updateter">You need to update the extension list in the Extension Manager.</label>
+			<label index="first">First</label>
+			<label index="previous">Previous</label>
+			<label index="next">Next</label>
+			<label index="last">Last</label>
+			<label index="pageIndicator">Page %1$s of %2$d</label>
+			<label index="rangeIndicator">Records %1$d - %2$d</label>
 		</languageKey>
 		<languageKey index="fr" type="array">
 			<label index="noresults">Aucune donnée à afficher</label>
@@ -121,7 +129,8 @@
 			<label index="clikeys_title">Additional reports - cliKeys</label>
 			<label index="clikeys_description">Liste de tous les cliKeys avec des informations pour chacun.</label>
 			<label index="plugins_title">Additional reports - plugins &amp; content type</label>
-			<label index="plugins_description">Liste de tous les plugins et types de contenu avec des informations pour chacun. Avec ce module, vous pouvez facilement savoir si un plugin ou un type de
+			<label index="plugins_description">Liste de tous les plugins et types de contenu avec des informations pour chacun.
+				Avec ce module, vous pouvez facilement savoir si un plugin ou un type de
 				contenu est utilisé (et où il est utilisé).
 			</label>
 			<label index="xclass_title">Additional reports - XCLASS</label>
@@ -144,7 +153,8 @@
 			<label index="status_loadedextensions">Extensions chargées</label>
 			<label index="status_nocrontab">Pas de tâche planifiée</label>
 			<label index="extensions_title">Additional reports - liste des extensions chargées</label>
-			<label index="extensions_description">Liste de toutes les extensions avec des informations utiles pour chacune.</label>
+			<label index="extensions_description">Liste de toutes les extensions avec des informations utiles pour chacune.
+			</label>
 			<label index="extensions_tables">Tables et champs</label>
 			<label index="extensions_tablesintegrity">Mise à jour de la BD ?</label>
 			<label index="extensions_files">Fichiers modifiés !!!</label>
@@ -156,6 +166,12 @@
 			<label index="extensions_ter">extension(s) du TER</label>
 			<label index="extensions_extensionsmodified">extension(s) modifiée(s)</label>
 			<label index="extensions_updateter">Vous devez mettre à jour la liste des extensions dans l'Extension Manager.</label>
+			<label index="first">Premier</label>
+			<label index="previous">Précédent</label>
+			<label index="next">Suivant</label>
+			<label index="last">Dernier</label>
+			<label index="pageIndicator">Page %1$s sur %2$d</label>
+			<label index="rangeIndicator">Enregistrements %1$d - %2$d</label>
 		</languageKey>
 		<languageKey index="de" type="array">
 			<label index="ajax_description">Auflistung aller registrierten ajax.php-Methoden mit Informationen</label>
@@ -184,7 +200,9 @@
 			<label index="extensions_ter">Erweiterung(en) aus dem TER</label>
 			<label index="extensions_title">Zusatzbericht - Geladene Erweiterungen</label>
 			<label index="extensions_toupdate">Aktualisierbare Erweiterungen</label>
-			<label index="extensions_updateter">Btte aktualisieren Sie die Erweiterungsliste, um aktuelle Daten angezeigt zu bekommen.</label>
+			<label index="extensions_updateter">Btte aktualisieren Sie die Erweiterungsliste, um aktuelle Daten angezeigt zu
+				bekommen.
+			</label>
 			<label index="filterByCat">Filtern nach Kategorie</label>
 			<label index="hooks_core">Core-Hooks</label>
 			<label index="hooks_corefile">Core-Datei</label>
@@ -202,7 +220,8 @@
 			<label index="path">Pfad</label>
 			<label index="pid">Seiten-ID</label>
 			<label index="plugin">Plugin</label>
-			<label index="plugins_description">Eine Auflistung aller Plugins und Inhaltstypen mit Informationen. Hierdurch können Sie prüfen, welche davon auf diesem System im Einsatz bzw. wo diese
+			<label index="plugins_description">Eine Auflistung aller Plugins und Inhaltstypen mit Informationen. Hierdurch können
+				Sie prüfen, welche davon auf diesem System im Einsatz bzw. wo diese
 				genutzt werden.
 			</label>
 			<label index="plugins_title">Zusatzbericht - Plugins &amp; Inhaltstypen</label>
