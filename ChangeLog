@@ -1,3 +1,7 @@
+2011-05-25 CERDAN Yohann <cerdanyohann@yahoo.fr>
+	* Small bugfixes
+	* Complete refactoring
+	* Add a support for version lower than 4.3 (with a module instead of reports)
 2011-05-10 CERDAN Yohann <cerdanyohann@yahoo.fr>
 	* Now compare the local version of a file to the same TER version (before it was the last version)
 	* Ignore blank spaces in diff (-b option)

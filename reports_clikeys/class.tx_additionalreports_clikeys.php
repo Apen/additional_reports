@@ -30,74 +30,43 @@
  * @package TYPO3
  */
 
-class tx_additionalreports_clikeys implements tx_reports_Report {
-    /**
-     * Back-reference to the calling reports module
-     *
-     * @var tx_reports_Module $reportObject
-     */
+class tx_additionalreports_clikeys implements tx_reports_Report
+{
+	/**
+	 * Back-reference to the calling reports module
+	 *
+	 * @var tx_reports_Module $reportObject
+	 */
 
-    protected $reportObject;
+	protected $reportObject;
 
-    /**
-     * Constructor for class tx_additionalreports_clikeys
-     *
-     * @param tx_reports_Module $ Back-reference to the calling reports module
-     */
+	/**
+	 * Constructor for class tx_additionalreports_clikeys
+	 *
+	 * @param tx_reports_Module $ Back-reference to the calling reports module
+	 */
 
-    public function __construct(tx_reports_Module $reportObject)
-    {
-        $this->reportObject = $reportObject;
-        $GLOBALS['LANG']->includeLLFile('EXT:additional_reports/locallang.xml');
-    }
+	public function __construct(tx_reports_Module $reportObject) {
+		$this->reportObject = $reportObject;
+		tx_additionalreports_main::init();
+	}
 
-    /**
-     * This method renders the report
-     *
-     * @return string The status report as HTML
-     */
+	/**
+	 * This method renders the report
+	 *
+	 * @return string The status report as HTML
+	 */
 
-    public function getReport()
-    {
-        $content = '';
-        $this->reportObject->doc->getPageRenderer()->addCssFile(t3lib_extMgm::extRelPath('additional_reports') . 'tx_additionalreports.css');
-        $content .= $this->displayCliKeys();
-        return $content;
-    }
+	public function getReport() {
+		$this->reportObject->doc->getPageRenderer()->addCssFile(t3lib_extMgm::extRelPath('additional_reports') . 'tx_additionalreports.css');
+		$content = tx_additionalreports_main::displayCliKeys();
+		return $content;
+	}
 
-    protected function displayCliKeys()
-    {
-        $content = '';
-        $items = $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['GLOBAL']['cliKeys'];
-        $content .= '<table cellspacing="1" cellpadding="2" border="0" class="tx_sv_reportlist typo3-dblist">';
-        $content .= '<tr class="t3-row-header"><td colspan="7">';
-        $content .= $GLOBALS['LANG']->getLL('clikeys_description');
-        $content .= '</td></tr>';
-        $content .= '<tr class="c-headLine">';
-        $content .= '<td class="cell"></td>';
-        $content .= '<td class="cell">' . $GLOBALS['LANG']->getLL('extension') . '</td>';
-        $content .= '<td class="cell">' . $GLOBALS['LANG']->getLL('name') . '</td>';
-        $content .= '<td class="cell">' . $GLOBALS['LANG']->getLL('path') . '</td>';
-        $content .= '<td class="cell">' . $GLOBALS['LANG']->getLL('user') . '</td>';
-        $content .= '</tr>';
-
-        foreach ($items as $itemKey => $itemValue) {
-            preg_match('/EXT:(.*?)\//', $itemValue[0], $ext);
-            $content .= '<tr class="db_list_normal">';
-            $content .= '<td class="col-icon"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . t3lib_extMgm::extRelPath($ext[1]) . 'ext_icon.gif"/></td>';
-            $content .= '<td class="cell">' . $ext[1] . '</td>';
-            $content .= '<td class="cell">' . $itemKey . '</td>';
-            $content .= '<td class="cell">' . $itemValue[0] . '</td>';
-            $content .= '<td class="cell">' . $itemValue[1] . '</td>';
-            $content .= '</tr>';
-        }
-        $content .= '</table>';
-        return $content;
-    }
 }
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/additional_reports/reports_clikeys/class.tx_additionalreports_clikeys.php']) {
-    include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/additional_reports/reports_clikeys/class.tx_additionalreports_clikeys.php']);
+	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/additional_reports/reports_clikeys/class.tx_additionalreports_clikeys.php']);
 }
 
 ?>
