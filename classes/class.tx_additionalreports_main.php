@@ -187,6 +187,7 @@ class tx_additionalreports_main
 				$extKey = $itemKey;
 				$extInfo = $itemValue;
 				$FDfile = array();
+				$update_statements = array();
 
 				if (t3lib_div::int_from_ver(TYPO3_version) <= 4005000) {
 					$currentMd5Array = $em->serverExtensionMD5Array($extKey, $extInfo);
@@ -682,17 +683,31 @@ class tx_additionalreports_main
 		$url = $this->baseURL;
 		$content = '<table>';
 		$content .= '<tr>';
-		$content .= '<td><input onClick="jumpToUrl(\'' . $url . '&display=1\');" style="margin-right:4px;" type="radio" name="display" value="1" id="radio1"' . (($this->display == 1) ? ' checked="checked"' : '') . '/><label for="radio1" style="margin-right:10px;">' . $GLOBALS['LANG']->getLL('pluginsmode1') . '</label></td>';
-		$content .= '<td><input onClick="jumpToUrl(\'' . $url . '&display=4\');" style="margin-right:4px;" type="radio" name="display" value="4" id="radio4"' . (($this->display == 4) ? ' checked="checked"' : '') . '/><label for="radio4" style="margin-right:10px;">' . $GLOBALS['LANG']->getLL('pluginsmode4') . '</label></td>';
-		$content .= '<td><input onClick="jumpToUrl(\'' . $url . '&display=6\');" style="margin-right:4px;" type="radio" name="display" value="6" id="radio6"' . (($this->display == 6) ? ' checked="checked"' : '') . '/><label for="radio6" style="margin-right:10px;">' . $GLOBALS['LANG']->getLL('pluginsmode4hidden') . '</label></td>';
+		$content .= '<td><input onClick="jumpToUrl(\'' . $url . '&display=1\');" style="margin-right:4px;" type="radio" name="display" value="1" id="radio1"' . (($this->display == 1)
+				? ' checked="checked"'
+				: '') . '/><label for="radio1" style="margin-right:10px;">' . $GLOBALS['LANG']->getLL('pluginsmode1') . '</label></td>';
+		$content .= '<td><input onClick="jumpToUrl(\'' . $url . '&display=4\');" style="margin-right:4px;" type="radio" name="display" value="4" id="radio4"' . (($this->display == 4)
+				? ' checked="checked"'
+				: '') . '/><label for="radio4" style="margin-right:10px;">' . $GLOBALS['LANG']->getLL('pluginsmode4') . '</label></td>';
+		$content .= '<td><input onClick="jumpToUrl(\'' . $url . '&display=6\');" style="margin-right:4px;" type="radio" name="display" value="6" id="radio6"' . (($this->display == 6)
+				? ' checked="checked"'
+				: '') . '/><label for="radio6" style="margin-right:10px;">' . $GLOBALS['LANG']->getLL('pluginsmode4hidden') . '</label></td>';
 		$content .= '</tr>';
 		$content .= '<tr>';
-		$content .= '<td><input onClick="jumpToUrl(\'' . $url . '&display=2\');" style="margin-right:4px;" type="radio" name="display" value="2" id="radio2"' . (($this->display == 2) ? ' checked="checked"' : '') . '/><label for="radio2" style="margin-right:10px;">' . $GLOBALS['LANG']->getLL('pluginsmode2') . '</label></td>';
-		$content .= '<td><input onClick="jumpToUrl(\'' . $url . '&display=3\');" style="margin-right:4px;" type="radio" name="display" value="3" id="radio3"' . (($this->display == 3) ? ' checked="checked"' : '') . '/><label for="radio3" style="margin-right:10px;">' . $GLOBALS['LANG']->getLL('pluginsmode3') . '</label></td>';
-		$content .= '<td><input onClick="jumpToUrl(\'' . $url . '&display=7\');" style="margin-right:4px;" type="radio" name="display" value="7" id="radio7"' . (($this->display == 7) ? ' checked="checked"' : '') . '/><label for="radio7" style="margin-right:10px;">' . $GLOBALS['LANG']->getLL('pluginsmode3hidden') . '</label></td>';
+		$content .= '<td><input onClick="jumpToUrl(\'' . $url . '&display=2\');" style="margin-right:4px;" type="radio" name="display" value="2" id="radio2"' . (($this->display == 2)
+				? ' checked="checked"'
+				: '') . '/><label for="radio2" style="margin-right:10px;">' . $GLOBALS['LANG']->getLL('pluginsmode2') . '</label></td>';
+		$content .= '<td><input onClick="jumpToUrl(\'' . $url . '&display=3\');" style="margin-right:4px;" type="radio" name="display" value="3" id="radio3"' . (($this->display == 3)
+				? ' checked="checked"'
+				: '') . '/><label for="radio3" style="margin-right:10px;">' . $GLOBALS['LANG']->getLL('pluginsmode3') . '</label></td>';
+		$content .= '<td><input onClick="jumpToUrl(\'' . $url . '&display=7\');" style="margin-right:4px;" type="radio" name="display" value="7" id="radio7"' . (($this->display == 7)
+				? ' checked="checked"'
+				: '') . '/><label for="radio7" style="margin-right:10px;">' . $GLOBALS['LANG']->getLL('pluginsmode3hidden') . '</label></td>';
 		$content .= '</tr>';
 		$content .= '<tr>';
-		$content .= '<td><input onClick="jumpToUrl(\'' . $url . '&display=5\');" style="margin-right:4px;" type="radio" name="display" value="5" id="radio5"' . (($this->display == 5) ? ' checked="checked"' : '') . '/><label for="radio5" style="margin-right:10px;">' . $GLOBALS['LANG']->getLL('pluginsmode5') . '</label></td>';
+		$content .= '<td><input onClick="jumpToUrl(\'' . $url . '&display=5\');" style="margin-right:4px;" type="radio" name="display" value="5" id="radio5"' . (($this->display == 5)
+				? ' checked="checked"'
+				: '') . '/><label for="radio5" style="margin-right:10px;">' . $GLOBALS['LANG']->getLL('pluginsmode5') . '</label></td>';
 		$content .= '</tr>';
 		$content .= '</table><div class="uppercase"></div>';
 
@@ -842,8 +857,12 @@ class tx_additionalreports_main
 			$content .= '<td class="col-icon"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . '../typo3conf/ext/' . $ext[1] . '/ext_icon.gif"/></td>';
 			$content .= '<td class="cell">' . $ext[1] . '</td>';
 			$content .= '<td class="cell">' . $GLOBALS['LANG']->getLLL($llfile[2], $LOCAL_LANG) . ' (' . $itemValue['list_type'] . ')</td>';
-			$iconPage = ($itemValue['hiddenpages'] == 0) ? '<img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/i/pages.gif"/>' : '<img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/i/pages__h.gif"/>';
-			$iconContent = ($itemValue['hiddentt_content'] == 0) ? '<img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/i/tt_content.gif"/>' : '<img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/i/tt_content__h.gif"/>';
+			$iconPage = ($itemValue['hiddenpages'] == 0)
+					? '<img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/i/pages.gif"/>'
+					: '<img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/i/pages__h.gif"/>';
+			$iconContent = ($itemValue['hiddentt_content'] == 0)
+					? '<img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/i/tt_content.gif"/>'
+					: '<img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/i/tt_content__h.gif"/>';
 			$content .= '<td class="cell">' . $iconPage . ' ' . $itemValue['pid'] . '</td>';
 			$content .= '<td class="cell">' . $iconContent . ' ' . $itemValue['uid'] . '</td>';
 			$content .= '<td class="cell">' . $itemValue['title'] . '</td>';
@@ -986,8 +1005,12 @@ class tx_additionalreports_main
 			}
 			$content .= '</td>';
 			$content .= '<td class="cell">' . $GLOBALS['LANG']->getLLL($llfile[2], $LOCAL_LANG) . ' (' . $itemValue['CType'] . ')</td>';
-			$iconPage = ($itemValue['hiddenpages'] == 0) ? '<img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/i/pages.gif"/>' : '<img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/i/pages__h.gif"/>';
-			$iconContent = ($itemValue['hiddentt_content'] == 0) ? '<img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/i/tt_content.gif"/>' : '<img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/i/tt_content__h.gif"/>';
+			$iconPage = ($itemValue['hiddenpages'] == 0)
+					? '<img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/i/pages.gif"/>'
+					: '<img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/i/pages__h.gif"/>';
+			$iconContent = ($itemValue['hiddentt_content'] == 0)
+					? '<img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/i/tt_content.gif"/>'
+					: '<img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/i/tt_content__h.gif"/>';
 			$content .= '<td class="cell">' . $iconPage . ' ' . $itemValue['pid'] . '</td>';
 			$content .= '<td class="cell">' . $iconContent . ' ' . $itemValue['uid'] . '</td>';
 			$content .= '<td class="cell">' . $itemValue['title'] . '</td>';
