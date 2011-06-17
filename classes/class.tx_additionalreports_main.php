@@ -679,7 +679,6 @@ class tx_additionalreports_main
 	}
 
 	public function displayPlugins() {
-		//$url = t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'mod.php?M=tools_txreportsM1';
 		$url = $this->baseURL;
 		$content = '<table>';
 		$content .= '<tr>';
@@ -709,9 +708,7 @@ class tx_additionalreports_main
 				? ' checked="checked"'
 				: '') . '/><label for="radio5" style="margin-right:10px;">' . $GLOBALS['LANG']->getLL('pluginsmode5') . '</label></td>';
 		$content .= '</tr>';
-		$content .= '</table><div class="uppercase"></div>';
-
-		$content .= '<br/>';
+		$content .= '</table><div class="uppercase" style="margin-bottom:5px;"></div>';
 
 		switch ($this->display) {
 			case 1 :
@@ -842,11 +839,13 @@ class tx_additionalreports_main
 		$content .= '<td class="cell">' . $GLOBALS['LANG']->getLL('pid') . '</td>';
 		$content .= '<td class="cell">' . $GLOBALS['LANG']->getLL('uid') . '</td>';
 		$content .= '<td class="cell">' . $GLOBALS['LANG']->getLL('pagetitle') . '</td>';
-		$content .= '<td class="cell" align="center">DB mode</td>';
-		$content .= '<td class="cell" align="center">Page</td>';
 		if (t3lib_extMgm::isLoaded('templavoila') && class_exists('tx_templavoila_api')) {
+			$content .= '<td class="cell" align="center">DB mode</td>';
 			$content .= '<td class="cell" align="center">Page TV</td>';
 			$content .= '<td class="cell" align="center">' . $GLOBALS['LANG']->getLL('tvused') . '</td>';
+		} else {
+			$content .= '<td class="cell" align="center">Page</td>';
+			$content .= '<td class="cell" align="center">DB mode</td>';
 		}
 		$content .= '</tr>';
 		foreach ($itemsBrowser as $itemKey => $itemValue) {
@@ -866,15 +865,17 @@ class tx_additionalreports_main
 			$content .= '<td class="cell">' . $iconPage . ' ' . $itemValue['pid'] . '</td>';
 			$content .= '<td class="cell">' . $iconContent . ' ' . $itemValue['uid'] . '</td>';
 			$content .= '<td class="cell">' . $itemValue['title'] . '</td>';
-			$content .= '<td class="cell" align="center"><a target="_blank" href="/typo3/db_list.php?id=' . $itemValue['pid'] . '"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/zoom.gif"/></span></a></td>';
-			$content .= '<td class="cell" align="center"><a target="_blank" href="/typo3/sysext/cms/layout/db_layout.php?id=' . $itemValue['pid'] . '"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/zoom.gif"/></span></a></td>';
 			if (t3lib_extMgm::isLoaded('templavoila') && class_exists('tx_templavoila_api')) {
+				$content .= '<td class="cell" align="center"><a target="_blank" href="/typo3/db_list.php?id=' . $itemValue['pid'] . '"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/zoom.gif"/></span></a></td>';
 				$content .= '<td class="cell" align="center"><a target="_blank" href="/typo3conf/ext/templavoila/mod1/index.php?id=' . $itemValue['pid'] . '"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/zoom.gif"/></span></a></td>';
 				if (self::isUsedInTV($itemValue['uid'], $itemValue['pid'])) {
 					$content .= '<td class="cell typo3-message message-ok">' . $GLOBALS['LANG']->getLL('yes') . '</td>';
 				} else {
 					$content .= '<td class="cell typo3-message message-error">' . $GLOBALS['LANG']->getLL('no') . '</td>';
 				}
+			} else {
+				$content .= '<td class="cell" align="center"><a target="_blank" href="/typo3/sysext/cms/layout/db_layout.php?id=' . $itemValue['pid'] . '"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/zoom.gif"/></span></a></td>';
+				$content .= '<td class="cell" align="center"><a target="_blank" href="/typo3/db_list.php?id=' . $itemValue['pid'] . '"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/zoom.gif"/></span></a></td>';
 			}
 			$content .= '</tr>';
 		}
@@ -988,11 +989,13 @@ class tx_additionalreports_main
 		$content .= '<td class="cell">' . $GLOBALS['LANG']->getLL('pid') . '</td>';
 		$content .= '<td class="cell">' . $GLOBALS['LANG']->getLL('uid') . '</td>';
 		$content .= '<td class="cell">' . $GLOBALS['LANG']->getLL('pagetitle') . '</td>';
-		$content .= '<td class="cell" align="center">DB mode</td>';
-		$content .= '<td class="cell" align="center">Page</td>';
 		if (t3lib_extMgm::isLoaded('templavoila') && class_exists('tx_templavoila_api')) {
+			$content .= '<td class="cell" align="center">DB mode</td>';
 			$content .= '<td class="cell" align="center">Page TV</td>';
 			$content .= '<td class="cell" align="center">' . $GLOBALS['LANG']->getLL('tvused') . '</td>';
+		} else {
+			$content .= '<td class="cell" align="center">Page</td>';
+			$content .= '<td class="cell" align="center">DB mode</td>';
 		}
 		$content .= '</tr>';
 		foreach ($itemsBrowser as $itemKey => $itemValue) {
@@ -1014,15 +1017,17 @@ class tx_additionalreports_main
 			$content .= '<td class="cell">' . $iconPage . ' ' . $itemValue['pid'] . '</td>';
 			$content .= '<td class="cell">' . $iconContent . ' ' . $itemValue['uid'] . '</td>';
 			$content .= '<td class="cell">' . $itemValue['title'] . '</td>';
-			$content .= '<td class="cell" align="center"><a target="_blank" href="/typo3/db_list.php?id=' . $itemValue['pid'] . '"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/zoom.gif"/></span></a></td>';
-			$content .= '<td class="cell" align="center"><a target="_blank" href="/typo3/sysext/cms/layout/db_layout.php?id=' . $itemValue['pid'] . '"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/zoom.gif"/></span></a></td>';
 			if (t3lib_extMgm::isLoaded('templavoila') && class_exists('tx_templavoila_api')) {
+				$content .= '<td class="cell" align="center"><a target="_blank" href="/typo3/db_list.php?id=' . $itemValue['pid'] . '"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/zoom.gif"/></span></a></td>';
 				$content .= '<td class="cell" align="center"><a target="_blank" href="/typo3conf/ext/templavoila/mod1/index.php?id=' . $itemValue['pid'] . '"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/zoom.gif"/></span></a></td>';
 				if (self::isUsedInTV($itemValue['uid'], $itemValue['pid'])) {
 					$content .= '<td class="cell typo3-message message-ok">' . $GLOBALS['LANG']->getLL('yes') . '</td>';
 				} else {
 					$content .= '<td class="cell typo3-message message-error">' . $GLOBALS['LANG']->getLL('no') . '</td>';
 				}
+			} else {
+				$content .= '<td class="cell" align="center"><a target="_blank" href="/typo3/db_list.php?id=' . $itemValue['pid'] . '"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/zoom.gif"/></span></a></td>';
+				$content .= '<td class="cell" align="center"><a target="_blank" href="/typo3/sysext/cms/layout/db_layout.php?id=' . $itemValue['pid'] . '"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/zoom.gif"/></span></a></td>';
 			}
 			$content .= '</tr>';
 		}
