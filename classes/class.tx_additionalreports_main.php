@@ -141,13 +141,13 @@ class tx_additionalreports_main
 		global $BACK_PATH;
 
 		$content = '';
+		$path = PATH_typo3conf . 'ext/';
+		$items = array();
 
 		if (t3lib_div::int_from_ver(TYPO3_version) <= 4005000) {
 			require_once($BACK_PATH . 'mod/tools/em/class.em_index.php');
 			$em = t3lib_div::makeInstance('SC_mod_tools_em_index');
 			$em->init();
-			$path = PATH_typo3conf . 'ext/';
-			$items = array();
 			$cat = $em->defaultCategories;
 			$em->getInstExtList($path, $items, $cat, 'L');
 		} else {
@@ -157,8 +157,6 @@ class tx_additionalreports_main
 			$em = t3lib_div::makeInstance('tx_em_Extensions_List');
 			$emDetails = t3lib_div::makeInstance('tx_em_Extensions_Details');
 			$emTools = t3lib_div::makeInstance('tx_em_Tools_XmlHandler');
-			$path = PATH_typo3conf . 'ext/';
-			$items = array();
 			$cat = tx_em_Tools::getDefaultCategory();
 			$em->getInstExtList($path, $items, $cat, 'L');
 		}
@@ -756,7 +754,7 @@ class tx_additionalreports_main
 				preg_match('/^LLL:(EXT:.*?):(.*)/', $itemValue[0], $llfile);
 				$LOCAL_LANG = t3lib_div::readLLfile($llfile[1], $GLOBALS['LANG']->lang);
 				$content .= '<tr class="db_list_normal">';
-				$content .= '<td class="col-icon"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . '../typo3conf/ext/' . $ext[1] . '/ext_icon.gif"/></td>';
+				$content .= '<td class="col-icon"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . $itemValue[2] . '"/></td>';
 				$content .= '<td class="cell">' . $ext[1] . '</td>';
 				$content .= '<td class="cell">' . $GLOBALS['LANG']->getLLL($llfile[2], $LOCAL_LANG) . ' (' . $itemValue[1] . ')</td>';
 				$content .= '<td class="cell"><a href="#" onclick="top.goToModule(\'tools_em\', 1, \'CMD[showExt]=' . $ext[1] . '&SET[singleDetails]=info\')">' . $GLOBALS['LANG']->getLL('emlink') . '</a></td>';
@@ -853,7 +851,15 @@ class tx_additionalreports_main
 			preg_match('/^LLL:(EXT:.*?):(.*)/', $plugins[$itemValue['list_type']][0], $llfile);
 			$LOCAL_LANG = t3lib_div::readLLfile($llfile[1], $GLOBALS['LANG']->lang);
 			$content .= '<tr class="db_list_normal">';
-			$content .= '<td class="col-icon"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . '../typo3conf/ext/' . $ext[1] . '/ext_icon.gif"/></td>';
+			if ($plugins[trim($ext[1])]) {
+				$content .= '<td class="col-icon"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . $plugins[trim($ext[1])][2] . '"/></td>';
+			} else {
+				if ($ext) {
+					$content .= '<td class="col-icon"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . '../typo3conf/ext/' . $ext[1] . '/ext_icon.gif"/></td>';
+				} else {
+					$content .= '<td class="col-icon">&nbsp;</td>';
+				}
+			}
 			$content .= '<td class="cell">' . $ext[1] . '</td>';
 			$content .= '<td class="cell">' . $GLOBALS['LANG']->getLLL($llfile[2], $LOCAL_LANG) . ' (' . $itemValue['list_type'] . ')</td>';
 			$iconPage = ($itemValue['hiddenpages'] == 0)
@@ -897,12 +903,19 @@ class tx_additionalreports_main
 
 		foreach ($GLOBALS['TCA']['tt_content']['columns']['CType']['config']['items'] as $itemKey => $itemValue) {
 			if ($itemValue[1] != '--div--') {
+				$temp = null;
 				preg_match('/^LLL:(EXT:.*?):(.*)/', $itemValue[0], $llfile);
 				$LOCAL_LANG = t3lib_div::readLLfile($llfile[1], $GLOBALS['LANG']->lang);
 				$content .= '<tr class="db_list_normal">';
 				$content .= '<td class="col-icon">';
-				if ($itemValue[2] != '' && is_file(PATH_site . '/typo3/sysext/t3skin/icons/gfx/' . $itemValue[2])) {
-					$content .= '<img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/' . $itemValue[2] . '"/>';
+				if ($itemValue[2] != '') {
+					if (is_file(PATH_site . 'typo3/sysext/t3skin/icons/gfx/' . $itemValue[2])) {
+						$content .= '<img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/' . $itemValue[2] . '"/>';
+					} elseif (preg_match('/^\.\./', $itemValue[2], $temp)) {
+						$content .= '<img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . $itemValue[2] . '"/>';
+					} elseif (preg_match('/^EXT:(.*)$/', $itemValue[2], $temp)) {
+						$content .= '<img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . '../typo3conf/ext/' . $temp[1] . '"/>';
+					}
 				}
 				$content .= '</td>';
 				$content .= '<td class="cell">' . $GLOBALS['LANG']->getLLL($llfile[2], $LOCAL_LANG) . ' (' . $itemValue[1] . ')</td>';
@@ -999,12 +1012,19 @@ class tx_additionalreports_main
 		}
 		$content .= '</tr>';
 		foreach ($itemsBrowser as $itemKey => $itemValue) {
+			$temp = NULL;
 			preg_match('/^LLL:(EXT:.*?):(.*)/', $ctypes[$itemValue['CType']][0], $llfile);
 			$LOCAL_LANG = t3lib_div::readLLfile($llfile[1], $GLOBALS['LANG']->lang);
 			$content .= '<tr class="db_list_normal">';
 			$content .= '<td class="col-icon">';
-			if (is_file(PATH_site . '/typo3/sysext/t3skin/icons/gfx/' . $ctypes[$itemValue['CType']][2])) {
-				$content .= '<img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/' . $ctypes[$itemValue['CType']][2] . '"/>';
+			if ($ctypes[$itemValue['CType']][2] != '') {
+				if (is_file(PATH_site . 'typo3/sysext/t3skin/icons/gfx/' . $ctypes[$itemValue['CType']][2])) {
+					$content .= '<img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/' . $ctypes[$itemValue['CType']][2] . '"/>';
+				} elseif (preg_match('/^\.\./', $ctypes[$itemValue['CType']][2], $temp)) {
+					$content .= '<img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . $ctypes[$itemValue['CType']][2] . '"/>';
+				} elseif (preg_match('/^EXT:(.*)$/', $ctypes[$itemValue['CType']][2], $temp)) {
+					$content .= '<img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . '../typo3conf/ext/' . $temp[1] . '"/>';
+				}
 			}
 			$content .= '</td>';
 			$content .= '<td class="cell">' . $GLOBALS['LANG']->getLLL($llfile[2], $LOCAL_LANG) . ' (' . $itemValue['CType'] . ')</td>';
@@ -1066,12 +1086,15 @@ class tx_additionalreports_main
 		$content .= '</tr>';
 		foreach ($items as $itemKey => $itemValue) {
 			$content .= '<tr class="db_list_normal">';
-
 			if ($itemValue['CType'] == 'list') {
 				preg_match('/EXT:(.*?)\//', $plugins[$itemValue['list_type']][0], $ext);
 				preg_match('/^LLL:(EXT:.*?):(.*)/', $plugins[$itemValue['list_type']][0], $llfile);
 				$LOCAL_LANG = t3lib_div::readLLfile($llfile[1], $GLOBALS['LANG']->lang);
-				$content .= '<td class="col-icon"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . '../typo3conf/ext/' . $ext[1] . '/ext_icon.gif"/></td>';
+				if ($plugins[$itemValue['list_type']][2]) {
+					$content .= '<td class="col-icon"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . $plugins[$itemValue['list_type']][2] . '"/></td>';
+				} else {
+					$content .= '<td class="col-icon">&nbsp;</td>';
+				}
 				$content .= '<td class="cell">' . $GLOBALS['LANG']->getLLL($llfile[2], $LOCAL_LANG) . ' (' . $itemValue['list_type'] . ')</td>';
 			} else {
 				preg_match('/^LLL:(EXT:.*?):(.*)/', $ctypes[$itemValue['CType']][0], $llfile);
@@ -1079,11 +1102,16 @@ class tx_additionalreports_main
 				$content .= '<td class="col-icon">';
 				if (is_file(PATH_site . '/typo3/sysext/t3skin/icons/gfx/' . $ctypes[$itemValue['CType']][2])) {
 					$content .= '<img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/' . $ctypes[$itemValue['CType']][2] . '"/>';
+				} elseif (preg_match('/^\.\./', $ctypes[$itemValue['CType']][2], $temp)) {
+					$content .= '<img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . $ctypes[$itemValue['CType']][2] . '"/>';
+				} elseif (preg_match('/^EXT:(.*)$/', $ctypes[$itemValue['CType']][2], $temp)) {
+					$content .= '<img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . '../typo3conf/ext/' . $temp[1] . '"/>';
+				} else {
+					$content .= '';
 				}
 				$content .= '</td>';
 				$content .= '<td class="cell">' . $GLOBALS['LANG']->getLLL($llfile[2], $LOCAL_LANG) . ' (' . $itemValue['CType'] . ')</td>';
 			}
-
 			$content .= '<td class="cell">' . $itemValue['nb'] . '</td>';
 			$content .= '<td class="cell">' . round((($itemValue['nb'] * 100) / $itemsCount[0]['nb']), 2) . ' %</td>';
 			$content .= '</tr>';
