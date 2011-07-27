@@ -2,7 +2,11 @@
 if (!defined('TYPO3_MODE')) die ('Access denied.');
 
 if (TYPO3_MODE == 'BE') {
-	$reports = array('eid', 'clikeys', 'plugins', 'xclass', 'hooks', 'status', 'ajax', 'extensions', 'realurlerrors');
+	$reports = array('eid', 'clikeys', 'plugins', 'xclass', 'hooks', 'status', 'ajax', 'extensions');
+
+	if (t3lib_extMgm::isLoaded('realurl')) {
+		$reports [] = 'realurlerrors';
+	}
 
 	// Add a module for older version (<4.3)
 	if (t3lib_div::int_from_ver(TYPO3_version) < 4003000) {
