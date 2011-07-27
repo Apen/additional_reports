@@ -1260,8 +1260,6 @@ class tx_additionalreports_main
 			$query['LIMIT']
 		);
 
-		//t3lib_div::debug($items);
-
 		// Page browser
 		$pointer = t3lib_div::_GP('pointer');
 		$limit = ($pointer !== null) ? $pointer . ',' . $this->nbElementsPerPage : '0,' . $this->nbElementsPerPage;
@@ -1296,8 +1294,6 @@ class tx_additionalreports_main
 			$content .= '<td class="cell">' . $GLOBALS['LANG']->getLL('tstamp') . '</td>';
 			$content .= '<td class="cell">' . $GLOBALS['LANG']->getLL('last_referer') . '</td>';
 			$content .= '</tr>';
-
-			//t3lib_div::debug($this->baseURL);
 
 			foreach ($itemsBrowser as $itemKey => $itemValue) {
 				$content .= '<tr class="db_list_normal">';
