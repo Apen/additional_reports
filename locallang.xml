@@ -54,6 +54,8 @@
 			<label index="xclass_description">List of all the XCLASS with the name and the path for each of them.</label>
 			<label index="hooks_title">Additional reports - hooks</label>
 			<label index="hooks_description">List of all the hooks with the name and the path for each of them.</label>
+			<label index="realurlerrors_title">Additional reports - realurl erros</label>
+			<label index="realurlerrors_description">List of all the errors in realurl.</label>
 			<label index="hooks_core">Core hooks</label>
 			<label index="hooks_extension">Extension hooks (experimental)</label>
 			<label index="hooks_corefile">Core file</label>
@@ -88,6 +90,12 @@
 			<label index="last">Last</label>
 			<label index="pageIndicator">Page %1$s of %2$d</label>
 			<label index="rangeIndicator">Records %1$d - %2$d</label>
+			<label index="flushalllog">Flush all log</label>
+			<label index="error">Error</label>
+			<label index="counter">Counter</label>
+			<label index="crdate">First time</label>
+			<label index="tstamp">Last time</label>
+			<label index="last_referer">Referer</label>
 		</languageKey>
 		<languageKey index="fr" type="array">
 			<label index="noresults">Aucune donnée à afficher</label>
@@ -138,6 +146,8 @@
 			<label index="hooks_title">Additional reports - hooks</label>
 			<label index="hooks_description">Liste de tous les hooks avec des informations pour chacun.</label>
 			<label index="hooks_core">Hooks du core</label>
+			<label index="realurlerrors_title">Additional reports - erreurs realurl</label>
+			<label index="realurlerrors_description">Liste de toutes les erreurs realurl.</label>
 			<label index="hooks_extension">Hooks d'extension (experimental)</label>
 			<label index="hooks_corefile">Fichier du core</label>
 			<label index="hooks_name">Nom du hook</label>
@@ -172,6 +182,12 @@
 			<label index="last">Dernier</label>
 			<label index="pageIndicator">Page %1$s sur %2$d</label>
 			<label index="rangeIndicator">Enregistrements %1$d - %2$d</label>
+			<label index="flushalllog">Vider tous les logs</label>
+			<label index="error">Erreur</label>
+			<label index="counter">Compteur</label>
+			<label index="crdate">Première fois</label>
+			<label index="tstamp">Dernière fois</label>
+			<label index="last_referer">Referer</label>
 		</languageKey>
 		<languageKey index="de" type="array">
 			<label index="ajax_description">Auflistung aller registrierten ajax.php-Methoden mit Informationen</label>

@@ -24,8 +24,7 @@
  ***************************************************************/
 
 /**
- * This class provides a report displaying a list of informations
- * Code inspired by EXT:dam/lib/class.tx_dam_svlist.php by Rene Fritz
+ * This class provides methods to generate the reports
  *
  * @author		CERDAN Yohann <cerdanyohann@yahoo.fr>
  * @package		TYPO3
@@ -1224,6 +1223,101 @@ class tx_additionalreports_main
 			$returnContent = $content;
 		} // end of if pages > 1
 		return $returnContent;
+	}
+
+	public function getRealUrlErrors() {
+		$cmd = t3lib_div::_GP('cmd');
+		if ($cmd === 'deleteAll') {
+			$GLOBALS['TYPO3_DB']->exec_DELETEquery(
+				'tx_realurl_errorlog',
+				''
+			);
+		}
+		if ($cmd === 'delete') {
+			$delete = t3lib_div::_GP('delete');
+			$GLOBALS['TYPO3_DB']->exec_DELETEquery(
+				'tx_realurl_errorlog',
+				'url_hash=' . mysql_real_escape_string($delete)
+			);
+		}
+
+		// query
+		$query = array();
+		$query['SELECT'] = 'url_hash,url,error,last_referer,counter,cr_date,tstamp';
+		$query['FROM'] = 'tx_realurl_errorlog';
+		$query['WHERE'] = '';
+		$query['GROUPBY'] = '';
+		$query['ORDERBY'] = 'counter DESC';
+		$query['LIMIT'] = '';
+
+		// items
+		$items = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
+			$query['SELECT'],
+			$query['FROM'],
+			$query['WHERE'],
+			$query['GROUPBY'],
+			$query['ORDERBY'],
+			$query['LIMIT']
+		);
+
+		//t3lib_div::debug($items);
+
+		// Page browser
+		$pointer = t3lib_div::_GP('pointer');
+		$limit = ($pointer !== null) ? $pointer . ',' . $this->nbElementsPerPage : '0,' . $this->nbElementsPerPage;
+		$current = ($pointer !== null) ? intval($pointer) : 0;
+		$pageBrowser = self::pluginsRenderListNavigation(count($items), $this->nbElementsPerPage, $current);
+		$itemsBrowser = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
+			$query['SELECT'],
+			$query['FROM'],
+			$query['WHERE'],
+			$query['GROUPBY'],
+			$query['ORDERBY'],
+			$limit
+		);
+
+
+		$content = '';
+
+		if (count($itemsBrowser) > 0) {
+
+			$content .= $pageBrowser;
+
+			$content .= '<table cellspacing="1" cellpadding="2" border="0" class="tx_sv_reportlist typo3-dblist">';
+			$content .= '<tr class="t3-row-header"><td colspan="10">';
+			$content .= $GLOBALS['LANG']->getLL('realurlerrors_description');
+			$content .= '</td></tr>';
+			$content .= '<tr class="c-headLine">';
+			$content .= '<td class="cell">&nbsp;</td>';
+			$content .= '<td class="cell">URL</td>';
+			$content .= '<td class="cell">' . $GLOBALS['LANG']->getLL('error') . '</td>';
+			$content .= '<td class="cell">' . $GLOBALS['LANG']->getLL('counter') . '</td>';
+			$content .= '<td class="cell">' . $GLOBALS['LANG']->getLL('crdate') . '</td>';
+			$content .= '<td class="cell">' . $GLOBALS['LANG']->getLL('tstamp') . '</td>';
+			$content .= '<td class="cell">' . $GLOBALS['LANG']->getLL('last_referer') . '</td>';
+			$content .= '</tr>';
+
+			//t3lib_div::debug($this->baseURL);
+
+			foreach ($itemsBrowser as $itemKey => $itemValue) {
+				$content .= '<tr class="db_list_normal">';
+				$actionURL = $this->baseURL . '&cmd=delete&delete=' . $itemValue['url_hash'];
+				$action = '<a href="' . $actionURL . '"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/garbage.gif"/></a>';
+				$content .= '<td class="cell">' . $action . '</td>';
+				$content .= '<td class="cell">' . $itemValue['url'] . '</td>';
+				$content .= '<td class="cell">' . $itemValue['error'] . '</td>';
+				$content .= '<td class="cell">' . $itemValue['counter'] . '</td>';
+				$content .= '<td class="cell">' . date('d/m/Y H:i:s', $itemValue['cr_date']) . '</td>';
+				$content .= '<td class="cell">' . date('d/m/Y H:i:s', $itemValue['tstamp']) . '</td>';
+				$content .= '<td class="cell">' . $itemValue['last_referer'] . '</td>';
+				$content .= '</tr>';
+			}
+
+			$content .= '</table>';
+
+		}
+
+		return $content;
 	}
 
 }
