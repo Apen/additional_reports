@@ -1,3 +1,7 @@
+2011-08-15 CERDAN Yohann <cerdanyohann@yahoo.fr>
+	* Add the PHP errors log
+	* Change the extensions reports
+	* In the extensions reports, add the possibility to check in the emconf if the extension is declared compatible with the current TYPO3 version
 2011-07-27 CERDAN Yohann <cerdanyohann@yahoo.fr>
 	* Add realurl errors log
 2011-06-17 CERDAN Yohann <cerdanyohann@yahoo.fr>
