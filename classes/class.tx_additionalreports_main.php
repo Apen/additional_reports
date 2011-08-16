@@ -126,7 +126,6 @@ class tx_additionalreports_main
 		$content .= '<td class="cell">' . $GLOBALS['LANG']->getLL('path') . '</td>';
 		$content .= '</tr>';
 		foreach ($items as $itemKey => $itemValue) {
-			preg_match('/EXT:(.*?)\//', $itemValue, $ext);
 			$content .= '<tr class="db_list_normal">';
 			$content .= '<td class="cell">' . $itemKey . '</td>';
 			$content .= '<td class="cell">' . $itemValue . '</td>';
@@ -230,7 +229,7 @@ class tx_additionalreports_main
 				$msg = sprintf($GLOBALS['LANG']->getLL('checkDependencies_typo3_too_high'), $t3version, $versionRange[1]);
 			} elseif ($versionRange[1] == '0.0.0') {
 				$status = 2;
-				$msg = $GLOBALS['LANG']->getLL('nottested'). ' (' . $depV . ')';
+				$msg = $GLOBALS['LANG']->getLL('nottested') . ' (' . $depV . ')';
 			} else {
 				$status = 1;
 				$msg = 'OK';
@@ -271,7 +270,7 @@ class tx_additionalreports_main
 
 		$content .= '<table cellspacing="1" cellpadding="2" border="0" class="tx_sv_reportlist typo3-dblist">';
 		$content .= '<tr class="t3-row-header"><td colspan="15">';
-		$content .= $GLOBALS['LANG']->getLL('extensions_ter').' (TYPO3 ' . TYPO3_version . ')';
+		$content .= $GLOBALS['LANG']->getLL('extensions_ter') . ' (TYPO3 ' . TYPO3_version . ')';
 		$content .= '</td></tr>';
 		$content .= '<tr class="c-headLine">';
 		$content .= '<td class="cell">&nbsp;</td>';

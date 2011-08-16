@@ -1,3 +1,5 @@
+2011-08-16 CERDAN Yohann <cerdanyohann@yahoo.fr>
+	* Small bugfix in the ExtDirect reports
 2011-08-15 CERDAN Yohann <cerdanyohann@yahoo.fr>
 	* Add the PHP errors log
 	* Change the extensions reports
