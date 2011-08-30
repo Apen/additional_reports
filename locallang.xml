@@ -103,6 +103,8 @@
 			<label index="versioncheck">Version check</label>
 			<label index="nottested">Not tested</label>
 			<label index="unknown">Unknown</label>
+			<label index="switch">Switch to</label>
+			<label index="newwindow">New window</label>
 		</languageKey>
 		<languageKey index="fr" type="array">
 			<label index="noresults">Aucune donnée à afficher</label>
@@ -202,6 +204,8 @@
 			<label index="versioncheck">Verif. version</label>
 			<label index="nottested">Non testée</label>
 			<label index="unknown">Inconnue</label>
+			<label index="switch">Changer vers</label>
+			<label index="newwindow">Nouvelle fenêtre</label>
 		</languageKey>
 		<languageKey index="de" type="array">
 			<label index="ajax_description">Auflistung aller registrierten ajax.php-Methoden mit Informationen</label>
