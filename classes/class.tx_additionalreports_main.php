@@ -1033,21 +1033,60 @@ class tx_additionalreports_main
 			$content .= '<td class="cell">' . $iconContent . ' ' . $itemValue['uid'] . '</td>';
 			$content .= '<td class="cell">' . $itemValue['title'] . '</td>';
 			if (t3lib_extMgm::isLoaded('templavoila') && class_exists('tx_templavoila_api')) {
-				$content .= '<td class="cell" align="center"><a target="_blank" href="/typo3/db_list.php?id=' . $itemValue['pid'] . '"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/zoom.gif"/></span></a></td>';
-				$content .= '<td class="cell" align="center"><a target="_blank" href="/typo3conf/ext/templavoila/mod1/index.php?id=' . $itemValue['pid'] . '"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/zoom.gif"/></span></a></td>';
+				$content .= '<td class="cell" align="center">';
+				$content .= '<a href="#" onclick="' . self::goToModuleList($itemValue['pid']) . '" title="' . $GLOBALS['LANG']->getLL('switch') . '"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/zoom.gif"/></span></a>';
+				$content .= '<a target="_blank" href="' . self::goToModuleList($itemValue['pid'], TRUE) . '" title="' . $GLOBALS['LANG']->getLL('newwindow') . '"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/zoom.gif"/></span></a>';
+				$content .= '</td>';
+				$content .= '<td class="cell" align="center">';
+				$content .= '<a href="#" onclick="' . self::goToModulePageTV($itemValue['pid']) . '" title="' . $GLOBALS['LANG']->getLL('switch') . '"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/zoom.gif"/></span></a>';
+				$content .= '<a target="_blank" href="' . self::goToModulePageTV($itemValue['pid'], TRUE) . '" title="' . $GLOBALS['LANG']->getLL('newwindow') . '"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/zoom.gif"/></span></a>';
+				$content .= '</td>';
 				if (self::isUsedInTV($itemValue['uid'], $itemValue['pid'])) {
 					$content .= '<td class="cell typo3-message message-ok">' . $GLOBALS['LANG']->getLL('yes') . '</td>';
 				} else {
 					$content .= '<td class="cell typo3-message message-error">' . $GLOBALS['LANG']->getLL('no') . '</td>';
 				}
 			} else {
-				$content .= '<td class="cell" align="center"><a target="_blank" href="/typo3/sysext/cms/layout/db_layout.php?id=' . $itemValue['pid'] . '"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/zoom.gif"/></span></a></td>';
-				$content .= '<td class="cell" align="center"><a target="_blank" href="/typo3/db_list.php?id=' . $itemValue['pid'] . '"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/zoom.gif"/></span></a></td>';
+				$content .= '<td class="cell" align="center">';
+				$content .= '<a href="#" onclick="' . self::goToModuleList($itemValue['pid']) . '" title="' . $GLOBALS['LANG']->getLL('switch') . '"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/zoom.gif"/></span></a>';
+				$content .= '<a target="_blank" href="' . self::goToModuleList($itemValue['pid'], TRUE) . '" title="' . $GLOBALS['LANG']->getLL('newwindow') . '"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/zoom.gif"/></span></a>';
+				$content .= '</td>';
+				$content .= '<td class="cell" align="center">';
+				$content .= '<a href="#" onclick="' . self::goToModulePage($itemValue['pid']) . '" title="' . $GLOBALS['LANG']->getLL('switch') . '"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/zoom.gif"/></span></a>';
+				$content .= '<a target="_blank" href="' . self::goToModulePage($itemValue['pid'], TRUE) . '" title="' . $GLOBALS['LANG']->getLL('newwindow') . '"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/zoom.gif"/></span></a>';
+				$content .= '</td>';
 			}
 			$content .= '</tr>';
 		}
 		$content .= '</table>';
 		return $content;
+	}
+
+	public function goToModuleList($uid, $urlOnly = FALSE) {
+		$url = t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'db_list.php?id=' . $uid;
+		if ($urlOnly === TRUE) {
+			return $url;
+		} else {
+			return 'top.nextLoadModuleUrl=\'' . $url . '\';top.goToModule(\'web_list\');';
+		}
+	}
+
+	public function goToModulePage($uid, $urlOnly = FALSE) {
+		$url = t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/cms/layout/db_layout.php?id=' . $uid;
+		if ($urlOnly === TRUE) {
+			return $url;
+		} else {
+			return 'top.nextLoadModuleUrl=\'' . $url . '\';top.goToModule(\'web_layout\');';
+		}
+	}
+
+	public function goToModulePageTV($uid, $urlOnly = FALSE) {
+		$url = t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . '../typo3conf/ext/templavoila/mod1/index.php?id=' . $uid;
+		if ($urlOnly === TRUE) {
+			return $url;
+		} else {
+			return 'top.nextLoadModuleUrl=\'' . $url . '\';top.goToModule(\'web_txtemplavoilaM1\');';
+		}
 	}
 
 	public function getAllCType() {
@@ -1199,16 +1238,28 @@ class tx_additionalreports_main
 			$content .= '<td class="cell">' . $iconContent . ' ' . $itemValue['uid'] . '</td>';
 			$content .= '<td class="cell">' . $itemValue['title'] . '</td>';
 			if (t3lib_extMgm::isLoaded('templavoila') && class_exists('tx_templavoila_api')) {
-				$content .= '<td class="cell" align="center"><a target="_blank" href="/typo3/db_list.php?id=' . $itemValue['pid'] . '"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/zoom.gif"/></span></a></td>';
-				$content .= '<td class="cell" align="center"><a target="_blank" href="/typo3conf/ext/templavoila/mod1/index.php?id=' . $itemValue['pid'] . '"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/zoom.gif"/></span></a></td>';
+				$content .= '<td class="cell" align="center">';
+				$content .= '<a href="#" onclick="' . self::goToModuleList($itemValue['pid']) . '" title="' . $GLOBALS['LANG']->getLL('switch') . '"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/zoom.gif"/></span></a>';
+				$content .= '<a target="_blank" href="' . self::goToModuleList($itemValue['pid'], TRUE) . '" title="' . $GLOBALS['LANG']->getLL('newwindow') . '"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/zoom.gif"/></span></a>';
+				$content .= '</td>';
+				$content .= '<td class="cell" align="center">';
+				$content .= '<a href="#" onclick="' . self::goToModulePageTV($itemValue['pid']) . '" title="' . $GLOBALS['LANG']->getLL('switch') . '"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/zoom.gif"/></span></a>';
+				$content .= '<a target="_blank" href="' . self::goToModulePageTV($itemValue['pid'], TRUE) . '" title="' . $GLOBALS['LANG']->getLL('newwindow') . '"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/zoom.gif"/></span></a>';
+				$content .= '</td>';
 				if (self::isUsedInTV($itemValue['uid'], $itemValue['pid'])) {
 					$content .= '<td class="cell typo3-message message-ok">' . $GLOBALS['LANG']->getLL('yes') . '</td>';
 				} else {
 					$content .= '<td class="cell typo3-message message-error">' . $GLOBALS['LANG']->getLL('no') . '</td>';
 				}
 			} else {
-				$content .= '<td class="cell" align="center"><a target="_blank" href="/typo3/db_list.php?id=' . $itemValue['pid'] . '"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/zoom.gif"/></span></a></td>';
-				$content .= '<td class="cell" align="center"><a target="_blank" href="/typo3/sysext/cms/layout/db_layout.php?id=' . $itemValue['pid'] . '"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/zoom.gif"/></span></a></td>';
+				$content .= '<td class="cell" align="center">';
+				$content .= '<a href="#" onclick="' . self::goToModuleList($itemValue['pid']) . '" title="' . $GLOBALS['LANG']->getLL('switch') . '"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/zoom.gif"/></span></a>';
+				$content .= '<a target="_blank" href="' . self::goToModuleList($itemValue['pid'], TRUE) . '" title="' . $GLOBALS['LANG']->getLL('newwindow') . '"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/zoom.gif"/></span></a>';
+				$content .= '</td>';
+				$content .= '<td class="cell" align="center">';
+				$content .= '<a href="#" onclick="' . self::goToModulePage($itemValue['pid']) . '" title="' . $GLOBALS['LANG']->getLL('switch') . '"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/zoom.gif"/></span></a>';
+				$content .= '<a target="_blank" href="' . self::goToModulePage($itemValue['pid'], TRUE) . '" title="' . $GLOBALS['LANG']->getLL('newwindow') . '"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/zoom.gif"/></span></a>';
+				$content .= '</td>';
 			}
 			$content .= '</tr>';
 		}
