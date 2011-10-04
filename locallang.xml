@@ -58,6 +58,8 @@
 			<label index="realurlerrors_description">List of all the errors in realurl.</label>
 			<label index="logerrors_title">Additional reports - log errors</label>
 			<label index="logerrors_description">List of all the errors in the log.</label>
+			<label index="websitesconf_title">Additional reports - websites/domains conf</label>
+			<label index="websitesconf_description">Check the conf of websites and domains.</label>
 			<label index="hooks_core">Core hooks</label>
 			<label index="hooks_extension">Extension hooks (experimental)</label>
 			<label index="hooks_corefile">Core file</label>
@@ -105,6 +107,9 @@
 			<label index="unknown">Unknown</label>
 			<label index="switch">Switch to</label>
 			<label index="newwindow">New window</label>
+			<label index="domain">Domain</label>
+			<label index="domains">Domain(s)</label>
+			<label index="preview">Preview</label>
 		</languageKey>
 		<languageKey index="fr" type="array">
 			<label index="noresults">Aucune donnée à afficher</label>
@@ -159,6 +164,8 @@
 			<label index="realurlerrors_description">Liste de toutes les erreurs realurl.</label>
 			<label index="logerrors_title">Additional reports - erreurs des logs </label>
 			<label index="logerrors_description">Liste de toutes les erreurs présentent dans les logs.</label>
+			<label index="websitesconf_title">Additional reports - configurations des sites/domaines</label>
+			<label index="websitesconf_description">Vérifie la configuration des sites et des domaines.</label>
 			<label index="hooks_extension">Hooks d'extension (experimental)</label>
 			<label index="hooks_corefile">Fichier du core</label>
 			<label index="hooks_name">Nom du hook</label>
@@ -206,6 +213,9 @@
 			<label index="unknown">Inconnue</label>
 			<label index="switch">Changer vers</label>
 			<label index="newwindow">Nouvelle fenêtre</label>
+			<label index="domain">Domaine</label>
+			<label index="domains">Domaine(s)</label>
+			<label index="preview">Aperçu</label>
 		</languageKey>
 		<languageKey index="de" type="array">
 			<label index="ajax_description">Auflistung aller registrierten ajax.php-Methoden mit Informationen</label>

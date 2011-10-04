@@ -1,5 +1,10 @@
+2011-10-04 CERDAN Yohann <cerdanyohann@yahoo.fr>
+	* Add a new report : check your websites/domains/baseURL configuration
+	* Fix the pagebrowser in errors log
 2011-08-30 CERDAN Yohann <cerdanyohann@yahoo.fr>
 	* In plugin list view, you can now switch into the list or page module
+	* In "List of used content types" & "List of used plugins", do not display offline pages
+	* In "List of used content types" & "List of used plugins", add first domain record
 2011-08-16 CERDAN Yohann <cerdanyohann@yahoo.fr>
 	* Small bugfix in the ExtDirect reports
 2011-08-15 CERDAN Yohann <cerdanyohann@yahoo.fr>
