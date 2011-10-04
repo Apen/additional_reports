@@ -948,7 +948,7 @@ class tx_additionalreports_main
 		$pluginsList = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
 			'DISTINCT tt_content.list_type',
 			'tt_content,pages',
-			'tt_content.pid=pages.uid AND tt_content.deleted=0 AND pages.deleted=0 ' . $addhidden . 'AND tt_content.CType=\'list\'',
+			'tt_content.pid=pages.uid AND pages.pid>=0 AND tt_content.deleted=0 AND pages.deleted=0 ' . $addhidden . 'AND tt_content.CType=\'list\'',
 			'',
 			'tt_content.list_type'
 		);
@@ -965,7 +965,7 @@ class tx_additionalreports_main
 		$items = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
 			'DISTINCT tt_content.list_type,tt_content.pid,tt_content.uid,pages.title,pages.hidden as "hiddenpages",tt_content.hidden as "hiddentt_content"',
 			'tt_content,pages',
-			'tt_content.pid=pages.uid AND tt_content.deleted=0 AND pages.deleted=0 ' . $addhidden . 'AND tt_content.CType=\'list\'' . $addWhere,
+			'tt_content.pid=pages.uid AND pages.pid>=0 AND tt_content.deleted=0 AND pages.deleted=0 ' . $addhidden . 'AND tt_content.CType=\'list\'' . $addWhere,
 			'',
 			'tt_content.list_type,tt_content.pid'
 		);
@@ -977,7 +977,7 @@ class tx_additionalreports_main
 		$itemsBrowser = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
 			'DISTINCT tt_content.list_type,tt_content.pid,tt_content.uid,pages.title,pages.hidden as "hiddenpages",tt_content.hidden as "hiddentt_content"',
 			'tt_content,pages',
-			'tt_content.pid=pages.uid AND tt_content.deleted=0 AND pages.deleted=0 ' . $addhidden . 'AND tt_content.CType=\'list\'' . $addWhere,
+			'tt_content.pid=pages.uid AND pages.pid>=0 AND tt_content.deleted=0 AND pages.deleted=0 ' . $addhidden . 'AND tt_content.CType=\'list\'' . $addWhere,
 			'',
 			'tt_content.list_type,tt_content.pid',
 			$limit
@@ -988,13 +988,14 @@ class tx_additionalreports_main
 		$content .= $pageBrowser;
 
 		$content .= '<table cellspacing="1" cellpadding="2" border="0" class="tx_sv_reportlist typo3-dblist">';
-		$content .= '<tr class="t3-row-header"><td colspan="10">';
+		$content .= '<tr class="t3-row-header"><td colspan="15">';
 		$content .= $GLOBALS['LANG']->getLL('pluginsmode4');
 		$content .= '</td></tr>';
 		$content .= '<tr class="c-headLine">';
 		$content .= '<td class="cell">&nbsp;</td>';
 		$content .= '<td class="cell">' . $GLOBALS['LANG']->getLL('extension') . '</td>';
 		$content .= '<td class="cell">' . $GLOBALS['LANG']->getLL('plugin') . '</td>';
+		$content .= '<td class="cell">' . $GLOBALS['LANG']->getLL('domain') . '</td>';
 		$content .= '<td class="cell">' . $GLOBALS['LANG']->getLL('pid') . '</td>';
 		$content .= '<td class="cell">' . $GLOBALS['LANG']->getLL('uid') . '</td>';
 		$content .= '<td class="cell">' . $GLOBALS['LANG']->getLL('pagetitle') . '</td>';
@@ -1006,11 +1007,20 @@ class tx_additionalreports_main
 			$content .= '<td class="cell" align="center">Page</td>';
 			$content .= '<td class="cell" align="center">DB mode</td>';
 		}
+		$content .= '<td class="cell" align="center">' . $GLOBALS['LANG']->getLL('preview') . '</td>';
 		$content .= '</tr>';
 		foreach ($itemsBrowser as $itemKey => $itemValue) {
 			preg_match('/EXT:(.*?)\//', $plugins[$itemValue['list_type']][0], $ext);
 			preg_match('/^LLL:(EXT:.*?):(.*)/', $plugins[$itemValue['list_type']][0], $llfile);
 			$LOCAL_LANG = t3lib_div::readLLfile($llfile[1], $GLOBALS['LANG']->lang);
+
+			$pageSelect = t3lib_div::makeInstance('t3lib_pageSelect');
+			$rootLine = $pageSelect->getRootLine($itemValue['pid']);
+			$domain = t3lib_BEfunc::firstDomainRecord($rootLine);
+			if ($domain === NULL) {
+				$domain = t3lib_div::getIndpEnv('TYPO3_HOST_ONLY');
+			}
+
 			$content .= '<tr class="db_list_normal">';
 			if ($plugins[trim($ext[1])]) {
 				$content .= '<td class="col-icon"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . $plugins[trim($ext[1])][2] . '"/></td>';
@@ -1023,6 +1033,7 @@ class tx_additionalreports_main
 			}
 			$content .= '<td class="cell">' . $ext[1] . '</td>';
 			$content .= '<td class="cell">' . $GLOBALS['LANG']->getLLL($llfile[2], $LOCAL_LANG) . ' (' . $itemValue['list_type'] . ')</td>';
+			$content .= '<td class="cell"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/i/domain.gif"/>' . $domain . '</td>';
 			$iconPage = ($itemValue['hiddenpages'] == 0)
 					? '<img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/i/pages.gif"/>'
 					: '<img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/i/pages__h.gif"/>';
@@ -1032,6 +1043,7 @@ class tx_additionalreports_main
 			$content .= '<td class="cell">' . $iconPage . ' ' . $itemValue['pid'] . '</td>';
 			$content .= '<td class="cell">' . $iconContent . ' ' . $itemValue['uid'] . '</td>';
 			$content .= '<td class="cell">' . $itemValue['title'] . '</td>';
+
 			if (t3lib_extMgm::isLoaded('templavoila') && class_exists('tx_templavoila_api')) {
 				$content .= '<td class="cell" align="center">';
 				$content .= '<a href="#" onclick="' . self::goToModuleList($itemValue['pid']) . '" title="' . $GLOBALS['LANG']->getLL('switch') . '"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/zoom.gif"/></span></a>';
@@ -1056,6 +1068,7 @@ class tx_additionalreports_main
 				$content .= '<a target="_blank" href="' . self::goToModulePage($itemValue['pid'], TRUE) . '" title="' . $GLOBALS['LANG']->getLL('newwindow') . '"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/zoom.gif"/></span></a>';
 				$content .= '</td>';
 			}
+			$content .= '<td class="cell" align="center"><a target="_blank" href="http://' . $domain . '/index.php?id=' . $itemValue['pid'] . '"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/zoom.gif"/></a></td>';
 			$content .= '</tr>';
 		}
 		$content .= '</table>';
@@ -1152,7 +1165,7 @@ class tx_additionalreports_main
 		$pluginsList = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
 			'DISTINCT tt_content.CType',
 			'tt_content,pages',
-			'tt_content.pid=pages.uid AND tt_content.deleted=0 AND pages.deleted=0 ' . $addhidden . 'AND tt_content.CType<>\'list\'',
+			'tt_content.pid=pages.uid AND pages.pid>=0 AND tt_content.deleted=0 AND pages.deleted=0 ' . $addhidden . 'AND tt_content.CType<>\'list\'',
 			'',
 			'tt_content.list_type'
 		);
@@ -1170,7 +1183,7 @@ class tx_additionalreports_main
 		$items = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
 			'DISTINCT tt_content.CType,tt_content.pid,tt_content.uid,pages.title,pages.hidden as "hiddenpages",tt_content.hidden as "hiddentt_content"',
 			'tt_content,pages',
-			'tt_content.pid=pages.uid AND tt_content.deleted=0 AND pages.deleted=0 ' . $addhidden . 'AND tt_content.CType<>\'list\'' . $addWhere,
+			'tt_content.pid=pages.uid AND pages.pid>=0 AND tt_content.deleted=0 AND pages.deleted=0 ' . $addhidden . 'AND tt_content.CType<>\'list\'' . $addWhere,
 			'',
 			'tt_content.CType,tt_content.pid'
 		);
@@ -1182,7 +1195,7 @@ class tx_additionalreports_main
 		$itemsBrowser = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
 			'DISTINCT tt_content.CType,tt_content.pid,tt_content.uid,pages.title,pages.hidden as "hiddenpages",tt_content.hidden as "hiddentt_content"',
 			'tt_content,pages',
-			'tt_content.pid=pages.uid AND tt_content.deleted=0 AND pages.deleted=0 ' . $addhidden . 'AND tt_content.CType<>\'list\'' . $addWhere,
+			'tt_content.pid=pages.uid AND pages.pid>=0 AND tt_content.deleted=0 AND pages.deleted=0 ' . $addhidden . 'AND tt_content.CType<>\'list\'' . $addWhere,
 			'',
 			'tt_content.CType,tt_content.pid',
 			$limit
@@ -1193,12 +1206,13 @@ class tx_additionalreports_main
 		$content .= $pageBrowser;
 
 		$content .= '<table cellspacing="1" cellpadding="2" border="0" class="tx_sv_reportlist typo3-dblist">';
-		$content .= '<tr class="t3-row-header"><td colspan="10">';
+		$content .= '<tr class="t3-row-header"><td colspan="15">';
 		$content .= $GLOBALS['LANG']->getLL('pluginsmode3');
 		$content .= '</td></tr>';
 		$content .= '<tr class="c-headLine">';
 		$content .= '<td class="cell">&nbsp;</td>';
 		$content .= '<td class="cell">' . $GLOBALS['LANG']->getLL('ctype') . '</td>';
+		$content .= '<td class="cell">' . $GLOBALS['LANG']->getLL('domain') . '</td>';
 		$content .= '<td class="cell">' . $GLOBALS['LANG']->getLL('pid') . '</td>';
 		$content .= '<td class="cell">' . $GLOBALS['LANG']->getLL('uid') . '</td>';
 		$content .= '<td class="cell">' . $GLOBALS['LANG']->getLL('pagetitle') . '</td>';
@@ -1210,11 +1224,20 @@ class tx_additionalreports_main
 			$content .= '<td class="cell" align="center">Page</td>';
 			$content .= '<td class="cell" align="center">DB mode</td>';
 		}
+		$content .= '<td class="cell" align="center">' . $GLOBALS['LANG']->getLL('preview') . '</td>';
 		$content .= '</tr>';
 		foreach ($itemsBrowser as $itemKey => $itemValue) {
 			$temp = NULL;
 			preg_match('/^LLL:(EXT:.*?):(.*)/', $ctypes[$itemValue['CType']][0], $llfile);
 			$LOCAL_LANG = t3lib_div::readLLfile($llfile[1], $GLOBALS['LANG']->lang);
+
+			$pageSelect = t3lib_div::makeInstance('t3lib_pageSelect');
+			$rootLine = $pageSelect->getRootLine($itemValue['pid']);
+			$domain = t3lib_BEfunc::firstDomainRecord($rootLine);
+			if ($domain === NULL) {
+				$domain = t3lib_div::getIndpEnv('TYPO3_HOST_ONLY');
+			}
+
 			$content .= '<tr class="db_list_normal">';
 			$content .= '<td class="col-icon">';
 			if ($ctypes[$itemValue['CType']][2] != '') {
@@ -1228,6 +1251,7 @@ class tx_additionalreports_main
 			}
 			$content .= '</td>';
 			$content .= '<td class="cell">' . $GLOBALS['LANG']->getLLL($llfile[2], $LOCAL_LANG) . ' (' . $itemValue['CType'] . ')</td>';
+			$content .= '<td class="cell"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/i/domain.gif"/>' . $domain . '</td>';
 			$iconPage = ($itemValue['hiddenpages'] == 0)
 					? '<img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/i/pages.gif"/>'
 					: '<img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/i/pages__h.gif"/>';
@@ -1261,6 +1285,7 @@ class tx_additionalreports_main
 				$content .= '<a target="_blank" href="' . self::goToModulePage($itemValue['pid'], TRUE) . '" title="' . $GLOBALS['LANG']->getLL('newwindow') . '"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/zoom.gif"/></span></a>';
 				$content .= '</td>';
 			}
+			$content .= '<td class="cell" align="center"><a target="_blank" href="http://' . $domain . '/index.php?id=' . $itemValue['pid'] . '"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/zoom.gif"/></a></td>';
 			$content .= '</tr>';
 		}
 		$content .= '</table>';
@@ -1282,8 +1307,8 @@ class tx_additionalreports_main
 			}
 		}
 
-		$itemsCount = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('COUNT( tt_content.uid ) as "nb"', 'tt_content,pages', 'tt_content.pid=pages.uid AND tt_content.hidden=0 AND tt_content.deleted=0 AND pages.hidden=0 AND pages.deleted=0');
-		$items = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('tt_content.CType,tt_content.list_type,count(*) as "nb"', 'tt_content,pages', 'tt_content.pid=pages.uid AND tt_content.hidden=0 AND tt_content.deleted=0 AND pages.hidden=0 AND pages.deleted=0', 'tt_content.CType,tt_content.list_type', 'nb DESC');
+		$itemsCount = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('COUNT( tt_content.uid ) as "nb"', 'tt_content,pages', 'tt_content.pid=pages.uid AND pages.pid>=0 AND tt_content.hidden=0 AND tt_content.deleted=0 AND pages.hidden=0 AND pages.deleted=0');
+		$items = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('tt_content.CType,tt_content.list_type,count(*) as "nb"', 'tt_content,pages', 'tt_content.pid=pages.uid AND pages.pid>=0 AND tt_content.hidden=0 AND tt_content.deleted=0 AND pages.hidden=0 AND pages.deleted=0', 'tt_content.CType,tt_content.list_type', 'nb DESC');
 
 		$content = '';
 		$content .= '<table cellspacing="1" cellpadding="2" border="0" class="tx_sv_reportlist typo3-dblist">';
@@ -1363,6 +1388,10 @@ class tx_additionalreports_main
 			if ($getFiltersCat !== null) {
 				$listURL .= '&filtersCat=' . $getFiltersCat;
 			}
+			$orderby = t3lib_div::_GP('orderby');
+			if ($orderby !== null) {
+				$listURL .= '&orderby=' . $orderby;
+			}
 			$currentPage = floor(($firstElementNumber + 1) / $iLimit) + 1;
 			// First
 			if ($currentPage > 1) {
@@ -1405,7 +1434,7 @@ class tx_additionalreports_main
 			}
 
 			$rangeIndicator = '<span class="pageIndicator">'
-			                  . sprintf($GLOBALS['LANG']->getLL('rangeIndicator'), $firstElementNumber + 1, $lastElementNumber)
+			                  . sprintf($GLOBALS['LANG']->getLL('rangeIndicator'), $firstElementNumber + 1, $lastElementNumber) . ' / ' . $totalItems
 			                  . '</span>';
 			// nb per page, filter and reload
 			$reload = '<input type="text" name="nbPerPage" id="nbPerPage" size="5" value="' . $this->nbElementsPerPage . '"/> / page ';
@@ -1615,6 +1644,70 @@ class tx_additionalreports_main
 
 		}
 
+		return $content;
+	}
+
+	public function displayWebsitesConf() {
+		$content = '';
+		$items = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
+			'uid, title',
+			'pages',
+			'is_siteroot = 1 AND deleted = 0 AND hidden = 0 AND pid != -1',
+			'', '', '',
+			'uid'
+		);
+		$content .= '<table cellspacing="1" cellpadding="2" border="0" class="tx_sv_reportlist typo3-dblist">';
+		$content .= '<tr class="t3-row-header"><td colspan="7">';
+		$content .= $GLOBALS['LANG']->getLL('websitesconf_description');
+		$content .= '</td></tr>';
+		$content .= '<tr class="c-headLine">';
+		$content .= '<td class="cell">' . $GLOBALS['LANG']->getLL('pid') . '</td>';
+		$content .= '<td class="cell">' . $GLOBALS['LANG']->getLL('pagetitle') . '</td>';
+		$content .= '<td class="cell">' . $GLOBALS['LANG']->getLL('domains') . '</td>';
+		$content .= '<td class="cell">sys_template</td>';
+		$content .= '<td class="cell">config.baseURL</td>';
+		$content .= '</tr>';
+		if (!empty($items)) {
+			foreach ($items as $itemKey => $itemValue) {
+				$domainRecords = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
+					'uid, pid, domainName',
+					'sys_domain',
+					'pid IN(' . $itemValue['uid'] . ') AND redirectTo=\'\' AND hidden=0',
+					'',
+					'sorting'
+				);
+				$content .= '<tr class="db_list_normal">';
+				$content .= '<td class="cell">' . $itemValue['uid'] . '</td>';
+				$content .= '<td class="cell"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/i/pages.gif"/> ' . $itemValue['title'] . '</td>';
+				$content .= '<td class="cell">';
+				foreach ($domainRecords as $domain) {
+					$content .= '<img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/i/domain.gif"/> ' . $domain['domainName'] . '<br/>';
+				}
+				$content .= '</td>';
+				$templates = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
+					'uid,title,root',
+					'sys_template',
+					'pid IN(' . $itemValue['uid'] . ') AND deleted=0 AND hidden=0',
+					'',
+					'sorting'
+				);
+				$content .= '<td class="cell">';
+				foreach ($templates as $template) {
+					$content .= '<img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/i/template.gif"/> ' . $template['title'] . ' [uid=' . $template['uid'] . ',root=' . $template['root'] . ']<br/>';
+				}
+				$content .= '</td>';
+				$tmpl = t3lib_div::makeInstance("t3lib_tsparser_ext");
+				$tmpl->tt_track = 0;
+				$tmpl->init();
+				$sys_page = t3lib_div::makeInstance("t3lib_pageSelect");
+				$rootLine = $sys_page->getRootLine($itemValue['uid']);
+				$tmpl->runThroughTemplates($rootLine, 0);
+				$tmpl->generateConfig();
+				$content .= '<td class="cell">' . $tmpl->setup['config.']['baseURL'] . '</td>';
+				$content .= '</tr>';
+			}
+		}
+		$content .= '</table>';
 		return $content;
 	}
 

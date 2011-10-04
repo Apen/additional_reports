@@ -1,6 +1,6 @@
 <?php
 
-$reports = array('eid', 'clikeys', 'plugins', 'xclass', 'hooks', 'status', 'ajax', 'extensions', 'extdirect', 'realurlerrors', 'logerrors');
+$reports = array('eid', 'clikeys', 'plugins', 'xclass', 'hooks', 'status', 'ajax', 'extensions', 'extdirect', 'realurlerrors', 'logerrors', 'websitesconf');
 
 if (t3lib_div::int_from_ver(TYPO3_version) >= 4005000) {
 	$reports [] = 'extdirect';
