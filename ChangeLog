@@ -1,3 +1,5 @@
+2011-10-07 CERDAN Yohann <cerdanyohann@yahoo.fr>
+	* Fix for TYPO3 4.6 compatibility
 2011-10-04 CERDAN Yohann <cerdanyohann@yahoo.fr>
 	* Add a new report : check your websites/domains/baseURL configuration
 	* Fix the pagebrowser in errors log

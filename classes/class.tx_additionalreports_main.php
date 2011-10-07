@@ -1672,7 +1672,7 @@ class tx_additionalreports_main
 				$domainRecords = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
 					'uid, pid, domainName',
 					'sys_domain',
-					'pid IN(' . $itemValue['uid'] . ') AND redirectTo=\'\' AND hidden=0',
+					'pid IN(' . $itemValue['uid'] . ') AND hidden=0',
 					'',
 					'sorting'
 				);
