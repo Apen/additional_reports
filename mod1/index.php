@@ -91,6 +91,9 @@ class  tx_additionalreports_module1 extends t3lib_SCbase
 				'displayHooks' => $LANG->getLL('hooks_title'),
 				'displayStatus' => $LANG->getLL('status_title'),
 				'displayExtensions' => $LANG->getLL('extensions_title'),
+				'getRealUrlErrors' => $LANG->getLL('realurlerrors_title'),
+				'getLogErrors' => $LANG->getLL('logerrors_title'),
+				'displayWebsitesConf' => $LANG->getLL('websitesconf_title'),
 			)
 		);
 		parent::menuConfig();
@@ -139,7 +142,7 @@ class  tx_additionalreports_module1 extends t3lib_SCbase
                             </script>
                         ';
 
-			$headerSection = $this->doc->getHeader('pages', $this->pageinfo, $this->pageinfo['_thePath']) . '<br />' . $LANG->sL('LLL:EXT:lang/locallang_core.xml:labels.path') . ': ' . t3lib_div::fixed_lgd_pre($this->pageinfo['_thePath'], 50);
+			$headerSection = $this->doc->getHeader('pages', $this->pageinfo, $this->pageinfo['_thePath']) . '<br />' . $LANG->sL('LLL:EXT:lang/locallang_core.xml:labels.path') . ': ' . t3lib_div::fixed_lgd_cs($this->pageinfo['_thePath'], 50);
 
 			$this->content .= $this->doc->startPage($LANG->getLL('title'));
 			$this->content .= $this->doc->header($LANG->getLL('title'));
@@ -193,19 +196,6 @@ class  tx_additionalreports_module1 extends t3lib_SCbase
 		$this->doc->inDocStylesArray[] = t3lib_div::getURL(t3lib_extMgm::extPath('additional_reports') . 'tx_additionalreports.css');
 		$action = (string)$this->MOD_SETTINGS['function'];
 		$this->content .= tx_additionalreports_main::$action();
-		/*switch ((string)$this->MOD_SETTINGS['function']) {
-			case 1:
-				$this->content .= tx_additionalreports_main::displayAjax();
-				break;
-			case 2:
-				$content = '';
-				$this->content .= $this->doc->section('Message #2:', $content, 0, 1);
-				break;
-			case 3:
-				$content = '';
-				$this->content .= $this->doc->section('Message #3:', $content, 0, 1);
-				break;
-		}*/
 	}
 
 }

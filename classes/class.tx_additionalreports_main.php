@@ -1559,21 +1559,13 @@ class tx_additionalreports_main
 	}
 
 	public function getLogErrors() {
-		/*$cmd = t3lib_div::_GP('cmd');
-		if ($cmd === 'delete') {
-			$delete = t3lib_div::_GP('delete');
-			$GLOBALS['TYPO3_DB']->exec_DELETEquery(
-				'tx_realurl_errorlog',
-				'url_hash=' . mysql_real_escape_string($delete)
-			);
-		}*/
 
 		// query
 		$query = array();
 		$query['SELECT'] = 'COUNT(*) AS "nb",details,tstamp';
 		$query['FROM'] = 'sys_log';
-		$query['WHERE'] = 'error=1 OR error=2';
-		$query['GROUPBY'] = 'details,tstamp';
+		$query['WHERE'] = 'error>0';
+		$query['GROUPBY'] = 'details';
 		$query['ORDERBY'] = 'nb DESC,tstamp DESC';
 		$query['LIMIT'] = '';
 
@@ -1606,8 +1598,7 @@ class tx_additionalreports_main
 			$limit
 		);
 
-
-		$content = '';
+		$content = self::writeInformation($GLOBALS['LANG']->getLL('flushalllog'), 'DELETE FROM sys_log WHERE error>0;');
 
 		if (count($itemsBrowser) > 0) {
 
@@ -1631,12 +1622,10 @@ class tx_additionalreports_main
 
 			foreach ($itemsBrowser as $itemKey => $itemValue) {
 				$content .= '<tr class="db_list_normal">';
-				//$actionURL = $this->baseURL . '&cmd=delete&delete=' . $itemValue['url_hash'];
-				//$action = '<a href="' . $actionURL . '"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/garbage.gif"/></a>';
-				//$content .= '<td class="cell">' . $action . '</td>';
 				$content .= '<td class="cell">' . $itemValue['nb'] . '</td>';
 				$content .= '<td class="cell">' . date('d/m/Y H:i:s', $itemValue['tstamp']) . '</td>';
-				$content .= '<td class="cell">' . htmlentities($itemValue['details']) . '</td>';
+				$content .= '<td class="cell">' . htmlentities($itemValue['details']) . '<br/>';
+				$content .= '<img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/garbage.gif"/>  DELETE FROM sys_log WHERE error>0 AND details = "' . htmlentities(mysql_real_escape_string($itemValue['details'])) . '";</td>';
 				$content .= '</tr>';
 			}
 
