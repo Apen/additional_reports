@@ -1,3 +1,5 @@
+2011-10-27 CERDAN Yohann <cerdanyohann@yahoo.fr>
+	* Add the number of pages for each domain
 2011-10-14 CERDAN Yohann <cerdanyohann@yahoo.fr>
 	* Update the mod1 for 4.3< versions
 	* Add a query to flush errors log

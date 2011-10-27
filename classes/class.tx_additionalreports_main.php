@@ -1646,7 +1646,7 @@ class tx_additionalreports_main
 			'uid'
 		);
 		$content .= '<table cellspacing="1" cellpadding="2" border="0" class="tx_sv_reportlist typo3-dblist">';
-		$content .= '<tr class="t3-row-header"><td colspan="7">';
+		$content .= '<tr class="t3-row-header"><td colspan="10">';
 		$content .= $GLOBALS['LANG']->getLL('websitesconf_description');
 		$content .= '</td></tr>';
 		$content .= '<tr class="c-headLine">';
@@ -1655,7 +1655,11 @@ class tx_additionalreports_main
 		$content .= '<td class="cell">' . $GLOBALS['LANG']->getLL('domains') . '</td>';
 		$content .= '<td class="cell">sys_template</td>';
 		$content .= '<td class="cell">config.baseURL</td>';
+		$content .= '<td class="cell">pages</td>';
+		$content .= '<td class="cell">pages.hidden</td>';
+		$content .= '<td class="cell">pages.no_search</td>';
 		$content .= '</tr>';
+
 		if (!empty($items)) {
 			foreach ($items as $itemKey => $itemValue) {
 				$domainRecords = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
@@ -1693,11 +1697,54 @@ class tx_additionalreports_main
 				$tmpl->runThroughTemplates($rootLine, 0);
 				$tmpl->generateConfig();
 				$content .= '<td class="cell">' . $tmpl->setup['config.']['baseURL'] . '</td>';
+
+				// count pages
+				$list = self::getTreeList($itemValue['uid'], 99, 0, '1=1');
+				$listArray = explode(',', $list);
+				$content .= '<td class="cell" align="center">' . (count($listArray) - 1) . '</td>';
+				$content .= '<td class="cell" align="center">' . (self::getCountPagesUids($list, 'hidden=1')) . '</td>';
+				$content .= '<td class="cell" align="center">' . (self::getCountPagesUids($list, 'no_search=1')) . '</td>';
+
 				$content .= '</tr>';
 			}
 		}
 		$content .= '</table>';
 		return $content;
+	}
+
+	public function getCountPagesUids($listOfUids, $where = '1=1') {
+		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid', 'pages', 'uid IN (' . $listOfUids . ') AND ' . $where);
+		$count = $GLOBALS['TYPO3_DB']->sql_num_rows($res);
+		$GLOBALS['TYPO3_DB']->sql_free_result($res);
+		return $count;
+	}
+
+	public function getTreeList($id, $depth, $begin = 0, $perms_clause) {
+		$depth = intval($depth);
+		$begin = intval($begin);
+		$id = intval($id);
+		if ($begin == 0) {
+			$theList = $id;
+		} else {
+			$theList = '';
+		}
+		if ($id && $depth > 0) {
+			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
+				'uid',
+				'pages',
+				'pid=' . $id . ' ' . t3lib_BEfunc::deleteClause('pages') . ' AND ' . $perms_clause
+			);
+			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+				if ($begin <= 0) {
+					$theList .= ',' . $row['uid'];
+				}
+				if ($depth > 1) {
+					$theList .= self::getTreeList($row['uid'], $depth - 1, $begin - 1, $perms_clause);
+				}
+			}
+			$GLOBALS['TYPO3_DB']->sql_free_result($res);
+		}
+		return $theList;
 	}
 
 }
