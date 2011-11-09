@@ -1,3 +1,5 @@
+2011-11-09 CERDAN Yohann <cerdanyohann@yahoo.fr>
+	* new feature : check if an extension need ext conf update (usefull after mass update)
 2011-10-27 CERDAN Yohann <cerdanyohann@yahoo.fr>
 	* Add the number of pages for each domain
 2011-10-14 CERDAN Yohann <cerdanyohann@yahoo.fr>

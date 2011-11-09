@@ -211,6 +211,27 @@ class tx_additionalreports_main
 		}
 	}
 
+	public function getExtPath($extKey, $type = 'L', $returnWithoutExtKey = FALSE) {
+		$typePath = self::typePath($type);
+
+		if ($typePath) {
+			$path = $typePath . ($returnWithoutExtKey ? '' : $extKey . '/');
+			return $path; # @is_dir($path) ? $path : '';
+		} else {
+			return '';
+		}
+	}
+
+	public function typePath($type) {
+		if ($type === 'S') {
+			return PATH_typo3 . 'sysext/';
+		} elseif ($type === 'G') {
+			return PATH_typo3 . 'ext/';
+		} elseif ($type === 'L') {
+			return PATH_typo3conf . 'ext/';
+		}
+	}
+
 	public function versionCompare($depV) {
 		$t3version = TYPO3_version;
 		$depK = 'typo3';
@@ -281,6 +302,7 @@ class tx_additionalreports_main
 		$content .= '<td class="cell" width="40" style="text-align:center;">' . $GLOBALS['LANG']->getLL('downloads') . '</td>';
 		$content .= '<td class="cell" colspan="2">' . $GLOBALS['LANG']->getLL('extensions_tables') . '</td>';
 		$content .= '<td class="cell" width="80" style="text-align:center;">' . $GLOBALS['LANG']->getLL('extensions_tablesintegrity') . '</td>';
+		$content .= '<td class="cell" width="80" style="text-align:center;">' . $GLOBALS['LANG']->getLL('extensions_confintegrity') . '</td>';
 		$content .= '<td class="cell" colspan="2">' . $GLOBALS['LANG']->getLL('extensions_files') . '</td>';
 		$content .= '</tr>';
 
@@ -346,6 +368,27 @@ class tx_additionalreports_main
 						$content .= '<td class="' . $class . '" align="center">' . $GLOBALS['LANG']->getLL('no') . '</td>';
 					}
 
+					// need extconf update
+					$absPath = self::getExtPath($extKey, $extInfo['type']);
+					$configTemplate = t3lib_div::getUrl($absPath . 'ext_conf_template.txt');
+					$tsparserObj = t3lib_div::makeInstance('t3lib_TSparser');
+					$tsparserObj->parse($configTemplate);
+					$arr = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][$extKey]);
+					$arr = is_array($arr) ? $arr : array();
+					$diffConf = array_diff_key($tsparserObj->setup, $arr);
+					if (count($diffConf) > 0) {
+						$id = 'extconf' . $extKey;
+						$datas = '<span style="color:white;">Diff : </span>' . self::view_array($diffConf);
+						$datas .= '<span style="color:white;">$GLOBALS[\'TYPO3_CONF_VARS\'][\'EXT\'][\'extConf\'][\'' . $extKey . '\'] : </span>' . self::view_array($arr);
+						$datas .= '<span style="color:white;">ext_conf_template.txt : </span>' . self::view_array($tsparserObj->setup);
+						$dumpExtConf = '<input type="button" onclick="Shadowbox.open({content:\'<div>\'+$(\'' . $id . '\').innerHTML+\'</div>\',player:\'html\',title:\'' . $extKey . '\',height:600,width:800});"'
+						               . ' value="+"/><div style="display:none;" id="' . $id . '">'
+						               . $datas . '</div>';
+						$content .= '<td class="' . $class . '" align="center"><span style="color:red;font-weight:bold;">' . $GLOBALS['LANG']->getLL('yes') . '&nbsp;&nbsp;' . $dumpExtConf . '</span></td>';
+					} else {
+						$content .= '<td class="' . $class . '" align="center">' . $GLOBALS['LANG']->getLL('no') . '</td>';
+					}
+
 					// modified files
 					if (count($affectedFiles) > 0) {
 						$extensionsModified++;
@@ -362,6 +405,7 @@ class tx_additionalreports_main
 					} else {
 						$content .= '<td class="' . $class . '">&nbsp;</td><td class="' . $class . '">&nbsp;</td>';
 					}
+
 					$content .= '</tr>';
 				}
 			}
