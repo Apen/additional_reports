@@ -79,6 +79,7 @@
 			<label index="extensions_description">List of all the extension with informations for each of them.</label>
 			<label index="extensions_tables">Tables and fields</label>
 			<label index="extensions_tablesintegrity">Need DB update ?</label>
+			<label index="extensions_confintegrity">Need extConf update ?</label>
 			<label index="extensions_files">Modified files !!!</label>
 			<label index="extensions_filesmodified">modified(s) file(s) in this extension</label>
 			<label index="extensions_tablesmodified">table(s) in this extension</label>
@@ -185,6 +186,7 @@
 			</label>
 			<label index="extensions_tables">Tables et champs</label>
 			<label index="extensions_tablesintegrity">Mise à jour de la BD ?</label>
+			<label index="extensions_confintegrity">Mise à jour du extConf ?</label>
 			<label index="extensions_files">Fichiers modifiés !!!</label>
 			<label index="extensions_filesmodified">fichier(s) modifié(s) dans cette extension</label>
 			<label index="extensions_tablesmodified">table(s) dans cette extension</label>
