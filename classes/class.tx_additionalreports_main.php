@@ -701,6 +701,9 @@ class tx_additionalreports_main
 		}
 		$content .= self::writeInformation('forceCharset', $GLOBALS['TYPO3_CONF_VARS']['BE']['forceCharset'] . '&nbsp;');
 		$content .= self::writeInformation('setDBinit', $GLOBALS['TYPO3_CONF_VARS']['SYS']['setDBinit'] . '&nbsp;');
+		$content .= self::writeInformation('no_pconnect', $GLOBALS['TYPO3_CONF_VARS']['SYS']['no_pconnect'] . '&nbsp;');
+		$content .= self::writeInformation('displayErrors', $GLOBALS['TYPO3_CONF_VARS']['SYS']['displayErrors'] . '&nbsp;');
+		$content .= self::writeInformation('maxFileSize', $GLOBALS['TYPO3_CONF_VARS']['BE']['maxFileSize'] . '&nbsp;');
 		$content .= '<div class="typo3-message message-information">';
 		$content .= '<div class="header-container">';
 		$extensions = explode(',', $GLOBALS['TYPO3_CONF_VARS']['EXT']['extList']);
@@ -725,6 +728,12 @@ class tx_additionalreports_main
 		$content .= self::writeInformation('max_execution_time', ini_get('max_execution_time'));
 		$content .= self::writeInformation('post_max_size', ini_get('post_max_size'));
 		$content .= self::writeInformation('upload_max_filesize', ini_get('upload_max_filesize'));
+		$content .= self::writeInformation('display_errors', ini_get('display_errors'));
+		$content .= self::writeInformation('error_reporting', ini_get('error_reporting'));
+		$apacheUser = posix_getpwuid(posix_getuid());
+		$apacheGroup = posix_getgrgid(posix_getgid());
+		$content .= self::writeInformation('Apache user', $apacheUser['name'] . ' (' . $apacheUser['uid'] . ')');
+		$content .= self::writeInformation('Apache group', $apacheGroup['name'] . ' (' . $apacheGroup['gid'] . ')');
 		$content .= '<div class="typo3-message message-information">';
 		$content .= '<div class="header-container">';
 		$content .= '<div class="message-header message-left">' . $GLOBALS['LANG']->getLL('status_loadedextensions') . '</div>';
@@ -734,9 +743,9 @@ class tx_additionalreports_main
 		natcasesort($extensions);
 		foreach ($extensions as $extension) {
 			if (phpversion($extension)) {
-				$content .= '<li>' . $extension . ' (' . phpversion($extension) . ')</li>';
+				$content .= '<li>' . strtolower($extension) . ' (' . phpversion($extension) . ')</li>';
 			} else {
-				$content .= '<li>' . $extension . '</li>';
+				$content .= '<li>' . strtolower($extension) . '</li>';
 			}
 		}
 		$content .= '</ul>';
@@ -762,24 +771,51 @@ class tx_additionalreports_main
 		$items = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('default_character_set_name, default_collation_name', 'information_schema.schemata', 'schema_name = \'' . TYPO3_db . '\'');
 		$content .= self::writeInformation('default_character_set_name', $items[0]['default_character_set_name']);
 		$content .= self::writeInformation('default_collation_name', $items[0]['default_collation_name']);
-		$items = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('table_name, engine, table_collation, table_rows ', 'information_schema.tables', 'table_schema = \'' . TYPO3_db . '\'', '', 'table_name');
+		// SHOW VARIABLES LIKE '%query_cache%'; - SHOW STATUS LIKE '%Qcache%';
+		$queryCache = '';
+		$res = $GLOBALS['TYPO3_DB']->sql_query('SHOW VARIABLES LIKE "%query_cache%";');
+		while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+			$queryCache .= $row['Variable_name'] . ' : ' . $row['Value'] . '<br />';
+		}
+		$GLOBALS['TYPO3_DB']->sql_free_result($res);
+		$res = $GLOBALS['TYPO3_DB']->sql_query('SHOW STATUS LIKE "%Qcache%";');
+		while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+			$queryCache .= $row['Variable_name'] . ' : ' . $row['Value'] . '<br />';
+		}
+		$GLOBALS['TYPO3_DB']->sql_free_result($res);
+		$content .= self::writeInformation('query_cache', $queryCache);
+		// SHOW VARIABLES LIKE '%character%';
+		$sqlEncoding = '';
+		$res = $GLOBALS['TYPO3_DB']->sql_query('SHOW VARIABLES LIKE "%character%";');
+		while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+			$sqlEncoding .= $row['Variable_name'] . ' : ' . $row['Value'] . '<br />';
+		}
+		$GLOBALS['TYPO3_DB']->sql_free_result($res);
+		$content .= self::writeInformation('character_set', $sqlEncoding);
+		// tables
+		$items = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('table_name, engine, table_collation, table_rows, ((data_length+index_length)/1024/1024) as "size"', 'information_schema.tables', 'table_schema = \'' . TYPO3_db . '\'', '', 'table_name');
 		$content .= '<table cellspacing="1" cellpadding="2" border="0" class="tx_sv_reportlist typo3-dblist" width="100%">';
-		$content .= '<tr class="t3-row-header"><td colspan="4">TYPO3_db - ' . count($items) . ' tables</td></tr>';
+		$content .= '<tr class="t3-row-header"><td colspan="6">' . TYPO3_db . ' - ' . count($items) . ' tables</td></tr>';
 		$content .= '<tr class="c-headLine">';
 		$content .= '<td class="cell">Name</td>';
 		$content .= '<td class="cell">Engine</td>';
 		$content .= '<td class="cell">Collation</td>';
 		$content .= '<td class="cell">Rows</td>';
+		$content .= '<td class="cell">Size (in MB)</td>';
 		$content .= '</tr>';
+		$size = 0;
 		foreach ($items as $itemKey => $itemValue) {
 			$content .= '<tr class="db_list_normal">';
 			$content .= '<td class="cell">' . $itemValue['table_name'] . '</td>';
 			$content .= '<td class="cell">' . $itemValue['engine'] . '</td>';
 			$content .= '<td class="cell">' . $itemValue['table_collation'] . '</td>';
 			$content .= '<td class="cell">' . $itemValue['table_rows'] . '</td>';
+			$content .= '<td class="cell">' . round($itemValue['size'], 2) . '</td>';
+			$size += round($itemValue['size'], 2);
 			$content .= '</tr>';
 
 		}
+		$content .= '<tr class="t3-row-header"><td class="cell" colspan="4">Total</td><td>' . round($size, 2) . ' MB</td></tr>';
 		$content .= '</table>';
 		$content .= '</div>';
 		// Crontab
