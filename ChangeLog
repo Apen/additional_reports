@@ -1,3 +1,5 @@
+2011-11-24 CERDAN Yohann <cerdanyohann@yahoo.fr>
+	* In status report : add some features like apache user/group, status of the mysql cache, db size...
 2011-11-09 CERDAN Yohann <cerdanyohann@yahoo.fr>
 	* new feature : check if an extension need ext conf update (usefull after mass update)
 2011-10-27 CERDAN Yohann <cerdanyohann@yahoo.fr>
