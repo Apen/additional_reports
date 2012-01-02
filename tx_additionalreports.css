@@ -5,11 +5,15 @@
 }
 
 .typo3-message {
-	background-position: 10px 12px;
+	background-position: 10px 4px;
 	background-repeat: no-repeat;
 	border: 1px solid;
 	margin-bottom: 4px;
-	padding: 12px 12px 12px 36px;
+	padding: 5px 12px 5px 36px;
+}
+
+.typo3-message li {
+	margin-bottom: 0px;
 }
 
 .message-left {

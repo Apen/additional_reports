@@ -1,3 +1,7 @@
+2012-01-02 CERDAN Yohann <cerdanyohann@yahoo.fr>
+	* Fix deprecated functions of the install tool
+2011-12-24 CERDAN Yohann <cerdanyohann@yahoo.fr>
+	* Bugfix on conf update check
 2011-11-24 CERDAN Yohann <cerdanyohann@yahoo.fr>
 	* In status report : add some features like apache user/group, status of the mysql cache, db size...
 2011-11-09 CERDAN Yohann <cerdanyohann@yahoo.fr>
