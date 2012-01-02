@@ -84,7 +84,7 @@ class  tx_additionalreports_module1 extends t3lib_SCbase
 		$this->MOD_MENU = Array(
 			'function' => Array(
 				'displayAjax' => $LANG->getLL('ajax_title'),
-				'displayEID' => $LANG->getLL('eid_title'),
+				'displayEid' => $LANG->getLL('eid_title'),
 				'displayCliKeys' => $LANG->getLL('clikeys_title'),
 				'displayPlugins' => $LANG->getLL('plugins_title'),
 				'displayXclass' => $LANG->getLL('xclass_title'),
