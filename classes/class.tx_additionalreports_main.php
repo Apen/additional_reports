@@ -745,10 +745,12 @@ class tx_additionalreports_main
 		$content .= self::writeInformation('upload_max_filesize', ini_get('upload_max_filesize'));
 		$content .= self::writeInformation('display_errors', ini_get('display_errors'));
 		$content .= self::writeInformation('error_reporting', ini_get('error_reporting'));
-		$apacheUser = posix_getpwuid(posix_getuid());
-		$apacheGroup = posix_getgrgid(posix_getgid());
-		$content .= self::writeInformation('Apache user', $apacheUser['name'] . ' (' . $apacheUser['uid'] . ')');
-		$content .= self::writeInformation('Apache group', $apacheGroup['name'] . ' (' . $apacheGroup['gid'] . ')');
+		if (function_exists('posix_getpwuid') && function_exists('posix_getgrgid')) {
+			$apacheUser = posix_getpwuid(posix_getuid());
+			$apacheGroup = posix_getgrgid(posix_getgid());
+			$content .= self::writeInformation('Apache user', $apacheUser['name'] . ' (' . $apacheUser['uid'] . ')');
+			$content .= self::writeInformation('Apache group', $apacheGroup['name'] . ' (' . $apacheGroup['gid'] . ')');
+		}
 		$content .= '<div class="typo3-message message-information">';
 		$content .= '<div class="header-container">';
 		$content .= '<div class="message-header message-left">' . $GLOBALS['LANG']->getLL('status_loadedextensions') . '</div>';
