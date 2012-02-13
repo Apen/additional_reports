@@ -91,9 +91,10 @@ class  tx_additionalreports_module1 extends t3lib_SCbase
 				'displayHooks' => $LANG->getLL('hooks_title'),
 				'displayStatus' => $LANG->getLL('status_title'),
 				'displayExtensions' => $LANG->getLL('extensions_title'),
-				'getRealUrlErrors' => $LANG->getLL('realurlerrors_title'),
-				'getLogErrors' => $LANG->getLL('logerrors_title'),
+				'displayRealUrlErrors' => $LANG->getLL('realurlerrors_title'),
+				'displayLogErrors' => $LANG->getLL('logerrors_title'),
 				'displayWebsitesConf' => $LANG->getLL('websitesconf_title'),
+				'displayDbCheck' => $LANG->getLL('dbcheck_title'),
 			)
 		);
 		parent::menuConfig();

@@ -52,6 +52,8 @@
 			</label>
 			<label index="xclass_title">Additional reports - XCLASS</label>
 			<label index="xclass_description">List of all the XCLASS with the name and the path for each of them.</label>
+			<label index="dbcheck_title">Additional reports - check the database</label>
+			<label index="dbcheck_description">Check the database integrity.</label>
 			<label index="hooks_title">Additional reports - hooks</label>
 			<label index="hooks_description">List of all the hooks with the name and the path for each of them.</label>
 			<label index="realurlerrors_title">Additional reports - realurl errors</label>
@@ -84,6 +86,7 @@
 			<label index="extensions_filesmodified">modified(s) file(s) in this extension</label>
 			<label index="extensions_tablesmodified">table(s) in this extension</label>
 			<label index="extensions_dev">specific developpment(s)</label>
+			<label index="extensions_unloaded">unloaded extension(s)</label>
 			<label index="extensions_toupdate">extension(s) to update</label>
 			<label index="extensions_extensions">loaded extension(s)</label>
 			<label index="extensions_ter">extension(s) from the TER</label>
@@ -158,12 +161,14 @@
 			</label>
 			<label index="xclass_title">Additional reports - XCLASS</label>
 			<label index="xclass_description">Liste de toutes les XCLASS avec des informations pour chacune.</label>
+			<label index="dbcheck_title">Additional reports - vérifier la base de données</label>
+			<label index="dbcheck_description">Vérifie l'intégrité de la base de données.</label>
 			<label index="hooks_title">Additional reports - hooks</label>
 			<label index="hooks_description">Liste de tous les hooks avec des informations pour chacun.</label>
 			<label index="hooks_core">Hooks du core</label>
 			<label index="realurlerrors_title">Additional reports - erreurs realurl</label>
 			<label index="realurlerrors_description">Liste de toutes les erreurs realurl.</label>
-			<label index="logerrors_title">Additional reports - erreurs des logs </label>
+			<label index="logerrors_title">Additional reports - erreurs des logs</label>
 			<label index="logerrors_description">Liste de toutes les erreurs présentent dans les logs.</label>
 			<label index="websitesconf_title">Additional reports - configurations des sites/domaines</label>
 			<label index="websitesconf_description">Vérifie la configuration des sites et des domaines.</label>
@@ -191,6 +196,7 @@
 			<label index="extensions_filesmodified">fichier(s) modifié(s) dans cette extension</label>
 			<label index="extensions_tablesmodified">table(s) dans cette extension</label>
 			<label index="extensions_dev">développement(s) spécifique(s)</label>
+			<label index="extensions_unloaded">extension(s) non chargées</label>
 			<label index="extensions_toupdate">extension(s) à mettre à jour</label>
 			<label index="extensions_extensions">extension(s) chargée(s)</label>
 			<label index="extensions_ter">extension(s) du TER</label>

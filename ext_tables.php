@@ -2,7 +2,7 @@
 if (!defined('TYPO3_MODE')) die ('Access denied.');
 
 if (TYPO3_MODE == 'BE') {
-	$reports = array('eid', 'clikeys', 'plugins', 'xclass', 'hooks', 'status', 'ajax', 'extensions', 'logerrors', 'websitesconf');
+	$reports = array('eid', 'clikeys', 'plugins', 'xclass', 'hooks', 'status', 'ajax', 'extensions', 'logerrors', 'websitesconf', 'dbcheck');
 
 	if (t3lib_extMgm::isLoaded('realurl')) {
 		$reports [] = 'realurlerrors';
@@ -29,5 +29,6 @@ if (TYPO3_MODE == 'BE') {
 	}
 }
 
+require_once(t3lib_extMgm::extPath('additional_reports') . 'classes/class.tx_additionalreports_util.php');
 
 ?>
