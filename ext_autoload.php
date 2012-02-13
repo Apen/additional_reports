@@ -1,8 +1,8 @@
 <?php
 
-$reports = array('eid', 'clikeys', 'plugins', 'xclass', 'hooks', 'status', 'ajax', 'extensions', 'extdirect', 'realurlerrors', 'logerrors', 'websitesconf');
+$reports = array('eid', 'clikeys', 'plugins', 'xclass', 'hooks', 'status', 'ajax', 'extensions', 'extdirect', 'realurlerrors', 'logerrors', 'websitesconf', 'dbcheck');
 
-if (version_compare(TYPO3_version,'4.5','>=')) {
+if (version_compare(TYPO3_version, '4.5', '>=')) {
 	$reports [] = 'extdirect';
 }
 
