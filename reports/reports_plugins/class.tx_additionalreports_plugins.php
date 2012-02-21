@@ -80,7 +80,7 @@ class tx_additionalreports_plugins implements tx_reports_Report
 	 */
 
 	public function getReport() {
-		$this->reportObject->doc->getPageRenderer()->addCssFile(t3lib_extMgm::extRelPath('additional_reports') . 'tx_additionalreports.css');
+		$this->reportObject->doc->getPageRenderer()->addCssFile(t3lib_extMgm::extRelPath('additional_reports') . 'res/tx_additionalreports.css');
 		$content = tx_additionalreports_main::displayPlugins();
 		return $content;
 	}

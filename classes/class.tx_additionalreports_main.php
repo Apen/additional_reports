@@ -73,16 +73,17 @@ class tx_additionalreports_main
 		$content .= '<td class="cell">' . $GLOBALS['LANG']->getLL('path') . '</td>';
 		$content .= '<td class="cell">' . $GLOBALS['LANG']->getLL('user') . '</td>';
 		$content .= '</tr>';
-
 		foreach ($items as $itemKey => $itemValue) {
 			preg_match('/EXT:(.*?)\//', $itemValue[0], $ext);
-			$content .= '<tr class="db_list_normal">';
-			$content .= '<td class="col-icon"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . t3lib_extMgm::extRelPath($ext[1]) . 'ext_icon.gif"/></td>';
-			$content .= '<td class="cell">' . $ext[1] . '</td>';
-			$content .= '<td class="cell">' . $itemKey . '</td>';
-			$content .= '<td class="cell">' . $itemValue[0] . '</td>';
-			$content .= '<td class="cell">' . $itemValue[1] . '</td>';
-			$content .= '</tr>';
+			if (t3lib_extMgm::isLoaded($ext[1])) {
+				$content .= '<tr class="db_list_normal">';
+				$content .= '<td class="col-icon"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . t3lib_extMgm::extRelPath($ext[1]) . 'ext_icon.gif"/></td>';
+				$content .= '<td class="cell">' . $ext[1] . '</td>';
+				$content .= '<td class="cell">' . $itemKey . '</td>';
+				$content .= '<td class="cell">' . $itemValue[0] . '</td>';
+				$content .= '<td class="cell">' . $itemValue[1] . '</td>';
+				$content .= '</tr>';
+			}
 		}
 		$content .= '</table>';
 		return $content;
@@ -110,7 +111,7 @@ class tx_additionalreports_main
 				$content .= '<td class="cell">' . $itemKey . '</td>';
 				$content .= '<td class="cell">' . $itemValue . '</td>';
 				$content .= '</tr>';
-			} 
+			}
 		}
 		$content .= '</table>';
 		return $content;
@@ -148,22 +149,6 @@ class tx_additionalreports_main
 		$em = tx_additionalreports_util::getExtList($path, $items);
 
 		$content .= '<script type="text/javascript">Shadowbox.init({displayNav:true,displayCounter:false,overlayOpacity:0.8});</script>';
-		$content .= '<table cellspacing="1" cellpadding="2" border="0" class="tx_sv_reportlist typo3-dblist">';
-		$content .= '<tr class="t3-row-header"><td colspan="15">';
-		$content .= $GLOBALS['LANG']->getLL('extensions_ter') . ' (TYPO3 ' . TYPO3_version . ')';
-		$content .= '</td></tr>';
-		$content .= '<tr class="c-headLine">';
-		$content .= '<td class="cell">&nbsp;</td>';
-		$content .= '<td class="cell" width="150" colspan="2">' . $GLOBALS['LANG']->getLL('extension') . '</td>';
-		$content .= '<td class="cell" width="40" style="text-align:center;">' . $GLOBALS['LANG']->getLL('status_version') . '</td>';
-		$content .= '<td class="cell" width="40" style="text-align:center;">' . $GLOBALS['LANG']->getLL('versioncheck') . '</td>';
-		$content .= '<td class="cell" width="40" style="text-align:center;">' . $GLOBALS['LANG']->getLL('status_lastversion') . '</td>';
-		$content .= '<td class="cell" width="40" style="text-align:center;">' . $GLOBALS['LANG']->getLL('downloads') . '</td>';
-		$content .= '<td class="cell" colspan="2">' . $GLOBALS['LANG']->getLL('extensions_tables') . '</td>';
-		$content .= '<td class="cell" width="80" style="text-align:center;">' . $GLOBALS['LANG']->getLL('extensions_tablesintegrity') . '</td>';
-		$content .= '<td class="cell" width="80" style="text-align:center;">' . $GLOBALS['LANG']->getLL('extensions_confintegrity') . '</td>';
-		$content .= '<td class="cell" colspan="2">' . $GLOBALS['LANG']->getLL('extensions_files') . '</td>';
-		$content .= '</tr>';
 
 		$extensionsToUpdate = 0;
 		$extensionsDev = 0;
@@ -278,6 +263,23 @@ class tx_additionalreports_main
 			}
 		}
 
+		$contentHead = '<table cellspacing="1" cellpadding="2" border="0" class="tx_sv_reportlist typo3-dblist">';
+		$contentHead .= '<tr class="t3-row-header"><td colspan="15">';
+		$contentHead .= $extensionsLoaded - count($itemsDev) . ' ' . $GLOBALS['LANG']->getLL('extensions_ter');
+		$contentHead .= '</td></tr>';
+		$contentHead .= '<tr class="c-headLine">';
+		$contentHead .= '<td class="cell">&nbsp;</td>';
+		$contentHead .= '<td class="cell" width="150" colspan="2">' . $GLOBALS['LANG']->getLL('extension') . '</td>';
+		$contentHead .= '<td class="cell" width="40" style="text-align:center;">' . $GLOBALS['LANG']->getLL('status_version') . '</td>';
+		$contentHead .= '<td class="cell" width="40" style="text-align:center;">' . $GLOBALS['LANG']->getLL('versioncheck') . '</td>';
+		$contentHead .= '<td class="cell" width="40" style="text-align:center;">' . $GLOBALS['LANG']->getLL('status_lastversion') . '</td>';
+		$contentHead .= '<td class="cell" width="40" style="text-align:center;">' . $GLOBALS['LANG']->getLL('downloads') . '</td>';
+		$contentHead .= '<td class="cell" colspan="2">' . $GLOBALS['LANG']->getLL('extensions_tables') . '</td>';
+		$contentHead .= '<td class="cell" width="80" style="text-align:center;">' . $GLOBALS['LANG']->getLL('extensions_tablesintegrity') . '</td>';
+		$contentHead .= '<td class="cell" width="80" style="text-align:center;">' . $GLOBALS['LANG']->getLL('extensions_confintegrity') . '</td>';
+		$contentHead .= '<td class="cell" colspan="2">' . $GLOBALS['LANG']->getLL('extensions_files') . '</td>';
+		$contentHead .= '</tr>';
+		$content = $contentHead . $content;
 		$content .= '</table>';
 
 		// specific developpment(s)
@@ -464,9 +466,9 @@ class tx_additionalreports_main
 				while (!feof($handle)) {
 					$buffer = fgets($handle);
 					if ($extension != '') {
-						if (preg_match("/\['EXTCONF'\]\['(.*?)'\].*?=/", $buffer, $matches)) {
+						if (preg_match("/\['EXTCONF'\]\['(.*?)'\](.*?)\s*=/", $buffer, $matches)) {
 							if ($matches[1] != $extension) {
-								$items [] = array($extension, $buffer);
+								$items [] = array($extension, $matches[1] . ' --> ' . $matches[2]);
 							}
 						}
 					}

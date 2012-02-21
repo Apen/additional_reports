@@ -32,6 +32,50 @@
 
 class tx_additionalreports_util
 {
+	/**
+	 * Define all the reports
+	 *
+	 * @return array
+	 */
+
+	public function getReportsList() {
+		$reports = array('eid', 'clikeys', 'plugins', 'xclass', 'hooks', 'status', 'ajax', 'extensions', 'logerrors', 'websitesconf', 'dbcheck');
+
+		if (t3lib_extMgm::isLoaded('realurl')) {
+			$reports [] = 'realurlerrors';
+		}
+
+		if (t3lib_div::int_from_ver(TYPO3_version) >= 4005000) {
+			$reports [] = 'extdirect';
+		}
+
+		return $reports;
+	}
+
+	/**
+	 * Define all the sub modules
+	 *
+	 * @return array
+	 */
+
+	public function getSubModules() {
+		global $LANG;
+		return array(
+			'displayAjax' => $LANG->getLL('ajax_title'),
+			'displayEid' => $LANG->getLL('eid_title'),
+			'displayCliKeys' => $LANG->getLL('clikeys_title'),
+			'displayPlugins' => $LANG->getLL('plugins_title'),
+			'displayXclass' => $LANG->getLL('xclass_title'),
+			'displayHooks' => $LANG->getLL('hooks_title'),
+			'displayStatus' => $LANG->getLL('status_title'),
+			'displayExtensions' => $LANG->getLL('extensions_title'),
+			'displayRealUrlErrors' => $LANG->getLL('realurlerrors_title'),
+			'displayLogErrors' => $LANG->getLL('logerrors_title'),
+			'displayWebsitesConf' => $LANG->getLL('websitesconf_title'),
+			'displayDbCheck' => $LANG->getLL('dbcheck_title'),
+		);
+	}
+
 	public function getSqlUpdateStatements() {
 		$tblFileContent = t3lib_div::getUrl(PATH_t3lib . 'stddb/tables.sql');
 		foreach ($GLOBALS['TYPO3_LOADED_EXT'] as $loadedExtConf) {
@@ -403,6 +447,91 @@ class tx_additionalreports_util
 		}
 
 		return $cacheFilePrefix;
+	}
+
+	public function getExtensionsInfos() {
+		$extLocalconf = tx_additionalreports_util::getCacheFilePrefix() . '_ext_localconf.php';
+		$extTables = tx_additionalreports_util::getCacheFilePrefix() . '_ext_tables.php';
+
+		$extensionsList = array();
+
+		// analyze _ext_localconf
+		if (is_file(PATH_site . 'typo3conf/' . $extLocalconf)) {
+			$handle = fopen(PATH_site . 'typo3conf/' . $extLocalconf, 'r');
+			$extension = '';
+			if ($handle) {
+				while (!feof($handle)) {
+					$buffer = fgets($handle);
+					if ($extension != '') {
+						if (preg_match("/\['EXTCONF'\]\['(.*?)'\](.*?)\s*=/", $buffer, $matches)) {
+							if ($matches[1] != $extension) {
+								$extensionsList[$extension]['hooks']++;
+							}
+						}
+						if (preg_match("/\['SC_OPTIONS'\]\['(.*?)'\](.*?)\s*=/", $buffer, $matches)) {
+							if ($matches[1] != $extension) {
+								$extensionsList[$extension]['corehooks']++;
+							}
+						}
+						if (preg_match("/\['XCLASS'\]\['(.*?)\.php'\](.*?)\s*=/", $buffer, $matches)) {
+							if ($matches[1] != $extension) {
+								$extensionsList[$extension]['xclass']++;
+							}
+						}
+						if (preg_match("/addPItoST43/", $buffer, $matchesPlugin)) {
+							$extensionsList[$extension]['plugins']++;
+						}
+						if (preg_match("/addService/", $buffer, $matchesPlugin)) {
+							$extensionsList[$extension]['services']++;
+						}
+					}
+					if (preg_match('/## EXTENSION: (.*?)$/', $buffer, $matches)) {
+						$extension = $matches[1];
+						$extensionsList[$extension] = array();
+					}
+				}
+				fclose($handle);
+			}
+		}
+
+		// analyze _ext_tables
+		if (is_file(PATH_site . 'typo3conf/' . $extTables)) {
+			$handle = fopen(PATH_site . 'typo3conf/' . $extTables, 'r');
+			$extension = '';
+			if ($handle) {
+				while (!feof($handle)) {
+					$buffer = fgets($handle);
+					if ($extension != '') {
+						if (preg_match("/\['SC_OPTIONS'\]\['(.*?)'\](.*?)\s*=/", $buffer, $matches)) {
+							if ($matches[1] != $extension) {
+								$extensionsList[$extension]['corehooks']++;
+							}
+						}
+						if (preg_match("/\['XCLASS'\]\['(.*?)\.php'\](.*?)\s*=/", $buffer, $matches)) {
+							if ($matches[1] != $extension) {
+								$extensionsList[$extension]['xclass']++;
+							}
+						}
+						if (preg_match("/addModule/", $buffer, $matchesPlugin)) {
+							$extensionsList[$extension]['modules']++;
+						}
+						if (preg_match("/insertModuleFunction/", $buffer, $matchesPlugin)) {
+							$extensionsList[$extension]['modulefunctions']++;
+						}
+					}
+					if (preg_match('/## EXTENSION: (.*?)$/', $buffer, $matches)) {
+						$extension = $matches[1];
+						if (!is_array($extensionsList[$extension])) {
+							$extensionsList[$extension] = array();
+						}
+					}
+				}
+				fclose($handle);
+			}
+		}
+
+		t3lib_div::debug($extensionsList);
+
 	}
 
 }

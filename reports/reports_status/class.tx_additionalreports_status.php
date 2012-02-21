@@ -26,25 +26,25 @@
  * This class provides a report displaying a list of informations
  * Code inspired by EXT:dam/lib/class.tx_dam_svlist.php by Rene Fritz
  *
- * @author		CERDAN Yohann <cerdanyohann@yahoo.fr>
- * @package		TYPO3
+ * @author        CERDAN Yohann <cerdanyohann@yahoo.fr>
+ * @package        TYPO3
  */
 
-class tx_additionalreports_extdirect implements tx_reports_Report
+class tx_additionalreports_status implements tx_reports_Report
 {
 
 	/**
 	 * Back-reference to the calling reports module
 	 *
-	 * @var	tx_reports_Module	$reportObject
+	 * @var    tx_reports_Module    $reportObject
 	 */
 
 	protected $reportObject;
 
 	/**
-	 * Constructor for class tx_additionalreports_extdirect
+	 * Constructor for class tx_additionalreports_status
 	 *
-	 * @param	tx_reports_Module	Back-reference to the calling reports module
+	 * @param    tx_reports_Module    Back-reference to the calling reports module
 	 */
 
 	public function __construct(tx_reports_Module $reportObject) {
@@ -55,20 +55,21 @@ class tx_additionalreports_extdirect implements tx_reports_Report
 	/**
 	 * This method renders the report
 	 *
-	 * @return	string	The status report as HTML
+	 * @return    string    The status report as HTML
 	 */
 
 	public function getReport() {
-		$this->reportObject->doc->getPageRenderer()->addCssFile(t3lib_extMgm::extRelPath('additional_reports') . 'tx_additionalreports.css');
-		$content = tx_additionalreports_main::displayExtDirect();
+		$this->reportObject->doc->getPageRenderer()->addCssFile(t3lib_extMgm::extRelPath('additional_reports') . 'res/tx_additionalreports.css');
+		$content = '<p class="help">' . $GLOBALS['LANG']->getLL('status_description') . '</p>';
+		$content .= tx_additionalreports_main::displayStatus();
 		return $content;
 	}
 
 }
 
 
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/additional_reports/reports_extdirect/class.tx_additionalreports_extdirect.php']) {
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/additional_reports/reports_extdirect/class.tx_additionalreports_extdirect.php']);
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/additional_reports/reports_status/class.tx_additionalreports_status.php']) {
+	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/additional_reports/reports_status/class.tx_additionalreports_status.php']);
 }
 
 ?>

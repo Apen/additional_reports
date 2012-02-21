@@ -30,7 +30,7 @@
  * @package        TYPO3
  */
 
-class tx_additionalreports_status implements tx_reports_Report
+class tx_additionalreports_dbcheck implements tx_reports_Report
 {
 
 	/**
@@ -42,7 +42,7 @@ class tx_additionalreports_status implements tx_reports_Report
 	protected $reportObject;
 
 	/**
-	 * Constructor for class tx_additionalreports_status
+	 * Constructor for class tx_additionalreports_dbcheck
 	 *
 	 * @param    tx_reports_Module    Back-reference to the calling reports module
 	 */
@@ -59,17 +59,17 @@ class tx_additionalreports_status implements tx_reports_Report
 	 */
 
 	public function getReport() {
-		$this->reportObject->doc->getPageRenderer()->addCssFile(t3lib_extMgm::extRelPath('additional_reports') . 'tx_additionalreports.css');
-		$content = '<p class="help">' . $GLOBALS['LANG']->getLL('status_description') . '</p>';
-		$content .= tx_additionalreports_main::displayStatus();
+		$this->reportObject->doc->getPageRenderer()->addCssFile(t3lib_extMgm::extRelPath('additional_reports') . 'res/tx_additionalreports.css');
+		$content = '<p class="help">' . $GLOBALS['LANG']->getLL('dbcheck_description') . '</p>';
+		$content .= tx_additionalreports_main::displayDbCheck();
 		return $content;
 	}
 
 }
 
 
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/additional_reports/reports_status/class.tx_additionalreports_status.php']) {
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/additional_reports/reports_status/class.tx_additionalreports_status.php']);
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/additional_reports/reports_dbcheck/class.tx_additionalreports_dbcheck.php']) {
+	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/additional_reports/reports_dbcheck/class.tx_additionalreports_dbcheck.php']);
 }
 
 ?>
