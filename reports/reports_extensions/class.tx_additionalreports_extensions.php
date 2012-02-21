@@ -26,59 +26,51 @@
  * This class provides a report displaying a list of informations
  * Code inspired by EXT:dam/lib/class.tx_dam_svlist.php by Rene Fritz
  *
- * @author        CERDAN Yohann <cerdanyohann@yahoo.fr>
- * @package        TYPO3
+ * @author		CERDAN Yohann <cerdanyohann@yahoo.fr>
+ * @package		TYPO3
  */
 
-class tx_additionalreports_logerrors implements tx_reports_Report
+class tx_additionalreports_extensions implements tx_reports_Report
 {
 
 	/**
 	 * Back-reference to the calling reports module
 	 *
-	 * @var    tx_reports_Module    $reportObject
+	 * @var	tx_reports_Module	$reportObject
 	 */
 
 	protected $reportObject;
-	public $nbElementsPerPage = 15;
-	public $baseURL = '';
 
 	/**
-	 * Constructor for class tx_additionalreports_xclass
+	 * Constructor for class tx_additionalreports_extensions
 	 *
-	 * @param    tx_reports_Module    Back-reference to the calling reports module
+	 * @param	tx_reports_Module	Back-reference to the calling reports module
 	 */
 
 	public function __construct(tx_reports_Module $reportObject) {
 		$this->reportObject = $reportObject;
 		tx_additionalreports_main::init();
-		// Check nb per page
-		$nbPerPage = t3lib_div::_GP('nbPerPage');
-		if ($nbPerPage !== null) {
-			$this->nbElementsPerPage = $nbPerPage;
-		}
-		$this->baseURL = t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'mod.php?M=tools_txreportsM1';
 	}
 
 	/**
 	 * This method renders the report
 	 *
-	 * @return    string    The status report as HTML
+	 * @return	string	The status report as HTML
 	 */
 
 	public function getReport() {
-		$this->reportObject->doc->getPageRenderer()->addCssFile(t3lib_extMgm::extRelPath('additional_reports') . 'tx_additionalreports.css');
-		//$actionURL = $this->baseURL . '&cmd=deleteAll';
-		//$content = '<a href="' . $actionURL . '"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/garbage.gif"/> ' . $GLOBALS['LANG']->getLL('flushalllog') . '</a>';
-		$content = tx_additionalreports_main::displayLogErrors();
+		$this->reportObject->doc->getPageRenderer()->addCssFile(t3lib_extMgm::extRelPath('additional_reports') . 'res/tx_additionalreports.css');
+		$this->reportObject->doc->getPageRenderer()->addCssFile(t3lib_extMgm::extRelPath('additional_reports') . 'libs/shadowbox.css');
+		$this->reportObject->doc->getPageRenderer()->addJsFile(t3lib_extMgm::extRelPath('additional_reports') . 'libs/shadowbox.js');
+		$content = tx_additionalreports_main::displayExtensions();
 		return $content;
 	}
 
 }
 
 
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/additional_reports/reports_xclass/class.tx_additionalreports_xclass.php']) {
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/additional_reports/reports_xclass/class.tx_additionalreports_xclass.php']);
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/additional_reports/reports_eid/class.tx_additionalreports_extensions.php']) {
+	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/additional_reports/reports_eid/class.tx_additionalreports_extensions.php']);
 }
 
 ?>

@@ -19,8 +19,7 @@ $file1 = t3lib_extMgm::extPath($extKey, $extFile);
 $file2 = 'http://typo3.org/typo3temp/tx_terfe/t3xcontentcache/' . $firstLetter . '/' . $secondLetter . '/' . $extKey . '/' . $extKey . '-' . $extVersion . '-' . preg_replace('/[^\w]/', '__', $extFile);
 t3Diff($file1, $file2);
 
-function t3Diff($file1, $file2)
-{
+function t3Diff($file1, $file2) {
 	$diff = t3lib_div::makeInstance('t3lib_diff');
 	$diff->diffOptions = '-bu';
 	$sourcesDiff = $diff->getDiff(t3lib_div::getURL($file1), t3lib_div::getURL($file2));
@@ -29,8 +28,7 @@ function t3Diff($file1, $file2)
 	printT3Diff($sourcesDiff);
 }
 
-function printT3Diff($sourcesDiff)
-{
+function printT3Diff($sourcesDiff) {
 	$out = '<pre width="10"><table border="0" cellspacing="0" cellpadding="0" style="width:780px;padding:8px;">';
 	$out .= '<tr><td style="background-color: #FDD;"><strong>Local file : ' . $GLOBALS['extKey'] . '/' . $GLOBALS['extFile'] . '</strong></td></tr>';
 	$out .= '<tr><td style="background-color: #DFD;"><strong>TER file (version ' . $GLOBALS['extVersion'] . ')</strong></td></tr>';
@@ -59,11 +57,8 @@ function printT3Diff($sourcesDiff)
 	echo $out;
 }
 
-function formatcode($code)
-{
+function formatcode($code) {
 	$code = htmlentities($code);
-	//$code = str_replace(" ", '&nbsp;', $code);
-	//$code = str_replace("\t", '&nbsp;&nbsp;&nbsp;&nbsp;', $code);
 	return $code;
 }
 

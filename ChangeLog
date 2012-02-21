@@ -1,4 +1,6 @@
 2011-02-20 CERDAN Yohann <cerdanyohann@yahoo.fr>
+	* Optimizations
+2011-02-20 CERDAN Yohann <cerdanyohann@yahoo.fr>
 	* Bugfix on eid list
 2012-02-13 CERDAN Yohann <cerdanyohann@yahoo.fr>
 	* Add areports to check database integrity (like install tool)

@@ -26,25 +26,25 @@
  * This class provides a report displaying a list of informations
  * Code inspired by EXT:dam/lib/class.tx_dam_svlist.php by Rene Fritz
  *
- * @author		CERDAN Yohann <cerdanyohann@yahoo.fr>
- * @package		TYPO3
+ * @author        CERDAN Yohann <cerdanyohann@yahoo.fr>
+ * @package        TYPO3
  */
 
-class tx_additionalreports_extensions implements tx_reports_Report
+class tx_additionalreports_hooks implements tx_reports_Report
 {
 
 	/**
 	 * Back-reference to the calling reports module
 	 *
-	 * @var	tx_reports_Module	$reportObject
+	 * @var    tx_reports_Module    $reportObject
 	 */
 
 	protected $reportObject;
 
 	/**
-	 * Constructor for class tx_additionalreports_extensions
+	 * Constructor for class tx_additionalreports_hooks
 	 *
-	 * @param	tx_reports_Module	Back-reference to the calling reports module
+	 * @param    tx_reports_Module    Back-reference to the calling reports module
 	 */
 
 	public function __construct(tx_reports_Module $reportObject) {
@@ -55,22 +55,21 @@ class tx_additionalreports_extensions implements tx_reports_Report
 	/**
 	 * This method renders the report
 	 *
-	 * @return	string	The status report as HTML
+	 * @return    string    The status report as HTML
 	 */
 
 	public function getReport() {
-		$this->reportObject->doc->getPageRenderer()->addCssFile(t3lib_extMgm::extRelPath('additional_reports') . 'tx_additionalreports.css');
-		$this->reportObject->doc->getPageRenderer()->addCssFile(t3lib_extMgm::extRelPath('additional_reports') . 'libs/shadowbox.css');
-		$this->reportObject->doc->getPageRenderer()->addJsFile(t3lib_extMgm::extRelPath('additional_reports') . 'libs/shadowbox.js');
-		$content = tx_additionalreports_main::displayExtensions();
+		$this->reportObject->doc->getPageRenderer()->addCssFile(t3lib_extMgm::extRelPath('additional_reports') . 'res/tx_additionalreports.css');
+		$content = '<p class="help">' . $GLOBALS['LANG']->getLL('hooks_description') . '</p>';
+		$content .= tx_additionalreports_main::displayHooks();
 		return $content;
 	}
 
 }
 
 
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/additional_reports/reports_eid/class.tx_additionalreports_extensions.php']) {
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/additional_reports/reports_eid/class.tx_additionalreports_extensions.php']);
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/additional_reports/reports_hooks/class.tx_additionalreports_hooks.php']) {
+	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/additional_reports/reports_hooks/class.tx_additionalreports_hooks.php']);
 }
 
 ?>

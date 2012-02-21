@@ -21,16 +21,10 @@
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-/**
- * [CLASS/FUNCTION INDEX of SCRIPT]
- *
- * Hint: use extdeveval to insert/update function index above.
- */
 
 tx_additionalreports_main::init();
 require_once(PATH_t3lib . 'class.t3lib_scbase.php');
 $BE_USER->modAccess($MCONF, 1); // This checks permissions and exits if the users has no permission for entry.
-
 
 /**
  * Module 'additional_reports' for the 'additional_reports' extension.
@@ -39,6 +33,7 @@ $BE_USER->modAccess($MCONF, 1); // This checks permissions and exits if the user
  * @package    TYPO3
  * @subpackage    tx_additionalreports
  */
+
 class  tx_additionalreports_module1 extends t3lib_SCbase
 {
 	public $pageinfo;
@@ -81,21 +76,8 @@ class  tx_additionalreports_module1 extends t3lib_SCbase
 	 */
 	function menuConfig() {
 		global $LANG;
-		$this->MOD_MENU = Array(
-			'function' => Array(
-				'displayAjax' => $LANG->getLL('ajax_title'),
-				'displayEid' => $LANG->getLL('eid_title'),
-				'displayCliKeys' => $LANG->getLL('clikeys_title'),
-				'displayPlugins' => $LANG->getLL('plugins_title'),
-				'displayXclass' => $LANG->getLL('xclass_title'),
-				'displayHooks' => $LANG->getLL('hooks_title'),
-				'displayStatus' => $LANG->getLL('status_title'),
-				'displayExtensions' => $LANG->getLL('extensions_title'),
-				'displayRealUrlErrors' => $LANG->getLL('realurlerrors_title'),
-				'displayLogErrors' => $LANG->getLL('logerrors_title'),
-				'displayWebsitesConf' => $LANG->getLL('websitesconf_title'),
-				'displayDbCheck' => $LANG->getLL('dbcheck_title'),
-			)
+		$this->MOD_MENU = array(
+			'function' => tx_additionalreports_util ::getSubModules()
 		);
 		parent::menuConfig();
 	}
@@ -119,7 +101,7 @@ class  tx_additionalreports_module1 extends t3lib_SCbase
 			// Draw the header.
 			$this->doc = t3lib_div::makeInstance('bigDoc');
 			$this->doc->JScode .= '';
-			$this->doc->JScode .= '<link rel="stylesheet" type="text/css" href="' . t3lib_extMgm::extRelPath('additional_reports') . 'tx_additionalreports.css" media="all"/>';
+			$this->doc->JScode .= '<link rel="stylesheet" type="text/css" href="' . t3lib_extMgm::extRelPath('additional_reports') . 'res/tx_additionalreports.css" media="all"/>';
 			$this->doc->JScode .= '<link rel="stylesheet" type="text/css" href="' . t3lib_extMgm::extRelPath('additional_reports') . 'libs/shadowbox.css" media="all"/>';
 			$this->doc->JScode .= '<script src="contrib/prototype/prototype.js" type="text/javascript"></script>';
 			$this->doc->JScode .= '<script src="' . t3lib_extMgm::extRelPath('additional_reports') . 'libs/shadowbox.js" type="text/javascript"></script>';
@@ -194,7 +176,7 @@ class  tx_additionalreports_module1 extends t3lib_SCbase
 	 * @return    void
 	 */
 	function moduleContent() {
-		$this->doc->inDocStylesArray[] = t3lib_div::getURL(t3lib_extMgm::extPath('additional_reports') . 'tx_additionalreports.css');
+		$this->doc->inDocStylesArray[] = t3lib_div::getURL(t3lib_extMgm::extPath('additional_reports') . 'res/tx_additionalreports.css');
 		$action = (string)$this->MOD_SETTINGS['function'];
 		$this->content .= tx_additionalreports_main::$action();
 	}
