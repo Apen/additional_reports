@@ -45,7 +45,7 @@ class tx_additionalreports_util
 			$reports [] = 'realurlerrors';
 		}
 
-		if (t3lib_div::int_from_ver(TYPO3_version) >= 4005000) {
+		if (tx_additionalreports_util::int_from_ver(TYPO3_version) >= 4005000) {
 			$reports [] = 'extdirect';
 		}
 
@@ -84,7 +84,7 @@ class tx_additionalreports_util
 			}
 		}
 		if ($tblFileContent) {
-			if (t3lib_div::int_from_ver(TYPO3_version) <= 4005000) {
+			if (tx_additionalreports_util::int_from_ver(TYPO3_version) <= 4005000) {
 				require_once(PATH_t3lib . "class.t3lib_install.php");
 				$instObj = new t3lib_install;
 				$fileContent = implode(chr(10), $instObj->getStatementArray($tblFileContent, 1, '^CREATE TABLE '));
@@ -100,7 +100,7 @@ class tx_additionalreports_util
 				$removeStatements = $instObj->getUpdateSuggestions($diff, 'remove');
 			} else {
 				// just for the 4.5 version and 4.6.0 ...
-				if (t3lib_div::int_from_ver(TYPO3_version) <= 4006000) {
+				if (tx_additionalreports_util::int_from_ver(TYPO3_version) <= 4006000) {
 					$instObj = new t3lib_install;
 					$fileContent = implode(chr(10), $instObj->getStatementArray($tblFileContent, 1, '^CREATE TABLE '));
 					$fdFile = $instObj->getFieldDefinitions_fileContent($fileContent);
@@ -173,6 +173,11 @@ class tx_additionalreports_util
 		}
 	}
 
+	public function int_from_ver($verNumberStr)	{
+		$verParts = explode('.',$verNumberStr);
+		return intval((int)$verParts[0].str_pad((int)$verParts[1],3,'0',STR_PAD_LEFT).str_pad((int)$verParts[2],3,'0',STR_PAD_LEFT));
+	}
+	
 	public function splitVersionRange($ver) {
 		$versionRange = array();
 		if (strstr($ver, '-')) {
@@ -191,7 +196,7 @@ class tx_additionalreports_util
 	}
 
 	public function getExtList($path, &$items) {
-		if (t3lib_div::int_from_ver(TYPO3_version) <= 4005000) {
+		if (tx_additionalreports_util::int_from_ver(TYPO3_version) <= 4005000) {
 			require_once($GLOBALS['BACK_PATH'] . 'mod/tools/em/class.em_index.php');
 			$em = t3lib_div::makeInstance('SC_mod_tools_em_index');
 			$em->init();
@@ -209,7 +214,7 @@ class tx_additionalreports_util
 	}
 
 	public function checkMAJ($em, $name) {
-		if (t3lib_div::int_from_ver(TYPO3_version) <= 4005000) {
+		if (tx_additionalreports_util::int_from_ver(TYPO3_version) <= 4005000) {
 			$em->xmlhandler->searchExtensionsXML($name, '', '', TRUE, TRUE, 0, 500, TRUE);
 			$v = $em->xmlhandler->extensionsXML[$name]['versions'];
 		} else {
@@ -227,7 +232,7 @@ class tx_additionalreports_util
 	}
 
 	public function getExtAffectedFiles($em, $extKey, $extInfo, &$affectedFiles, &$lastVersion) {
-		if (t3lib_div::int_from_ver(TYPO3_version) <= 4005000) {
+		if (tx_additionalreports_util::int_from_ver(TYPO3_version) <= 4005000) {
 			$currentMd5Array = $em->serverExtensionMD5Array($extKey, $extInfo);
 			$affectedFiles = $em->findMD5ArrayDiff($currentMd5Array, unserialize($extInfo['EM_CONF']['_md5_values_when_last_written']));
 			$lastVersion = tx_additionalreports_util::checkMAJ($em, $extKey);
@@ -262,7 +267,7 @@ class tx_additionalreports_util
 	}
 
 	public function getExtSqlUpdateStatements($em, $extKey, $extInfo, &$fdFile, &$updateStatements) {
-		if (t3lib_div::int_from_ver(TYPO3_version) <= 4005000) {
+		if (tx_additionalreports_util::int_from_ver(TYPO3_version) <= 4005000) {
 			$instObj = new t3lib_install;
 			if (is_array($extInfo['files']) && in_array('ext_tables.sql', $extInfo['files'])) {
 				$fileContent = t3lib_div::getUrl($em->getExtPath($extKey, $extInfo['type']) . 'ext_tables.sql');
@@ -277,7 +282,7 @@ class tx_additionalreports_util
 			}
 		} else {
 			// just for the 4.5 version...
-			if (t3lib_div::int_from_ver(TYPO3_version) <= 4006000) {
+			if (tx_additionalreports_util::int_from_ver(TYPO3_version) <= 4006000) {
 				$instObj = new t3lib_install;
 				if (is_array($extInfo['files']) && in_array('ext_tables.sql', $extInfo['files'])) {
 					$fileContent = t3lib_div::getUrl(tx_em_Tools::getExtPath($extKey, $extInfo['type']) . 'ext_tables.sql');

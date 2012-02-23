@@ -10,7 +10,7 @@ if (TYPO3_MODE == 'BE') {
 	$reports = tx_additionalreports_util::getReportsList();
 
 	// Add a module for older version (<4.3)
-	if (t3lib_div::int_from_ver(TYPO3_version) < 4003000) {
+	if (tx_additionalreports_util::int_from_ver(TYPO3_version) < 4003000) {
 		t3lib_extMgm::addModulePath('tools_txadditionalreportsM1', t3lib_extMgm::extPath($_EXTKEY) . 'mod1/');
 		t3lib_extMgm::addModule('tools', 'txadditionalreportsM1', '', t3lib_extMgm::extPath($_EXTKEY) . 'mod1/');
 	} else { // 4.3>=
