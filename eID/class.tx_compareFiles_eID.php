@@ -10,13 +10,25 @@
 require_once(PATH_t3lib . 'class.t3lib_befunc.php');
 require_once(PATH_t3lib . 'stddb/tables.php');
 
+
+if (checkBeLogin() !== TRUE) {
+	die ('Access denied.');
+}
+
 $extKey = t3lib_div::_GP('extKey');
 $extFile = t3lib_div::_GP('extFile');
 $extVersion = t3lib_div::_GP('extVersion');
 $firstLetter = strtolower(substr($extKey, 0, 1));
 $secondLetter = strtolower(substr($extKey, 1, 1));
-$file1 = t3lib_extMgm::extPath($extKey, $extFile);
+$file1 = realpath(t3lib_extMgm::extPath($extKey, $extFile));
+$realPathExt = realpath(PATH_site . 'typo3conf/ext/' . $extKey);
+
+if (strstr($file1, $realPathExt) === FALSE) {
+	die ('Access denied.');
+}
+
 $file2 = 'http://typo3.org/typo3temp/tx_terfe/t3xcontentcache/' . $firstLetter . '/' . $secondLetter . '/' . $extKey . '/' . $extKey . '-' . $extVersion . '-' . preg_replace('/[^\w]/', '__', $extFile);
+
 t3Diff($file1, $file2);
 
 function t3Diff($file1, $file2) {
@@ -60,6 +72,46 @@ function printT3Diff($sourcesDiff) {
 function formatcode($code) {
 	$code = htmlentities($code);
 	return $code;
+}
+
+function checkBeLogin() {
+	initTSFE(0);
+	$BE_USER = NULL;
+	if ($_COOKIE['be_typo_user']) {
+		$BE_USER = t3lib_div::makeInstance('t3lib_tsfeBeUserAuth');
+		$BE_USER->start();
+		if ($BE_USER->user['uid']) {
+			$BE_USER->fetchGroupData();
+		}
+		return $BE_USER->isAdmin();
+	}
+	return $BE_USER;
+}
+
+function initTSFE($id) {
+	require_once(PATH_tslib . 'class.tslib_pagegen.php');
+	require_once(PATH_tslib . 'class.tslib_fe.php');
+	require_once(PATH_t3lib . 'class.t3lib_page.php');
+	require_once(PATH_tslib . 'class.tslib_content.php');
+	require_once(PATH_t3lib . 'class.t3lib_userauth.php');
+	require_once(PATH_tslib . 'class.tslib_feuserauth.php');
+	require_once(PATH_t3lib . 'class.t3lib_tstemplate.php');
+	require_once(PATH_t3lib . 'class.t3lib_cs.php');
+
+	if (version_compare(TYPO3_version, '4.3.0', '<')) {
+		$tsfeClassName = t3lib_div::makeInstanceClassName('tslib_fe');
+		$GLOBALS['TSFE'] = new $tsfeClassName($GLOBALS['TYPO3_CONF_VARS'], $id, '');
+	}
+	else {
+		$GLOBALS['TSFE'] = t3lib_div::makeInstance('tslib_fe', $GLOBALS['TYPO3_CONF_VARS'], $id, '');
+	}
+	$GLOBALS['TSFE']->connectToDB();
+	$GLOBALS['TSFE']->initFEuser();
+	$GLOBALS['TSFE']->checkAlternativeIdMethods();
+	$GLOBALS['TSFE']->determineId();
+	$GLOBALS['TSFE']->getCompressedTCarray();
+	$GLOBALS['TSFE']->initTemplate();
+	$GLOBALS['TSFE']->getConfigArray();
 }
 
 ?>
