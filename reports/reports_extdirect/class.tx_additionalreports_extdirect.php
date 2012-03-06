@@ -67,8 +67,8 @@ class tx_additionalreports_extdirect implements tx_reports_Report
 }
 
 
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/additional_reports/reports_extdirect/class.tx_additionalreports_extdirect.php']) {
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/additional_reports/reports_extdirect/class.tx_additionalreports_extdirect.php']);
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/additional_reports/reports/reports_extdirect/class.tx_additionalreports_extdirect.php']) {
+	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/additional_reports/reports/reports_extdirect/class.tx_additionalreports_extdirect.php']);
 }
 
 ?>

@@ -1,3 +1,5 @@
+2011-03-06 CERDAN Yohann <cerdanyohann@yahoo.fr>
+	* Fix isLoaded() for realurl in autoload.php
 2011-03-03 CERDAN Yohann <cerdanyohann@yahoo.fr>
 	* Security fix, please update
 2011-02-20 CERDAN Yohann <cerdanyohann@yahoo.fr>
