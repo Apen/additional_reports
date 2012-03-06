@@ -67,8 +67,8 @@ class tx_additionalreports_ajax implements tx_reports_Report
 }
 
 
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/additional_reports/reports_ajax/class.tx_additionalreports_ajax.php']) {
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/additional_reports/reports_ajax/class.tx_additionalreports_ajax.php']);
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/additional_reports/reports/reports_ajax/class.tx_additionalreports_ajax.php']) {
+	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/additional_reports/reports/reports_ajax/class.tx_additionalreports_ajax.php']); 
 }
 
 ?>

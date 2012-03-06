@@ -39,11 +39,7 @@ class tx_additionalreports_util
 	 */
 
 	public function getReportsList() {
-		$reports = array('eid', 'clikeys', 'plugins', 'xclass', 'hooks', 'status', 'ajax', 'extensions', 'logerrors', 'websitesconf', 'dbcheck');
-
-		if (t3lib_extMgm::isLoaded('realurl')) {
-			$reports [] = 'realurlerrors';
-		}
+		$reports = array('eid', 'clikeys', 'plugins', 'xclass', 'hooks', 'status', 'ajax', 'extensions', 'logerrors', 'websitesconf', 'dbcheck', 'realurlerrors');
 
 		if (tx_additionalreports_util::int_from_ver(TYPO3_version) >= 4005000) {
 			$reports [] = 'extdirect';

@@ -68,8 +68,8 @@ class tx_additionalreports_dbcheck implements tx_reports_Report
 }
 
 
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/additional_reports/reports_dbcheck/class.tx_additionalreports_dbcheck.php']) {
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/additional_reports/reports_dbcheck/class.tx_additionalreports_dbcheck.php']);
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/additional_reports/reports/reports_dbcheck/class.tx_additionalreports_dbcheck.php']) {
+	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/additional_reports/reports/reports_dbcheck/class.tx_additionalreports_dbcheck.php']);
 }
 
 ?>
