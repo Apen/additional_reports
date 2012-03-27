@@ -1440,7 +1440,7 @@ class tx_additionalreports_main
 
 		// query
 		$query = array();
-		$query['SELECT'] = 'COUNT(*) AS "nb",details,tstamp';
+		$query['SELECT'] = 'COUNT(*) AS "nb",details,MAX(tstamp) as "tstamp"';
 		$query['FROM'] = 'sys_log';
 		$query['WHERE'] = 'error>0';
 		$query['GROUPBY'] = 'details';
