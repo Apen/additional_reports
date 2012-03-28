@@ -3,7 +3,7 @@
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2011 CERDAN Yohann <cerdanyohann@yahoo.fr>
+ *  (c) 2012 CERDAN Yohann <cerdanyohann@yahoo.fr>
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -173,7 +173,7 @@ class tx_additionalreports_util
 		$verParts = explode('.',$verNumberStr);
 		return intval((int)$verParts[0].str_pad((int)$verParts[1],3,'0',STR_PAD_LEFT).str_pad((int)$verParts[2],3,'0',STR_PAD_LEFT));
 	}
-	
+
 	public function splitVersionRange($ver) {
 		$versionRange = array();
 		if (strstr($ver, '-')) {
