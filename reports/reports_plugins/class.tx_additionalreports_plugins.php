@@ -39,7 +39,7 @@ class tx_additionalreports_plugins implements tx_reports_Report
 	 */
 
 	protected $reportObject;
-	public $nbElementsPerPage = 15;
+	public $nbElementsPerPage = 10;
 	public $display = 1;
 	public $filtersCat = 1;
 	public $baseURL = '';
@@ -80,7 +80,7 @@ class tx_additionalreports_plugins implements tx_reports_Report
 	 */
 
 	public function getReport() {
-		$this->reportObject->doc->getPageRenderer()->addCssFile(t3lib_extMgm::extRelPath('additional_reports') . 'res/tx_additionalreports.css');
+		$this->reportObject->doc->getPageRenderer()->addCssFile(tx_additionalreports_main::getCss());
 		$content = tx_additionalreports_main::displayPlugins();
 		return $content;
 	}

@@ -1,3 +1,5 @@
+2012-04-27 CERDAN Yohann <cerdanyohann@yahoo.fr>
+	* Big refactoring/cleanup using a backend template rendering 
 2011-03-27 CERDAN Yohann <cerdanyohann@yahoo.fr>
 	* fix tstamp in errors log
 2011-03-06 CERDAN Yohann <cerdanyohann@yahoo.fr>

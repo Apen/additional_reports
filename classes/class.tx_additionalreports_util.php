@@ -26,10 +26,9 @@
 /**
  * Utility class
  *
- * @author        CERDAN Yohann <cerdanyohann@yahoo.fr>
+ * @author         CERDAN Yohann <cerdanyohann@yahoo.fr>
  * @package        TYPO3
  */
-
 class tx_additionalreports_util
 {
 	/**
@@ -37,12 +36,14 @@ class tx_additionalreports_util
 	 *
 	 * @return array
 	 */
-
 	public function getReportsList() {
-		$reports = array('eid', 'clikeys', 'plugins', 'xclass', 'hooks', 'status', 'ajax', 'extensions', 'logerrors', 'websitesconf', 'dbcheck', 'realurlerrors');
+		$reports = array(
+			'eid', 'clikeys', 'plugins', 'xclass', 'hooks', 'status', 'ajax', 'extensions', 'logerrors', 'websitesconf',
+			'dbcheck', 'realurlerrors'
+		);
 
-		if (tx_additionalreports_util::int_from_ver(TYPO3_version) >= 4005000) {
-			$reports [] = 'extdirect';
+		if (self::intFromVer(TYPO3_version) >= 4005000) {
+			$reports[] = 'extdirect';
 		}
 
 		return $reports;
@@ -53,25 +54,28 @@ class tx_additionalreports_util
 	 *
 	 * @return array
 	 */
-
 	public function getSubModules() {
-		global $LANG;
 		return array(
-			'displayAjax' => $LANG->getLL('ajax_title'),
-			'displayEid' => $LANG->getLL('eid_title'),
-			'displayCliKeys' => $LANG->getLL('clikeys_title'),
-			'displayPlugins' => $LANG->getLL('plugins_title'),
-			'displayXclass' => $LANG->getLL('xclass_title'),
-			'displayHooks' => $LANG->getLL('hooks_title'),
-			'displayStatus' => $LANG->getLL('status_title'),
-			'displayExtensions' => $LANG->getLL('extensions_title'),
-			'displayRealUrlErrors' => $LANG->getLL('realurlerrors_title'),
-			'displayLogErrors' => $LANG->getLL('logerrors_title'),
-			'displayWebsitesConf' => $LANG->getLL('websitesconf_title'),
-			'displayDbCheck' => $LANG->getLL('dbcheck_title'),
+			'displayAjax'          => $GLOBALS['LANG']->getLL('ajax_title'),
+			'displayEid'           => $GLOBALS['LANG']->getLL('eid_title'),
+			'displayCliKeys'       => $GLOBALS['LANG']->getLL('clikeys_title'),
+			'displayPlugins'       => $GLOBALS['LANG']->getLL('plugins_title'),
+			'displayXclass'        => $GLOBALS['LANG']->getLL('xclass_title'),
+			'displayHooks'         => $GLOBALS['LANG']->getLL('hooks_title'),
+			'displayStatus'        => $GLOBALS['LANG']->getLL('status_title'),
+			'displayExtensions'    => $GLOBALS['LANG']->getLL('extensions_title'),
+			'displayRealUrlErrors' => $GLOBALS['LANG']->getLL('realurlerrors_title'),
+			'displayLogErrors'     => $GLOBALS['LANG']->getLL('logerrors_title'),
+			'displayWebsitesConf'  => $GLOBALS['LANG']->getLL('websitesconf_title'),
+			'displayDbCheck'       => $GLOBALS['LANG']->getLL('dbcheck_title'),
 		);
 	}
 
+	/**
+	 * Get the update statement of the database
+	 *
+	 * @return array
+	 */
 	public function getSqlUpdateStatements() {
 		$tblFileContent = t3lib_div::getUrl(PATH_t3lib . 'stddb/tables.sql');
 		foreach ($GLOBALS['TYPO3_LOADED_EXT'] as $loadedExtConf) {
@@ -80,52 +84,67 @@ class tx_additionalreports_util
 			}
 		}
 		if ($tblFileContent) {
-			if (tx_additionalreports_util::int_from_ver(TYPO3_version) <= 4005000) {
-				require_once(PATH_t3lib . "class.t3lib_install.php");
-				$instObj = new t3lib_install;
+			if (self::intFromVer(TYPO3_version) <= 4005000) {
+				require_once(PATH_t3lib . 'class.t3lib_install.php');
+				$instObj     = new t3lib_install;
 				$fileContent = implode(chr(10), $instObj->getStatementArray($tblFileContent, 1, '^CREATE TABLE '));
 				if (method_exists('t3lib_install', 'getFieldDefinitions_fileContent') === TRUE) {
 					$fdFile = $instObj->getFieldDefinitions_fileContent($fileContent);
 				} else {
 					$fdFile = $instObj->getFieldDefinitions_sqlContent($fileContent);
 				}
-				$fdDb = $instObj->getFieldDefinitions_database(TYPO3_db);
-				$diff = $instObj->getDatabaseExtra($fdFile, $fdDb);
+				$fdDb             = $instObj->getFieldDefinitions_database(TYPO3_db);
+				$diff             = $instObj->getDatabaseExtra($fdFile, $fdDb);
 				$updateStatements = $instObj->getUpdateSuggestions($diff);
-				$diff = $instObj->getDatabaseExtra($fdDb, $fdFile);
+				$diff             = $instObj->getDatabaseExtra($fdDb, $fdFile);
 				$removeStatements = $instObj->getUpdateSuggestions($diff, 'remove');
 			} else {
 				// just for the 4.5 version and 4.6.0 ...
-				if (tx_additionalreports_util::int_from_ver(TYPO3_version) <= 4006000) {
-					$instObj = new t3lib_install;
-					$fileContent = implode(chr(10), $instObj->getStatementArray($tblFileContent, 1, '^CREATE TABLE '));
-					$fdFile = $instObj->getFieldDefinitions_fileContent($fileContent);
-					$fdDb = $instObj->getFieldDefinitions_database(TYPO3_db);
-					$diff = $instObj->getDatabaseExtra($fdFile, $fdDb);
+				if (self::intFromVer(TYPO3_version) <= 4006000) {
+					$instObj          = new t3lib_install;
+					$fileContent      = implode(chr(10), $instObj->getStatementArray($tblFileContent, 1, '^CREATE TABLE '));
+					$fdFile           = $instObj->getFieldDefinitions_fileContent($fileContent);
+					$fdDb             = $instObj->getFieldDefinitions_database(TYPO3_db);
+					$diff             = $instObj->getDatabaseExtra($fdFile, $fdDb);
 					$updateStatements = $instObj->getUpdateSuggestions($diff);
-					$diff = $instObj->getDatabaseExtra($fdDb, $fdFile);
+					$diff             = $instObj->getDatabaseExtra($fdDb, $fdFile);
 					$removeStatements = $instObj->getUpdateSuggestions($diff, 'remove');
 				} else {
-					$instObj = new t3lib_install_Sql;
-					$fileContent = implode(chr(10), $instObj->getStatementArray($tblFileContent, 1, '^CREATE TABLE '));
-					$fdFile = $instObj->getFieldDefinitions_fileContent($fileContent);
-					$fdDb = $instObj->getFieldDefinitions_database(TYPO3_db);
-					$diff = $instObj->getDatabaseExtra($fdFile, $fdDb);
+					$instObj          = new t3lib_install_Sql;
+					$fileContent      = implode(chr(10), $instObj->getStatementArray($tblFileContent, 1, '^CREATE TABLE '));
+					$fdFile           = $instObj->getFieldDefinitions_fileContent($fileContent);
+					$fdDb             = $instObj->getFieldDefinitions_database(TYPO3_db);
+					$diff             = $instObj->getDatabaseExtra($fdFile, $fdDb);
 					$updateStatements = $instObj->getUpdateSuggestions($diff);
-					$diff = $instObj->getDatabaseExtra($fdDb, $fdFile);
+					$diff             = $instObj->getDatabaseExtra($fdDb, $fdFile);
 					$removeStatements = $instObj->getUpdateSuggestions($diff, 'remove');
 				}
 			}
-			return array('update' => $updateStatements, 'remove' => $removeStatements);
+			return array(
+				'update' => $updateStatements,
+				'remove' => $removeStatements
+			);
 		} else {
-			return array('update' => NULL, 'remove' => NULL);
+			return array(
+				'update' => NULL,
+				'remove' => NULL
+			);
 		}
 	}
 
-	public function getTreeList($id, $depth, $begin = 0, $perms_clause) {
+	/**
+	 * Generates a list of Page-uid's from $id
+	 *
+	 * @param  int      $id
+	 * @param  int      $depth
+	 * @param  int      $begin
+	 * @param  string   $permsClause
+	 * @return string
+	 */
+	public function getTreeList($id, $depth, $begin = 0, $permsClause = '1=1') {
 		$depth = intval($depth);
 		$begin = intval($begin);
-		$id = intval($id);
+		$id    = intval($id);
 		if ($begin == 0) {
 			$theList = $id;
 		} else {
@@ -135,14 +154,14 @@ class tx_additionalreports_util
 			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
 				'uid',
 				'pages',
-					'pid=' . $id . ' ' . t3lib_BEfunc::deleteClause('pages') . ' AND ' . $perms_clause
+				'pid=' . $id . ' ' . t3lib_BEfunc::deleteClause('pages') . ' AND ' . $permsClause
 			);
 			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
 				if ($begin <= 0) {
 					$theList .= ',' . $row['uid'];
 				}
 				if ($depth > 1) {
-					$theList .= self::getTreeList($row['uid'], $depth - 1, $begin - 1, $perms_clause);
+					$theList .= self::getTreeList($row['uid'], $depth - 1, $begin - 1, $permsClause);
 				}
 			}
 			$GLOBALS['TYPO3_DB']->sql_free_result($res);
@@ -150,18 +169,32 @@ class tx_additionalreports_util
 		return $theList;
 	}
 
+	/**
+	 * Count page uids in a list given (validating the condition)
+	 *
+	 * @param string $listOfUids
+	 * @param string $where
+	 * @return int
+	 */
 	public function getCountPagesUids($listOfUids, $where = '1=1') {
-		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid', 'pages', 'uid IN (' . $listOfUids . ') AND ' . $where);
+		$res   = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid', 'pages', 'uid IN (' . $listOfUids . ') AND ' . $where);
 		$count = $GLOBALS['TYPO3_DB']->sql_num_rows($res);
 		$GLOBALS['TYPO3_DB']->sql_free_result($res);
 		return $count;
 	}
 
-	public function isUsedInTV($uid, $pid) {
-		$apiObj = t3lib_div::makeInstance('tx_templavoila_api', 'pages');
+	/**
+	 * Check if a content is used by TemplaVoila
+	 *
+	 * @param int $uid
+	 * @param int $pid
+	 * @return bool
+	 */
+	public static function isUsedInTv($uid, $pid) {
+		$apiObj            = t3lib_div::makeInstance('tx_templavoila_api', 'pages');
 		$rootElementRecord = t3lib_BEfunc::getRecordWSOL('pages', $pid, '*');
-		$contentTreeData = $apiObj->getContentTree('pages', $rootElementRecord);
-		$usedUids = array_keys($contentTreeData['contentElementUsage']);
+		$contentTreeData   = $apiObj->getContentTree('pages', $rootElementRecord);
+		$usedUids          = array_keys($contentTreeData['contentElementUsage']);
 		if (t3lib_div::inList(implode(',', $usedUids), $uid)) {
 			return TRUE;
 		} else {
@@ -169,11 +202,30 @@ class tx_additionalreports_util
 		}
 	}
 
-	public function int_from_ver($verNumberStr)	{
-		$verParts = explode('.',$verNumberStr);
-		return intval((int)$verParts[0].str_pad((int)$verParts[1],3,'0',STR_PAD_LEFT).str_pad((int)$verParts[2],3,'0',STR_PAD_LEFT));
+	/**
+	 * Returns an integer from a three part version number, eg '4.12.3' -> 4012003
+	 *
+	 * @param    string    $verNumberStr  number on format x.x.x
+	 * @return   integer   Integer version of version number (where each part can count to 999)
+	 */
+	public function intFromVer($verNumberStr) {
+		$verParts = explode('.', $verNumberStr);
+		return intval(
+			(int)$verParts[0] . str_pad((int)$verParts[1], 3, '0', STR_PAD_LEFT) . str_pad(
+				(int)$verParts[2], 3, '0', STR_PAD_LEFT
+			)
+		);
 	}
 
+	/**
+	 * Splits a version range into an array.
+	 *
+	 * If a single version number is given, it is considered a minimum value.
+	 * If a dash is found, the numbers left and right are considered as minimum and maximum. Empty values are allowed.
+	 *
+	 * @param    string        $ver A string with a version range.
+	 * @return   array
+	 */
 	public function splitVersionRange($ver) {
 		$versionRange = array();
 		if (strstr($ver, '-')) {
@@ -191,8 +243,15 @@ class tx_additionalreports_util
 		return $versionRange;
 	}
 
-	public function getExtList($path, &$items) {
-		if (tx_additionalreports_util::int_from_ver(TYPO3_version) <= 4005000) {
+	/**
+	 * Get the extension list
+	 *
+	 * @param string $path    path of the dir extension
+	 * @param array  &$items  fill this array with all the extension
+	 * @return object this is an EM object to manipulate the extension manager
+	 */
+	public static function getExtList($path, &$items) {
+		if (self::intFromVer(TYPO3_version) <= 4005000) {
 			require_once($GLOBALS['BACK_PATH'] . 'mod/tools/em/class.em_index.php');
 			$em = t3lib_div::makeInstance('SC_mod_tools_em_index');
 			$em->init();
@@ -202,15 +261,22 @@ class tx_additionalreports_util
 			require_once($GLOBALS['BACK_PATH'] . 'sysext/em/classes/extensions/class.tx_em_extensions_list.php');
 			require_once($GLOBALS['BACK_PATH'] . 'sysext/em/classes/extensions/class.tx_em_extensions_details.php');
 			require_once($GLOBALS['BACK_PATH'] . 'sysext/em/classes/tools/class.tx_em_tools_xmlhandler.php');
-			$em = t3lib_div::makeInstance('tx_em_Extensions_List');
+			$em  = t3lib_div::makeInstance('tx_em_Extensions_List');
 			$cat = tx_em_Tools::getDefaultCategory();
 			$em->getInstExtList($path, $items, $cat, 'L');
 		}
 		return $em;
 	}
 
-	public function checkMAJ($em, $name) {
-		if (tx_additionalreports_util::int_from_ver(TYPO3_version) <= 4005000) {
+	/**
+	 * Return the last version number of an extension
+	 *
+	 * @param object $em
+	 * @param string $name
+	 * @return string
+	 */
+	public function checkUpdate($em, $name) {
+		if (self::intFromVer(TYPO3_version) <= 4005000) {
 			$em->xmlhandler->searchExtensionsXML($name, '', '', TRUE, TRUE, 0, 500, TRUE);
 			$v = $em->xmlhandler->extensionsXML[$name]['versions'];
 		} else {
@@ -227,20 +293,40 @@ class tx_additionalreports_util
 		}
 	}
 
-	public function getExtAffectedFiles($em, $extKey, $extInfo, &$affectedFiles, &$lastVersion) {
-		if (tx_additionalreports_util::int_from_ver(TYPO3_version) <= 4005000) {
+	/**
+	 * Check files that are modified directly without xclass or hook
+	 *
+	 * @param object       $em
+	 * @param string       $extKey
+	 * @param array        $extInfo
+	 * @param array        &$affectedFiles
+	 * @param array        &$lastVersion
+	 */
+	public static function getExtAffectedFiles($em, $extKey, $extInfo, &$affectedFiles, &$lastVersion) {
+		if (self::intFromVer(TYPO3_version) <= 4005000) {
 			$currentMd5Array = $em->serverExtensionMD5Array($extKey, $extInfo);
-			$affectedFiles = $em->findMD5ArrayDiff($currentMd5Array, unserialize($extInfo['EM_CONF']['_md5_values_when_last_written']));
-			$lastVersion = tx_additionalreports_util::checkMAJ($em, $extKey);
+			$affectedFiles   = $em->findMD5ArrayDiff(
+				$currentMd5Array, unserialize($extInfo['EM_CONF']['_md5_values_when_last_written'])
+			);
+			$lastVersion     = self::checkUpdate($em, $extKey);
 		} else {
-			$emDetails = t3lib_div::makeInstance('tx_em_Extensions_Details');
-			$emTools = t3lib_div::makeInstance('tx_em_Tools_XmlHandler');
+			$emDetails       = t3lib_div::makeInstance('tx_em_Extensions_Details');
+			$emTools         = t3lib_div::makeInstance('tx_em_Tools_XmlHandler');
 			$currentMd5Array = $emDetails->serverExtensionMD5Array($extKey, $extInfo);
-			$affectedFiles = tx_em_Tools::findMD5ArrayDiff($currentMd5Array, unserialize($extInfo['EM_CONF']['_md5_values_when_last_written']));
-			$lastVersion = tx_additionalreports_util::checkMAJ($emTools, $extKey);
+			$affectedFiles   = tx_em_Tools::findMD5ArrayDiff(
+				$currentMd5Array,
+				unserialize($extInfo['EM_CONF']['_md5_values_when_last_written'])
+			);
+			$lastVersion     = self::checkUpdate($emTools, $extKey);
 		}
 	}
 
+	/**
+	 * Get the extension path for a given type
+	 *
+	 * @param string $type
+	 * @return string
+	 */
 	public function typePath($type) {
 		if ($type === 'S') {
 			return PATH_typo3 . 'sysext/';
@@ -252,8 +338,151 @@ class tx_additionalreports_util
 		return PATH_typo3conf . 'ext/';
 	}
 
-	public function getExtPath($extKey, $type = 'L', $returnWithoutExtKey = FALSE) {
-		$typePath = tx_additionalreports_util::typePath($type);
+	/**
+	 * Get the HTTP icon path of an extension
+	 *
+	 * @param string $extKey
+	 * @return string
+	 */
+	public static function getExtIcon($extKey) {
+		$extType = self::getExtensionType($extKey);
+		return t3lib_div::getIndpEnv('TYPO3_SITE_URL') . $extType['siteRelPath'] . 'ext_icon.gif';
+	}
+
+	/**
+	 * Get the icon path of zoom icon
+	 *
+	 * @return string
+	 */
+	public static function getIconZoom() {
+		$typo3Dir = t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR');
+		return '<img src="' . $typo3Dir . 'sysext/t3skin/icons/gfx/zoom.gif"/>';
+	}
+
+	/**
+	 * Get the icon path of zoom icon
+	 *
+	 * @return string
+	 */
+	public static function getIconDomain() {
+		$typo3Dir = t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR');
+		return '<img src="' . $typo3Dir . 'sysext/t3skin/icons/gfx/i/domain.gif"/>';
+	}
+
+	/**
+	 * Get the icon path of web page icon
+	 *
+	 * @return string
+	 */
+	public static function getIconWebPage() {
+		$typo3Dir = t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR');
+		return '<img src="' . $typo3Dir . 'sysext/t3skin/icons/module_web_layout.gif"/>';
+	}
+
+	/**
+	 * Get the icon path of web list icon
+	 *
+	 * @return string
+	 */
+	public static function getIconWebList() {
+		$typo3Dir = t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR');
+		return '<img src="' . $typo3Dir . 'sysext/t3skin/icons/module_web_list.gif"/>';
+	}
+
+	/**
+	 * Get the icon path of page icon
+	 *
+	 * @param boolean $hidden
+	 * @return string
+	 */
+	public static function getIconPage($hidden = FALSE) {
+		$typo3Dir = t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR');
+		if ($hidden === TRUE) {
+			return '<img src="' . $typo3Dir . 'sysext/t3skin/icons/gfx/i/pages__h.gif"/>';
+		} else {
+			return '<img src="' . $typo3Dir . 'sysext/t3skin/icons/gfx/i/pages.gif"/>';
+		}
+	}
+
+	/**
+	 * Get the icon path of content icon
+	 *
+	 * @param boolean $hidden
+	 * @return string
+	 */
+	public static function getIconContent($hidden = FALSE) {
+		$typo3Dir = t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR');
+		if ($hidden === TRUE) {
+			return '<img src="' . $typo3Dir . 'sysext/t3skin/icons/gfx/i/tt_content__h.gif"/>';
+		} else {
+			return '<img src="' . $typo3Dir . 'sysext/t3skin/icons/gfx/i/tt_content.gif"/>';
+		}
+	}
+
+	/**
+	 * Get the type and the path of an extension
+	 *
+	 * @param string $extKey
+	 * @return array
+	 */
+	public function getExtensionType($extKey) {
+		if (@is_dir(PATH_typo3conf . 'ext/' . $extKey . '/')) {
+			return array(
+				'type'         => 'L',
+				'siteRelPath'  => 'typo3conf/ext/' . $extKey . '/',
+				'typo3RelPath' => '../typo3conf/ext/' . $extKey . '/'
+			);
+		} elseif (@is_dir(PATH_typo3 . 'ext/' . $extKey . '/')) {
+			return array(
+				'type'         => 'G',
+				'siteRelPath'  => TYPO3_mainDir . 'ext/' . $extKey . '/',
+				'typo3RelPath' => 'ext/' . $extKey . '/'
+			);
+		} elseif (@is_dir(PATH_typo3 . 'sysext/' . $extKey . '/')) {
+			return array(
+				'type'         => 'S',
+				'siteRelPath'  => TYPO3_mainDir . 'sysext/' . $extKey . '/',
+				'typo3RelPath' => 'sysext/' . $extKey . '/'
+			);
+		}
+	}
+
+	/**
+	 * Get rootline by page uid
+	 *
+	 * @param int $pageUid
+	 * @return mixed
+	 */
+	public static function getRootLine($pageUid) {
+		require_once(PATH_t3lib . 'class.t3lib_page.php');
+		$sysPage = t3lib_div::makeInstance('t3lib_pageSelect');
+		return $sysPage->getRootLine($pageUid);
+	}
+
+	/**
+	 * Get principal domain by page uid
+	 *
+	 * @param int $pageUid
+	 * @return mixed
+	 */
+	public static function getDomain($pageUid) {
+		$domain = t3lib_BEfunc::firstDomainRecord(self::getRootLine($pageUid));
+		if ($domain === NULL) {
+			$domain = t3lib_div::getIndpEnv('TYPO3_HOST_ONLY');
+		}
+		return $domain;
+	}
+
+	/**
+	 * Get the absolute path of an extension
+	 *
+	 * @param string $extKey
+	 * @param string $type
+	 * @param bool   $returnWithoutExtKey
+	 * @return string
+	 */
+	public static function getExtPath($extKey, $type = 'L', $returnWithoutExtKey = FALSE) {
+		$typePath = self::typePath($type);
 		if ($typePath) {
 			$path = $typePath . ($returnWithoutExtKey ? '' : $extKey . '/');
 			return $path;
@@ -262,8 +491,17 @@ class tx_additionalreports_util
 		}
 	}
 
-	public function getExtSqlUpdateStatements($em, $extKey, $extInfo, &$fdFile, &$updateStatements) {
-		if (tx_additionalreports_util::int_from_ver(TYPO3_version) <= 4005000) {
+	/**
+	 * Get the sql statements of an extension define in ext_tables.sql
+	 *
+	 * @param object $em
+	 * @param string $extKey
+	 * @param array  $extInfo
+	 * @param array  &$fdFile
+	 * @param array  &$updateStatements
+	 */
+	public static function getExtSqlUpdateStatements($em, $extKey, $extInfo, &$fdFile, &$updateStatements) {
+		if (self::intFromVer(TYPO3_version) <= 4005000) {
 			$instObj = new t3lib_install;
 			if (is_array($extInfo['files']) && in_array('ext_tables.sql', $extInfo['files'])) {
 				$fileContent = t3lib_div::getUrl($em->getExtPath($extKey, $extInfo['type']) . 'ext_tables.sql');
@@ -272,38 +510,48 @@ class tx_additionalreports_util
 				} else {
 					$fdFile = $instObj->getFieldDefinitions_sqlContent($fileContent);
 				}
-				$fdDb = $instObj->getFieldDefinitions_database(TYPO3_db);
-				$diff = $instObj->getDatabaseExtra($fdFile, $fdDb);
+				$fdDb             = $instObj->getFieldDefinitions_database(TYPO3_db);
+				$diff             = $instObj->getDatabaseExtra($fdFile, $fdDb);
 				$updateStatements = $instObj->getUpdateSuggestions($diff);
 			}
 		} else {
 			// just for the 4.5 version...
-			if (tx_additionalreports_util::int_from_ver(TYPO3_version) <= 4006000) {
+			if (self::intFromVer(TYPO3_version) <= 4006000) {
 				$instObj = new t3lib_install;
 				if (is_array($extInfo['files']) && in_array('ext_tables.sql', $extInfo['files'])) {
-					$fileContent = t3lib_div::getUrl(tx_em_Tools::getExtPath($extKey, $extInfo['type']) . 'ext_tables.sql');
-					$fdFile = $instObj->getFieldDefinitions_fileContent($fileContent);
-					$fdDb = $instObj->getFieldDefinitions_database(TYPO3_db);
-					$diff = $instObj->getDatabaseExtra($fdFile, $fdDb);
+					$fileContent      = t3lib_div::getUrl(tx_em_Tools::getExtPath($extKey, $extInfo['type']) . 'ext_tables.sql');
+					$fdFile           = $instObj->getFieldDefinitions_fileContent($fileContent);
+					$fdDb             = $instObj->getFieldDefinitions_database(TYPO3_db);
+					$diff             = $instObj->getDatabaseExtra($fdFile, $fdDb);
 					$updateStatements = $instObj->getUpdateSuggestions($diff);
 				}
 			} else {
 				$instObj = new t3lib_install_Sql;
 				if (is_array($extInfo['files']) && in_array('ext_tables.sql', $extInfo['files'])) {
-					$fileContent = t3lib_div::getUrl(tx_em_Tools::getExtPath($extKey, $extInfo['type']) . 'ext_tables.sql');
-					$fdFile = $instObj->getFieldDefinitions_fileContent($fileContent);
-					$fdDb = $instObj->getFieldDefinitions_database(TYPO3_db);
-					$diff = $instObj->getDatabaseExtra($fdFile, $fdDb);
+					$fileContent      = t3lib_div::getUrl(tx_em_Tools::getExtPath($extKey, $extInfo['type']) . 'ext_tables.sql');
+					$fdFile           = $instObj->getFieldDefinitions_fileContent($fileContent);
+					$fdDb             = $instObj->getFieldDefinitions_database(TYPO3_db);
+					$diff             = $instObj->getDatabaseExtra($fdFile, $fdDb);
 					$updateStatements = $instObj->getUpdateSuggestions($diff);
 				}
 			}
 		}
 	}
 
-	public function versionCompare($depV) {
+	/**
+	 * Compare 2 versions of an extension
+	 *
+	 * @param string $depV
+	 * @return string
+	 */
+	public static function versionCompare($depV) {
 		$t3version = TYPO3_version;
-		$depK = 'typo3';
-		if (stripos($t3version, '-dev') || stripos($t3version, '-alpha') || stripos($t3version, '-beta') || stripos($t3version, '-RC')) {
+		if (
+			stripos($t3version, '-dev') ||
+			stripos($t3version, '-alpha') ||
+			stripos($t3version, '-beta') ||
+			stripos($t3version, '-RC')
+		) {
 			// find the last occurence of "-" and replace that part with a ".0"
 			$t3version = substr($t3version, 0, strrpos($t3version, '-')) . '.0';
 		}
@@ -311,21 +559,21 @@ class tx_additionalreports_util
 		$status = 0;
 
 		if (isset($depV)) {
-			$versionRange = tx_additionalreports_util::splitVersionRange($depV);
+			$versionRange = self::splitVersionRange($depV);
 			if ($versionRange[0] != '0.0.0' && version_compare($t3version, $versionRange[0], '<')) {
 				$msg = sprintf($GLOBALS['LANG']->getLL('checkDependencies_typo3_too_low'), $t3version, $versionRange[0]);
 			} elseif ($versionRange[1] != '0.0.0' && version_compare($t3version, $versionRange[1], '>')) {
 				$msg = sprintf($GLOBALS['LANG']->getLL('checkDependencies_typo3_too_high'), $t3version, $versionRange[1]);
 			} elseif ($versionRange[1] == '0.0.0') {
 				$status = 2;
-				$msg = $GLOBALS['LANG']->getLL('nottested') . ' (' . $depV . ')';
+				$msg    = $GLOBALS['LANG']->getLL('nottested') . ' (' . $depV . ')';
 			} else {
 				$status = 1;
-				$msg = 'OK';
+				$msg    = 'OK';
 			}
 		} else {
 			$status = 3;
-			$msg = $GLOBALS['LANG']->getLL('unknown');
+			$msg    = $GLOBALS['LANG']->getLL('unknown');
 		}
 
 		switch ($status) {
@@ -336,59 +584,72 @@ class tx_additionalreports_util
 				$msg = '<span style="color:green;font-weight:bold;" title="' . $msg . '">OK</span>';
 				break;
 			case 2:
-				$msg = '<span style="color:orange;font-weight:bold;" title="' . $msg . '">' . $GLOBALS['LANG']->getLL('nottested') . '</span>';
+				$msg = '<span style="color:orange;font-weight:bold;" title="' . $msg . '">' . $GLOBALS['LANG']->getLL(
+					'nottested'
+				) . '</span>';
 				break;
 			case 3:
-				$msg = '<span style="color:orange;font-weight:bold;" title="' . $msg . '">' . $GLOBALS['LANG']->getLL('unknown') . '</span>';
+				$msg = '<span style="color:orange;font-weight:bold;" title="' . $msg . '">' . $GLOBALS['LANG']->getLL(
+					'unknown'
+				) . '</span>';
+				break;
+			default:
+				$msg = '<span style="color:red;font-weight:bold;" title="' . $msg . '">KO</span>';
 				break;
 		}
 
 		return $msg;
 	}
 
-	public function view_array($array_in) {
-		if (is_array($array_in)) {
-			$result = '
-			<table border="1" cellpadding="1" cellspacing="0" bgcolor="white" width="100%">';
-			if (count($array_in) == 0) {
-				$result .= '<tr><td><font face="Verdana,Arial" size="1"><strong>EMPTY!</strong></font></td></tr>';
+	/**
+	 * Print a debug of an array
+	 *
+	 * @param array $arrayIn
+	 * @return string
+	 */
+	public static function viewArray($arrayIn) {
+		if (is_array($arrayIn)) {
+			$result = '<table class="debug" border="1" cellpadding="0" cellspacing="0" bgcolor="white" width="100%">';
+			if (count($arrayIn) == 0) {
+				$result .= '<tr><td><strong>EMPTY!</strong></td></tr>';
 			} else {
-				foreach ($array_in as $key => $val) {
-					$result .= '<tr>
-						<td valign="top"><font face="Verdana,Arial" size="1">' . htmlspecialchars((string)$key) . '</font></td>
-						<td>';
+				foreach ($arrayIn as $key => $val) {
+					$result .= '<tr><td>' . htmlspecialchars((string)$key) . '</td><td class="debugvar">';
 					if (is_array($val)) {
-						$result .= self::view_array($val);
+						$result .= self::viewArray($val);
 					} elseif (is_object($val)) {
 						$string = get_class($val);
 						if (method_exists($val, '__toString')) {
 							$string .= ': ' . (string)$val;
 						}
-						$result .= '<font face="Verdana,Arial" size="1" color="red">' . nl2br(htmlspecialchars($string)) . '<br /></font>';
+						$result .= nl2br(htmlspecialchars($string)) . '<br />';
 					} else {
 						if (gettype($val) == 'object') {
 							$string = 'Unknown object';
 						} else {
 							$string = (string)$val;
 						}
-						$result .= '<font face="Verdana,Arial" size="1" color="red">' . nl2br(htmlspecialchars($string)) . '<br /></font>';
+						$result .= nl2br(htmlspecialchars($string)) . '<br />';
 					}
-					$result .= '</td>
-					</tr>';
+					$result .= '</td></tr>';
 				}
 			}
 			$result .= '</table>';
 		} else {
-			$result = '<table border="0" cellpadding="1" cellspacing="0" bgcolor="white">
-				<tr>
-					<td><font face="Verdana,Arial" size="1" color="red">' . nl2br(htmlspecialchars((string)$array_in)) . '<br /></font></td>
-				</tr>
-			</table>'; // Output it as a string.
+			$result = '<table class="debug" border="0" cellpadding="0" cellspacing="0" bgcolor="white">';
+			$result .= '<tr><td class="debugvar">' . nl2br(htmlspecialchars((string)$arrayIn)) . '</td></tr></table>';
 		}
 		return $result;
 	}
 
-	public function goToModuleList($uid, $urlOnly = FALSE) {
+	/**
+	 * Return a link to the module list
+	 *
+	 * @param int  $uid
+	 * @param bool $urlOnly
+	 * @return string
+	 */
+	public static function goToModuleList($uid, $urlOnly = FALSE) {
 		$url = t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'db_list.php?id=' . $uid;
 		if ($urlOnly === TRUE) {
 			return $url;
@@ -397,7 +658,14 @@ class tx_additionalreports_util
 		}
 	}
 
-	public function goToModulePage($uid, $urlOnly = FALSE) {
+	/**
+	 * Return a link to the module page
+	 *
+	 * @param int  $uid
+	 * @param bool $urlOnly
+	 * @return string
+	 */
+	public static function goToModulePage($uid, $urlOnly = FALSE) {
 		$url = t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/cms/layout/db_layout.php?id=' . $uid;
 		if ($urlOnly === TRUE) {
 			return $url;
@@ -406,7 +674,14 @@ class tx_additionalreports_util
 		}
 	}
 
-	public function goToModulePageTV($uid, $urlOnly = FALSE) {
+	/**
+	 * Return a link to the module page (with TV)
+	 *
+	 * @param int  $uid
+	 * @param bool $urlOnly
+	 * @return string
+	 */
+	public static function goToModulePageTv($uid, $urlOnly = FALSE) {
 		$url = t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . '../typo3conf/ext/templavoila/mod1/index.php?id=' . $uid;
 		if ($urlOnly === TRUE) {
 			return $url;
@@ -415,6 +690,38 @@ class tx_additionalreports_util
 		}
 	}
 
+	/**
+	 * Return a link to the module EM
+	 *
+	 * @param int  $extKey
+	 * @return string
+	 */
+	public static function goToModuleEm($extKey) {
+		return 'top.goToModule(\'tools_em\', 1, \'CMD[showExt]=' . $extKey . '&SET[singleDetails]=info\');';
+	}
+
+	/**
+	 * Return a <a...>...</a> code
+	 *
+	 * @param array  $att
+	 * @param string $content
+	 * @return string
+	 */
+	public static function generateLink($att = array(), $content = '') {
+		$attList = '';
+		foreach ($att as $attKey => $attValue) {
+			$attList .= ' ' . $attKey . '="' . $attValue . '"';
+		}
+		return '<a' . $attList . '>' . $content . '</a>';
+	}
+
+	/**
+	 * Get the version of a given extension
+	 *
+	 * @param string $key
+	 * @return string
+	 * @throws InvalidArgumentException
+	 */
 	public static function getExtensionVersion($key) {
 		$EM_CONF = array();
 		if (!is_string($key) || empty($key)) {
@@ -424,13 +731,19 @@ class tx_additionalreports_util
 			return '';
 		}
 
+		// need for the next include
 		$_EXTKEY = $key;
 		include(t3lib_extMgm::extPath($key) . 'ext_emconf.php');
 
 		return $EM_CONF[$key]['version'];
 	}
 
-	public function getCacheFilePrefix() {
+	/**
+	 * Get the name of the temp_CACHED files
+	 *
+	 * @return string
+	 */
+	public static function getCacheFilePrefix() {
 		$extensionCacheBehaviour = intval($GLOBALS['TYPO3_CONF_VARS']['EXT']['extCache']);
 
 		// Caching of extensions is disabled when install tool is used:
@@ -443,97 +756,302 @@ class tx_additionalreports_util
 
 		if ($extensionCacheBehaviour == 1) {
 			$cacheFilePrefix .= '_ps' . substr(t3lib_div::shortMD5(PATH_site . '|' . $GLOBALS['TYPO_VERSION']), 0, 4);
-		} elseif ($extensionCacheBehaviour == 2) {
-			$cacheFilePrefix .= '_' . t3lib_div::shortMD5(self::getEnabledExtensionList());
 		}
 
 		return $cacheFilePrefix;
 	}
 
-	public function getExtensionsInfos() {
-		$extLocalconf = tx_additionalreports_util::getCacheFilePrefix() . '_ext_localconf.php';
-		$extTables = tx_additionalreports_util::getCacheFilePrefix() . '_ext_tables.php';
+	/**
+	 * Get informations about the mysql cache
+	 *
+	 * @return string HTML code
+	 */
+	public static function getMySqlCacheInformations() {
+		$queryCache = '';
 
-		$extensionsList = array();
-
-		// analyze _ext_localconf
-		if (is_file(PATH_site . 'typo3conf/' . $extLocalconf)) {
-			$handle = fopen(PATH_site . 'typo3conf/' . $extLocalconf, 'r');
-			$extension = '';
-			if ($handle) {
-				while (!feof($handle)) {
-					$buffer = fgets($handle);
-					if ($extension != '') {
-						if (preg_match("/\['EXTCONF'\]\['(.*?)'\](.*?)\s*=/", $buffer, $matches)) {
-							if ($matches[1] != $extension) {
-								$extensionsList[$extension]['hooks']++;
-							}
-						}
-						if (preg_match("/\['SC_OPTIONS'\]\['(.*?)'\](.*?)\s*=/", $buffer, $matches)) {
-							if ($matches[1] != $extension) {
-								$extensionsList[$extension]['corehooks']++;
-							}
-						}
-						if (preg_match("/\['XCLASS'\]\['(.*?)\.php'\](.*?)\s*=/", $buffer, $matches)) {
-							if ($matches[1] != $extension) {
-								$extensionsList[$extension]['xclass']++;
-							}
-						}
-						if (preg_match("/addPItoST43/", $buffer, $matchesPlugin)) {
-							$extensionsList[$extension]['plugins']++;
-						}
-						if (preg_match("/addService/", $buffer, $matchesPlugin)) {
-							$extensionsList[$extension]['services']++;
-						}
-					}
-					if (preg_match('/## EXTENSION: (.*?)$/', $buffer, $matches)) {
-						$extension = $matches[1];
-						$extensionsList[$extension] = array();
-					}
-				}
-				fclose($handle);
-			}
+		$res = $GLOBALS['TYPO3_DB']->sql_query('SHOW VARIABLES LIKE "%query_cache%";');
+		while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+			$queryCache .= $row['Variable_name'] . ' : ' . $row['Value'] . '<br />';
 		}
+		$GLOBALS['TYPO3_DB']->sql_free_result($res);
 
-		// analyze _ext_tables
-		if (is_file(PATH_site . 'typo3conf/' . $extTables)) {
-			$handle = fopen(PATH_site . 'typo3conf/' . $extTables, 'r');
-			$extension = '';
-			if ($handle) {
-				while (!feof($handle)) {
-					$buffer = fgets($handle);
-					if ($extension != '') {
-						if (preg_match("/\['SC_OPTIONS'\]\['(.*?)'\](.*?)\s*=/", $buffer, $matches)) {
-							if ($matches[1] != $extension) {
-								$extensionsList[$extension]['corehooks']++;
-							}
-						}
-						if (preg_match("/\['XCLASS'\]\['(.*?)\.php'\](.*?)\s*=/", $buffer, $matches)) {
-							if ($matches[1] != $extension) {
-								$extensionsList[$extension]['xclass']++;
-							}
-						}
-						if (preg_match("/addModule/", $buffer, $matchesPlugin)) {
-							$extensionsList[$extension]['modules']++;
-						}
-						if (preg_match("/insertModuleFunction/", $buffer, $matchesPlugin)) {
-							$extensionsList[$extension]['modulefunctions']++;
-						}
-					}
-					if (preg_match('/## EXTENSION: (.*?)$/', $buffer, $matches)) {
-						$extension = $matches[1];
-						if (!is_array($extensionsList[$extension])) {
-							$extensionsList[$extension] = array();
-						}
-					}
-				}
-				fclose($handle);
-			}
+		$res = $GLOBALS['TYPO3_DB']->sql_query('SHOW STATUS LIKE "%Qcache%";');
+		while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+			$queryCache .= $row['Variable_name'] . ' : ' . $row['Value'] . '<br />';
 		}
+		$GLOBALS['TYPO3_DB']->sql_free_result($res);
 
-		t3lib_div::debug($extensionsList);
-
+		return $queryCache;
 	}
+
+	/**
+	 * Get informations about the mysql character_set
+	 *
+	 * @return string HTML code
+	 */
+	public static function getMySqlCharacterSet() {
+		$sqlEncoding = '';
+
+		$res = $GLOBALS['TYPO3_DB']->sql_query('SHOW VARIABLES LIKE "%character%";');
+		while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+			$sqlEncoding .= $row['Variable_name'] . ' : ' . $row['Value'] . '<br />';
+		}
+		$GLOBALS['TYPO3_DB']->sql_free_result($res);
+
+		return $sqlEncoding;
+	}
+
+	/**
+	 * Generate a special formated div (with icon)
+	 *
+	 * @param   string     $label
+	 * @param   string     $value
+	 * @return  string HTML code
+	 */
+	public static function writeInformation($label, $value) {
+		return '
+			<div class="typo3-message message-information">
+				<div class="header-container">
+					<div class="message-header message-left">' . $label . '</div>
+					<div class="message-header message-right">' . $value . '&nbsp;</div>
+				</div>
+				<div class="message-body"></div>
+			</div>
+		';
+	}
+
+	/**
+	 * Generate a formated list
+	 *
+	 * @param string $label
+	 * @param array  $array
+	 * @return string HTML code
+	 */
+	public static function writeInformationList($label, $array) {
+		$content = '<ul>';
+		foreach ($array as $value) {
+			$content .= '<li>' . $value . '</li>';
+		}
+		$content .= '</ul>';
+		return self::writeInformation($label, $content);
+	}
+
+	/**
+	 * Open a popup with div content
+	 *
+	 * @param string $divId
+	 * @param string $title
+	 * @param string $hideContent
+	 * @return string HTML code
+	 */
+	public static function writePopUp($divId, $title, $hideContent) {
+		$js = 'Shadowbox.open({content:\'<div>\'+$(\'' . $divId . '\').innerHTML';
+		$js .= '+\'</div>\',player:\'html\',title:\'' . $title . '\',height:600,width:800});';
+		$content = '<input type="button" onclick="' . $js . '" value="+"/>';
+		$content .= '<div style="display:none;" id="' . $divId . '">' . $hideContent . '</div>';
+		return $content;
+	}
+
+	/**
+	 * Return the use number of a plugin
+	 *
+	 * @param string $key
+	 * @param string $mode
+	 * @return int
+	 */
+	public static function checkPluginIsUsed($key, $mode = 'all') {
+		$select = 'tt_content.list_type,tt_content.pid,pages.title';
+		$from   = 'tt_content,pages';
+
+		switch ($mode) {
+			default:
+			case 'all':
+				$where = 'tt_content.pid=pages.uid AND tt_content.hidden=0 AND tt_content.deleted=0 ';
+				$where .= 'AND pages.hidden=0 AND pages.deleted=0 AND tt_content.CType=\'list\' ';
+				$where .= 'AND tt_content.list_type=\'' . $key . '\'';
+				break;
+			case 'hidden':
+				$where = 'tt_content.pid=pages.uid AND (tt_content.hidden=1 OR pages.hidden=1) AND tt_content.deleted=0 ';
+				$where .= 'AND pages.deleted=0 AND tt_content.CType=\'list\' AND tt_content.list_type=\'' . $key . '\'';
+				break;
+			case 'deleted':
+				$where = 'tt_content.pid=pages.uid AND (tt_content.deleted=1 OR pages.deleted=1) ';
+				$where .= 'AND tt_content.CType=\'list\' AND tt_content.list_type=\'' . $key . '\'';
+				break;
+		}
+
+		$groupBy = '';
+		$orderBy = 'tt_content.list_type';
+
+		$items = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows($select, $from, $where, $groupBy, $orderBy);
+		return count($items);
+	}
+
+	/**
+	 * Return the use number of a ctype
+	 *
+	 * @param string $key
+	 * @param string $mode
+	 * @return int
+	 */
+	public static function checkCtypeIsUsed($key, $mode = 'all') {
+		$select = 'tt_content.CType,tt_content.pid,pages.title';
+		$from   = 'tt_content,pages';
+
+		switch ($mode) {
+			default:
+			case 'all':
+				$where = 'tt_content.pid=pages.uid AND tt_content.hidden=0 AND tt_content.deleted=0 ';
+				$where .= 'AND pages.hidden=0 AND pages.deleted=0 AND tt_content.CType=\'' . $key . '\'';
+				break;
+			case 'hidden':
+				$where = 'tt_content.pid=pages.uid AND (tt_content.hidden=1 OR pages.hidden=0) AND tt_content.deleted=0 ';
+				$where .= 'AND pages.deleted=0 AND tt_content.CType=\'' . $key . '\'';
+				break;
+			case 'deleted':
+				$where = 'tt_content.pid=pages.uid AND (tt_content.deleted=1 OR pages.deleted=1) AND tt_content.CType=\'' . $key . '\'';
+				break;
+		}
+
+		$groupBy = '';
+		$orderBy = 'tt_content.CType';
+
+		$items = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows($select, $from, $where, $groupBy, $orderBy);
+		return count($items);
+	}
+
+	/**
+	 * Get all the different plugins
+	 *
+	 * @param string $where
+	 * @return array
+	 */
+	public static function getAllDifferentPlugins($where) {
+		return $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
+			'DISTINCT tt_content.list_type',
+			'tt_content,pages',
+			'tt_content.pid=pages.uid AND pages.pid>=0 AND tt_content.deleted=0 ' .
+				'AND pages.deleted=0 ' . $where . 'AND tt_content.CType=\'list\'',
+			'',
+			'tt_content.list_type'
+		);
+	}
+
+	/**
+	 * Get all the different plugins (html select)
+	 *
+	 * @param string $where
+	 * @param string $getFiltersCat
+	 * @return array
+	 */
+	public static function getAllDifferentPluginsSelect($where, $getFiltersCat) {
+		$pluginsList = self::getAllDifferentPlugins($where);
+		$filterCat   = '';
+
+		if ($getFiltersCat == 'all') {
+			$filterCat .= '<option value="all" selected="selected">' . $GLOBALS['LANG']->getLL('all') . '</option>';
+		} else {
+			$filterCat .= '<option value="all">' . $GLOBALS['LANG']->getLL('all') . '</option>';
+		}
+
+		foreach ($pluginsList as $pluginsElement) {
+			if (($getFiltersCat == $pluginsElement['list_type']) && ($getFiltersCat !== NULL)) {
+				$filterCat .= '<option value="' . $pluginsElement['list_type'] . '" selected="selected">';
+				$filterCat .= $pluginsElement['list_type'] . '</option>';
+			} else {
+				$filterCat .= '<option value="' . $pluginsElement['list_type'] . '">' . $pluginsElement['list_type'] . '</option>';
+			}
+		}
+
+		return '<select name="filtersCat" id="filtersCat">' . $filterCat . '</select>';
+	}
+
+	/**
+	 * Get all the different ctypes
+	 *
+	 * @param string $where
+	 * @return array
+	 */
+	public static function getAllDifferentCtypes($where) {
+		return $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
+			'DISTINCT tt_content.CType',
+			'tt_content,pages',
+			'tt_content.pid=pages.uid AND pages.pid>=0 AND tt_content.deleted=0 ' .
+				'AND pages.deleted=0 ' . $where . 'AND tt_content.CType<>\'list\'',
+			'',
+			'tt_content.list_type'
+		);
+	}
+
+	/**
+	 * Get all the different ctypes (html select)
+	 *
+	 * @param string $where
+	 * @param string $getFiltersCat
+	 * @return array
+	 */
+	public static function getAllDifferentCtypesSelect($where, $getFiltersCat) {
+		$pluginsList = self::getAllDifferentCtypes($where);
+		$filterCat   = '';
+
+		if ($getFiltersCat == 'all') {
+			$filterCat .= '<option value="all" selected="selected">' . $GLOBALS['LANG']->getLL('all') . '</option>';
+		} else {
+			$filterCat .= '<option value="all">' . $GLOBALS['LANG']->getLL('all') . '</option>';
+		}
+
+		foreach ($pluginsList as $pluginsElement) {
+			if (($getFiltersCat == $pluginsElement['CType']) && ($getFiltersCat !== NULL)) {
+				$filterCat .= '<option value="' . $pluginsElement['CType'] . '" selected="selected">';
+				$filterCat .= $pluginsElement['CType'] . '</option>';
+			} else {
+				$filterCat .= '<option value="' . $pluginsElement['CType'] . '">' . $pluginsElement['CType'] . '</option>';
+			}
+		}
+
+		return '<select name="filtersCat" id="filtersCat">' . $filterCat . '</select>';
+	}
+
+	/**
+	 * Get all the usage of a all the plugins
+	 *
+	 * @param string $where
+	 * @param string $limit
+	 * @return array
+	 */
+	public static function getAllPlugins($where, $limit = '') {
+		return $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
+			'DISTINCT tt_content.list_type,tt_content.pid,tt_content.uid,' .
+				'pages.title,pages.hidden as "hiddenpages",tt_content.hidden as "hiddentt_content"',
+			'tt_content,pages',
+			'tt_content.pid=pages.uid AND pages.pid>=0 AND tt_content.deleted=0 ' .
+				'AND pages.deleted=0 ' . $where . 'AND tt_content.CType=\'list\'',
+			'',
+			'tt_content.list_type,tt_content.pid',
+			$limit
+		);
+	}
+
+	/**
+	 * Get all the usage of a all the ctypes
+	 *
+	 * @param string $where
+	 * @param string $limit
+	 * @return array
+	 */
+	public static function getAllCtypes($where, $limit = '') {
+		return $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
+			'DISTINCT tt_content.CType,tt_content.pid,tt_content.uid,pages.title,' .
+				'pages.hidden as "hiddenpages",tt_content.hidden as "hiddentt_content"',
+			'tt_content,pages',
+			'tt_content.pid=pages.uid AND pages.pid>=0 AND tt_content.deleted=0 ' .
+				'AND pages.deleted=0 ' . $where . 'AND tt_content.CType<>\'list\'',
+			'',
+			'tt_content.CType,tt_content.pid',
+			$limit
+		);
+	}
+
 
 }
 

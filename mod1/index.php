@@ -101,7 +101,7 @@ class  tx_additionalreports_module1 extends t3lib_SCbase
 			// Draw the header.
 			$this->doc = t3lib_div::makeInstance('bigDoc');
 			$this->doc->JScode .= '';
-			$this->doc->JScode .= '<link rel="stylesheet" type="text/css" href="' . t3lib_extMgm::extRelPath('additional_reports') . 'res/tx_additionalreports.css" media="all"/>';
+			$this->doc->JScode .= '<link rel="stylesheet" type="text/css" href="' . tx_additionalreports_main::getCss() .'" media="all"/>';
 			$this->doc->JScode .= '<link rel="stylesheet" type="text/css" href="' . t3lib_extMgm::extRelPath('additional_reports') . 'libs/shadowbox.css" media="all"/>';
 			$this->doc->JScode .= '<script src="contrib/prototype/prototype.js" type="text/javascript"></script>';
 			$this->doc->JScode .= '<script src="' . t3lib_extMgm::extRelPath('additional_reports') . 'libs/shadowbox.js" type="text/javascript"></script>';

@@ -59,7 +59,7 @@ class tx_additionalreports_status implements tx_reports_Report
 	 */
 
 	public function getReport() {
-		$this->reportObject->doc->getPageRenderer()->addCssFile(t3lib_extMgm::extRelPath('additional_reports') . 'res/tx_additionalreports.css');
+		$this->reportObject->doc->getPageRenderer()->addCssFile(tx_additionalreports_main::getCss());
 		$content = '<p class="help">' . $GLOBALS['LANG']->getLL('status_description') . '</p>';
 		$content .= tx_additionalreports_main::displayStatus();
 		return $content;
