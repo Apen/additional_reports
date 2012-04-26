@@ -67,7 +67,7 @@ class tx_additionalreports_logerrors implements tx_reports_Report
 	 */
 
 	public function getReport() {
-		$this->reportObject->doc->getPageRenderer()->addCssFile(t3lib_extMgm::extRelPath('additional_reports') . 'res/tx_additionalreports.css');
+		$this->reportObject->doc->getPageRenderer()->addCssFile(tx_additionalreports_main::getCss());
 		//$actionURL = $this->baseURL . '&cmd=deleteAll';
 		//$content = '<a href="' . $actionURL . '"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/garbage.gif"/> ' . $GLOBALS['LANG']->getLL('flushalllog') . '</a>';
 		$content = tx_additionalreports_main::displayLogErrors();

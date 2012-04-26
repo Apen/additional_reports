@@ -59,7 +59,7 @@ class tx_additionalreports_eid implements tx_reports_Report
 	 */
 
 	public function getReport() {
-		$this->reportObject->doc->getPageRenderer()->addCssFile(t3lib_extMgm::extRelPath('additional_reports') . 'res/tx_additionalreports.css');
+		$this->reportObject->doc->getPageRenderer()->addCssFile(tx_additionalreports_main::getCss());
 		$content = tx_additionalreports_main::displayEid();
 		return $content;
 	}

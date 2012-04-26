@@ -29,6 +29,8 @@ if (strstr($file1, $realPathExt) === FALSE) {
 
 $file2 = 'http://typo3.org/typo3temp/tx_terfe/t3xcontentcache/' . $firstLetter . '/' . $secondLetter . '/' . $extKey . '/' . $extKey . '-' . $extVersion . '-' . preg_replace('/[^\w]/', '__', $extFile);
 
+t3lib_div::debug($file2);
+
 t3Diff($file1, $file2);
 
 function t3Diff($file1, $file2) {
