@@ -29,7 +29,8 @@ if (strstr($file1, $realPathExt) === FALSE) {
 
 $file2 = 'http://typo3.org/typo3temp/tx_terfe/t3xcontentcache/' . $firstLetter . '/' . $secondLetter . '/' . $extKey . '/' . $extKey . '-' . $extVersion . '-' . preg_replace('/[^\w]/', '__', $extFile);
 
-t3lib_div::debug($file2);
+echo 'This file "<strong>'.$file2.'</strong>" no longer exist, if you want this feautre back, you can ask the core team here: <a href="http://forge.typo3.org/issues/31049" target="_blank">http://forge.typo3.org/issues/31049</a>.';
+return NULL;
 
 t3Diff($file1, $file2);
 
