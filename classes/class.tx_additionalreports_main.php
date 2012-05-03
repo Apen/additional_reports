@@ -431,7 +431,7 @@ class tx_additionalreports_main
 
 		$markersArrayTemp = array();
 
-		if (count($items) > 0) {
+		if (count($itemsDev) > 0) {
 			foreach ($itemsDev as $itemKey => $itemValue) {
 				if (t3lib_extMgm::isLoaded($itemKey)) {
 					$markersArrayExtension = array();
@@ -488,7 +488,7 @@ class tx_additionalreports_main
 
 		$markersArrayTemp = array();
 
-		if (count($items) > 0) {
+		if (count($itemsUnloaded) > 0) {
 			foreach ($itemsUnloaded as $itemKey => $itemValue) {
 				$markersArrayExtension = array();
 				$extKey                = $itemKey;
@@ -1998,7 +1998,7 @@ class tx_additionalreports_main
 			foreach ($sqlStatements['update']['change'] as $itemKey => $itemValue) {
 				if (isset($sqlStatements['update']['change_currentValue'][$itemKey])) {
 					$markersArrayTemp[] = array(
-						'###VALUE###' => $itemValue . ' [current: ' . $sqlStatements['update']['change_currentValue'][$itemKey] . ']'
+						'###VALUE###' => $itemValue . ' -- [current: ' . $sqlStatements['update']['change_currentValue'][$itemKey] . ']'
 					);
 				} else {
 					$markersArrayTemp[] = array('###VALUE###' => $itemValue);
@@ -2055,9 +2055,11 @@ class tx_additionalreports_main
 			$markersArrayTemp                = array();
 			foreach ($sqlStatements['remove']['change_table'] as $itemKey => $itemValue) {
 				if (!empty($sqlStatements['remove']['tables_count'][$itemKey])) {
-					$markersArrayTemp[] = array('###VALUE###' => $itemValue . ' [' . $sqlStatements['remove']['tables_count'][$itemKey] . ']');
+					$markersArrayTemp[] = array(
+						'###VALUE###' => $itemValue . ' -- [' . $sqlStatements['remove']['tables_count'][$itemKey] . ']'
+					);
 				} else {
-					$markersArrayTemp[] = array('###VALUE###' => $itemValue . ' [empty]');
+					$markersArrayTemp[] = array('###VALUE###' => $itemValue . ' -- [empty]');
 				}
 			}
 			$markersArray['###REPORTS_DBCHECK_OBJECT###'] = $template->renderAllTemplate(
@@ -2072,9 +2074,11 @@ class tx_additionalreports_main
 			$markersArrayTemp                = array();
 			foreach ($sqlStatements['remove']['drop_table'] as $itemKey => $itemValue) {
 				if (!empty($sqlStatements['remove']['tables_count'][$itemKey])) {
-					$markersArrayTemp[] = array('###VALUE###' => $itemValue . ' [' . $sqlStatements['remove']['tables_count'][$itemKey] . ']');
+					$markersArrayTemp[] = array(
+						'###VALUE###' => $itemValue . ' -- [' . $sqlStatements['remove']['tables_count'][$itemKey] . ']'
+					);
 				} else {
-					$markersArrayTemp[] = array('###VALUE###' => $itemValue . ' [empty]');
+					$markersArrayTemp[] = array('###VALUE###' => $itemValue . ' -- [empty]');
 				}
 			}
 			$markersArray['###REPORTS_DBCHECK_OBJECT###'] = $template->renderAllTemplate(

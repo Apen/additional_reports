@@ -1,14 +1,16 @@
+2012-05-03 CERDAN Yohann <cerdanyohann@yahoo.fr>
+	* Fix bug #36788
 2012-04-27 CERDAN Yohann <cerdanyohann@yahoo.fr>
-	* Big refactoring/cleanup using a backend template rendering 
-2011-03-27 CERDAN Yohann <cerdanyohann@yahoo.fr>
+	* Big refactoring/cleanup using a backend template rendering
+2012-03-27 CERDAN Yohann <cerdanyohann@yahoo.fr>
 	* fix tstamp in errors log
-2011-03-06 CERDAN Yohann <cerdanyohann@yahoo.fr>
+2012-03-06 CERDAN Yohann <cerdanyohann@yahoo.fr>
 	* Fix isLoaded() for realurl in autoload.php
-2011-03-03 CERDAN Yohann <cerdanyohann@yahoo.fr>
+2012-03-03 CERDAN Yohann <cerdanyohann@yahoo.fr>
 	* Security fix, please update
-2011-02-20 CERDAN Yohann <cerdanyohann@yahoo.fr>
+2012-02-20 CERDAN Yohann <cerdanyohann@yahoo.fr>
 	* Optimizations
-2011-02-20 CERDAN Yohann <cerdanyohann@yahoo.fr>
+2012-02-20 CERDAN Yohann <cerdanyohann@yahoo.fr>
 	* Bugfix on eid list
 2012-02-13 CERDAN Yohann <cerdanyohann@yahoo.fr>
 	* Add areports to check database integrity (like install tool)
