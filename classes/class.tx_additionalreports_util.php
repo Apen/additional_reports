@@ -83,6 +83,10 @@ class tx_additionalreports_util
 				$tblFileContent .= chr(10) . chr(10) . chr(10) . chr(10) . t3lib_div::getUrl($loadedExtConf['ext_tables.sql']);
 			}
 		}
+		// include cache tables form 4.6>=
+		if (self::intFromVer(TYPO3_version) >= 4006000) {
+			$tblFileContent .= t3lib_cache::getDatabaseTableDefinitions();
+		}
 		if ($tblFileContent) {
 			if (self::intFromVer(TYPO3_version) <= 4005000) {
 				require_once(PATH_t3lib . 'class.t3lib_install.php');
