@@ -32,16 +32,6 @@
 class tx_additionalreports_main
 {
 	/**
-	 * Init the class
-	 * Include the locallang file
-	 *
-	 * @return void
-	 */
-	public function init() {
-		$GLOBALS['LANG']->includeLLFile('EXT:additional_reports/locallang.xml');
-	}
-
-	/**
 	 * Get the global css path
 	 *
 	 * @return string
