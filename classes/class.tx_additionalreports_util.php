@@ -50,6 +50,28 @@ class tx_additionalreports_util
 	}
 
 	/**
+	 * Get base url of the report (use to generate links)
+	 *
+	 * @return string url
+	 */
+	public function getBaseUrl() {
+		// since 6.0> extbase is using by reports module
+		$baseUrl    = t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'mod.php?';
+		$parameters = array();
+		if (self::intFromVer(TYPO3_version) < 6000000) {
+			$parameters[] = 'M=tools_txreportsM1';
+		} else {
+			$vars         = t3lib_div::_GET('tx_reports_tools_reportstxreportsm1');
+			$parameters[] = 'M=tools_ReportsTxreportsm1';
+			$parameters[] = 'tx_reports_tools_reportstxreportsm1%5Bextension%5D=additional_reports';
+			$parameters[] = 'tx_reports_tools_reportstxreportsm1%5Breport%5D=' . $vars['report'];
+			$parameters[] = 'tx_reports_tools_reportstxreportsm1%5Baction%5D=detail';
+			$parameters[] = 'tx_reports_tools_reportstxreportsm1%5Bcontroller%5D=Report';
+		}
+		return $baseUrl . implode('&', $parameters);
+	}
+
+	/**
 	 * Define all the sub modules
 	 *
 	 * @return array
