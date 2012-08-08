@@ -116,6 +116,7 @@
             <label index="preview">Preview</label>
             <label index="careful">Careful</label>
             <label index="carefuldesc">A plugin/ctype can be also called in typoscript, typoscript file, php file...</label>
+            <label index="xclasscarefuldesc">No XCLASS found, maybe you need to clear caches and refresh the page</label>
         </languageKey>
         <languageKey index="fr" type="array">
             <label index="noresults">Aucune donnée à afficher</label>
@@ -228,6 +229,7 @@
             <label index="preview">Aperçu</label>
             <label index="careful">Attention</label>
             <label index="carefuldesc">Un plugin/ctype peut aussi être appelé en typoscript, fichier typoscript, fichier php...</label>
+            <label index="xclasscarefuldesc">Aucune XCLASS trouvée, peut être devez vous vider les caches et recharger la page</label>
         </languageKey>
         <languageKey index="de" type="array">
             <label index="ajax_description">Auflistung aller registrierten ajax.php-Methoden mit Informationen</label>

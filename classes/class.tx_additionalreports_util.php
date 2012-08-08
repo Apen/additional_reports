@@ -1114,6 +1114,41 @@ class tx_additionalreports_util
 		);
 	}
 
+	/**
+	 * Return a php array of autoload classes
+	 *
+	 * @param string $identifier
+	 * @return mixed|null
+	 */
+	public static function getAutoloadXlassFile($identifier) {
+		$file = PATH_site . 'typo3temp/Cache/Code/cache_phpcode/' . $identifier . '.php';
+		if (is_file($file)) {
+			return require($file);
+		} else {
+			return NULL;
+		}
+	}
+
+	/**
+	 * Return all the XCLASS from autoload class
+	 *
+	 * @return array|null
+	 */
+	public static function getAutoloadXlass() {
+		$identifier = 'autoload_' . sha1(TYPO3_version . PATH_site . 'autoload');
+		$classes    = self::getAutoloadXlassFile($identifier);
+		if ($classes === NULL) {
+			return NULL;
+		}
+		$xclass = array();
+		foreach ($classes as $class => $file) {
+			if ((substr($class, 0, 3) === 'ux_') && ($file !== NULL)) {
+				$xclass[$class] = $file;
+			}
+		}
+		return $xclass;
+	}
+
 
 }
 

@@ -56,6 +56,10 @@ class tx_additionalreports_main
 			'FE' => $GLOBALS['TYPO3_CONF_VARS']['FE']['XCLASS']
 		);
 
+		if (tx_additionalreports_util::intFromVer(TYPO3_version) >= 6000000) {
+			$xclassList['autoload'] = tx_additionalreports_util::getAutoloadXlass();
+		}
+
 		foreach ($xclassList as $keyXclass => $items) {
 			$markersArray = array();
 
@@ -64,6 +68,15 @@ class tx_additionalreports_main
 			}
 			if ($keyXclass == 'BE') {
 				$markersArray['###LLL:TITLE###'] = 'Backend';
+			}
+			if ($keyXclass == 'autoload') {
+				if ($xclassList['autoload'] === NULL) {
+					$content .= tx_additionalreports_util::writeInformation(
+						$GLOBALS['LANG']->getLL('careful'),
+						$GLOBALS['LANG']->getLL('xclasscarefuldesc')
+					);
+				}
+				$markersArray['###LLL:TITLE###'] = 'Autoload XCLASS (6.0)';
 			}
 
 			$markersArray['###LLL:NAME###'] = $GLOBALS['LANG']->getLL('name');
