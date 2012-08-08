@@ -71,6 +71,10 @@ class tx_additionalreports_report
 		if (isset($this->reportObject->doc)) {
 			$this->reportObject->doc->getPageRenderer()->addCssFile($path);
 		}
+		if (tx_additionalreports_util::intFromVer(TYPO3_version) >= 6000000) {
+			$doc          = t3lib_div::makeInstance('template');
+			$pageRenderer = $doc->getPageRenderer()->addCssFile($path);
+		}
 	}
 
 	/**
@@ -82,6 +86,10 @@ class tx_additionalreports_report
 	public function setJs($path) {
 		if (isset($this->reportObject->doc)) {
 			$this->reportObject->doc->getPageRenderer()->addJsFile($path);
+		}
+		if (tx_additionalreports_util::intFromVer(TYPO3_version) >= 6000000) {
+			$doc          = t3lib_div::makeInstance('template');
+			$pageRenderer = $doc->getPageRenderer()->addJsFile($path);
 		}
 	}
 
