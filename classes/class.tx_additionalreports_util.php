@@ -38,12 +38,16 @@ class tx_additionalreports_util
 	 */
 	public function getReportsList() {
 		$reports = array(
-			'eid', 'clikeys', 'plugins', 'xclass', 'hooks', 'status', 'ajax', 'extensions', 'logerrors', 'websitesconf',
-			'dbcheck', 'realurlerrors'
+			'eid', 'clikeys', 'plugins', 'xclass', 'hooks', 'status', 'ajax', 'logerrors', 'websitesconf', 'dbcheck', 'realurlerrors'
 		);
 
 		if (self::intFromVer(TYPO3_version) >= 4005000) {
 			$reports[] = 'extdirect';
+		}
+
+		// new new new extension manager with new new new class and methods
+		if (self::intFromVer(TYPO3_version) < 6000000) {
+			$reports[] = 'extensions';
 		}
 
 		return $reports;
@@ -56,12 +60,12 @@ class tx_additionalreports_util
 	 */
 	public function getBaseUrl() {
 		// since 6.0> extbase is using by reports module
-		$baseUrl    = t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'mod.php?';
+		$baseUrl = t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'mod.php?';
 		$parameters = array();
 		if (self::intFromVer(TYPO3_version) < 6000000) {
 			$parameters[] = 'M=tools_txreportsM1';
 		} else {
-			$vars         = t3lib_div::_GET('tx_reports_tools_reportstxreportsm1');
+			$vars = t3lib_div::_GET('tx_reports_tools_reportstxreportsm1');
 			$parameters[] = 'M=tools_ReportsTxreportsm1';
 			$parameters[] = 'tx_reports_tools_reportstxreportsm1%5Bextension%5D=additional_reports';
 			$parameters[] = 'tx_reports_tools_reportstxreportsm1%5Breport%5D=' . $vars['report'];
@@ -112,37 +116,37 @@ class tx_additionalreports_util
 		if ($tblFileContent) {
 			if (self::intFromVer(TYPO3_version) <= 4005000) {
 				require_once(PATH_t3lib . 'class.t3lib_install.php');
-				$instObj     = new t3lib_install;
+				$instObj = new t3lib_install;
 				$fileContent = implode(chr(10), $instObj->getStatementArray($tblFileContent, 1, '^CREATE TABLE '));
 				if (method_exists('t3lib_install', 'getFieldDefinitions_fileContent') === TRUE) {
 					$fdFile = $instObj->getFieldDefinitions_fileContent($fileContent);
 				} else {
 					$fdFile = $instObj->getFieldDefinitions_sqlContent($fileContent);
 				}
-				$fdDb             = $instObj->getFieldDefinitions_database(TYPO3_db);
-				$diff             = $instObj->getDatabaseExtra($fdFile, $fdDb);
+				$fdDb = $instObj->getFieldDefinitions_database(TYPO3_db);
+				$diff = $instObj->getDatabaseExtra($fdFile, $fdDb);
 				$updateStatements = $instObj->getUpdateSuggestions($diff);
-				$diff             = $instObj->getDatabaseExtra($fdDb, $fdFile);
+				$diff = $instObj->getDatabaseExtra($fdDb, $fdFile);
 				$removeStatements = $instObj->getUpdateSuggestions($diff, 'remove');
 			} else {
 				// just for the 4.5 version and 4.6.0 ...
 				if (self::intFromVer(TYPO3_version) <= 4006000) {
-					$instObj          = new t3lib_install;
-					$fileContent      = implode(chr(10), $instObj->getStatementArray($tblFileContent, 1, '^CREATE TABLE '));
-					$fdFile           = $instObj->getFieldDefinitions_fileContent($fileContent);
-					$fdDb             = $instObj->getFieldDefinitions_database(TYPO3_db);
-					$diff             = $instObj->getDatabaseExtra($fdFile, $fdDb);
+					$instObj = new t3lib_install;
+					$fileContent = implode(chr(10), $instObj->getStatementArray($tblFileContent, 1, '^CREATE TABLE '));
+					$fdFile = $instObj->getFieldDefinitions_fileContent($fileContent);
+					$fdDb = $instObj->getFieldDefinitions_database(TYPO3_db);
+					$diff = $instObj->getDatabaseExtra($fdFile, $fdDb);
 					$updateStatements = $instObj->getUpdateSuggestions($diff);
-					$diff             = $instObj->getDatabaseExtra($fdDb, $fdFile);
+					$diff = $instObj->getDatabaseExtra($fdDb, $fdFile);
 					$removeStatements = $instObj->getUpdateSuggestions($diff, 'remove');
 				} else {
-					$instObj          = new t3lib_install_Sql;
-					$fileContent      = implode(chr(10), $instObj->getStatementArray($tblFileContent, 1, '^CREATE TABLE '));
-					$fdFile           = $instObj->getFieldDefinitions_fileContent($fileContent);
-					$fdDb             = $instObj->getFieldDefinitions_database(TYPO3_db);
-					$diff             = $instObj->getDatabaseExtra($fdFile, $fdDb);
+					$instObj = new t3lib_install_Sql;
+					$fileContent = implode(chr(10), $instObj->getStatementArray($tblFileContent, 1, '^CREATE TABLE '));
+					$fdFile = $instObj->getFieldDefinitions_fileContent($fileContent);
+					$fdDb = $instObj->getFieldDefinitions_database(TYPO3_db);
+					$diff = $instObj->getDatabaseExtra($fdFile, $fdDb);
 					$updateStatements = $instObj->getUpdateSuggestions($diff);
-					$diff             = $instObj->getDatabaseExtra($fdDb, $fdFile);
+					$diff = $instObj->getDatabaseExtra($fdDb, $fdFile);
 					$removeStatements = $instObj->getUpdateSuggestions($diff, 'remove');
 				}
 			}
@@ -170,7 +174,7 @@ class tx_additionalreports_util
 	public function getTreeList($id, $depth, $begin = 0, $permsClause = '1=1') {
 		$depth = intval($depth);
 		$begin = intval($begin);
-		$id    = intval($id);
+		$id = intval($id);
 		if ($begin == 0) {
 			$theList = $id;
 		} else {
@@ -203,7 +207,7 @@ class tx_additionalreports_util
 	 * @return int
 	 */
 	public function getCountPagesUids($listOfUids, $where = '1=1') {
-		$res   = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid', 'pages', 'uid IN (' . $listOfUids . ') AND ' . $where);
+		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid', 'pages', 'uid IN (' . $listOfUids . ') AND ' . $where);
 		$count = $GLOBALS['TYPO3_DB']->sql_num_rows($res);
 		$GLOBALS['TYPO3_DB']->sql_free_result($res);
 		return $count;
@@ -217,10 +221,10 @@ class tx_additionalreports_util
 	 * @return bool
 	 */
 	public static function isUsedInTv($uid, $pid) {
-		$apiObj            = t3lib_div::makeInstance('tx_templavoila_api', 'pages');
+		$apiObj = t3lib_div::makeInstance('tx_templavoila_api', 'pages');
 		$rootElementRecord = t3lib_BEfunc::getRecordWSOL('pages', $pid, '*');
-		$contentTreeData   = $apiObj->getContentTree('pages', $rootElementRecord);
-		$usedUids          = array_keys($contentTreeData['contentElementUsage']);
+		$contentTreeData = $apiObj->getContentTree('pages', $rootElementRecord);
+		$usedUids = array_keys($contentTreeData['contentElementUsage']);
 		if (t3lib_div::inList(implode(',', $usedUids), $uid)) {
 			return TRUE;
 		} else {
@@ -287,7 +291,7 @@ class tx_additionalreports_util
 			require_once($GLOBALS['BACK_PATH'] . 'sysext/em/classes/extensions/class.tx_em_extensions_list.php');
 			require_once($GLOBALS['BACK_PATH'] . 'sysext/em/classes/extensions/class.tx_em_extensions_details.php');
 			require_once($GLOBALS['BACK_PATH'] . 'sysext/em/classes/tools/class.tx_em_tools_xmlhandler.php');
-			$em  = t3lib_div::makeInstance('tx_em_Extensions_List');
+			$em = t3lib_div::makeInstance('tx_em_Extensions_List');
 			$cat = tx_em_Tools::getDefaultCategory();
 			$em->getInstExtList($path, $items, $cat, 'L');
 		}
@@ -331,19 +335,19 @@ class tx_additionalreports_util
 	public static function getExtAffectedFiles($em, $extKey, $extInfo, &$affectedFiles, &$lastVersion) {
 		if (self::intFromVer(TYPO3_version) <= 4005000) {
 			$currentMd5Array = $em->serverExtensionMD5Array($extKey, $extInfo);
-			$affectedFiles   = $em->findMD5ArrayDiff(
+			$affectedFiles = $em->findMD5ArrayDiff(
 				$currentMd5Array, unserialize($extInfo['EM_CONF']['_md5_values_when_last_written'])
 			);
-			$lastVersion     = self::checkUpdate($em, $extKey);
+			$lastVersion = self::checkUpdate($em, $extKey);
 		} else {
-			$emDetails       = t3lib_div::makeInstance('tx_em_Extensions_Details');
-			$emTools         = t3lib_div::makeInstance('tx_em_Tools_XmlHandler');
+			$emDetails = t3lib_div::makeInstance('tx_em_Extensions_Details');
+			$emTools = t3lib_div::makeInstance('tx_em_Tools_XmlHandler');
 			$currentMd5Array = $emDetails->serverExtensionMD5Array($extKey, $extInfo);
-			$affectedFiles   = tx_em_Tools::findMD5ArrayDiff(
+			$affectedFiles = tx_em_Tools::findMD5ArrayDiff(
 				$currentMd5Array,
 				unserialize($extInfo['EM_CONF']['_md5_values_when_last_written'])
 			);
-			$lastVersion     = self::checkUpdate($emTools, $extKey);
+			$lastVersion = self::checkUpdate($emTools, $extKey);
 		}
 	}
 
@@ -536,8 +540,8 @@ class tx_additionalreports_util
 				} else {
 					$fdFile = $instObj->getFieldDefinitions_sqlContent($fileContent);
 				}
-				$fdDb             = $instObj->getFieldDefinitions_database(TYPO3_db);
-				$diff             = $instObj->getDatabaseExtra($fdFile, $fdDb);
+				$fdDb = $instObj->getFieldDefinitions_database(TYPO3_db);
+				$diff = $instObj->getDatabaseExtra($fdFile, $fdDb);
 				$updateStatements = $instObj->getUpdateSuggestions($diff);
 			}
 		} else {
@@ -545,19 +549,19 @@ class tx_additionalreports_util
 			if (self::intFromVer(TYPO3_version) <= 4006000) {
 				$instObj = new t3lib_install;
 				if (is_array($extInfo['files']) && in_array('ext_tables.sql', $extInfo['files'])) {
-					$fileContent      = t3lib_div::getUrl(tx_em_Tools::getExtPath($extKey, $extInfo['type']) . 'ext_tables.sql');
-					$fdFile           = $instObj->getFieldDefinitions_fileContent($fileContent);
-					$fdDb             = $instObj->getFieldDefinitions_database(TYPO3_db);
-					$diff             = $instObj->getDatabaseExtra($fdFile, $fdDb);
+					$fileContent = t3lib_div::getUrl(tx_em_Tools::getExtPath($extKey, $extInfo['type']) . 'ext_tables.sql');
+					$fdFile = $instObj->getFieldDefinitions_fileContent($fileContent);
+					$fdDb = $instObj->getFieldDefinitions_database(TYPO3_db);
+					$diff = $instObj->getDatabaseExtra($fdFile, $fdDb);
 					$updateStatements = $instObj->getUpdateSuggestions($diff);
 				}
 			} else {
 				$instObj = new t3lib_install_Sql;
 				if (is_array($extInfo['files']) && in_array('ext_tables.sql', $extInfo['files'])) {
-					$fileContent      = t3lib_div::getUrl(tx_em_Tools::getExtPath($extKey, $extInfo['type']) . 'ext_tables.sql');
-					$fdFile           = $instObj->getFieldDefinitions_fileContent($fileContent);
-					$fdDb             = $instObj->getFieldDefinitions_database(TYPO3_db);
-					$diff             = $instObj->getDatabaseExtra($fdFile, $fdDb);
+					$fileContent = t3lib_div::getUrl(tx_em_Tools::getExtPath($extKey, $extInfo['type']) . 'ext_tables.sql');
+					$fdFile = $instObj->getFieldDefinitions_fileContent($fileContent);
+					$fdDb = $instObj->getFieldDefinitions_database(TYPO3_db);
+					$diff = $instObj->getDatabaseExtra($fdFile, $fdDb);
 					$updateStatements = $instObj->getUpdateSuggestions($diff);
 				}
 			}
@@ -592,14 +596,14 @@ class tx_additionalreports_util
 				$msg = sprintf($GLOBALS['LANG']->getLL('checkDependencies_typo3_too_high'), $t3version, $versionRange[1]);
 			} elseif ($versionRange[1] == '0.0.0') {
 				$status = 2;
-				$msg    = $GLOBALS['LANG']->getLL('nottested') . ' (' . $depV . ')';
+				$msg = $GLOBALS['LANG']->getLL('nottested') . ' (' . $depV . ')';
 			} else {
 				$status = 1;
-				$msg    = 'OK';
+				$msg = 'OK';
 			}
 		} else {
 			$status = 3;
-			$msg    = $GLOBALS['LANG']->getLL('unknown');
+			$msg = $GLOBALS['LANG']->getLL('unknown');
 		}
 
 		switch ($status) {
@@ -887,7 +891,7 @@ class tx_additionalreports_util
 	 */
 	public static function checkPluginIsUsed($key, $mode = 'all') {
 		$select = 'tt_content.list_type,tt_content.pid,pages.title';
-		$from   = 'tt_content,pages';
+		$from = 'tt_content,pages';
 
 		switch ($mode) {
 			default:
@@ -926,7 +930,7 @@ class tx_additionalreports_util
 	 */
 	public static function checkCtypeIsUsed($key, $mode = 'all') {
 		$select = 'tt_content.CType,tt_content.pid,pages.title';
-		$from   = 'tt_content,pages';
+		$from = 'tt_content,pages';
 
 		switch ($mode) {
 			default:
@@ -999,7 +1003,7 @@ class tx_additionalreports_util
 	 */
 	public static function getAllDifferentPluginsSelect($where, $getFiltersCat) {
 		$pluginsList = self::getAllDifferentPlugins($where);
-		$filterCat   = '';
+		$filterCat = '';
 
 		if ($getFiltersCat == 'all') {
 			$filterCat .= '<option value="all" selected="selected">' . $GLOBALS['LANG']->getLL('all') . '</option>';
@@ -1048,7 +1052,7 @@ class tx_additionalreports_util
 	 */
 	public static function getAllDifferentCtypesSelect($where, $getFiltersCat) {
 		$pluginsList = self::getAllDifferentCtypes($where);
-		$filterCat   = '';
+		$filterCat = '';
 
 		if ($getFiltersCat == 'all') {
 			$filterCat .= '<option value="all" selected="selected">' . $GLOBALS['LANG']->getLL('all') . '</option>';
@@ -1136,7 +1140,7 @@ class tx_additionalreports_util
 	 */
 	public static function getAutoloadXlass() {
 		$identifier = 'autoload_' . sha1(TYPO3_version . PATH_site . 'autoload');
-		$classes    = self::getAutoloadXlassFile($identifier);
+		$classes = self::getAutoloadXlassFile($identifier);
 		if ($classes === NULL) {
 			return NULL;
 		}
