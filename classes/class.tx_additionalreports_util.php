@@ -38,16 +38,11 @@ class tx_additionalreports_util
 	 */
 	public function getReportsList() {
 		$reports = array(
-			'eid', 'clikeys', 'plugins', 'xclass', 'hooks', 'status', 'ajax', 'logerrors', 'websitesconf', 'dbcheck', 'realurlerrors'
+			'eid', 'clikeys', 'plugins', 'xclass', 'hooks', 'status', 'ajax', 'logerrors', 'websitesconf', 'dbcheck', 'realurlerrors', 'extensions'
 		);
 
 		if (self::intFromVer(TYPO3_version) >= 4005000) {
 			$reports[] = 'extdirect';
-		}
-
-		// new new new extension manager with new new new class and methods
-		if (self::intFromVer(TYPO3_version) < 6000000) {
-			$reports[] = 'extensions';
 		}
 
 		return $reports;
@@ -98,77 +93,12 @@ class tx_additionalreports_util
 	}
 
 	/**
-	 * Get the update statement of the database
-	 *
-	 * @return array
-	 */
-	public function getSqlUpdateStatements() {
-		$tblFileContent = t3lib_div::getUrl(PATH_t3lib . 'stddb/tables.sql');
-		foreach ($GLOBALS['TYPO3_LOADED_EXT'] as $loadedExtConf) {
-			if (is_array($loadedExtConf) && $loadedExtConf['ext_tables.sql']) {
-				$tblFileContent .= chr(10) . chr(10) . chr(10) . chr(10) . t3lib_div::getUrl($loadedExtConf['ext_tables.sql']);
-			}
-		}
-		// include cache tables form 4.6>=
-		if (self::intFromVer(TYPO3_version) >= 4006000) {
-			$tblFileContent .= t3lib_cache::getDatabaseTableDefinitions();
-		}
-		if ($tblFileContent) {
-			if (self::intFromVer(TYPO3_version) <= 4005000) {
-				require_once(PATH_t3lib . 'class.t3lib_install.php');
-				$instObj = new t3lib_install;
-				$fileContent = implode(chr(10), $instObj->getStatementArray($tblFileContent, 1, '^CREATE TABLE '));
-				if (method_exists('t3lib_install', 'getFieldDefinitions_fileContent') === TRUE) {
-					$fdFile = $instObj->getFieldDefinitions_fileContent($fileContent);
-				} else {
-					$fdFile = $instObj->getFieldDefinitions_sqlContent($fileContent);
-				}
-				$fdDb = $instObj->getFieldDefinitions_database(TYPO3_db);
-				$diff = $instObj->getDatabaseExtra($fdFile, $fdDb);
-				$updateStatements = $instObj->getUpdateSuggestions($diff);
-				$diff = $instObj->getDatabaseExtra($fdDb, $fdFile);
-				$removeStatements = $instObj->getUpdateSuggestions($diff, 'remove');
-			} else {
-				// just for the 4.5 version and 4.6.0 ...
-				if (self::intFromVer(TYPO3_version) <= 4006000) {
-					$instObj = new t3lib_install;
-					$fileContent = implode(chr(10), $instObj->getStatementArray($tblFileContent, 1, '^CREATE TABLE '));
-					$fdFile = $instObj->getFieldDefinitions_fileContent($fileContent);
-					$fdDb = $instObj->getFieldDefinitions_database(TYPO3_db);
-					$diff = $instObj->getDatabaseExtra($fdFile, $fdDb);
-					$updateStatements = $instObj->getUpdateSuggestions($diff);
-					$diff = $instObj->getDatabaseExtra($fdDb, $fdFile);
-					$removeStatements = $instObj->getUpdateSuggestions($diff, 'remove');
-				} else {
-					$instObj = new t3lib_install_Sql;
-					$fileContent = implode(chr(10), $instObj->getStatementArray($tblFileContent, 1, '^CREATE TABLE '));
-					$fdFile = $instObj->getFieldDefinitions_fileContent($fileContent);
-					$fdDb = $instObj->getFieldDefinitions_database(TYPO3_db);
-					$diff = $instObj->getDatabaseExtra($fdFile, $fdDb);
-					$updateStatements = $instObj->getUpdateSuggestions($diff);
-					$diff = $instObj->getDatabaseExtra($fdDb, $fdFile);
-					$removeStatements = $instObj->getUpdateSuggestions($diff, 'remove');
-				}
-			}
-			return array(
-				'update' => $updateStatements,
-				'remove' => $removeStatements
-			);
-		} else {
-			return array(
-				'update' => NULL,
-				'remove' => NULL
-			);
-		}
-	}
-
-	/**
 	 * Generates a list of Page-uid's from $id
 	 *
-	 * @param  int      $id
-	 * @param  int      $depth
-	 * @param  int      $begin
-	 * @param  string   $permsClause
+	 * @param  int    $id
+	 * @param  int    $depth
+	 * @param  int    $begin
+	 * @param  string $permsClause
 	 * @return string
 	 */
 	public function getTreeList($id, $depth, $begin = 0, $permsClause = '1=1') {
@@ -181,11 +111,7 @@ class tx_additionalreports_util
 			$theList = '';
 		}
 		if ($id && $depth > 0) {
-			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-				'uid',
-				'pages',
-				'pid=' . $id . ' ' . t3lib_BEfunc::deleteClause('pages') . ' AND ' . $permsClause
-			);
+			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid', 'pages', 'pid=' . $id . ' ' . t3lib_BEfunc::deleteClause('pages') . ' AND ' . $permsClause);
 			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
 				if ($begin <= 0) {
 					$theList .= ',' . $row['uid'];
@@ -235,16 +161,12 @@ class tx_additionalreports_util
 	/**
 	 * Returns an integer from a three part version number, eg '4.12.3' -> 4012003
 	 *
-	 * @param    string    $verNumberStr  number on format x.x.x
+	 * @param    string $verNumberStr  number on format x.x.x
 	 * @return   integer   Integer version of version number (where each part can count to 999)
 	 */
 	public function intFromVer($verNumberStr) {
 		$verParts = explode('.', $verNumberStr);
-		return intval(
-			(int)$verParts[0] . str_pad((int)$verParts[1], 3, '0', STR_PAD_LEFT) . str_pad(
-				(int)$verParts[2], 3, '0', STR_PAD_LEFT
-			)
-		);
+		return intval((int)$verParts[0] . str_pad((int)$verParts[1], 3, '0', STR_PAD_LEFT) . str_pad((int)$verParts[2], 3, '0', STR_PAD_LEFT));
 	}
 
 	/**
@@ -253,7 +175,7 @@ class tx_additionalreports_util
 	 * If a single version number is given, it is considered a minimum value.
 	 * If a dash is found, the numbers left and right are considered as minimum and maximum. Empty values are allowed.
 	 *
-	 * @param    string        $ver A string with a version range.
+	 * @param    string $ver A string with a version range.
 	 * @return   array
 	 */
 	public function splitVersionRange($ver) {
@@ -274,81 +196,118 @@ class tx_additionalreports_util
 	}
 
 	/**
-	 * Get the extension list
+	 * Gathers all extensions in $path
 	 *
-	 * @param string $path    path of the dir extension
-	 * @param array  &$items  fill this array with all the extension
-	 * @return object this is an EM object to manipulate the extension manager
+	 * @param    string $path       Absolute path to local, global or system extensions
+	 * @param    string $type       Path-type: L, G or S
+	 * @return    void        "Returns" content by reference
 	 */
-	public static function getExtList($path, &$items) {
-		if (self::intFromVer(TYPO3_version) <= 4005000) {
-			require_once($GLOBALS['BACK_PATH'] . 'mod/tools/em/class.em_index.php');
-			$em = t3lib_div::makeInstance('SC_mod_tools_em_index');
-			$em->init();
-			$cat = $em->defaultCategories;
-			$em->getInstExtList($path, $items, $cat, 'L');
-		} else {
-			require_once($GLOBALS['BACK_PATH'] . 'sysext/em/classes/extensions/class.tx_em_extensions_list.php');
-			require_once($GLOBALS['BACK_PATH'] . 'sysext/em/classes/extensions/class.tx_em_extensions_details.php');
-			require_once($GLOBALS['BACK_PATH'] . 'sysext/em/classes/tools/class.tx_em_tools_xmlhandler.php');
-			$em = t3lib_div::makeInstance('tx_em_Extensions_List');
-			$cat = tx_em_Tools::getDefaultCategory();
-			$em->getInstExtList($path, $items, $cat, 'L');
+	public function getInstExtList($path, $type) {
+		$list = array();
+		if (@is_dir($path)) {
+			$extList = t3lib_div::get_dirs($path);
+			if (is_array($extList)) {
+				foreach ($extList as $extKey) {
+					if (@is_file($path . $extKey . '/ext_emconf.php')) {
+						$emConf = self::includeEMCONF($path . $extKey . '/ext_emconf.php', $extKey);
+						if (is_array($emConf)) {
+							if (is_array($list[$extKey])) {
+								$list[$extKey] = array('doubleInstall' => $list[$extKey]['doubleInstall']);
+							}
+							$list[$extKey]['extkey'] = $extKey;
+							$list[$extKey]['doubleInstall'] .= $type;
+							$list[$extKey]['type'] = $type;
+							$list[$extKey]['installed'] = t3lib_extMgm::isLoaded($extKey);
+							$list[$extKey]['EM_CONF'] = $emConf;
+							$list[$extKey]['files'] = t3lib_div::getFilesInDir($path . $extKey, '', 0, '', $this->excludeForPackaging);
+						}
+					}
+				}
+			}
 		}
-		return $em;
+		return $list;
 	}
 
 	/**
-	 * Return the last version number of an extension
+	 * Returns the $EM_CONF array from an extensions ext_emconf.php file
 	 *
-	 * @param object $em
-	 * @param string $name
-	 * @return string
+	 * @param    string $path       Absolute path to EMCONF file.
+	 * @param    string $_EXTKEY    Extension key.
+	 * @return    array        EMconf array values.
 	 */
-	public function checkUpdate($em, $name) {
-		if (self::intFromVer(TYPO3_version) <= 4005000) {
-			$em->xmlhandler->searchExtensionsXML($name, '', '', TRUE, TRUE, 0, 500, TRUE);
-			$v = $em->xmlhandler->extensionsXML[$name]['versions'];
+	public static function includeEMCONF($path, $_EXTKEY) {
+		$EM_CONF = NULL;
+		include($path);
+		return $EM_CONF[$_EXTKEY];
+	}
+
+	/**
+	 * Get last version information for an extkey
+	 *
+	 * @param array $extInfo
+	 * @return array        EMconf array values.
+	 */
+	public function checkExtensionUpdate($extInfo) {
+		if (self::intFromVer(TYPO3_version) < 6000000) {
+			$lastVersion = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'cache_extensions', 'extkey="' . $extInfo['extkey'] . '" AND lastversion=1');
+			return $lastVersion[0];
 		} else {
-			$em->searchExtensionsXML($name, '', '', TRUE, TRUE, 0, 500, TRUE);
-			$v = $em->extensionsXML[$name]['versions'];
-		}
-		if (is_array($v)) {
-			$versions = array_keys($v);
-			natsort($versions);
-			$lastversion = end($versions);
-			return $v[$lastversion];
-		} else {
-			return NULL;
+			$lastVersion = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'tx_extensionmanager_domain_model_extension', 'extension_key="' . $extInfo['extkey'] . '" AND current_version=1');
+			return $lastVersion[0];
 		}
 	}
 
 	/**
-	 * Check files that are modified directly without xclass or hook
+	 * Compares two arrays with MD5-hash values for analysis of which files has changed.
 	 *
-	 * @param object       $em
-	 * @param string       $extKey
-	 * @param array        $extInfo
-	 * @param array        &$affectedFiles
-	 * @param array        &$lastVersion
+	 * @param    array $current    Current values
+	 * @param    array $past       Past values
+	 * @return    array        Affected files
 	 */
-	public static function getExtAffectedFiles($em, $extKey, $extInfo, &$affectedFiles, &$lastVersion) {
-		if (self::intFromVer(TYPO3_version) <= 4005000) {
-			$currentMd5Array = $em->serverExtensionMD5Array($extKey, $extInfo);
-			$affectedFiles = $em->findMD5ArrayDiff(
-				$currentMd5Array, unserialize($extInfo['EM_CONF']['_md5_values_when_last_written'])
-			);
-			$lastVersion = self::checkUpdate($em, $extKey);
-		} else {
-			$emDetails = t3lib_div::makeInstance('tx_em_Extensions_Details');
-			$emTools = t3lib_div::makeInstance('tx_em_Tools_XmlHandler');
-			$currentMd5Array = $emDetails->serverExtensionMD5Array($extKey, $extInfo);
-			$affectedFiles = tx_em_Tools::findMD5ArrayDiff(
-				$currentMd5Array,
-				unserialize($extInfo['EM_CONF']['_md5_values_when_last_written'])
-			);
-			$lastVersion = self::checkUpdate($emTools, $extKey);
+	public static function findMD5ArrayDiff($current, $past) {
+		if (!is_array($current)) {
+			$current = array();
 		}
+		if (!is_array($past)) {
+			$past = array();
+		}
+		$filesInCommon = array_intersect($current, $past);
+		$diff1 = array_keys(array_diff($past, $filesInCommon));
+		$diff2 = array_keys(array_diff($current, $filesInCommon));
+		$affectedFiles = array_unique(array_merge($diff1, $diff2));
+		return $affectedFiles;
+	}
+
+	/**
+	 * Get all all files and md5 to check modified files
+	 *
+	 * @param array $extInfo
+	 * @return array
+	 */
+	public function getFilesMDArray($extInfo) {
+		$filesMD5Array = array();
+		$fileArr = array();
+		$extPath = self::typePath($extInfo['type']) . $extInfo['extkey'] . '/';
+		$fileArr = t3lib_div::getAllFilesAndFoldersInPath($fileArr, $extPath, '', 0, 99, $GLOBALS['TYPO3_CONF_VARS']['EXT']['excludeForPackaging']);
+		foreach ($fileArr as $file) {
+			$relFileName = substr($file, strlen($extPath));
+			if ($relFileName != 'ext_emconf.php') {
+				$content = t3lib_div::getUrl($file);
+				$filesMD5Array[$relFileName] = substr(md5($content), 0, 4);
+			}
+		}
+		return $filesMD5Array;
+	}
+
+	/**
+	 * Get all modified files
+	 *
+	 * @param array $extInfo
+	 * @return array
+	 */
+	public function getExtAffectedFiles($extInfo) {
+		$currentMd5Array = self::getFilesMDArray($extInfo);
+		return self::findMD5ArrayDiff($currentMd5Array, unserialize($extInfo['EM_CONF']['_md5_values_when_last_written']));
 	}
 
 	/**
@@ -522,50 +481,107 @@ class tx_additionalreports_util
 	}
 
 	/**
+	 * Get the update statement of the database
+	 *
+	 * @return array
+	 */
+	public function getSqlUpdateStatements() {
+		$tblFileContent = t3lib_div::getUrl(PATH_t3lib . 'stddb/tables.sql');
+
+		foreach ($GLOBALS['TYPO3_LOADED_EXT'] as $loadedExtConf) {
+			if (is_array($loadedExtConf) && $loadedExtConf['ext_tables.sql']) {
+				$tblFileContent .= chr(10) . chr(10) . chr(10) . chr(10) . t3lib_div::getUrl($loadedExtConf['ext_tables.sql']);
+			}
+		}
+
+		// include cache tables form 4.6>=
+		if (self::intFromVer(TYPO3_version) >= 4006000) {
+			$tblFileContent .= t3lib_cache::getDatabaseTableDefinitions();
+		}
+
+		$installClass = self::getInstallSqlClass();
+		$instObj = new $installClass();
+		$fdDb = self::getDatabaseSchema();
+
+		if ($tblFileContent) {
+			$fileContent = implode(chr(10), $instObj->getStatementArray($tblFileContent, 1, '^CREATE TABLE '));
+
+			// just support for old version
+			if (method_exists($installClass, 'getFieldDefinitions_fileContent') === TRUE) {
+				$fdFile = $instObj->getFieldDefinitions_fileContent($fileContent);
+			} else {
+				$fdFile = $instObj->getFieldDefinitions_sqlContent($fileContent);
+			}
+
+			$diff = $instObj->getDatabaseExtra($fdFile, $fdDb);
+			$updateStatements = $instObj->getUpdateSuggestions($diff);
+			$diff = $instObj->getDatabaseExtra($fdDb, $fdFile);
+			$removeStatements = $instObj->getUpdateSuggestions($diff, 'remove');
+
+			return array(
+				'update' => $updateStatements,
+				'remove' => $removeStatements
+			);
+		} else {
+			return array(
+				'update' => NULL,
+				'remove' => NULL
+			);
+		}
+	}
+
+	/**
 	 * Get the sql statements of an extension define in ext_tables.sql
 	 *
-	 * @param object $em
-	 * @param string $extKey
-	 * @param array  $extInfo
+	 * @param string $extInfo
+	 * @param array  $dbSchema
 	 * @param array  &$fdFile
 	 * @param array  &$updateStatements
 	 */
-	public static function getExtSqlUpdateStatements($em, $extKey, $extInfo, &$fdFile, &$updateStatements) {
-		if (self::intFromVer(TYPO3_version) <= 4005000) {
-			$instObj = new t3lib_install;
-			if (is_array($extInfo['files']) && in_array('ext_tables.sql', $extInfo['files'])) {
-				$fileContent = t3lib_div::getUrl($em->getExtPath($extKey, $extInfo['type']) . 'ext_tables.sql');
-				if (method_exists('t3lib_install', 'getFieldDefinitions_fileContent') === TRUE) {
-					$fdFile = $instObj->getFieldDefinitions_fileContent($fileContent);
-				} else {
-					$fdFile = $instObj->getFieldDefinitions_sqlContent($fileContent);
-				}
-				$fdDb = $instObj->getFieldDefinitions_database(TYPO3_db);
-				$diff = $instObj->getDatabaseExtra($fdFile, $fdDb);
-				$updateStatements = $instObj->getUpdateSuggestions($diff);
-			}
-		} else {
-			// just for the 4.5 version...
-			if (self::intFromVer(TYPO3_version) <= 4006000) {
-				$instObj = new t3lib_install;
-				if (is_array($extInfo['files']) && in_array('ext_tables.sql', $extInfo['files'])) {
-					$fileContent = t3lib_div::getUrl(tx_em_Tools::getExtPath($extKey, $extInfo['type']) . 'ext_tables.sql');
-					$fdFile = $instObj->getFieldDefinitions_fileContent($fileContent);
-					$fdDb = $instObj->getFieldDefinitions_database(TYPO3_db);
-					$diff = $instObj->getDatabaseExtra($fdFile, $fdDb);
-					$updateStatements = $instObj->getUpdateSuggestions($diff);
-				}
-			} else {
-				$instObj = new t3lib_install_Sql;
-				if (is_array($extInfo['files']) && in_array('ext_tables.sql', $extInfo['files'])) {
-					$fileContent = t3lib_div::getUrl(tx_em_Tools::getExtPath($extKey, $extInfo['type']) . 'ext_tables.sql');
-					$fdFile = $instObj->getFieldDefinitions_fileContent($fileContent);
-					$fdDb = $instObj->getFieldDefinitions_database(TYPO3_db);
-					$diff = $instObj->getDatabaseExtra($fdFile, $fdDb);
-					$updateStatements = $instObj->getUpdateSuggestions($diff);
-				}
-			}
+	public static function getExtSqlUpdateStatements($extInfo, $dbSchema, &$fdFile, &$updateStatements) {
+		$installClass = self::getInstallSqlClass();
+
+		if (is_array($extInfo['files']) && in_array('ext_tables.sql', $extInfo['files'])) {
+			$fileContent = t3lib_div::getUrl(self::getExtPath($extInfo['extkey'], $extInfo['type']) . 'ext_tables.sql');
 		}
+
+		$instObj = new $installClass();
+
+		// just support for old version < 4.5
+		if (method_exists($installClass, 'getFieldDefinitions_fileContent') === TRUE) {
+			$fdFile = $instObj->getFieldDefinitions_fileContent($fileContent);
+		} else {
+			$fdFile = $instObj->getFieldDefinitions_sqlContent($fileContent);
+		}
+
+		$diff = $instObj->getDatabaseExtra($fdFile, $dbSchema);
+		$updateStatements = $instObj->getUpdateSuggestions($diff);
+	}
+
+	/**
+	 * Get the install class name (for compatibility)
+	 *
+	 * @return string
+	 */
+	public function getInstallSqlClass() {
+		$installClass = 't3lib_install';
+
+		if (self::intFromVer(TYPO3_version) >= 4006000) {
+			$installClass = 't3lib_install_Sql';
+		}
+
+		return $installClass;
+	}
+
+	/**
+	 * Get the entire database schema
+	 *
+	 * @return array
+	 */
+	public function getDatabaseSchema() {
+		$installClass = self::getInstallSqlClass();
+		$instObj = new $installClass();
+		return $instObj->getFieldDefinitions_database(TYPO3_db);
 	}
 
 	/**
@@ -576,12 +592,7 @@ class tx_additionalreports_util
 	 */
 	public static function versionCompare($depV) {
 		$t3version = TYPO3_version;
-		if (
-			stripos($t3version, '-dev') ||
-			stripos($t3version, '-alpha') ||
-			stripos($t3version, '-beta') ||
-			stripos($t3version, '-RC')
-		) {
+		if (stripos($t3version, '-dev') || stripos($t3version, '-alpha') || stripos($t3version, '-beta') || stripos($t3version, '-RC')) {
 			// find the last occurence of "-" and replace that part with a ".0"
 			$t3version = substr($t3version, 0, strrpos($t3version, '-')) . '.0';
 		}
@@ -614,14 +625,10 @@ class tx_additionalreports_util
 				$msg = '<span style="color:green;font-weight:bold;" title="' . $msg . '">OK</span>';
 				break;
 			case 2:
-				$msg = '<span style="color:orange;font-weight:bold;" title="' . $msg . '">' . $GLOBALS['LANG']->getLL(
-					'nottested'
-				) . '</span>';
+				$msg = '<span style="color:orange;font-weight:bold;" title="' . $msg . '">' . $GLOBALS['LANG']->getLL('nottested') . '</span>';
 				break;
 			case 3:
-				$msg = '<span style="color:orange;font-weight:bold;" title="' . $msg . '">' . $GLOBALS['LANG']->getLL(
-					'unknown'
-				) . '</span>';
+				$msg = '<span style="color:orange;font-weight:bold;" title="' . $msg . '">' . $GLOBALS['LANG']->getLL('unknown') . '</span>';
 				break;
 			default:
 				$msg = '<span style="color:red;font-weight:bold;" title="' . $msg . '">KO</span>';
@@ -723,7 +730,7 @@ class tx_additionalreports_util
 	/**
 	 * Return a link to the module EM
 	 *
-	 * @param int  $extKey
+	 * @param int $extKey
 	 * @return string
 	 */
 	public static function goToModuleEm($extKey) {
@@ -834,8 +841,8 @@ class tx_additionalreports_util
 	/**
 	 * Generate a special formated div (with icon)
 	 *
-	 * @param   string     $label
-	 * @param   string     $value
+	 * @param   string $label
+	 * @param   string $value
 	 * @return  string HTML code
 	 */
 	public static function writeInformation($label, $value) {
@@ -883,112 +890,16 @@ class tx_additionalreports_util
 	}
 
 	/**
-	 * Return the use number of a plugin
-	 *
-	 * @param string $key
-	 * @param string $mode
-	 * @return int
-	 */
-	public static function checkPluginIsUsed($key, $mode = 'all') {
-		$select = 'tt_content.list_type,tt_content.pid,pages.title';
-		$from = 'tt_content,pages';
-
-		switch ($mode) {
-			default:
-			case 'all':
-				$where = 'tt_content.pid=pages.uid AND tt_content.hidden=0 AND tt_content.deleted=0 ';
-				$where .= 'AND pages.hidden=0 AND pages.deleted=0 AND tt_content.CType=\'list\' ';
-				$where .= 'AND tt_content.list_type=\'' . $key . '\'';
-				break;
-			case 'hidden':
-				$where = 'tt_content.pid=pages.uid AND (tt_content.hidden=1 OR pages.hidden=1) AND tt_content.deleted=0 ';
-				$where .= 'AND pages.deleted=0 AND tt_content.CType=\'list\' AND tt_content.list_type=\'' . $key . '\'';
-				break;
-			case 'deleted':
-				$where = 'tt_content.pid=pages.uid AND (tt_content.deleted=1 OR pages.deleted=1) ';
-				$where .= 'AND tt_content.CType=\'list\' AND tt_content.list_type=\'' . $key . '\'';
-				break;
-		}
-
-		if (t3lib_extMgm::isLoaded('templavoila')) {
-			$where .= self::getTvFlexWhere();
-		}
-
-		$groupBy = '';
-		$orderBy = 'tt_content.list_type';
-
-		$items = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows($select, $from, $where, $groupBy, $orderBy);
-		return count($items);
-	}
-
-	/**
-	 * Return the use number of a ctype
-	 *
-	 * @param string $key
-	 * @param string $mode
-	 * @return int
-	 */
-	public static function checkCtypeIsUsed($key, $mode = 'all') {
-		$select = 'tt_content.CType,tt_content.pid,pages.title';
-		$from = 'tt_content,pages';
-
-		switch ($mode) {
-			default:
-			case 'all':
-				$where = 'tt_content.pid=pages.uid AND tt_content.hidden=0 AND tt_content.deleted=0 ';
-				$where .= 'AND pages.hidden=0 AND pages.deleted=0 AND tt_content.CType=\'' . $key . '\'';
-				break;
-			case 'hidden':
-				$where = 'tt_content.pid=pages.uid AND (tt_content.hidden=1 OR pages.hidden=0) AND tt_content.deleted=0 ';
-				$where .= 'AND pages.deleted=0 AND tt_content.CType=\'' . $key . '\'';
-				break;
-			case 'deleted':
-				$where = 'tt_content.pid=pages.uid AND (tt_content.deleted=1 OR pages.deleted=1) AND tt_content.CType=\'' . $key . '\'';
-				break;
-		}
-
-		if (t3lib_extMgm::isLoaded('templavoila')) {
-			$where .= self::getTvFlexWhere();
-		}
-
-		$groupBy = '';
-		$orderBy = 'tt_content.CType';
-
-		$items = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows($select, $from, $where, $groupBy, $orderBy);
-		return count($items);
-	}
-
-	/**
-	 * Get sql where for templavoila flex (to check content is in teh flexform)
-	 *
-	 * @return string
-	 */
-	public static function getTvFlexWhere() {
-		$where = " ";
-		$where .= "AND (";
-		$where .= "pages.tx_templavoila_flex REGEXP concat('<value index=\"vDEF\">',tt_content.uid,'</value>')";
-		$where .= "OR pages.tx_templavoila_flex REGEXP concat('<value index=\"vDEF\">',tt_content.uid,',.*</value>')";
-		$where .= "OR pages.tx_templavoila_flex REGEXP concat('<value index=\"vDEF\">.*,',tt_content.uid,'</value>')";
-		$where .= "OR pages.tx_templavoila_flex REGEXP concat('<value index=\"vDEF\">.*,',tt_content.uid,',.*</value>')";
-		$where .= ")";
-		return $where;
-	}
-
-	/**
 	 * Get all the different plugins
 	 *
 	 * @param string $where
 	 * @return array
 	 */
 	public static function getAllDifferentPlugins($where) {
-		if (t3lib_extMgm::isLoaded('templavoila')) {
-			$where .= self::getTvFlexWhere();
-		}
 		return $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
 			'DISTINCT tt_content.list_type',
 			'tt_content,pages',
-			'tt_content.pid=pages.uid AND pages.pid>=0 AND tt_content.deleted=0 ' .
-				'AND pages.deleted=0 ' . $where . 'AND tt_content.CType=\'list\'',
+			'tt_content.pid=pages.uid AND pages.pid>=0 AND tt_content.deleted=0 AND pages.deleted=0 ' . $where . 'AND tt_content.CType=\'list\' AND tt_content.list_type<>""',
 			'',
 			'tt_content.list_type'
 		);
@@ -1030,14 +941,10 @@ class tx_additionalreports_util
 	 * @return array
 	 */
 	public static function getAllDifferentCtypes($where) {
-		if (t3lib_extMgm::isLoaded('templavoila')) {
-			$where .= self::getTvFlexWhere();
-		}
 		return $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
 			'DISTINCT tt_content.CType',
 			'tt_content,pages',
-			'tt_content.pid=pages.uid AND pages.pid>=0 AND tt_content.deleted=0 ' .
-				'AND pages.deleted=0 ' . $where . 'AND tt_content.CType<>\'list\'',
+			'tt_content.pid=pages.uid AND pages.pid>=0 AND tt_content.deleted=0 AND pages.deleted=0 ' . $where . 'AND tt_content.CType<>\'list\'',
 			'',
 			'tt_content.list_type'
 		);
@@ -1080,15 +987,10 @@ class tx_additionalreports_util
 	 * @return array
 	 */
 	public static function getAllPlugins($where, $limit = '') {
-		if (t3lib_extMgm::isLoaded('templavoila')) {
-			$where .= self::getTvFlexWhere();
-		}
 		return $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
-			'DISTINCT tt_content.list_type,tt_content.pid,tt_content.uid,' .
-				'pages.title,pages.hidden as "hiddenpages",tt_content.hidden as "hiddentt_content"',
+			'DISTINCT tt_content.list_type,tt_content.pid,tt_content.uid,pages.title,pages.hidden as "hiddenpages",tt_content.hidden as "hiddentt_content"',
 			'tt_content,pages',
-			'tt_content.pid=pages.uid AND pages.pid>=0 AND tt_content.deleted=0 ' .
-				'AND pages.deleted=0 ' . $where . 'AND tt_content.CType=\'list\'',
+			'tt_content.pid=pages.uid AND pages.pid>=0 AND tt_content.deleted=0 AND pages.deleted=0 ' . $where . 'AND tt_content.CType=\'list\'',
 			'',
 			'tt_content.list_type,tt_content.pid',
 			$limit
@@ -1103,15 +1005,10 @@ class tx_additionalreports_util
 	 * @return array
 	 */
 	public static function getAllCtypes($where, $limit = '') {
-		if (t3lib_extMgm::isLoaded('templavoila')) {
-			$where .= self::getTvFlexWhere();
-		}
 		return $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
-			'DISTINCT tt_content.CType,tt_content.pid,tt_content.uid,pages.title,' .
-				'pages.hidden as "hiddenpages",tt_content.hidden as "hiddentt_content"',
+			'DISTINCT tt_content.CType,tt_content.pid,tt_content.uid,pages.title,pages.hidden as "hiddenpages",tt_content.hidden as "hiddentt_content"',
 			'tt_content,pages',
-			'tt_content.pid=pages.uid AND pages.pid>=0 AND tt_content.deleted=0 ' .
-				'AND pages.deleted=0 ' . $where . 'AND tt_content.CType<>\'list\'',
+			'tt_content.pid=pages.uid AND pages.pid>=0 AND tt_content.deleted=0 AND pages.deleted=0 ' . $where . 'AND tt_content.CType<>\'list\'',
 			'',
 			'tt_content.CType,tt_content.pid',
 			$limit
