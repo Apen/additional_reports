@@ -1,5 +1,5 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-		"http://www.w3.org/TR/html4/loose.dtd">
+	"http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 	<title>additional_reports : Compare files</title>
@@ -7,8 +7,10 @@
 <body style="background:white;">
 <?php
 
-require_once(PATH_t3lib . 'class.t3lib_befunc.php');
-require_once(PATH_t3lib . 'stddb/tables.php');
+if (tx_additionalreports_util::intFromVer(TYPO3_version) < 6002000) {
+	require_once(PATH_t3lib . 'class.t3lib_befunc.php');
+	require_once(PATH_t3lib . 'stddb/tables.php');
+}
 
 
 if (checkBeLogin() !== TRUE) {
@@ -27,9 +29,10 @@ if (strstr($file1, $realPathExt) === FALSE) {
 	die ('Access denied.');
 }
 
-$file2 = 'http://typo3.org/typo3temp/tx_terfe/t3xcontentcache/' . $firstLetter . '/' . $secondLetter . '/' . $extKey . '/' . $extKey . '-' . $extVersion . '-' . preg_replace('/[^\w]/', '__', $extFile);
+$file2 = 'http://typo3.org/typo3temp/tx_terfe/t3xcontentcache/' . $firstLetter . '/' . $secondLetter . '/' . $extKey . '/' . $extKey . '-' . $extVersion . '-' . preg_replace('/[^\w]/', '__', $extFile
+	);
 
-echo 'This file "<strong>'.$file2.'</strong>" no longer exist, if you want this feautre back, you can ask the core team here: <a href="http://forge.typo3.org/issues/31049" target="_blank">http://forge.typo3.org/issues/31049</a>.';
+echo 'This file "<strong>' . $file2 . '</strong>" no longer exist, if you want this feautre back, you can ask the core team here: <a href="http://forge.typo3.org/issues/31049" target="_blank">http://forge.typo3.org/issues/31049</a>.';
 return NULL;
 
 t3Diff($file1, $file2);
@@ -96,16 +99,17 @@ function initTSFE($id) {
 	require_once(PATH_tslib . 'class.tslib_fe.php');
 	require_once(PATH_t3lib . 'class.t3lib_page.php');
 	require_once(PATH_tslib . 'class.tslib_content.php');
-	require_once(PATH_t3lib . 'class.t3lib_userauth.php');
-	require_once(PATH_tslib . 'class.tslib_feuserauth.php');
-	require_once(PATH_t3lib . 'class.t3lib_tstemplate.php');
-	require_once(PATH_t3lib . 'class.t3lib_cs.php');
+	if (tx_additionalreports_util::intFromVer(TYPO3_version) < 6002000) {
+		require_once(PATH_t3lib . 'class.t3lib_userauth.php');
+		require_once(PATH_tslib . 'class.tslib_feuserauth.php');
+		require_once(PATH_t3lib . 'class.t3lib_tstemplate.php');
+		require_once(PATH_t3lib . 'class.t3lib_cs.php');
+	}
 
 	if (version_compare(TYPO3_version, '4.3.0', '<')) {
 		$tsfeClassName = t3lib_div::makeInstanceClassName('tslib_fe');
 		$GLOBALS['TSFE'] = new $tsfeClassName($GLOBALS['TYPO3_CONF_VARS'], $id, '');
-	}
-	else {
+	} else {
 		$GLOBALS['TSFE'] = t3lib_div::makeInstance('tslib_fe', $GLOBALS['TYPO3_CONF_VARS'], $id, '');
 	}
 	$GLOBALS['TSFE']->connectToDB();

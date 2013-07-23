@@ -29,8 +29,7 @@
  * @author         CERDAN Yohann <cerdanyohann@yahoo.fr>
  * @package        TYPO3
  */
-class tx_additionalreports_util
-{
+class tx_additionalreports_util {
 	/**
 	 * Define all the reports
 	 *
@@ -60,12 +59,21 @@ class tx_additionalreports_util
 		if (self::intFromVer(TYPO3_version) < 6000000) {
 			$parameters[] = 'M=tools_txreportsM1';
 		} else {
-			$vars = t3lib_div::_GET('tx_reports_tools_reportstxreportsm1');
-			$parameters[] = 'M=tools_ReportsTxreportsm1';
-			$parameters[] = 'tx_reports_tools_reportstxreportsm1%5Bextension%5D=additional_reports';
-			$parameters[] = 'tx_reports_tools_reportstxreportsm1%5Breport%5D=' . $vars['report'];
-			$parameters[] = 'tx_reports_tools_reportstxreportsm1%5Baction%5D=detail';
-			$parameters[] = 'tx_reports_tools_reportstxreportsm1%5Bcontroller%5D=Report';
+			if (tx_additionalreports_util::intFromVer(TYPO3_version) < 6002000) {
+				$vars = t3lib_div::_GET('tx_reports_tools_reportstxreportsm1');
+				$parameters[] = 'M=tools_ReportsTxreportsm1';
+				$parameters[] = 'tx_reports_tools_reportstxreportsm1%5Bextension%5D=additional_reports';
+				$parameters[] = 'tx_reports_tools_reportstxreportsm1%5Breport%5D=' . $vars['report'];
+				$parameters[] = 'tx_reports_tools_reportstxreportsm1%5Baction%5D=detail';
+				$parameters[] = 'tx_reports_tools_reportstxreportsm1%5Bcontroller%5D=Report';
+			} else {
+				$vars = t3lib_div::_GET('tx_reports_system_reportstxreportsm1');
+				$parameters[] = 'M=system_ReportsTxreportsm1';
+				$parameters[] = 'tx_reports_system_reportstxreportsm1%5Bextension%5D=additional_reports';
+				$parameters[] = 'tx_reports_system_reportstxreportsm1%5Breport%5D=' . $vars['report'];
+				$parameters[] = 'tx_reports_system_reportstxreportsm1%5Baction%5D=detail';
+				$parameters[] = 'tx_reports_system_reportstxreportsm1%5Bcontroller%5D=Report';
+			}
 		}
 		return $baseUrl . implode('&', $parameters);
 	}
@@ -443,7 +451,9 @@ class tx_additionalreports_util
 	 * @return mixed
 	 */
 	public static function getRootLine($pageUid) {
-		require_once(PATH_t3lib . 'class.t3lib_page.php');
+		if (tx_additionalreports_util::intFromVer(TYPO3_version) < 6002000) {
+			require_once(PATH_t3lib . 'class.t3lib_page.php');
+		}
 		$sysPage = t3lib_div::makeInstance('t3lib_pageSelect');
 		return $sysPage->getRootLine($pageUid);
 	}
