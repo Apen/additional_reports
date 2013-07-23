@@ -29,8 +29,7 @@
  * @author         CERDAN Yohann <cerdanyohann@yahoo.fr>
  * @package        TYPO3
  */
-class tx_additionalreports_main
-{
+class tx_additionalreports_main {
 	/**
 	 * Get the global css path
 	 *
@@ -404,8 +403,8 @@ class tx_additionalreports_main
 		}
 
 		$markersArray['###LLL:TITLELOADED###'] = $extensionsLoaded - count($itemsDev) . ' ' . $GLOBALS['LANG']->getLL(
-			'extensions_ter'
-		);
+				'extensions_ter'
+			);
 		$markersArray['###LLL:TITLEDEV###'] = count($itemsDev) . ' ' . $GLOBALS['LANG']->getLL('extensions_dev');
 		$markersArray['###LLL:TITLEULOADED###'] = count($itemsUnloaded) . ' ' . $GLOBALS['LANG']->getLL('extensions_unloaded');
 		$markersArray['###LLL:EXTENSION###'] = $GLOBALS['LANG']->getLL('extension');
@@ -482,8 +481,8 @@ class tx_additionalreports_main
 				$markersArrayExtension['###ICONEXT###'] = tx_additionalreports_util::getExtIcon($extKey);
 				$markersArrayExtension['###EXTENSION###'] = $extKey;
 				$markersArrayExtension['###EXTENSIONLINK###'] = '<a href="#" onclick="' . tx_additionalreports_util::goToModuleEm(
-					$extKey
-				) . '">';
+						$extKey
+					) . '">';
 				$markersArrayExtension['###EXTENSIONLINK###'] .= tx_additionalreports_util::getIconZoom() . '</a>';
 				$markersArrayExtension['###VERSION###'] = $itemValue['EM_CONF']['version'];
 
@@ -907,8 +906,8 @@ class tx_additionalreports_main
 
 			$markersExt['###EXTENSION###'] = $ext[1];
 			$markersExt['###PLUGIN###'] = $GLOBALS['LANG']->getLLL(
-				$llfile[2], $localLang
-			) . ' (' . $itemValue['list_type'] . ')';
+					$llfile[2], $localLang
+				) . ' (' . $itemValue['list_type'] . ')';
 			$markersExt['###DOMAIN###'] = tx_additionalreports_util::getIconDomain() . $domain;
 
 			$iconPage = ($itemValue['hiddenpages'] == 0)
@@ -1097,8 +1096,8 @@ class tx_additionalreports_main
 			if ($ctypes[$itemValue['CType']][2] != '') {
 				if (is_file(PATH_site . 'typo3/sysext/t3skin/icons/gfx/' . $ctypes[$itemValue['CType']][2])) {
 					$markersExt['###ICONEXT###'] = t3lib_div::getIndpEnv(
-						'TYPO3_REQUEST_DIR'
-					) . 'sysext/t3skin/icons/gfx/' . $ctypes[$itemValue['CType']][2];
+							'TYPO3_REQUEST_DIR'
+						) . 'sysext/t3skin/icons/gfx/' . $ctypes[$itemValue['CType']][2];
 				} elseif (preg_match('/^\.\./', $ctypes[$itemValue['CType']][2], $temp)) {
 					$markersExt['###ICONEXT###'] = t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . $ctypes[$itemValue['CType']][2];
 				} elseif (preg_match('/^EXT:(.*)$/', $ctypes[$itemValue['CType']][2], $temp)) {
@@ -1258,14 +1257,14 @@ class tx_additionalreports_main
 		$itemsCount = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
 			'COUNT( tt_content.uid ) as "nb"', 'tt_content,pages',
 			'tt_content.pid=pages.uid AND pages.pid>=0 AND tt_content.hidden=0 ' .
-				'AND tt_content.deleted=0 AND pages.hidden=0 AND pages.deleted=0'
+			'AND tt_content.deleted=0 AND pages.hidden=0 AND pages.deleted=0'
 		);
 
 		$items = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
 			'tt_content.CType,tt_content.list_type,count(*) as "nb"',
 			'tt_content,pages',
 			'tt_content.pid=pages.uid AND pages.pid>=0 AND tt_content.hidden=0 ' .
-				'AND tt_content.deleted=0 AND pages.hidden=0 AND pages.deleted=0',
+			'AND tt_content.deleted=0 AND pages.hidden=0 AND pages.deleted=0',
 			'tt_content.CType,tt_content.list_type',
 			'nb DESC'
 		);
@@ -1286,21 +1285,21 @@ class tx_additionalreports_main
 				$localLang = t3lib_div::readLLfile($llfile[1], $GLOBALS['LANG']->lang);
 				if ($plugins[$itemValue['list_type']][2]) {
 					$markersTemp['###ICONEXT###'] = t3lib_div::getIndpEnv(
-						'TYPO3_REQUEST_DIR'
-					) . $plugins[$itemValue['list_type']][2];
+							'TYPO3_REQUEST_DIR'
+						) . $plugins[$itemValue['list_type']][2];
 				} else {
 					$markersTemp['###ICONEXT###'] = '';
 				}
 				$markersTemp['###CONTENT###'] = $GLOBALS['LANG']->getLLL(
-					$llfile[2], $localLang
-				) . ' (' . $itemValue['list_type'] . ')';
+						$llfile[2], $localLang
+					) . ' (' . $itemValue['list_type'] . ')';
 			} else {
 				preg_match('/^LLL:(EXT:.*?):(.*)/', $ctypes[$itemValue['CType']][0], $llfile);
 				$localLang = t3lib_div::readLLfile($llfile[1], $GLOBALS['LANG']->lang);
 				if (is_file(PATH_site . '/typo3/sysext/t3skin/icons/gfx/' . $ctypes[$itemValue['CType']][2])) {
 					$markersTemp['###ICONEXT###'] = t3lib_div::getIndpEnv(
-						'TYPO3_REQUEST_DIR'
-					) . 'sysext/t3skin/icons/gfx/' . $ctypes[$itemValue['CType']][2];
+							'TYPO3_REQUEST_DIR'
+						) . 'sysext/t3skin/icons/gfx/' . $ctypes[$itemValue['CType']][2];
 				} elseif (preg_match('/^\.\./', $ctypes[$itemValue['CType']][2], $temp)) {
 					$markersTemp['###ICONEXT###'] = t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . $ctypes[$itemValue['CType']][2];
 				} elseif (preg_match('/^EXT:(.*)$/', $ctypes[$itemValue['CType']][2], $temp)) {
@@ -1309,8 +1308,8 @@ class tx_additionalreports_main
 					$markersTemp['###ICONEXT###'] = '';
 				}
 				$markersTemp['###CONTENT###'] = $GLOBALS['LANG']->getLLL(
-					$llfile[2], $localLang
-				) . ' (' . $itemValue['CType'] . ')';
+						$llfile[2], $localLang
+					) . ' (' . $itemValue['CType'] . ')';
 			}
 
 			$markersTemp['###REFERENCES###'] = $itemValue['nb'];
@@ -1472,7 +1471,7 @@ class tx_additionalreports_main
 			$delete = t3lib_div::_GP('delete');
 			$GLOBALS['TYPO3_DB']->exec_DELETEquery(
 				'tx_realurl_errorlog',
-				'url_hash=' . mysql_real_escape_string($delete)
+				'url_hash=' . $GLOBALS['TYPO3_DB']->fullQuoteStr($delete, NULL)
 			);
 		}
 
@@ -1615,22 +1614,22 @@ class tx_additionalreports_main
 		$markersArray['###LLL:COUNTER###'] = $GLOBALS['LANG']->getLL('counter');
 		$markersArray['###LLL:COUNTER###'] .= '&nbsp;&nbsp;<a href="' . $this->baseURL . '&orderby=nb%20DESC,tstamp%20DESC">';
 		$markersArray['###LLL:COUNTER###'] .= '<img alt="" src="' . t3lib_div::getIndpEnv(
-			'TYPO3_REQUEST_DIR'
-		) . 'sysext/t3skin/icons/gfx/reddown.gif"></a>';
+				'TYPO3_REQUEST_DIR'
+			) . 'sysext/t3skin/icons/gfx/reddown.gif"></a>';
 		$markersArray['###LLL:COUNTER###'] .= '&nbsp;&nbsp;<a href="' . $this->baseURL . '&orderby=nb%20ASC,tstamp%20DESC">';
 		$markersArray['###LLL:COUNTER###'] .= '<img alt="" src="' . t3lib_div::getIndpEnv(
-			'TYPO3_REQUEST_DIR'
-		) . 'sysext/t3skin/icons/gfx/redup.gif"></a>';
+				'TYPO3_REQUEST_DIR'
+			) . 'sysext/t3skin/icons/gfx/redup.gif"></a>';
 
 		$markersArray['###LLL:TSTAMP###'] = $GLOBALS['LANG']->getLL('tstamp');
 		$markersArray['###LLL:TSTAMP###'] .= '&nbsp;&nbsp;<a href="' . $this->baseURL . '&orderby=tstamp%20DESC,nb%20DESC">';
 		$markersArray['###LLL:TSTAMP###'] .= '<img width="7" height="4" alt="" src="' . t3lib_div::getIndpEnv(
-			'TYPO3_REQUEST_DIR'
-		) . 'sysext/t3skin/icons/gfx/reddown.gif"></a>';
+				'TYPO3_REQUEST_DIR'
+			) . 'sysext/t3skin/icons/gfx/reddown.gif"></a>';
 		$markersArray['###LLL:TSTAMP###'] .= '&nbsp;&nbsp;<a href="' . $this->baseURL . '&orderby=tstamp%20ASC,nb%20DESC">';
 		$markersArray['###LLL:TSTAMP###'] .= '<img width="7" height="4" alt="" src="' . t3lib_div::getIndpEnv(
-			'TYPO3_REQUEST_DIR'
-		) . 'sysext/t3skin/icons/gfx/redup.gif"></a>';
+				'TYPO3_REQUEST_DIR'
+			) . 'sysext/t3skin/icons/gfx/redup.gif"></a>';
 
 		if (count($itemsBrowser) > 0) {
 
@@ -1640,10 +1639,10 @@ class tx_additionalreports_main
 
 			foreach ($itemsBrowser as $itemKey => $itemValue) {
 				$deleteStatement = '<br/><img src="' . t3lib_div::getIndpEnv(
-					'TYPO3_REQUEST_DIR'
-				) . 'sysext/t3skin/icons/gfx/garbage.gif"/>  DELETE FROM sys_log WHERE error>0 AND details = "' . htmlentities(
-					mysql_real_escape_string($itemValue['details'])
-				) . '";';
+						'TYPO3_REQUEST_DIR'
+					) . 'sysext/t3skin/icons/gfx/garbage.gif"/>  DELETE FROM sys_log WHERE error>0 AND details = "' . htmlentities(
+						$GLOBALS['TYPO3_DB']->fullQuoteStr($itemValue['details'], NULL)
+					) . '";';
 
 				$markersArrayTemp[] = array(
 					'###COUNTER###' => $itemValue['nb'],

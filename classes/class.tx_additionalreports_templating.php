@@ -29,8 +29,7 @@
  * @author         CERDAN Yohann <cerdanyohann@yahoo.fr>
  * @package        TYPO3
  */
-class tx_additionalreports_templating
-{
+class tx_additionalreports_templating {
 	/**
 	 * Template object for frontend functions
 	 */
@@ -40,7 +39,9 @@ class tx_additionalreports_templating
 	 * Constructor
 	 */
 	public function __construct() {
-		require_once(PATH_t3lib . 'class.t3lib_parsehtml.php');
+		if (tx_additionalreports_util::intFromVer(TYPO3_version) < 6002000) {
+			require_once(PATH_t3lib . 'class.t3lib_parsehtml.php');
+		}
 	}
 
 	/**
