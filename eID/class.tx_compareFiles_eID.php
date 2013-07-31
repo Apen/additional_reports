@@ -12,7 +12,6 @@ if (tx_additionalreports_util::intFromVer(TYPO3_version) < 6002000) {
 	require_once(PATH_t3lib . 'stddb/tables.php');
 }
 
-
 if (checkBeLogin() !== TRUE) {
 	die ('Access denied.');
 }
@@ -29,31 +28,50 @@ if (strstr($file1, $realPathExt) === FALSE) {
 	die ('Access denied.');
 }
 
-$file2 = 'http://typo3.org/typo3temp/tx_terfe/t3xcontentcache/' . $firstLetter . '/' . $secondLetter . '/' . $extKey . '/' . $extKey . '-' . $extVersion . '-' . preg_replace('/[^\w]/', '__', $extFile
-	);
+$terFileContent = downloadT3x($extKey, $extVersion);
+t3Diff(t3lib_div::getURL($file1), $terFileContent);
 
-echo 'This file "<strong>' . $file2 . '</strong>" no longer exist, if you want this feautre back, you can ask the core team here: <a href="http://forge.typo3.org/issues/31049" target="_blank">http://forge.typo3.org/issues/31049</a>.';
-return NULL;
+function downloadT3x($extension, $version) {
+	$from = 'http://typo3.org/fileadmin/ter/' . $GLOBALS['firstLetter'] . '/' . $GLOBALS['secondLetter'] . '/' . $extension . '_' . $version . '.t3x';
+	$content = t3lib_div::getURL($from);
+	$t3xfiles = extractExtensionDataFromT3x($content);
+	return $t3xfiles['FILES'][$GLOBALS['extFile']]['content'];
+}
 
-t3Diff($file1, $file2);
+function extractExtensionDataFromT3x($content) {
+	$parts = explode(':', $content, 3);
+	if ($parts[1] === 'gzcompress') {
+		if (function_exists('gzuncompress')) {
+			$parts[2] = gzuncompress($parts[2]);
+		} else {
+			throw new \Exception('Decoding Error: No decompressor available for compressed content. gzcompress()/gzuncompress() functions are not available!');
+		}
+	}
+	if (md5($parts[2]) == $parts[0]) {
+		$output = unserialize($parts[2]);
+		if (is_array($output)) {
+			return $output;
+		} else {
+			throw new \Exception('Error: Content could not be unserialized to an array. Strange (since MD5 hashes match!)');
+		}
+	} else {
+		throw new \Exception('Error: MD5 mismatch. Maybe the extension file was downloaded and saved as a text file by the browser and thereby corrupted!? (Always select "All" filetype when saving extensions)');
+	}
+}
 
 function t3Diff($file1, $file2) {
 	$diff = t3lib_div::makeInstance('t3lib_diff');
 	$diff->diffOptions = '-bu';
-	$sourcesDiff = $diff->getDiff(t3lib_div::getURL($file1), t3lib_div::getURL($file2));
-	$sourcesDiff[0] = $file1;
-	$sourcesDiff[1] = $file2;
+	$sourcesDiff = $diff->getDiff($file1, $file2);
 	printT3Diff($sourcesDiff);
 }
 
 function printT3Diff($sourcesDiff) {
 	$out = '<pre width="10"><table border="0" cellspacing="0" cellpadding="0" style="width:780px;padding:8px;">';
-	$out .= '<tr><td style="background-color: #FDD;"><strong>Local file : ' . $GLOBALS['extKey'] . '/' . $GLOBALS['extFile'] . '</strong></td></tr>';
-	$out .= '<tr><td style="background-color: #DFD;"><strong>TER file (version ' . $GLOBALS['extVersion'] . ')</strong></td></tr>';
-
+	$out .= '<tr><td style="background-color: #FDD;"><strong>Local file</strong></td></tr>';
+	$out .= '<tr><td style="background-color: #DFD;"><strong>TER file</strong></td></tr>';
 	unset($sourcesDiff[0]);
 	unset($sourcesDiff[1]);
-
 	foreach ($sourcesDiff as $line => $content) {
 		switch (substr($content, 0, 1)) {
 			case '+':
@@ -70,7 +88,6 @@ function printT3Diff($sourcesDiff) {
 				$out .= '<tr><td>' . formatcode($content) . '</td></tr>';
 		}
 	}
-
 	$out .= '</table></pre>';
 	echo $out;
 }
