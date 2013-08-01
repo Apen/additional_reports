@@ -7,6 +7,8 @@
 <body style="background:white;">
 <?php
 
+require_once(t3lib_extMgm::extPath('additional_reports') . 'classes/class.tx_additionalreports_util.php');
+
 if (tx_additionalreports_util::intFromVer(TYPO3_version) < 6002000) {
 	require_once(PATH_t3lib . 'class.t3lib_befunc.php');
 	require_once(PATH_t3lib . 'stddb/tables.php');
@@ -112,11 +114,12 @@ function checkBeLogin() {
 }
 
 function initTSFE($id) {
-	require_once(PATH_tslib . 'class.tslib_pagegen.php');
-	require_once(PATH_tslib . 'class.tslib_fe.php');
-	require_once(PATH_t3lib . 'class.t3lib_page.php');
-	require_once(PATH_tslib . 'class.tslib_content.php');
+
 	if (tx_additionalreports_util::intFromVer(TYPO3_version) < 6002000) {
+		require_once(PATH_tslib . 'class.tslib_pagegen.php');
+		require_once(PATH_tslib . 'class.tslib_fe.php');
+		require_once(PATH_t3lib . 'class.t3lib_page.php');
+		require_once(PATH_tslib . 'class.tslib_content.php');
 		require_once(PATH_t3lib . 'class.t3lib_userauth.php');
 		require_once(PATH_tslib . 'class.tslib_feuserauth.php');
 		require_once(PATH_t3lib . 'class.t3lib_tstemplate.php');
@@ -131,7 +134,7 @@ function initTSFE($id) {
 	}
 	$GLOBALS['TSFE']->connectToDB();
 	$GLOBALS['TSFE']->initFEuser();
-	$GLOBALS['TSFE']->checkAlternativeIdMethods();
+	// $GLOBALS['TSFE']->checkAlternativeIdMethods();
 	$GLOBALS['TSFE']->determineId();
 	$GLOBALS['TSFE']->getCompressedTCarray();
 	$GLOBALS['TSFE']->initTemplate();
