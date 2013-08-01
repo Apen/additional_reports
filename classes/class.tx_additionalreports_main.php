@@ -305,6 +305,9 @@ class tx_additionalreports_main {
 
 						// need extension update ?
 						$updateDate = date('d/m/Y', $lastVersion['lastuploaddate']);
+						if (tx_additionalreports_util::intFromVer(TYPO3_version) > 6000000) {
+							$updateDate = date('d/m/Y', $lastVersion['last_updated']);
+						}
 						if (version_compare($itemValue['EM_CONF']['version'], $lastVersion['version'], '<')) {
 							$extensionsToUpdate++;
 							$markersArrayExtension['###VERSIONLAST###'] = '<span style="color:green;font-weight:bold;">' . $lastVersion['version'] . '&nbsp;(' . $updateDate . ')</span>';
