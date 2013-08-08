@@ -36,7 +36,7 @@ class tx_additionalreports_main {
 	 * @return string
 	 */
 	public static function getCss() {
-		return t3lib_extMgm::extRelPath('additional_reports') . 'res/css/tx_additionalreports.css';
+		return t3lib_extMgm::extPath('additional_reports') . 'res/css/tx_additionalreports.css';
 	}
 
 	/**
@@ -46,7 +46,7 @@ class tx_additionalreports_main {
 	 */
 	public function displayXclass() {
 		$template = new tx_additionalreports_templating();
-		$template->initTemplate('typo3conf/ext/additional_reports/res/templates/xclass.html');
+		$template->initTemplate(t3lib_extMgm::extPath('additional_reports') . 'res/templates/xclass.html');
 
 		$content = '';
 
@@ -112,7 +112,7 @@ class tx_additionalreports_main {
 	 */
 	public function displayAjax() {
 		$template = new tx_additionalreports_templating();
-		$template->initTemplate('typo3conf/ext/additional_reports/res/templates/ajax.html');
+		$template->initTemplate(t3lib_extMgm::extPath('additional_reports') . 'res/templates/ajax.html');
 
 		$items = $GLOBALS['TYPO3_CONF_VARS']['BE']['AJAX'];
 		$markersArray = array();
@@ -145,7 +145,7 @@ class tx_additionalreports_main {
 	 */
 	public function displayCliKeys() {
 		$template = new tx_additionalreports_templating();
-		$template->initTemplate('typo3conf/ext/additional_reports/res/templates/clikeys.html');
+		$template->initTemplate(t3lib_extMgm::extPath('additional_reports') . 'res/templates/clikeys.html');
 
 		$items = $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['GLOBAL']['cliKeys'];
 		$markersArray = array();
@@ -184,7 +184,7 @@ class tx_additionalreports_main {
 	 */
 	public function displayEid() {
 		$template = new tx_additionalreports_templating();
-		$template->initTemplate('typo3conf/ext/additional_reports/res/templates/eid.html');
+		$template->initTemplate(t3lib_extMgm::extPath('additional_reports') . 'res/templates/eid.html');
 
 		$items = $GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include'];
 		$markersArray = array();
@@ -223,7 +223,7 @@ class tx_additionalreports_main {
 	 */
 	public function displayExtDirect() {
 		$template = new tx_additionalreports_templating();
-		$template->initTemplate('typo3conf/ext/additional_reports/res/templates/extdirect.html');
+		$template->initTemplate(t3lib_extMgm::extPath('additional_reports') . 'res/templates/extdirect.html');
 
 		$items = $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ExtDirect'];
 		$markersArray = array();
@@ -256,7 +256,7 @@ class tx_additionalreports_main {
 	 */
 	public function displayExtensions() {
 		$template = new tx_additionalreports_templating();
-		$template->initTemplate('typo3conf/ext/additional_reports/res/templates/extensions.html');
+		$template->initTemplate(t3lib_extMgm::extPath('additional_reports') . 'res/templates/extensions.html');
 
 		$content = '';
 		$path = PATH_typo3conf . 'ext/';
@@ -533,7 +533,7 @@ class tx_additionalreports_main {
 	 */
 	public function displayHooks() {
 		$template = new tx_additionalreports_templating();
-		$template->initTemplate('typo3conf/ext/additional_reports/res/templates/hooks.html');
+		$template->initTemplate(t3lib_extMgm::extPath('additional_reports') . 'res/templates/hooks.html');
 
 		$markersArray = array();
 		$markersArray['###LLL:TITLE###'] = $GLOBALS['LANG']->getLL('hooks_core');
@@ -623,7 +623,7 @@ class tx_additionalreports_main {
 	 */
 	public function displayStatus() {
 		$template = new tx_additionalreports_templating();
-		$template->initTemplate('typo3conf/ext/additional_reports/res/templates/status.html');
+		$template->initTemplate(t3lib_extMgm::extPath('additional_reports') . 'res/templates/status.html');
 
 		$markersArray = array();
 
@@ -783,7 +783,7 @@ class tx_additionalreports_main {
 		$url = $this->baseURL;
 
 		$template = new tx_additionalreports_templating();
-		$template->initTemplate('typo3conf/ext/additional_reports/res/templates/plugins.html');
+		$template->initTemplate(t3lib_extMgm::extPath('additional_reports') . 'res/templates/plugins.html');
 
 		$markersArray = array();
 		$markersArray['###URL###'] = $url;
@@ -842,7 +842,7 @@ class tx_additionalreports_main {
 	 */
 	public function getAllUsedPlugins($displayHidden = FALSE) {
 		$template = new tx_additionalreports_templating();
-		$template->initTemplate('typo3conf/ext/additional_reports/res/templates/plugins.html');
+		$template->initTemplate(t3lib_extMgm::extPath('additional_reports') . 'res/templates/plugins.html');
 		$markersArray = array();
 
 		$plugins = array();
@@ -1044,7 +1044,7 @@ class tx_additionalreports_main {
 	 */
 	public function getAllUsedCtypes($displayHidden = FALSE) {
 		$template = new tx_additionalreports_templating();
-		$template->initTemplate('typo3conf/ext/additional_reports/res/templates/plugins.html');
+		$template->initTemplate(t3lib_extMgm::extPath('additional_reports') . 'res/templates/plugins.html');
 		$markersArray = array();
 
 		$ctypes = array();
@@ -1240,7 +1240,7 @@ class tx_additionalreports_main {
 	 */
 	public function getSummary() {
 		$template = new tx_additionalreports_templating();
-		$template->initTemplate('typo3conf/ext/additional_reports/res/templates/plugins.html');
+		$template->initTemplate(t3lib_extMgm::extPath('additional_reports') . 'res/templates/plugins.html');
 		$markersArray = array();
 
 		$plugins = array();
@@ -1512,7 +1512,7 @@ class tx_additionalreports_main {
 		);
 
 		$template = new tx_additionalreports_templating();
-		$template->initTemplate('typo3conf/ext/additional_reports/res/templates/realurlerrors.html');
+		$template->initTemplate(t3lib_extMgm::extPath('additional_reports') . 'res/templates/realurlerrors.html');
 		$markersArray = array();
 
 		$markersArray['###PAGEBROWSER###'] = '';
@@ -1607,7 +1607,7 @@ class tx_additionalreports_main {
 		);
 
 		$template = new tx_additionalreports_templating();
-		$template->initTemplate('typo3conf/ext/additional_reports/res/templates/logerrors.html');
+		$template->initTemplate(t3lib_extMgm::extPath('additional_reports') . 'res/templates/logerrors.html');
 		$markersArray = array();
 
 		$markersArray['###PAGEBROWSER###'] = '';
@@ -1677,7 +1677,7 @@ class tx_additionalreports_main {
 	 */
 	public function displayWebsitesConf() {
 		$template = new tx_additionalreports_templating();
-		$template->initTemplate('typo3conf/ext/additional_reports/res/templates/websiteconf.html');
+		$template->initTemplate(t3lib_extMgm::extPath('additional_reports') . 'res/templates/websiteconf.html');
 		$markersArray = array();
 
 		$items = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
@@ -1768,7 +1768,7 @@ class tx_additionalreports_main {
 	 */
 	public function displayDbCheck() {
 		$template = new tx_additionalreports_templating();
-		$template->initTemplate('typo3conf/ext/additional_reports/res/templates/dbcheck.html');
+		$template->initTemplate(t3lib_extMgm::extPath('additional_reports') . 'res/templates/dbcheck.html');
 
 		$sqlStatements = tx_additionalreports_util::getSqlUpdateStatements();
 		$content = '';
