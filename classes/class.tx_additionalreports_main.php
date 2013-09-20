@@ -1027,9 +1027,13 @@ class tx_additionalreports_main {
 			$markersArrayTemp[] = $markersExt;
 		}
 
-		$markersArray['###REPORTS_PLUGINS_USEDPLUGINS_OBJECT###'] = $template->renderAllTemplate(
-			$markersArrayTemp, '###REPORTS_PLUGINS_USEDPLUGINS_OBJECT###'
-		);
+		if (!empty($markersArrayTemp)) {
+			$markersArray['###REPORTS_PLUGINS_USEDPLUGINS_OBJECT###'] = $template->renderAllTemplate(
+				$markersArrayTemp, '###REPORTS_PLUGINS_USEDPLUGINS_OBJECT###'
+			);
+		} else {
+			return $markersArray['###PAGEBROWSER###'];
+		}
 
 		$content = $template->renderAllTemplate($markersArray, '###REPORTS_PLUGINS_USEDPLUGINS###');
 
@@ -1224,9 +1228,14 @@ class tx_additionalreports_main {
 
 			$markersArrayTemp[] = $markersExt;
 		}
-		$markersArray['###REPORTS_PLUGINS_USEDCTYPES_OBJECT###'] = $template->renderAllTemplate(
-			$markersArrayTemp, '###REPORTS_PLUGINS_USEDCTYPES_OBJECT###'
-		);
+
+		if (!empty($markersArrayTemp)) {
+			$markersArray['###REPORTS_PLUGINS_USEDCTYPES_OBJECT###'] = $template->renderAllTemplate(
+				$markersArrayTemp, '###REPORTS_PLUGINS_USEDCTYPES_OBJECT###'
+			);
+		} else {
+			return $markersArray['###PAGEBROWSER###'];
+		}
 
 		$content = $template->renderAllTemplate($markersArray, '###REPORTS_PLUGINS_USEDCTYPES###');
 
