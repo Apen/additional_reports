@@ -30,8 +30,7 @@
  * @package        TYPO3
  */
 
-class tx_additionalreports_status extends tx_additionalreports_report implements tx_reports_Report
-{
+class tx_additionalreports_status extends tx_additionalreports_report implements tx_reports_Report {
 
 	/**
 	 * This method renders the report

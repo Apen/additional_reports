@@ -625,17 +625,28 @@ class tx_additionalreports_main {
 		$template = new tx_additionalreports_templating();
 		$template->initTemplate(t3lib_extMgm::extPath('additional_reports') . 'res/templates/status.html');
 
+		// infos about typo3 versions
+		$jsonVersions = tx_additionalreports_util::getJsonVersionInfos();
+		$currentVersionInfos = tx_additionalreports_util::getCurrentVersionInfos($jsonVersions);
+		$currentBranch = tx_additionalreports_util::getCurrentBranchInfos($jsonVersions);
+		$latestStable = tx_additionalreports_util::getLatestStableInfos($jsonVersions);
+		$latestLts = tx_additionalreports_util::getLatestLtsInfos($jsonVersions);
+		$headerVersions = $GLOBALS['LANG']->getLL('status_version') . '<br/>';
+		$headerVersions .= $GLOBALS['LANG']->getLL('latestbranch') . '<br/>';
+		$headerVersions .= $GLOBALS['LANG']->getLL('lateststable') . '<br/>';
+		$headerVersions .= $GLOBALS['LANG']->getLL('latestlts');
+		$htmlVersions = TYPO3_version . ' [' . $currentVersionInfos['date'] . ']';
+		$htmlVersions .= '<br/>' . $currentBranch['version'] . ' [' . $currentBranch['date'] . ']';
+		$htmlVersions .= '<br/>' . $latestStable['version'] . ' [' . $latestStable['date'] . ']';
+		$htmlVersions .= '<br/>' . $latestLts['version'] . ' [' . $latestLts['date'] . ']';
+
 		$markersArray = array();
 
 		// TYPO3
-		$content = tx_additionalreports_util::writeInformation(
-			$GLOBALS['LANG']->getLL('status_sitename'), $GLOBALS['TYPO3_CONF_VARS']['SYS']['sitename']
-		);
-		$content .= tx_additionalreports_util::writeInformation($GLOBALS['LANG']->getLL('status_version'), TYPO3_version);
+		$content = tx_additionalreports_util::writeInformation($GLOBALS['LANG']->getLL('status_sitename'), $GLOBALS['TYPO3_CONF_VARS']['SYS']['sitename']);
+		$content .= tx_additionalreports_util::writeInformation($headerVersions, $htmlVersions);
 		$content .= tx_additionalreports_util::writeInformation($GLOBALS['LANG']->getLL('status_path'), PATH_site);
-		$content .= tx_additionalreports_util::writeInformation('TYPO3_db', TYPO3_db);
-		$content .= tx_additionalreports_util::writeInformation('TYPO3_db_username', TYPO3_db_username);
-		$content .= tx_additionalreports_util::writeInformation('TYPO3_db_host', TYPO3_db_host);
+		$content .= tx_additionalreports_util::writeInformation('TYPO3_db<br/>TYPO3_db_username<br/>TYPO3_db_host', TYPO3_db . '<br/>' . TYPO3_db_username . '<br/>' . TYPO3_db_host);
 		if ($GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path'] != '') {
 			$cmd = t3lib_div::imageMagickCommand('convert', '-version');
 			exec($cmd, $ret);

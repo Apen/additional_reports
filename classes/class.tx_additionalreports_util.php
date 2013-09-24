@@ -875,11 +875,11 @@ class tx_additionalreports_util {
 	 * @return string HTML code
 	 */
 	public static function writeInformationList($label, $array) {
-		$content = '<ul>';
+		$content = '';
 		foreach ($array as $value) {
-			$content .= '<li>' . $value . '</li>';
+			$content .= '' . $value . '<br/>';
 		}
-		$content .= '</ul>';
+		$content .= '';
 		return self::writeInformation($label, $content);
 	}
 
@@ -1060,7 +1060,54 @@ class tx_additionalreports_util {
 		return $xclass;
 	}
 
+	/**
+	 * Return an array with all versions infos
+	 *
+	 * @return array
+	 */
+	public static function getJsonVersionInfos() {
+		return json_decode(t3lib_div::getUrl('http://get.typo3.org/json'), TRUE);
+	}
 
+	/**
+	 * Return an array with current version infos
+	 *
+	 * @return array
+	 */
+	public static function getCurrentVersionInfos($jsonVersions) {
+		$currentVersion = explode('.', TYPO3_version);
+		return $jsonVersions[$currentVersion[0] . '.' . $currentVersion[1]]['releases'][TYPO3_version];
+	}
+
+	/**
+	 * Return an array with current branch infos
+	 *
+	 * @return array
+	 */
+	public static function getCurrentBranchInfos($jsonVersions) {
+		$currentVersion = explode('.', TYPO3_version);
+		return reset($jsonVersions[$currentVersion[0] . '.' . $currentVersion[1]]['releases']);
+	}
+
+	/**
+	 * Return an array with latest stable infos
+	 *
+	 * @return array
+	 */
+	public static function getLatestStableInfos($jsonVersions) {
+		$currentVersion = explode('.', $jsonVersions['latest_stable']);
+		return $jsonVersions[$currentVersion[0] . '.' . $currentVersion[1]]['releases'][$jsonVersions['latest_stable']];
+	}
+
+	/**
+	 * Return an array with latest LTS infos
+	 *
+	 * @return array
+	 */
+	public static function getLatestLtsInfos($jsonVersions) {
+		$currentVersion = explode('.', $jsonVersions['latest_lts']);
+		return $jsonVersions[$currentVersion[0] . '.' . $currentVersion[1]]['releases'][$jsonVersions['latest_lts']];
+	}
 }
 
 ?>
