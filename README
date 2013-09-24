@@ -1,3 +1,4 @@
 Useful informations in the reports module : xclass, ajax, cliKeys, eID, general status of the system (encoding, DB, php vars...), hooks, compare local and TER extension (diff), used content type, used plugins, ExtDirect... It can really help you during migration or new existing project (to have a global reports of the system).
 
 TER url : http://typo3.org/extensions/repository/view/additional_reports
+DOC : http://docs.typo3.org/typo3cms/extensions/additional_reports/2.5.18/
