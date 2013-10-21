@@ -206,11 +206,11 @@ class tx_additionalreports_util {
 	/**
 	 * Gathers all extensions in $path
 	 *
-	 * @param    string $path Absolute path to local, global or system extensions
-	 * @param    string $type Path-type: L, G or S
+	 * @param    string $path     Absolute path to local, global or system extensions
+	 * @param    array  $dbSchema array with all the tables
 	 * @return    array        "Returns" content by reference
 	 */
-	public static function getInstExtList($path, $type) {
+	public static function getInstExtList($path, $dbSchema) {
 		$list = array();
 		if (@is_dir($path)) {
 			$extList = t3lib_div::get_dirs($path);
@@ -219,15 +219,31 @@ class tx_additionalreports_util {
 					if (@is_file($path . $extKey . '/ext_emconf.php')) {
 						$emConf = self::includeEMCONF($path . $extKey . '/ext_emconf.php', $extKey);
 						if (is_array($emConf)) {
-							if (is_array($list[$extKey])) {
-								$list[$extKey] = array('doubleInstall' => $list[$extKey]['doubleInstall']);
+							$currentExt = array();
+							$currentExt['extkey'] = $extKey;
+							$currentExt['installed'] = t3lib_extMgm::isLoaded($extKey);
+							$currentExt['EM_CONF'] = $emConf;
+							$currentExt['files'] = t3lib_div::getFilesInDir($path . $extKey, '', 0, '', NULL);
+							$currentExt['lastversion'] = tx_additionalreports_util::checkExtensionUpdate($currentExt);
+							$currentExt['affectedfiles'] = tx_additionalreports_util::getExtAffectedFiles($currentExt);
+							$currentExt['icon'] = tx_additionalreports_util::getExtIcon($extKey);
+
+							// db infos
+							$fdFile = array();
+							$updateStatements = array();
+							tx_additionalreports_util::getExtSqlUpdateStatements($currentExt, $dbSchema, $fdFile, $updateStatements);
+							$currentExt['fdfile'] = $fdFile;
+							$currentExt['updatestatements'] = $updateStatements;
+
+							if ($currentExt['installed']) {
+								if ($currentExt['lastversion']) {
+									$list['ter'][$extKey] = $currentExt;
+								} else {
+									$list['dev'][$extKey] = $currentExt;
+								}
+							} else {
+								$list['unloaded'][$extKey] = $currentExt;
 							}
-							$list[$extKey]['extkey'] = $extKey;
-							$list[$extKey]['doubleInstall'] .= $type;
-							$list[$extKey]['type'] = $type;
-							$list[$extKey]['installed'] = t3lib_extMgm::isLoaded($extKey);
-							$list[$extKey]['EM_CONF'] = $emConf;
-							$list[$extKey]['files'] = t3lib_div::getFilesInDir($path . $extKey, '', 0, '', NULL);
 						}
 					}
 				}
@@ -258,11 +274,18 @@ class tx_additionalreports_util {
 	public static function checkExtensionUpdate($extInfo) {
 		if (self::intFromVer(TYPO3_version) < 6000000) {
 			$lastVersion = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'cache_extensions', 'extkey="' . $extInfo['extkey'] . '" AND lastversion=1');
-			return $lastVersion[0];
+			if ($lastVersion) {
+				$lastVersion[0]['updatedate'] = date('d/m/Y', $lastVersion[0]['lastuploaddate']);
+				return $lastVersion[0];
+			}
 		} else {
 			$lastVersion = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'tx_extensionmanager_domain_model_extension', 'extension_key="' . $extInfo['extkey'] . '" AND current_version=1');
-			return $lastVersion[0];
+			if ($lastVersion) {
+				$lastVersion[0]['updatedate'] = date('d/m/Y', $lastVersion[0]['last_updated']);
+				return $lastVersion[0];
+			}
 		}
+		return NULL;
 	}
 
 	/**
