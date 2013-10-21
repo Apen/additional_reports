@@ -39,6 +39,45 @@ class tx_additionalreports_status extends tx_additionalreports_report implements
 	 */
 	public function getReport() {
 		$content = '<p class="help">' . $GLOBALS['LANG']->getLL('status_description') . '</p>';
+
+		if (!isset($this->reportObject->doc)) {
+			$this->reportObject->doc = t3lib_div::makeInstance('template');
+		}
+
+		$this->reportObject->doc->getPageRenderer()->loadExtJS();
+		$this->reportObject->doc->getPageRenderer()->addExtOnReadyCode('
+			Ext.select("h2.section-header").each(function(element){
+				element.on("click", function(event, tag) {
+					var state = 0,
+						el = Ext.fly(tag),
+						div = el.next("div"),
+						saveKey = el.getAttribute("rel");
+					if (el.hasClass("collapsed")) {
+						el.removeClass("collapsed").addClass("expanded");
+						div.slideIn("t", {
+							easing: "easeIn",
+							duration: .5
+						});
+					} else {
+						el.removeClass("expanded").addClass("collapsed");
+						div.slideOut("t", {
+							easing: "easeOut",
+							duration: .5,
+							remove: false,
+							useDisplay: true
+						});
+						state = 1;
+					}
+					if (saveKey) {
+						try {
+							top.TYPO3.BackendUserSettings.ExtDirect.set(saveKey + "." + tag.id, state, function(response) {});
+						} catch(e) {}
+					}
+				});
+			});
+		'
+		);
+
 		$content .= tx_additionalreports_main::displayStatus();
 		return $content;
 	}
@@ -46,9 +85,7 @@ class tx_additionalreports_status extends tx_additionalreports_report implements
 }
 
 
-if (defined('TYPO3_MODE')
-	&& $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/additional_reports/reports/reports_status/class.tx_additionalreports_status.php']
-) {
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/additional_reports/reports/reports_status/class.tx_additionalreports_status.php']) {
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/additional_reports/reports/reports_status/class.tx_additionalreports_status.php']);
 }
 

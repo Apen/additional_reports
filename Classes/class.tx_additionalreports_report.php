@@ -30,22 +30,14 @@
  * @package        TYPO3
  */
 
-class tx_additionalreports_report
-{
+class tx_additionalreports_report {
 
 	/**
 	 * Back-reference to the calling reports module
 	 *
-	 * @var    object    $reportObject
+	 * @var    object $reportObject
 	 */
 	protected $reportObject;
-
-	/**
-	 * Base url of the report
-	 *
-	 * @var string $baseURL
-	 */
-	public $baseURL = '';
 
 	/**
 	 * Constructor for class tx_additionalreports_report
@@ -58,7 +50,6 @@ class tx_additionalreports_report
 		$this->setCss(tx_additionalreports_main::getCss());
 		// include LL
 		$GLOBALS['LANG']->includeLLFile('EXT:additional_reports/locallang.xml');
-		$this->baseURL = tx_additionalreports_util::getBaseUrl();
 	}
 
 	/**
@@ -72,7 +63,7 @@ class tx_additionalreports_report
 			$this->reportObject->doc->getPageRenderer()->addCssFile($path);
 		}
 		if (tx_additionalreports_util::intFromVer(TYPO3_version) >= 6000000) {
-			$doc          = t3lib_div::makeInstance('template');
+			$doc = t3lib_div::makeInstance('template');
 			$pageRenderer = $doc->getPageRenderer()->addCssFile($path);
 		}
 	}
@@ -88,7 +79,7 @@ class tx_additionalreports_report
 			$this->reportObject->doc->getPageRenderer()->addJsFile($path);
 		}
 		if (tx_additionalreports_util::intFromVer(TYPO3_version) >= 6000000) {
-			$doc          = t3lib_div::makeInstance('template');
+			$doc = t3lib_div::makeInstance('template');
 			$pageRenderer = $doc->getPageRenderer()->addJsFile($path);
 		}
 	}

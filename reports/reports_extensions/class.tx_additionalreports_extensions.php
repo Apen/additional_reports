@@ -29,8 +29,7 @@
  * @package        TYPO3
  */
 
-class tx_additionalreports_extensions extends tx_additionalreports_report implements tx_reports_Report
-{
+class tx_additionalreports_extensions extends tx_additionalreports_report implements tx_reports_Report {
 
 	/**
 	 * This method renders the report
@@ -46,10 +45,7 @@ class tx_additionalreports_extensions extends tx_additionalreports_report implem
 
 }
 
-
-if (defined('TYPO3_MODE')
-	&& $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/additional_reports/reports/reports_eid/class.tx_additionalreports_extensions.php']
-) {
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/additional_reports/reports/reports_eid/class.tx_additionalreports_extensions.php']) {
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/additional_reports/reports/reports_eid/class.tx_additionalreports_extensions.php']);
 }
 

@@ -116,7 +116,7 @@
             <label index="preview">Preview</label>
             <label index="careful">Careful</label>
             <label index="carefuldesc">A plugin/ctype can be also called in typoscript, typoscript file, php file...</label>
-            <label index="xclasscarefuldesc">No XCLASS found, maybe you need to clear caches and refresh the page</label>
+            <label index="xclasscarefuldesc">No autoload XCLASS found, maybe you need to clear caches and refresh the page</label>
             <label index="latestbranch">Lastest from this branch</label>
             <label index="lateststable">Lastest stable</label>
             <label index="latestlts">Lastest LTS</label>
@@ -232,7 +232,7 @@
             <label index="preview">Aperçu</label>
             <label index="careful">Attention</label>
             <label index="carefuldesc">Un plugin/ctype peut aussi être appelé en typoscript, fichier typoscript, fichier php...</label>
-            <label index="xclasscarefuldesc">Aucune XCLASS trouvée, peut être devez vous vider les caches et recharger la page</label>
+            <label index="xclasscarefuldesc">Aucune autoload XCLASS trouvée, peut être devez vous vider les caches et recharger la page</label>
             <label index="latestbranch">Dernière pour cette branche</label>
             <label index="lateststable">Dernière stable</label>
             <label index="latestlts">Dernière LTS</label>
