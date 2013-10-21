@@ -164,222 +164,47 @@ class tx_additionalreports_main {
 	 * @return string HTML code
 	 */
 	public function displayExtensions() {
-		$path = PATH_typo3conf . 'ext/';
-		$itemsDev = array();
-		$itemsUnloaded = array();
 		$extensionsToUpdate = 0;
-		$extensionsDev = 0;
-		$extensionsLoaded = 0;
 		$extensionsModified = 0;
 
-		$items = tx_additionalreports_util::getInstExtList($path, 'L');
 		$dbSchema = tx_additionalreports_util::getDatabaseSchema();
+		$allExtension = tx_additionalreports_util::getInstExtList(PATH_typo3conf . 'ext/', $dbSchema);
 
 		$listExtensionsTer = array();
 		$listExtensionsDev = array();
 		$listExtensionsUnloaded = array();
 
-		/********************************* loaded extension(s) *********************************/
-
-		if (count($items) > 0) {
-			foreach ($items as $itemKey => $itemValue) {
-				if (t3lib_extMgm::isLoaded($itemKey)) {
-					$extensionsLoaded++;
-
-					$extKey = $itemKey;
-					$extInfo = $itemValue;
-					$fdFile = array();
-					$updateStatements = array();
-
-					$lastVersion = tx_additionalreports_util::checkExtensionUpdate($extInfo);
-					$affectedFiles = tx_additionalreports_util::getExtAffectedFiles($extInfo);
-					tx_additionalreports_util::getExtSqlUpdateStatements($extInfo, $dbSchema, $fdFile, $updateStatements);
-
-					if (!$lastVersion) {
-						$itemsDev[$itemKey] = $itemValue;
-						$extensionsDev++;
-					} else {
-						$listExtensionsTerItem = array();
-						$listExtensionsTerItem['icon'] = tx_additionalreports_util::getExtIcon($extKey);
-						$listExtensionsTerItem['extension'] = $extKey;
-						$listExtensionsTerItem['extensionlink'] = '<a href="#" onclick="' . tx_additionalreports_util::goToModuleEm($extKey) . '">' . tx_additionalreports_util::getIconZoom() . '</a>';
-						$listExtensionsTerItem['version'] = $itemValue['EM_CONF']['version'];
-						$listExtensionsTerItem['versioncheck'] = tx_additionalreports_util::versionCompare($itemValue['EM_CONF']['constraints']['depends']['typo3']);
-
-						// need extension update ?
-						$updateDate = date('d/m/Y', $lastVersion['lastuploaddate']);
-						if (tx_additionalreports_util::intFromVer(TYPO3_version) > 6000000) {
-							$updateDate = date('d/m/Y', $lastVersion['last_updated']);
-						}
-						if (version_compare($itemValue['EM_CONF']['version'], $lastVersion['version'], '<')) {
-							$extensionsToUpdate++;
-							$listExtensionsTerItem['versionlast'] = '<span style="color:green;font-weight:bold;">' . $lastVersion['version'] . '&nbsp;(' . $updateDate . ')</span>';
-						} else {
-							$listExtensionsTerItem['versionlast'] = $lastVersion['version'] . '&nbsp;(' . $updateDate . ')';
-						}
-
-						$listExtensionsTerItem['downloads'] = $lastVersion['alldownloadcounter'];;
-
-						// show db
-						$dumpTf1 = '';
-						$dumpTf2 = '';
-						if (count($fdFile) > 0) {
-							$id = 'sql' . $extKey;
-							$dumpTf1 = count($fdFile) . ' ' . self::getLl('extensions_tablesmodified');
-							$dumpTf2 = tx_additionalreports_util::writePopUp($id, $extKey, tx_additionalreports_util::viewArray($fdFile));
-						}
-						$listExtensionsTerItem['tables'] = $dumpTf1;
-						$listExtensionsTerItem['tableslink'] = $dumpTf2;
-
-						// need db update
-						if (count($updateStatements) > 0) {
-							$listExtensionsTerItem['tablesintegrity'] = self::getLl('yes');
-						} else {
-							$listExtensionsTerItem['tablesintegrity'] = self::getLl('no');
-						}
-
-						// need extconf update
-						$absPath = tx_additionalreports_util::getExtPath($extKey, $extInfo['type']);
-						if (is_file($absPath . 'ext_conf_template.txt')) {
-							$configTemplate = t3lib_div::getUrl($absPath . 'ext_conf_template.txt');
-							/** @var $tsparserObj t3lib_TSparser */
-							$tsparserObj = t3lib_div::makeInstance('t3lib_TSparser');
-							$tsparserObj->parse($configTemplate);
-							$arr = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][$extKey]);
-							$arr = is_array($arr) ? $arr : array();
-							$diffConf = array_diff_key($tsparserObj->setup, $arr);
-							if (isset($diffConf['updateMessage'])) {
-								unset($diffConf['updateMessage']);
-							}
-							if (count($diffConf) > 0) {
-								$id = 'extconf' . $extKey;
-								$datas = '<span style="color:white;">Diff : </span>' . tx_additionalreports_util::viewArray($diffConf);
-								$datas .= '<span style="color:white;">$GLOBALS[\'TYPO3_CONF_VARS\'][\'EXT\'][\'extConf\'][\'' . $extKey . '\'] : </span>';
-								$datas .= tx_additionalreports_util::viewArray($arr);
-								$datas .= '<span style="color:white;">ext_conf_template.txt : </span>';
-								$datas .= tx_additionalreports_util::viewArray($tsparserObj->setup);
-								$dumpExtConf = tx_additionalreports_util::writePopUp($id, $extKey, $datas);
-								$listExtensionsTerItem['confintegrity'] = self::getLl('yes') . '&nbsp;&nbsp;' . $dumpExtConf;
-							} else {
-								$listExtensionsTerItem['confintegrity'] = self::getLl('no');
-							}
-						} else {
-							$listExtensionsTerItem['confintegrity'] = self::getLl('no');
-						}
-
-						// modified files
-						if (count($affectedFiles) > 0) {
-							$extensionsModified++;
-							$id = 'files' . $extKey;
-							$contentUl = '<div style="display:none;" id="' . $id . '"><ul>';
-							foreach ($affectedFiles as $affectedFile) {
-								$compareUrl = t3lib_div::getIndpEnv('TYPO3_SITE_URL');
-								$compareUrl .= 'index.php?eID=additional_reports_compareFiles';
-								$compareUrl .= '&extKey=' . $extKey . '&extFile=' . $affectedFile . '&extVersion=' . $itemValue['EM_CONF']['version'];
-								$contentUl .= '<li><a rel="shadowbox;height=600;width=800;" href = "' . $compareUrl . '" target = "_blank"';
-								$contentUl .= 'title="' . $affectedFile . ' : ' . $extKey . ' ' . $itemValue['EM_CONF']['version'] . '" > ';
-								$contentUl .= $affectedFile . '</a></li>';
-							}
-							$contentUl .= '</ul>';
-							$contentUl .= '</div>';
-							$listExtensionsTerItem['files'] = count($affectedFiles) . ' ' . self::getLl('extensions_filesmodified') . $contentUl;
-							$listExtensionsTerItem['fileslink'] = '<input type="button" onclick="$(\'' . $id . '\').toggle();" value="+"/>';
-						} else {
-							$listExtensionsTerItem['files'] = '&nbsp;';
-							$listExtensionsTerItem['fileslink'] = '&nbsp;';
-						}
-						$listExtensionsTer[] = $listExtensionsTerItem;
-					}
-				} else {
-					$itemsUnloaded[$itemKey] = $itemValue;
+		if (count($allExtension['ter']) > 0) {
+			foreach ($allExtension['ter'] as $extKey => $itemValue) {
+				$currentExtension = self::getExtensionInformations($itemValue);
+				if (version_compare($itemValue['EM_CONF']['version'], $itemValue['lastversion']['version'], '<')) {
+					$extensionsToUpdate++;
 				}
-
+				if (count($itemValue['affectedfiles']) > 0) {
+					$extensionsModified++;
+				}
+				$listExtensionsTer[] = $currentExtension;
 			}
 		}
 
-		/********************************* specific developpment(s) *********************************/
-
-		if (count($itemsDev) > 0) {
-			foreach ($itemsDev as $itemKey => $itemValue) {
-				if (t3lib_extMgm::isLoaded($itemKey)) {
-					$listExtensionsDevItem = array();
-					$extKey = $itemKey;
-					$extInfo = $itemValue;
-					$fdFile = array();
-					$updateStatements = array();
-
-					tx_additionalreports_util::getExtSqlUpdateStatements($extInfo, $dbSchema, $fdFile, $updateStatements);
-
-					$listExtensionsDevItem['icon'] = tx_additionalreports_util::getExtIcon($extKey);
-					$listExtensionsDevItem['extension'] = $extKey;
-					$listExtensionsDevItem['extensionlink'] = '<a href="#" onclick="' . tx_additionalreports_util::goToModuleEm($extKey) . '">';
-					$listExtensionsDevItem['extensionlink'] .= tx_additionalreports_util::getIconZoom() . '</a>';
-					$listExtensionsDevItem['version'] = $itemValue['EM_CONF']['version'];
-
-					// show db
-					$dumpTf1 = '';
-					$dumpTf2 = '';
-					if (count($fdFile) > 0) {
-						$id = 'sql' . $extKey;
-						$dumpTf1 = count($fdFile) . ' ' . self::getLl('extensions_tablesmodified');
-						$dumpTf2 = tx_additionalreports_util::writePopUp($id, $extKey, tx_additionalreports_util::viewArray($fdFile));
-					}
-					$listExtensionsDevItem['tables'] = $dumpTf1;
-					$listExtensionsDevItem['tableslink'] = $dumpTf2;
-
-					// need db update
-					if (count($updateStatements) > 0) {
-						$listExtensionsDevItem['tablesintegrity'] = '<span style="color:red;font-weight:bold;">' . self::getLl('yes') . '</span>';
-					} else {
-						$listExtensionsDevItem['tablesintegrity'] = self::getLl('no');
-					}
-
-					$listExtensionsDev[] = $listExtensionsDevItem;
-				}
+		if (count($allExtension['dev']) > 0) {
+			foreach ($allExtension['dev'] as $extKey => $itemValue) {
+				$listExtensionsDev[] = self::getExtensionInformations($itemValue);
 			}
 		}
 
-		/********************************* unloaded extension(s) *********************************/
-
-		if (count($itemsUnloaded) > 0) {
-			foreach ($itemsUnloaded as $itemKey => $itemValue) {
-				$listExtensionsUnloadedItem = array();
-				$extKey = $itemKey;
-				$extInfo = $itemValue;
-				$fdFile = array();
-				$updateStatements = array();
-
-				tx_additionalreports_util::getExtSqlUpdateStatements($extInfo, $dbSchema, $fdFile, $updateStatements);
-
-				$listExtensionsUnloadedItem['icon'] = tx_additionalreports_util::getExtIcon($extKey);
-				$listExtensionsUnloadedItem['extension'] = $extKey;
-				$listExtensionsUnloadedItem['extensionlink'] = '<a href="#" onclick="' . tx_additionalreports_util::goToModuleEm(
-						$extKey
-					) . '">';
-				$listExtensionsUnloadedItem['extensionlink'] .= tx_additionalreports_util::getIconZoom() . '</a>';
-				$listExtensionsUnloadedItem['version'] = $itemValue['EM_CONF']['version'];
-
-				// show db
-				$dumpTf1 = '';
-				$dumpTf2 = '';
-				if (count($fdFile) > 0) {
-					$id = 'sql' . $extKey;
-					$dumpTf1 = count($fdFile) . ' ' . self::getLl('extensions_tablesmodified');
-					$dumpTf2 = tx_additionalreports_util::writePopUp($id, $extKey, tx_additionalreports_util::viewArray($fdFile));
-				}
-				$listExtensionsUnloadedItem['tables'] = $dumpTf1;
-				$listExtensionsUnloadedItem['tableslink'] = $dumpTf2;
-
-				$listExtensionsUnloaded[] = $listExtensionsUnloadedItem;
+		if (count($allExtension['unloaded']) > 0) {
+			foreach ($allExtension['unloaded'] as $extKey => $itemValue) {
+				$listExtensionsUnloaded[] = self::getExtensionInformations($itemValue);
 			}
 		}
 
 		$addContent = '';
-		$addContent .= $extensionsLoaded . ' ' . self::getLl('extensions_extensions');
+		$addContent .= (count($allExtension['ter']) + count($allExtension['dev'])) . ' ' . self::getLl('extensions_extensions');
 		$addContent .= '<br/>';
-		$addContent .= $extensionsLoaded - count($itemsDev) . ' ' . self::getLl('extensions_ter');
+		$addContent .= count($allExtension['ter']) . ' ' . self::getLl('extensions_ter');
 		$addContent .= '  /  ';
-		$addContent .= $extensionsDev . ' ' . self::getLl('extensions_dev');
+		$addContent .= count($allExtension['dev']) . ' ' . self::getLl('extensions_dev');
 		$addContent .= '<br/>';
 		$addContent .= $extensionsToUpdate . ' ' . self::getLl('extensions_toupdate');
 		$addContent .= '  /  ';
@@ -392,6 +217,101 @@ class tx_additionalreports_main {
 		$view->assign('listExtensionsDev', $listExtensionsDev);
 		$view->assign('listExtensionsUnloaded', $listExtensionsUnloaded);
 		return $addContentItem . $view->render();
+	}
+
+	/**
+	 * Get all necessary informations about an ext
+	 *
+	 * @param array $itemValue
+	 * @return array
+	 */
+	public function getExtensionInformations($itemValue) {
+		$extKey = $itemValue['extkey'];
+		$listExtensionsTerItem = array();
+		$listExtensionsTerItem['icon'] = $itemValue['icon'];
+		$listExtensionsTerItem['extension'] = $extKey;
+		$listExtensionsTerItem['extensionlink'] = '<a href="#" onclick="' . tx_additionalreports_util::goToModuleEm($extKey) . '">' . tx_additionalreports_util::getIconZoom() . '</a>';
+		$listExtensionsTerItem['version'] = $itemValue['EM_CONF']['version'];
+		$listExtensionsTerItem['versioncheck'] = tx_additionalreports_util::versionCompare($itemValue['EM_CONF']['constraints']['depends']['typo3']);
+
+		// need extension update ?
+		if (version_compare($itemValue['EM_CONF']['version'], $itemValue['lastversion']['version'], '<')) {
+			$listExtensionsTerItem['versionlast'] = '<span style="color:green;font-weight:bold;">' . $itemValue['lastversion']['version'] . '&nbsp;(' . $itemValue['lastversion']['updatedate'] . ')</span>';
+		} else {
+			$listExtensionsTerItem['versionlast'] = $itemValue['lastversion']['version'] . '&nbsp;(' . $itemValue['lastversion']['updatedate'] . ')';
+		}
+
+		$listExtensionsTerItem['downloads'] = $itemValue['lastversion']['alldownloadcounter'];
+
+		// show db
+		$dumpTf1 = '';
+		$dumpTf2 = '';
+		if (count($itemValue['fdfile']) > 0) {
+			$id = 'sql' . $extKey;
+			$dumpTf1 = count($itemValue['fdfile']) . ' ' . self::getLl('extensions_tablesmodified');
+			$dumpTf2 = tx_additionalreports_util::writePopUp($id, $extKey, tx_additionalreports_util::viewArray($itemValue['fdfile']));
+		}
+		$listExtensionsTerItem['tables'] = $dumpTf1;
+		$listExtensionsTerItem['tableslink'] = $dumpTf2;
+
+		// need db update
+		if (count($itemValue['updatestatements']) > 0) {
+			$listExtensionsTerItem['tablesintegrity'] = self::getLl('yes');
+		} else {
+			$listExtensionsTerItem['tablesintegrity'] = self::getLl('no');
+		}
+
+		// need extconf update
+		$absPath = tx_additionalreports_util::getExtPath($extKey, $itemValue['type']);
+		if (is_file($absPath . 'ext_conf_template.txt')) {
+			$configTemplate = t3lib_div::getUrl($absPath . 'ext_conf_template.txt');
+			/** @var $tsparserObj t3lib_TSparser */
+			$tsparserObj = t3lib_div::makeInstance('t3lib_TSparser');
+			$tsparserObj->parse($configTemplate);
+			$arr = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][$extKey]);
+			$arr = is_array($arr) ? $arr : array();
+			$diffConf = array_diff_key($tsparserObj->setup, $arr);
+			if (isset($diffConf['updateMessage'])) {
+				unset($diffConf['updateMessage']);
+			}
+			if (count($diffConf) > 0) {
+				$id = 'extconf' . $extKey;
+				$datas = '<span style="color:white;">Diff : </span>' . tx_additionalreports_util::viewArray($diffConf);
+				$datas .= '<span style="color:white;">$GLOBALS[\'TYPO3_CONF_VARS\'][\'EXT\'][\'extConf\'][\'' . $extKey . '\'] : </span>';
+				$datas .= tx_additionalreports_util::viewArray($arr);
+				$datas .= '<span style="color:white;">ext_conf_template.txt : </span>';
+				$datas .= tx_additionalreports_util::viewArray($tsparserObj->setup);
+				$dumpExtConf = tx_additionalreports_util::writePopUp($id, $extKey, $datas);
+				$listExtensionsTerItem['confintegrity'] = self::getLl('yes') . '&nbsp;&nbsp;' . $dumpExtConf;
+			} else {
+				$listExtensionsTerItem['confintegrity'] = self::getLl('no');
+			}
+		} else {
+			$listExtensionsTerItem['confintegrity'] = self::getLl('no');
+		}
+
+		// modified files
+		if (count($itemValue['affectedfiles']) > 0) {
+			$id = 'files' . $extKey;
+			$contentUl = '<div style="display:none;" id="' . $id . '"><ul>';
+			foreach ($itemValue['affectedfiles'] as $affectedFile) {
+				$compareUrl = t3lib_div::getIndpEnv('TYPO3_SITE_URL');
+				$compareUrl .= 'index.php?eID=additional_reports_compareFiles';
+				$compareUrl .= '&extKey=' . $extKey . '&extFile=' . $affectedFile . '&extVersion=' . $itemValue['EM_CONF']['version'];
+				$contentUl .= '<li><a rel="shadowbox;height=600;width=800;" href = "' . $compareUrl . '" target = "_blank"';
+				$contentUl .= 'title="' . $affectedFile . ' : ' . $extKey . ' ' . $itemValue['EM_CONF']['version'] . '" > ';
+				$contentUl .= $affectedFile . '</a></li>';
+			}
+			$contentUl .= '</ul>';
+			$contentUl .= '</div>';
+			$listExtensionsTerItem['files'] = count($itemValue['affectedfiles']) . ' ' . self::getLl('extensions_filesmodified') . $contentUl;
+			$listExtensionsTerItem['fileslink'] = '<input type="button" onclick="$(\'' . $id . '\').toggle();" value="+"/>';
+		} else {
+			$listExtensionsTerItem['files'] = '&nbsp;';
+			$listExtensionsTerItem['fileslink'] = '&nbsp;';
+		}
+
+		return $listExtensionsTerItem;
 	}
 
 	/**
@@ -492,21 +412,12 @@ class tx_additionalreports_main {
 				self::getLl('status_im'), $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path'] . ' (' . $ret[0] . ')'
 			);
 		}
-		$content .= tx_additionalreports_util::writeInformation(
-			'forceCharset', $GLOBALS['TYPO3_CONF_VARS']['BE']['forceCharset']
-		);
-		$content .= tx_additionalreports_util::writeInformation(
-			'setDBinit', $GLOBALS['TYPO3_CONF_VARS']['SYS']['setDBinit']
-		);
-		$content .= tx_additionalreports_util::writeInformation(
-			'no_pconnect', $GLOBALS['TYPO3_CONF_VARS']['SYS']['no_pconnect']
-		);
-		$content .= tx_additionalreports_util::writeInformation(
-			'displayErrors', $GLOBALS['TYPO3_CONF_VARS']['SYS']['displayErrors']
-		);
-		$content .= tx_additionalreports_util::writeInformation(
-			'maxFileSize', $GLOBALS['TYPO3_CONF_VARS']['BE']['maxFileSize']
-		);
+		$content .= tx_additionalreports_util::writeInformation('forceCharset', $GLOBALS['TYPO3_CONF_VARS']['BE']['forceCharset']);
+		$content .= tx_additionalreports_util::writeInformation('setDBinit', $GLOBALS['TYPO3_CONF_VARS']['SYS']['setDBinit']);
+		$content .= tx_additionalreports_util::writeInformation('no_pconnect', $GLOBALS['TYPO3_CONF_VARS']['SYS']['no_pconnect']);
+		$content .= tx_additionalreports_util::writeInformation('displayErrors', $GLOBALS['TYPO3_CONF_VARS']['SYS']['displayErrors']);
+		$content .= tx_additionalreports_util::writeInformation('maxFileSize', $GLOBALS['TYPO3_CONF_VARS']['BE']['maxFileSize']);
+
 		$extensions = explode(',', $GLOBALS['TYPO3_CONF_VARS']['EXT']['extList']);
 		sort($extensions);
 		foreach ($extensions as $aKey => $extension) {

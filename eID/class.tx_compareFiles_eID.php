@@ -7,7 +7,7 @@
 <body style="background:white;">
 <?php
 
-require_once(t3lib_extMgm::extPath('additional_reports') . 'classes/class.tx_additionalreports_util.php');
+require_once(t3lib_extMgm::extPath('additional_reports') . 'Classes/class.tx_additionalreports_util.php');
 
 if (tx_additionalreports_util::intFromVer(TYPO3_version) < 6002000) {
 	require_once(PATH_t3lib . 'class.t3lib_befunc.php');
