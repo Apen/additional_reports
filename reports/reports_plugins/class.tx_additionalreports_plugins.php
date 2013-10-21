@@ -29,13 +29,7 @@
  * @package TYPO3
  */
 
-class tx_additionalreports_plugins extends tx_additionalreports_report implements tx_reports_Report
-{
-
-	public $nbElementsPerPage = 10;
-	public $display = 1;
-	public $filtersCat = 1;
-	public $baseURL = '';
+class tx_additionalreports_plugins extends tx_additionalreports_report implements tx_reports_Report {
 
 	/**
 	 * Constructor for class tx_additionalreports_plugins
@@ -44,23 +38,6 @@ class tx_additionalreports_plugins extends tx_additionalreports_report implement
 	 */
 	public function __construct($reportObject) {
 		parent::__construct($reportObject);
-		// Check nb per page
-		$nbPerPage = t3lib_div::_GP('nbPerPage');
-		if ($nbPerPage !== NULL) {
-			$this->nbElementsPerPage = $nbPerPage;
-		}
-		// Check the display mode
-		$display = t3lib_div::_GP('display');
-		if ($display !== NULL) {
-			$GLOBALS['BE_USER']->setAndSaveSessionData('additional_reports_menu', $display);
-			$this->display = $display;
-		}
-		// Check the session
-		$sessionDisplay = $GLOBALS['BE_USER']->getSessionData('additional_reports_menu');
-		if ($sessionDisplay !== NULL) {
-			$this->display = $sessionDisplay;
-		}
-		$this->filtersCat = '';
 	}
 
 	/**
@@ -75,9 +52,7 @@ class tx_additionalreports_plugins extends tx_additionalreports_report implement
 
 }
 
-if (defined('TYPO3_MODE')
-	&& $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/additional_reports/reports/reports_plugins/class.tx_additionalreports_plugins.php']
-) {
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/additional_reports/reports/reports_plugins/class.tx_additionalreports_plugins.php']) {
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/additional_reports/reports/reports_plugins/class.tx_additionalreports_plugins.php']);
 }
 

@@ -29,11 +29,7 @@
  * @package        TYPO3
  */
 
-class tx_additionalreports_logerrors extends tx_additionalreports_report implements tx_reports_Report
-{
-
-	public $nbElementsPerPage = 15;
-	public $baseURL = '';
+class tx_additionalreports_logerrors extends tx_additionalreports_report implements tx_reports_Report {
 
 	/**
 	 * Constructor for class tx_additionalreports_xclass
@@ -42,11 +38,6 @@ class tx_additionalreports_logerrors extends tx_additionalreports_report impleme
 	 */
 	public function __construct($reportObject) {
 		parent::__construct($reportObject);
-		// Check nb per page
-		$nbPerPage = t3lib_div::_GP('nbPerPage');
-		if ($nbPerPage !== NULL) {
-			$this->nbElementsPerPage = $nbPerPage;
-		}
 	}
 
 	/**
@@ -64,10 +55,7 @@ class tx_additionalreports_logerrors extends tx_additionalreports_report impleme
 
 }
 
-
-if (defined('TYPO3_MODE')
-	&& $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/additional_reports/reports/reports_xclass/class.tx_additionalreports_xclass.php']
-) {
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/additional_reports/reports/reports_xclass/class.tx_additionalreports_xclass.php']) {
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/additional_reports/reports/reports_xclass/class.tx_additionalreports_xclass.php']);
 }
 

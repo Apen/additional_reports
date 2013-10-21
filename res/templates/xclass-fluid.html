@@ -1,0 +1,92 @@
+<!-- fe -->
+
+<f:if condition="{xclass.FE}">
+    <table cellspacing="1" cellpadding="2" border="0" class="tx_sv_reportlist typo3-dblist">
+        <tr class="t3-row-header">
+            <td colspan="2">Frontend</td>
+        </tr>
+        <tr class="c-headLine">
+            <td class="cell">
+                <f:translate key="LLL:EXT:additional_reports/locallang.xml:name"/>
+            </td>
+            <td class="cell">
+                <f:translate key="LLL:EXT:additional_reports/locallang.xml:path"/>
+            </td>
+        </tr>
+        <f:for each="{xclass.FE}" as="path" key="name">
+            <tr class="db_list_normal">
+                <td class="cell">{path}</td>
+                <td class="cell">{name}</td>
+            </tr>
+        </f:for>
+    </table>
+</f:if>
+
+<!-- be -->
+
+<f:if condition="{xclass.BE}">
+    <table cellspacing="1" cellpadding="2" border="0" class="tx_sv_reportlist typo3-dblist">
+        <tr class="t3-row-header">
+            <td colspan="2">Backend</td>
+        </tr>
+        <tr class="c-headLine">
+            <td class="cell">
+                <f:translate key="LLL:EXT:additional_reports/locallang.xml:name"/>
+            </td>
+            <td class="cell">
+                <f:translate key="LLL:EXT:additional_reports/locallang.xml:path"/>
+            </td>
+        </tr>
+        <f:for each="{xclass.BE}" as="path" key="name">
+            <tr class="db_list_normal">
+                <td class="cell">{path}</td>
+                <td class="cell">{name}</td>
+            </tr>
+        </f:for>
+    </table>
+</f:if>
+
+<!-- 6.0> -->
+
+<f:if condition="{typo3version} >= 6000000">
+    <f:if condition="{xclass.autoload}">
+        <f:then>
+            <table cellspacing="1" cellpadding="2" border="0" class="tx_sv_reportlist typo3-dblist">
+                <tr class="t3-row-header">
+                    <td colspan="2">Autoload XCLASS (6.0>)</td>
+                </tr>
+                <tr class="c-headLine">
+                    <td class="cell">
+                        <f:translate key="LLL:EXT:additional_reports/locallang.xml:name"/>
+                    </td>
+                    <td class="cell">
+                        <f:translate key="LLL:EXT:additional_reports/locallang.xml:path"/>
+                    </td>
+                </tr>
+                <f:for each="{xclass.autoload}" as="path" key="name">
+                    <tr class="db_list_normal">
+                        <td class="cell">{path}</td>
+                        <td class="cell">{name}</td>
+                    </tr>
+                </f:for>
+            </table>
+        </f:then>
+        <f:else>
+            <f:render section="info" arguments="{label:'{f:translate(key:\'LLL:EXT:additional_reports/locallang.xml:careful\')}',value:'{f:translate(key:\'LLL:EXT:additional_reports/locallang.xml:xclasscarefuldesc\')}'}"/>
+        </f:else>
+    </f:if>
+</f:if>
+
+<f:section name="info">
+    <br/>
+
+    <div class="typo3-message message-information">
+        <div class="header-container">
+            <div class="message-header message-left">{label}</div>
+            <div class="message-header message-right">{value}</div>
+        </div>
+        <div class="message-body"></div>
+    </div>
+    <br/>
+</f:section>
+

@@ -29,8 +29,7 @@
  * @package        TYPO3
  */
 
-class tx_additionalreports_ajax extends tx_additionalreports_report implements tx_reports_Report
-{
+class tx_additionalreports_ajax extends tx_additionalreports_report implements tx_reports_Report {
 
 	/**
 	 * This method renders the report
@@ -45,9 +44,7 @@ class tx_additionalreports_ajax extends tx_additionalreports_report implements t
 }
 
 
-if (defined('TYPO3_MODE')
-	&& $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/additional_reports/reports/reports_ajax/class.tx_additionalreports_ajax.php']
-) {
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/additional_reports/reports/reports_ajax/class.tx_additionalreports_ajax.php']) {
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/additional_reports/reports/reports_ajax/class.tx_additionalreports_ajax.php']);
 }
 
