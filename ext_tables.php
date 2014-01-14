@@ -11,7 +11,7 @@ if (TYPO3_MODE == 'BE') {
 		$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['reports'][$_EXTKEY][$report] = array(
 			'title'       => 'LLL:EXT:' . $_EXTKEY . '/locallang.xml:' . $report . '_title',
 			'description' => 'LLL:EXT:' . $_EXTKEY . '/locallang.xml:' . $report . '_description',
-			'icon'        => 'EXT:' . $_EXTKEY . '/reports/reports_' . $report . '/tx_additionalreports_' . $report . '.png',
+			'icon'        => 'EXT:' . $_EXTKEY . '/Resources/Public/Icons/tx_additionalreports_' . $report . '.png',
 			'report'      => 'tx_additionalreports_' . $report
 		);
 	}

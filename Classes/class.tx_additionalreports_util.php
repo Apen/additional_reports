@@ -971,7 +971,7 @@ class tx_additionalreports_util {
 		$content .= '<a href="#"  onClick="jumpToUrl(\'' . $listUrlOrig;
 		$content .= '&filtersCat=\'+document.getElementById(\'filtersCat\').value);">';
 		$content .= '&nbsp;<img width="16" height="16" title="" alt="" src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR');
-		$content .= '../typo3conf/ext/additional_reports/res/images/refresh_n.gif"></a>';
+		$content .= '../typo3/sysext/t3skin/icons/gfx/refresh_n.gif"></a>';
 
 		return $content;
 	}
@@ -1025,7 +1025,7 @@ class tx_additionalreports_util {
 		$content .= '<a href="#"  onClick="jumpToUrl(\'' . $listUrlOrig;
 		$content .= '&filtersCat=\'+document.getElementById(\'filtersCat\').value);">';
 		$content .= '&nbsp;<img width="16" height="16" title="" alt="" src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR');
-		$content .= '../typo3conf/ext/additional_reports/res/images/refresh_n.gif"></a>';
+		$content .= '../typo3/sysext/t3skin/icons/gfx/refresh_n.gif"></a>';
 
 		return $content;
 	}
@@ -1177,6 +1177,92 @@ class tx_additionalreports_util {
 		}
 
 		return $displayMode;
+	}
+
+	/**
+	 * Download an extension content
+	 *
+	 * @param $extension
+	 * @param $version
+	 * @param $extFile
+	 * @return array
+	 */
+	public static function downloadT3x($extension, $version, $extFile) {
+		$firstLetter = strtolower(substr($extension, 0, 1));
+		$secondLetter = strtolower(substr($extension, 1, 1));
+		$from = 'http://typo3.org/fileadmin/ter/' . $firstLetter . '/' . $secondLetter . '/' . $extension . '_' . $version . '.t3x';
+		$content = t3lib_div::getURL($from);
+		$t3xfiles = self::extractExtensionDataFromT3x($content);
+		return $t3xfiles['FILES'][$extFile]['content'];
+	}
+
+	/**
+	 * Extract a t3x file
+	 *
+	 * @param $content
+	 * @return array
+	 * @throws Exception
+	 */
+	public static function extractExtensionDataFromT3x($content) {
+		$parts = explode(':', $content, 3);
+		if ($parts[1] === 'gzcompress') {
+			if (function_exists('gzuncompress')) {
+				$parts[2] = gzuncompress($parts[2]);
+			} else {
+				throw new \Exception('Decoding Error: No decompressor available for compressed content. gzcompress()/gzuncompress() functions are not available!');
+			}
+		}
+		if (md5($parts[2]) == $parts[0]) {
+			$output = unserialize($parts[2]);
+			if (is_array($output)) {
+				return $output;
+			} else {
+				throw new \Exception('Error: Content could not be unserialized to an array. Strange (since MD5 hashes match!)');
+			}
+		} else {
+			throw new \Exception('Error: MD5 mismatch. Maybe the extension file was downloaded and saved as a text file by the browser and thereby corrupted!? (Always select "All" filetype when saving extensions)');
+		}
+	}
+
+	/**
+	 * Init a fake TSFE
+	 *
+	 * @param $id
+	 */
+	public static function initTSFE($id) {
+		if (tx_additionalreports_util::intFromVer(TYPO3_version) < 6002000) {
+			require_once(PATH_t3lib . 'class.t3lib_befunc.php');
+			require_once(PATH_t3lib . 'stddb/tables.php');
+		}
+
+		if (tx_additionalreports_util::intFromVer(TYPO3_version) < 6002000) {
+			require_once(PATH_tslib . 'class.tslib_pagegen.php');
+			require_once(PATH_tslib . 'class.tslib_fe.php');
+			require_once(PATH_t3lib . 'class.t3lib_page.php');
+			require_once(PATH_tslib . 'class.tslib_content.php');
+			require_once(PATH_t3lib . 'class.t3lib_userauth.php');
+			require_once(PATH_tslib . 'class.tslib_feuserauth.php');
+			require_once(PATH_t3lib . 'class.t3lib_tstemplate.php');
+			require_once(PATH_t3lib . 'class.t3lib_cs.php');
+		}
+
+		if (!is_object($GLOBALS['TT'])) {
+			$GLOBALS['TT'] = t3lib_div::makeInstance('t3lib_TimeTrackNull');
+		}
+
+		if (version_compare(TYPO3_version, '4.3.0', '<')) {
+			$tsfeClassName = t3lib_div::makeInstanceClassName('tslib_fe');
+			$GLOBALS['TSFE'] = new $tsfeClassName($GLOBALS['TYPO3_CONF_VARS'], $id, '');
+		} else {
+			$GLOBALS['TSFE'] = t3lib_div::makeInstance('tslib_fe', $GLOBALS['TYPO3_CONF_VARS'], $id, '');
+		}
+		$GLOBALS['TSFE']->connectToDB();
+		$GLOBALS['TSFE']->initFEuser();
+		// $GLOBALS['TSFE']->checkAlternativeIdMethods();
+		$GLOBALS['TSFE']->determineId();
+		$GLOBALS['TSFE']->getCompressedTCarray();
+		$GLOBALS['TSFE']->initTemplate();
+		$GLOBALS['TSFE']->getConfigArray();
 	}
 
 }

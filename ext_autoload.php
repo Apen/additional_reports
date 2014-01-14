@@ -11,7 +11,7 @@ $autoload['tx_additionalreports_util'] = $extensionPath . 'Classes/class.tx_addi
 $autoload['tx_additionalreports_report'] = $extensionPath . 'Classes/class.tx_additionalreports_report.php';
 
 foreach ($reports as $report) {
-	$autoload['tx_additionalreports_' . $report] = $extensionPath . 'reports/reports_' . $report . '/class.tx_additionalreports_' . $report . '.php';
+	$autoload['tx_additionalreports_' . $report] = $extensionPath . 'Classes/Reports/class.tx_additionalreports_' . $report . '.php';
 }
 
 return $autoload;

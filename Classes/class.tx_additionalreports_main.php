@@ -36,8 +36,8 @@ class tx_additionalreports_main {
 	 * @return string
 	 */
 	public static function getCss() {
-		return t3lib_extMgm::extRelPath('additional_reports') . 'res/css/tx_additionalreports.css';
-	} 
+		return t3lib_extMgm::extRelPath('additional_reports') . 'Resources/Public/Css/tx_additionalreports.css';
+	}
 
 	public function getLl($key) {
 		return $GLOBALS['LANG']->getLL($key);
@@ -59,7 +59,7 @@ class tx_additionalreports_main {
 		}
 
 		$view = t3lib_div::makeInstance('Tx_Fluid_View_StandaloneView');
-		$view->setTemplatePathAndFilename(t3lib_extMgm::extPath('additional_reports') . 'res/templates/xclass-fluid.html');
+		$view->setTemplatePathAndFilename(t3lib_extMgm::extPath('additional_reports') . 'Resources/Private/Templates/xclass-fluid.html');
 		$view->assign('xclass', $xclassList);
 		$view->assign('typo3version', tx_additionalreports_util::intFromVer(TYPO3_version));
 		return $view->render();
@@ -72,7 +72,7 @@ class tx_additionalreports_main {
 	 */
 	public function displayAjax() {
 		$view = t3lib_div::makeInstance('Tx_Fluid_View_StandaloneView');
-		$view->setTemplatePathAndFilename(t3lib_extMgm::extPath('additional_reports') . 'res/templates/ajax-fluid.html');
+		$view->setTemplatePathAndFilename(t3lib_extMgm::extPath('additional_reports') . 'Resources/Private/Templates/ajax-fluid.html');
 		$view->assign('ajax', $GLOBALS['TYPO3_CONF_VARS']['BE']['AJAX']);
 		return $view->render();
 	}
@@ -100,7 +100,7 @@ class tx_additionalreports_main {
 		}
 
 		$view = t3lib_div::makeInstance('Tx_Fluid_View_StandaloneView');
-		$view->setTemplatePathAndFilename(t3lib_extMgm::extPath('additional_reports') . 'res/templates/clikeys-fluid.html');
+		$view->setTemplatePathAndFilename(t3lib_extMgm::extPath('additional_reports') . 'Resources/Private/Templates/clikeys-fluid.html');
 		$view->assign('clikeys', $clikeys);
 		return $view->render();
 	}
@@ -129,7 +129,7 @@ class tx_additionalreports_main {
 		}
 
 		$view = t3lib_div::makeInstance('Tx_Fluid_View_StandaloneView');
-		$view->setTemplatePathAndFilename(t3lib_extMgm::extPath('additional_reports') . 'res/templates/eid-fluid.html');
+		$view->setTemplatePathAndFilename(t3lib_extMgm::extPath('additional_reports') . 'Resources/Private/Templates/eid-fluid.html');
 		$view->assign('eids', $eids);
 		return $view->render();
 	}
@@ -153,7 +153,7 @@ class tx_additionalreports_main {
 		}
 
 		$view = t3lib_div::makeInstance('Tx_Fluid_View_StandaloneView');
-		$view->setTemplatePathAndFilename(t3lib_extMgm::extPath('additional_reports') . 'res/templates/extdirect-fluid.html');
+		$view->setTemplatePathAndFilename(t3lib_extMgm::extPath('additional_reports') . 'Resources/Private/Templates/extdirect-fluid.html');
 		$view->assign('extdirects', $extdirects);
 		return $view->render();
 	}
@@ -212,7 +212,7 @@ class tx_additionalreports_main {
 		$addContentItem = tx_additionalreports_util::writeInformation(self::getLl('pluginsmode5') . '<br/>' . self::getLl('extensions_updateter') . '', $addContent);
 
 		$view = t3lib_div::makeInstance('Tx_Fluid_View_StandaloneView');
-		$view->setTemplatePathAndFilename(t3lib_extMgm::extPath('additional_reports') . 'res/templates/extensions-fluid.html');
+		$view->setTemplatePathAndFilename(t3lib_extMgm::extPath('additional_reports') . 'Resources/Private/Templates/extensions-fluid.html');
 		$view->assign('listExtensionsTer', $listExtensionsTer);
 		$view->assign('listExtensionsDev', $listExtensionsDev);
 		$view->assign('listExtensionsUnloaded', $listExtensionsUnloaded);
@@ -371,7 +371,7 @@ class tx_additionalreports_main {
 		}
 
 		$view = t3lib_div::makeInstance('Tx_Fluid_View_StandaloneView');
-		$view->setTemplatePathAndFilename(t3lib_extMgm::extPath('additional_reports') . 'res/templates/hooks-fluid.html');
+		$view->setTemplatePathAndFilename(t3lib_extMgm::extPath('additional_reports') . 'Resources/Private/Templates/hooks-fluid.html');
 		$view->assign('hooks', $hooks);
 		return $view->render();
 	}
@@ -383,7 +383,7 @@ class tx_additionalreports_main {
 	 */
 	public function displayStatus() {
 		$view = t3lib_div::makeInstance('Tx_Fluid_View_StandaloneView');
-		$view->setTemplatePathAndFilename(t3lib_extMgm::extPath('additional_reports') . 'res/templates/status-fluid.html');
+		$view->setTemplatePathAndFilename(t3lib_extMgm::extPath('additional_reports') . 'Resources/Private/Templates/status-fluid.html');
 
 		// infos about typo3 versions
 		$jsonVersions = tx_additionalreports_util::getJsonVersionInfos();
@@ -534,7 +534,7 @@ class tx_additionalreports_main {
 	 */
 	public function displayPlugins() {
 		$view = t3lib_div::makeInstance('Tx_Fluid_View_StandaloneView');
-		$view->setTemplatePathAndFilename(t3lib_extMgm::extPath('additional_reports') . 'res/templates/plugins-fluid.html');
+		$view->setTemplatePathAndFilename(t3lib_extMgm::extPath('additional_reports') . 'Resources/Private/Templates/plugins-fluid.html');
 
 		$view->assign('url', tx_additionalreports_util::getBaseUrl());
 		$view->assign('caution', tx_additionalreports_util::writeInformation(self::getLl('careful'), self::getLl('carefuldesc')));
@@ -868,7 +868,7 @@ class tx_additionalreports_main {
 		}
 
 		$view = t3lib_div::makeInstance('Tx_Fluid_View_StandaloneView');
-		$view->setTemplatePathAndFilename(t3lib_extMgm::extPath('additional_reports') . 'res/templates/realurlerrors-fluid.html');
+		$view->setTemplatePathAndFilename(t3lib_extMgm::extPath('additional_reports') . 'Resources/Private/Templates/realurlerrors-fluid.html');
 		$view->assign('items', $realurlErrors);
 		return $view->render();
 	}
@@ -935,7 +935,7 @@ class tx_additionalreports_main {
 		}
 
 		$view = t3lib_div::makeInstance('Tx_Fluid_View_StandaloneView');
-		$view->setTemplatePathAndFilename(t3lib_extMgm::extPath('additional_reports') . 'res/templates/logerrors-fluid.html');
+		$view->setTemplatePathAndFilename(t3lib_extMgm::extPath('additional_reports') . 'Resources/Private/Templates/logerrors-fluid.html');
 		$view->assign('items', $logErrors);
 		$view->assign('ordercounter', $ordercounter);
 		$view->assign('ordertstamp', $ordertstamp);
@@ -1014,7 +1014,7 @@ class tx_additionalreports_main {
 		}
 
 		$view = t3lib_div::makeInstance('Tx_Fluid_View_StandaloneView');
-		$view->setTemplatePathAndFilename(t3lib_extMgm::extPath('additional_reports') . 'res/templates/websiteconf-fluid.html');
+		$view->setTemplatePathAndFilename(t3lib_extMgm::extPath('additional_reports') . 'Resources/Private/Templates/websiteconf-fluid.html');
 		$view->assign('items', $websiteconf);
 		return $view->render();
 	}
@@ -1101,7 +1101,7 @@ class tx_additionalreports_main {
 		$content .= '<textarea style="width:100%;height:200px;">' . $sqlStructure . '</textarea>';
 
 		$view = t3lib_div::makeInstance('Tx_Fluid_View_StandaloneView');
-		$view->setTemplatePathAndFilename(t3lib_extMgm::extPath('additional_reports') . 'res/templates/dbcheck-fluid.html');
+		$view->setTemplatePathAndFilename(t3lib_extMgm::extPath('additional_reports') . 'Resources/Private/Templates/dbcheck-fluid.html');
 		$view->assign('dbchecks', $dbchecks);
 		return $view->render() . $content;
 	}
