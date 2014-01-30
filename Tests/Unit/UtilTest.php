@@ -7,7 +7,6 @@ class UtilTest extends Tx_Phpunit_TestCase {
 	private $testingFramework;
 
 	public function setUp() {
-		require_once(PATH_typo3 . 'template.php');
 		$this->testingFramework = new Tx_Phpunit_Framework('additional_reports');
 	}
 
@@ -87,8 +86,8 @@ class UtilTest extends Tx_Phpunit_TestCase {
 		$allExtension = tx_additionalreports_util::getInstExtList(PATH_typo3conf . 'ext/', $dbSchema);
 		$this->testArray($allExtension);
 		$this->testArray($allExtension['ter']);
-		$this->testArray($allExtension['dev']);
-		$this->testArray($allExtension['unloaded']);
+		//$this->testArray($allExtension['dev']);
+		//$this->testArray($allExtension['unloaded']);
 		unset($dbSchema);
 		unset($allExtension);
 	}
@@ -201,6 +200,10 @@ class UtilTest extends Tx_Phpunit_TestCase {
 		$this->assertTrue($ext['type'] == 'L');
 		$this->assertTrue($ext['siteRelPath'] == 'typo3conf/ext/additional_reports/');
 		$this->assertTrue($ext['typo3RelPath'] == '../typo3conf/ext/additional_reports/');
+		$ext = tx_additionalreports_util::getExtensionType('reports');
+		$this->assertTrue($ext['type'] == 'S');
+		$this->assertTrue($ext['siteRelPath'] == 'typo3/sysext/reports/');
+		$this->assertTrue($ext['typo3RelPath'] == 'sysext/reports/');
 	}
 
 	/**
@@ -215,6 +218,8 @@ class UtilTest extends Tx_Phpunit_TestCase {
 	 */
 	public function getDomain() {
 		$domain = tx_additionalreports_util::getDomain(1);
+		$this->assertTrue(!empty($domain));
+		$domain = tx_additionalreports_util::getDomain(123456789);
 		$this->assertTrue(!empty($domain));
 	}
 
@@ -421,7 +426,12 @@ class UtilTest extends Tx_Phpunit_TestCase {
 	 * @test
 	 */
 	public function getJsonVersionInfos() {
-		$this->testArray(tx_additionalreports_util::getJsonVersionInfos());
+		$jsonVersions = tx_additionalreports_util::getJsonVersionInfos();
+		$currentVersion = explode('.', '4.5.32');
+		$this->testArray($jsonVersions);
+		$this->testArray($jsonVersions[$currentVersion[0] . '.' . $currentVersion[1]]);
+		$this->testArray($jsonVersions[$currentVersion[0] . '.' . $currentVersion[1]]['releases']);
+		$this->testArray($jsonVersions[$currentVersion[0] . '.' . $currentVersion[1]]['releases']['4.5.32']);
 	}
 
 	/**
@@ -429,7 +439,7 @@ class UtilTest extends Tx_Phpunit_TestCase {
 	 */
 	public function getCurrentVersionInfos() {
 		$jsonVersions = tx_additionalreports_util::getJsonVersionInfos();
-		$this->testArray(tx_additionalreports_util::getCurrentVersionInfos($jsonVersions));
+		$this->testArray(tx_additionalreports_util::getCurrentVersionInfos($jsonVersions, '4.5.32'));
 	}
 
 	/**
@@ -437,7 +447,7 @@ class UtilTest extends Tx_Phpunit_TestCase {
 	 */
 	public function getCurrentBranchInfos() {
 		$jsonVersions = tx_additionalreports_util::getJsonVersionInfos();
-		$this->testArray(tx_additionalreports_util::getCurrentBranchInfos($jsonVersions));
+		$this->testArray(tx_additionalreports_util::getCurrentBranchInfos($jsonVersions, '4.5.32'));
 	}
 
 	/**
@@ -459,17 +469,39 @@ class UtilTest extends Tx_Phpunit_TestCase {
 	/**
 	 * @test
 	 */
+	public function extractExtensionDataFromT3x() {
+		$content = t3lib_div::getURL('http://typo3.org/fileadmin/ter/a/d/additional_reports_2.6.4.t3x');
+		$testExplode = explode(':', $content, 3);
+		$this->assertTrue(preg_match('/^[a-f0-9]{32}$/', $testExplode[0]) > 0);
+		$this->assertTrue($testExplode[1] === 'gzcompress');
+		$this->assertTrue(strlen($testExplode[2]) === 474613);
+		$files = tx_additionalreports_util::extractExtensionDataFromT3x($content);
+		$this->testArray($files['FILES']);
+	}
+
+	/**
+	 * @test
+	 */
 	public function downloadT3x() {
-		$content = tx_additionalreports_util::downloadT3x('additional_reports', tx_additionalreports_util::getExtensionVersion('additional_reports'), 'ext_tables.php');
+		$content = tx_additionalreports_util::downloadT3x('additional_reports', '2.6.4', 'ext_tables.php');
 		$this->assertTrue(!empty($content));
 	}
 
 	/**
 	 * @test
 	 */
+	public function isGzuncompress() {
+		$this->assertTrue(function_exists('gzuncompress'));
+	}
+
+	/**
+	 * @test
+	 */
 	public function initTSFE() {
-		tx_additionalreports_util::initTSFE(0);
-		$this->assertTrue(!empty($GLOBALS['TSFE']));
+		if (!defined('TYPO3_cliMode')) {
+			tx_additionalreports_util::initTSFE(1);
+			$this->assertTrue(!empty($GLOBALS['TSFE']));
+		}
 	}
 
 	/*

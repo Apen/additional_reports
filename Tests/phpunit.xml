@@ -1,0 +1,36 @@
+<phpunit backupGlobals="false"
+         backupStaticAttributes="false"
+         colors="true"
+         convertErrorsToExceptions="true"
+         convertWarningsToExceptions="true"
+         forceCoversAnnotation="false"
+         processIsolation="false"
+         stopOnError="false"
+         stopOnFailure="false"
+         stopOnIncomplete="false"
+         stopOnSkipped="false"
+         strict="false"
+         verbose="false">
+
+    <testsuites>
+        <testsuite name="EXT:additional_reports">
+            <!--<directory>typo3conf/ext/additional_reports/Tests</directory>-->
+            <file>typo3conf/ext/additional_reports/Tests/Unit/UtilTest.php</file>
+            <file>typo3conf/ext/additional_reports/Tests/Unit/MainTest.php</file>
+        </testsuite>
+    </testsuites>
+
+    <filter>
+        <blacklist>
+            <directory>/home/typo3SRC</directory>
+            <directory>/home/html/dev/packagedev/typo3conf</directory>
+            <exclude>
+                <directory>/home/html/dev/packagedev/typo3conf/ext/additional_reports</directory>
+            </exclude>
+        </blacklist>
+        <!--<whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">typo3conf/ext/additional_reports</directory>
+        </whitelist>-->
+    </filter>
+
+</phpunit>
