@@ -489,8 +489,11 @@ class tx_additionalreports_util {
 	 */
 	public static function getDomain($pageUid) {
 		$domain = t3lib_BEfunc::firstDomainRecord(self::getRootLine($pageUid));
-		if ($domain === NULL) {
+		if (empty($domain)) {
 			$domain = t3lib_div::getIndpEnv('TYPO3_HOST_ONLY');
+		}
+		if (empty($domain)) {
+			$domain = 'localhost';
 		}
 		return $domain;
 	}
@@ -798,7 +801,7 @@ class tx_additionalreports_util {
 			throw new InvalidArgumentException('Extension key must be a non-empty string.');
 		}
 		if (!t3lib_extMgm::isLoaded($key)) {
-			return '';
+			return NULL;
 		}
 
 		// need for the next include
@@ -1115,9 +1118,9 @@ class tx_additionalreports_util {
 	 *
 	 * @return array
 	 */
-	public static function getCurrentVersionInfos($jsonVersions) {
-		$currentVersion = explode('.', TYPO3_version);
-		return $jsonVersions[$currentVersion[0] . '.' . $currentVersion[1]]['releases'][TYPO3_version];
+	public static function getCurrentVersionInfos($jsonVersions, $version) {
+		$currentVersion = explode('.', $version);
+		return $jsonVersions[$currentVersion[0] . '.' . $currentVersion[1]]['releases'][$version];
 	}
 
 	/**
@@ -1125,8 +1128,8 @@ class tx_additionalreports_util {
 	 *
 	 * @return array
 	 */
-	public static function getCurrentBranchInfos($jsonVersions) {
-		$currentVersion = explode('.', TYPO3_version);
+	public static function getCurrentBranchInfos($jsonVersions, $version) {
+		$currentVersion = explode('.', $version);
 		return reset($jsonVersions[$currentVersion[0] . '.' . $currentVersion[1]]['releases']);
 	}
 
@@ -1233,9 +1236,6 @@ class tx_additionalreports_util {
 		if (tx_additionalreports_util::intFromVer(TYPO3_version) < 6002000) {
 			require_once(PATH_t3lib . 'class.t3lib_befunc.php');
 			require_once(PATH_t3lib . 'stddb/tables.php');
-		}
-
-		if (tx_additionalreports_util::intFromVer(TYPO3_version) < 6002000) {
 			require_once(PATH_tslib . 'class.tslib_pagegen.php');
 			require_once(PATH_tslib . 'class.tslib_fe.php');
 			require_once(PATH_t3lib . 'class.t3lib_page.php');
@@ -1258,7 +1258,7 @@ class tx_additionalreports_util {
 		}
 		$GLOBALS['TSFE']->connectToDB();
 		$GLOBALS['TSFE']->initFEuser();
-		// $GLOBALS['TSFE']->checkAlternativeIdMethods();
+		//$GLOBALS['TSFE']->checkAlternativeIdMethods();
 		$GLOBALS['TSFE']->determineId();
 		$GLOBALS['TSFE']->getCompressedTCarray();
 		$GLOBALS['TSFE']->initTemplate();

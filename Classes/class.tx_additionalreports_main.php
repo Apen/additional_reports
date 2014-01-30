@@ -387,8 +387,8 @@ class tx_additionalreports_main {
 
 		// infos about typo3 versions
 		$jsonVersions = tx_additionalreports_util::getJsonVersionInfos();
-		$currentVersionInfos = tx_additionalreports_util::getCurrentVersionInfos($jsonVersions);
-		$currentBranch = tx_additionalreports_util::getCurrentBranchInfos($jsonVersions);
+		$currentVersionInfos = tx_additionalreports_util::getCurrentVersionInfos($jsonVersions, TYPO3_version);
+		$currentBranch = tx_additionalreports_util::getCurrentBranchInfos($jsonVersions, TYPO3_version);
 		$latestStable = tx_additionalreports_util::getLatestStableInfos($jsonVersions);
 		$latestLts = tx_additionalreports_util::getLatestLtsInfos($jsonVersions);
 		$headerVersions = self::getLl('status_version') . '<br/>';
