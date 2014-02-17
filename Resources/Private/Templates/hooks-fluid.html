@@ -33,7 +33,7 @@
 <f:if condition="{hooks.extensions}">
     <table cellspacing="1" cellpadding="2" border="0" class="tx_sv_reportlist typo3-dblist">
         <tr class="t3-row-header">
-            <td colspan="2">
+            <td colspan="3">
                 <f:translate key="LLL:EXT:additional_reports/locallang.xml:hooks_extension"/>
             </td>
         </tr>
@@ -42,13 +42,19 @@
                 <f:translate key="LLL:EXT:additional_reports/locallang.xml:extension"/>
             </td>
             <td class="cell">
-                <f:translate key="LLL:EXT:additional_reports/locallang.xml:hooks_line"/>
+                <f:translate key="LLL:EXT:additional_reports/locallang.xml:hooks_name"/>
+            </td>
+            <td class="cell">
+                <f:translate key="LLL:EXT:additional_reports/locallang.xml:hooks_file"/>
             </td>
         </tr>
         <f:for each="{hooks.extensions}" as="hook">
             <tr class="db_list_normal">
-                <td class="cell">{hook.extension}</td>
-                <td class="cell">{hook.line}</td>
+                <td class="cell">{hook.corefile}</td>
+                <td class="cell">{hook.name}</td>
+                <td class="cell">
+                    <ar:raw>{hook.file}</ar:raw>
+                </td>
             </tr>
         </f:for>
     </table>

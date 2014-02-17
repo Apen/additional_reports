@@ -20,10 +20,10 @@
             <td class="cell" width="40" style="text-align:center;">
                 <f:translate key="LLL:EXT:additional_reports/locallang.xml:status_version"/>
             </td>
-            <td class="cell" width="40" style="text-align:center;">
+            <!--<td class="cell" width="40" style="text-align:center;">
                 <f:translate key="LLL:EXT:additional_reports/locallang.xml:versioncheck"/>
-            </td>
-            <td class="cell" width="40" style="text-align:center;">
+            </td>-->
+            <td class="cell" colspan="2" width="60" style="text-align:center;">
                 <f:translate key="LLL:EXT:additional_reports/locallang.xml:status_lastversion"/>
             </td>
             <td class="cell" width="40" style="text-align:center;">
@@ -50,11 +50,14 @@
                     <ar:raw>{extension.extensionlink}</ar:raw>
                 </td>
                 <td class="cell" align="center">{extension.version}</td>
-                <td class="cell" align="center">
+                <!--<td class="cell" align="center">
                     <ar:raw>{extension.versioncheck}</ar:raw>
-                </td>
+                </td>-->
                 <td class="cell" align="center">
                     <ar:raw>{extension.versionlast}</ar:raw>
+                </td>
+                <td class="cell" align="center">
+                    <ar:raw>{extension.versionlastcompare}</ar:raw>
                 </td>
                 <td class="cell" align="center">{extension.downloads}</td>
                 <td class="cell" align="center">{extension.tables}</td>
