@@ -70,22 +70,6 @@ class MainTest extends Tx_Phpunit_TestCase {
 	 * @test
 	 */
 	public function displayExtensions() {
-		$_GET['display'] = 1;
-		$str = tx_additionalreports_main::displayExtensions();
-		$this->assertTrue(!empty($str));
-		$_GET['display'] = 3;
-		$str = tx_additionalreports_main::displayExtensions();
-		$this->assertTrue(!empty($str));
-		$_GET['display'] = 4;
-		$str = tx_additionalreports_main::displayExtensions();
-		$this->assertTrue(!empty($str));
-		$_GET['display'] = 5;
-		$str = tx_additionalreports_main::displayExtensions();
-		$this->assertTrue(!empty($str));
-		$_GET['display'] = 6;
-		$str = tx_additionalreports_main::displayExtensions();
-		$this->assertTrue(!empty($str));
-		$_GET['display'] = 7;
 		$str = tx_additionalreports_main::displayExtensions();
 		$this->assertTrue(!empty($str));
 	}
@@ -110,6 +94,24 @@ class MainTest extends Tx_Phpunit_TestCase {
 	 * @test
 	 */
 	public function displayPlugins() {
+		$str = tx_additionalreports_main::displayPlugins();
+		$this->assertTrue(!empty($str));
+		$_GET['display'] = 1;
+		$str = tx_additionalreports_main::displayPlugins();
+		$this->assertTrue(!empty($str));
+		$_GET['display'] = 3;
+		$str = tx_additionalreports_main::displayPlugins();
+		$this->assertTrue(!empty($str));
+		$_GET['display'] = 4;
+		$str = tx_additionalreports_main::displayPlugins();
+		$this->assertTrue(!empty($str));
+		$_GET['display'] = 5;
+		$str = tx_additionalreports_main::displayPlugins();
+		$this->assertTrue(!empty($str));
+		$_GET['display'] = 6;
+		$str = tx_additionalreports_main::displayPlugins();
+		$this->assertTrue(!empty($str));
+		$_GET['display'] = 7;
 		$str = tx_additionalreports_main::displayPlugins();
 		$this->assertTrue(!empty($str));
 	}

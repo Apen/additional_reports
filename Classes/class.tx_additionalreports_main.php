@@ -237,8 +237,15 @@ class tx_additionalreports_main {
 		// need extension update ?
 		if (version_compare($itemValue['EM_CONF']['version'], $itemValue['lastversion']['version'], '<')) {
 			$listExtensionsTerItem['versionlast'] = '<span style="color:green;font-weight:bold;">' . $itemValue['lastversion']['version'] . '&nbsp;(' . $itemValue['lastversion']['updatedate'] . ')</span>';
+			$compareUrl = t3lib_div::getIndpEnv('TYPO3_SITE_URL');
+			$compareUrl .= 'index.php?eID=additional_reports_compareFiles';
+			$compareUrl .= '&extKey=' . $extKey . '&mode=compareExtension&extVersion=' . $itemValue['lastversion']['version'];
+			$compareLabem = $extKey . ' : ' . $itemValue['EM_CONF']['version'] . ' <--> ' . $itemValue['lastversion']['version'];
+			$js = 'Shadowbox.open({content:\'' . $compareUrl . '\',player:\'iframe\',title:\'' . $compareLabem . '\',height:600,width:800});';
+			$listExtensionsTerItem['versionlastcompare'] = '<input type="button" onclick="' . $js . '" value="+" title="' . $compareLabem . '"/>';
 		} else {
 			$listExtensionsTerItem['versionlast'] = $itemValue['lastversion']['version'] . '&nbsp;(' . $itemValue['lastversion']['updatedate'] . ')';
+			$listExtensionsTerItem['versionlastcompare'] = '&nbsp;';
 		}
 
 		$listExtensionsTerItem['downloads'] = $itemValue['lastversion']['alldownloadcounter'];
@@ -328,45 +335,32 @@ class tx_additionalreports_main {
 			foreach ($items as $itemKey => $itemValue) {
 				if (preg_match('/.*?\/.*?\.php/', $itemKey, $matches)) {
 					foreach ($itemValue as $hookName => $hookList) {
-						$hooks['core'][] = array(
+						$hookList = tx_additionalreports_util::getHook($hookList);
+						if (!empty($hookList)) {
+							$hooks['core'][] = array(
+								'corefile' => $itemKey,
+								'name'     => $hookName,
+								'file'     => tx_additionalreports_util::viewArray($hookList)
+							);
+						}
+					}
+				}
+			}
+		}
+
+		$items = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'];
+		if (count($items) > 0) {
+			foreach ($items as $itemKey => $itemValue) {
+				foreach ($itemValue as $hookName => $hookList) {
+					$hookList = tx_additionalreports_util::getHook($hookList);
+					if (!empty($hookList)) {
+						$hooks['extensions'][] = array(
 							'corefile' => $itemKey,
 							'name'     => $hookName,
 							'file'     => tx_additionalreports_util::viewArray($hookList)
 						);
 					}
 				}
-			}
-		}
-
-		// extension hooks (we read the temp_CACHED and look for $EXTCONF modification)
-		$tempCached = tx_additionalreports_util::getCacheFilePrefix() . '_ext_localconf.php';
-		$items = array();
-		if (is_file(PATH_site . 'typo3conf/' . $tempCached)) {
-			$handle = fopen(PATH_site . 'typo3conf/' . $tempCached, 'r');
-			$extension = '';
-			if ($handle) {
-				while (!feof($handle)) {
-					$buffer = fgets($handle);
-					if ($extension != '') {
-						if (preg_match("/\['EXTCONF'\]\['(.*?)'\](.*?)\s*=/", $buffer, $matches)) {
-							if ($matches[1] != $extension) {
-								$items[] = array($extension, $matches[1] . ' --> ' . $matches[2]);
-							}
-						}
-					}
-					if (preg_match('/## EXTENSION: (.*?)$/', $buffer, $matches)) {
-						$extension = $matches[1];
-					}
-				}
-				fclose($handle);
-			}
-		}
-		if (count($items) > 0) {
-			foreach ($items as $itemValue) {
-				$hooks['extensions'][] = array(
-					'extension' => $itemValue[0],
-					'line'      => $itemValue[1]
-				);
 			}
 		}
 
@@ -471,7 +465,9 @@ class tx_additionalreports_main {
 		}
 
 		// MySQL
-		$content = tx_additionalreports_util::writeInformation('Version', mysql_get_server_info());
+		if (function_exists('mysql_get_server_info')) {
+			$content = tx_additionalreports_util::writeInformation('Version', mysql_get_server_info());
+		}
 		$items = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
 			'default_character_set_name, default_collation_name',
 			'information_schema.schemata',

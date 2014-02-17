@@ -331,6 +331,26 @@ class tx_additionalreports_util {
 	}
 
 	/**
+	 * Get all all files and md5 to check modified files of the last version
+	 *
+	 * @param string $extension
+	 * @param string $version
+	 * @return array
+	 */
+	public function getFilesMDArrayFromT3x($extension, $version) {
+		$firstLetter = strtolower(substr($extension, 0, 1));
+		$secondLetter = strtolower(substr($extension, 1, 1));
+		$from = 'http://typo3.org/fileadmin/ter/' . $firstLetter . '/' . $secondLetter . '/' . $extension . '_' . $version . '.t3x';
+		$content = t3lib_div::getURL($from);
+		$t3xfiles = self::extractExtensionDataFromT3x($content);
+		$filesMD5Array = array();
+		foreach ($t3xfiles['FILES'] as $file => $infos) {
+			$filesMD5Array[$file] = substr($infos['content_md5'], 0, 4);
+		}
+		return $filesMD5Array;
+	}
+
+	/**
 	 * Get all modified files
 	 *
 	 * @param array $extInfo
@@ -338,6 +358,17 @@ class tx_additionalreports_util {
 	 */
 	public static function getExtAffectedFiles($extInfo) {
 		$currentMd5Array = self::getFilesMDArray($extInfo);
+		return self::findMD5ArrayDiff($currentMd5Array, unserialize($extInfo['EM_CONF']['_md5_values_when_last_written']));
+	}
+
+	/**
+	 * Get all modified files
+	 *
+	 * @param array $extInfo
+	 * @return array
+	 */
+	public static function getExtAffectedFilesLastVersion($extInfo) {
+		$currentMd5Array = self::getFilesMDArrayFromT3x($extInfo['extkey'], $extInfo['lastversion']['version']);
 		return self::findMD5ArrayDiff($currentMd5Array, unserialize($extInfo['EM_CONF']['_md5_values_when_last_written']));
 	}
 
@@ -522,7 +553,11 @@ class tx_additionalreports_util {
 	 * @return array
 	 */
 	public function getSqlUpdateStatements() {
-		$tblFileContent = t3lib_div::getUrl(PATH_t3lib . 'stddb/tables.sql');
+		if (self::intFromVer(TYPO3_version) < 6001000) {
+			$tblFileContent = t3lib_div::getUrl(PATH_t3lib . 'stddb/tables.sql');
+		} else {
+			$tblFileContent = t3lib_div::getUrl(PATH_typo3 . 'sysext/core/ext_tables.sql');
+		}
 
 		foreach ($GLOBALS['TYPO3_LOADED_EXT'] as $loadedExtConf) {
 			if (is_array($loadedExtConf) && $loadedExtConf['ext_tables.sql']) {
@@ -1263,6 +1298,90 @@ class tx_additionalreports_util {
 		$GLOBALS['TSFE']->getCompressedTCarray();
 		$GLOBALS['TSFE']->initTemplate();
 		$GLOBALS['TSFE']->getConfigArray();
+	}
+
+	/**
+	 * Check if string given is hook
+	 *
+	 * @param string $hook
+	 * @return boolean
+	 */
+	public static function isHook($hook) {
+		$isHook = FALSE;
+		if (!empty($hook)) {
+			// if it's a key-path hook
+			if (is_array($hook)) {
+				$isHook = self::isHook($hook[1]);
+			}
+			// classname begin with &
+			if ($hook[0] == '&') {
+				$hook = substr($hook, 1);
+			}
+			//Check class exists
+			if (class_exists($hook)) {
+				$isHook = TRUE;
+			} //Check if namespace and class exists
+			else if (strpos($hook, "\\") !== FALSE && class_exists($hook)) {
+				$isHook = TRUE;
+			} //Check if file.php is used
+			else if (strpos($hook, ".php") !== FALSE) {
+				$hookArray = explode(".php", $hook);
+				if (!empty($hookArray) && is_array($hookArray)) {
+					$file = t3lib_div::getFileAbsFileName($hookArray[0] . ".php");
+					if (file_exists($file)) {
+						$isHook = TRUE;
+					}
+				}
+			}
+			//Check if function is used
+			if ($isHook === FALSE && strpos($hook, "->") !== FALSE) {
+				$hookArray = explode("->", $hook);
+				if (!empty($hookArray) && is_array($hookArray)) {
+					if (class_exists($hookArray[0])) {
+						$isHook = TRUE;
+					}
+				}
+			}
+		}
+		return $isHook;
+	}
+
+	/**
+	 * Get the string from potential array and test it
+	 *
+	 * @param string|array $hookPotential
+	 * @return null|array
+	 * @see self::isHook
+	 */
+	public static function getHook($hookPotential) {
+		//If is array
+		if (is_array($hookPotential)) {
+			foreach ($hookPotential as $key => $value) {
+				//if array nested
+				if (is_array($value)) {
+					foreach ($value as $keySecond => $valueSecond) {
+						//stop allowing array nested
+						if (is_array($valueSecond)) {
+							unset($value[$keySecond]);
+						} else if (self::isHook($valueSecond) === FALSE) {
+							unset($value[$keySecond]);
+						}
+					}
+				} else if (self::isHook($value) === FALSE) {
+					$value = NULL;
+				}
+
+				if (empty($value)) {
+					unset($hookPotential[$key]);
+				} else {
+					$hookPotential[$key] = $value;
+				}
+			}
+		} else if (self::isHook($hookPotential) === FALSE) {
+			$hookPotential = NULL;
+		}
+
+		return $hookPotential;
 	}
 
 }

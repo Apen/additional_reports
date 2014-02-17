@@ -8,6 +8,7 @@ class UtilTest extends Tx_Phpunit_TestCase {
 
 	public function setUp() {
 		$this->testingFramework = new Tx_Phpunit_Framework('additional_reports');
+		t3lib_extMgm::removeCacheFiles();
 	}
 
 	/**
@@ -50,7 +51,8 @@ class UtilTest extends Tx_Phpunit_TestCase {
 	 * @test
 	 */
 	public function isUsedInTv() {
-		if (!defined('TYPO3_cliMode')) {
+		// test only in my instance
+		if (t3lib_extMgm::isLoaded('templavoila') && PATH_site == '/home/html/dev/packagedev/') {
 			$this->assertTrue(tx_additionalreports_util::isUsedInTv(192, 6));
 			$this->assertFalse(tx_additionalreports_util::isUsedInTv(99999, 6));
 		}
@@ -124,12 +126,43 @@ class UtilTest extends Tx_Phpunit_TestCase {
 	public function getFilesMDArray() {
 		$extInfo['extkey'] = 'additional_reports';
 		$extInfo['type'] = 'L';
+		$this->testArray(tx_additionalreports_util::getExtAffectedFiles($extInfo));
+	}
+
+	/**
+	 * @test
+	 */
+	public function getFilesMDArrayFromT3x() {
+		$this->testArray(tx_additionalreports_util::getFilesMDArrayFromT3x('additional_reports', '2.6.5'));
+	}
+
+	/**
+	 * @test
+	 */
+	public function getExtAffectedFiles() {
+		$extInfo['extkey'] = 'additional_reports';
+		$extInfo['type'] = 'L';
 		$emconf = tx_additionalreports_util::includeEMCONF(PATH_typo3conf . 'ext/additional_reports/ext_emconf.php', 'additional_reports');
 		$new = unserialize($emconf['_md5_values_when_last_written']);
 		unset($new['ChangeLog']);
 		$emconf['_md5_values_when_last_written'] = serialize($new);
 		$extInfo['EM_CONF'] = $emconf;
 		$this->testArray(tx_additionalreports_util::getExtAffectedFiles($extInfo));
+	}
+
+	/**
+	 * @test
+	 */
+	public function getExtAffectedFilesLastVersion() {
+		$extInfo['extkey'] = 'additional_reports';
+		$extInfo['type'] = 'L';
+		$emconf = tx_additionalreports_util::includeEMCONF(PATH_typo3conf . 'ext/additional_reports/ext_emconf.php', 'additional_reports');
+		$new = unserialize($emconf['_md5_values_when_last_written']);
+		unset($new['ChangeLog']);
+		$emconf['_md5_values_when_last_written'] = serialize($new);
+		$extInfo['EM_CONF'] = $emconf;
+		$extInfo['lastversion'] = tx_additionalreports_util::checkExtensionUpdate($extInfo);
+		$this->testArray(tx_additionalreports_util::getExtAffectedFilesLastVersion($extInfo));
 	}
 
 	/**
