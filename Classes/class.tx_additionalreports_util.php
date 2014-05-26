@@ -73,6 +73,7 @@ class tx_additionalreports_util {
 				$parameters[] = 'tx_reports_system_reportstxreportsm1%5Breport%5D=' . $vars['report'];
 				$parameters[] = 'tx_reports_system_reportstxreportsm1%5Baction%5D=detail';
 				$parameters[] = 'tx_reports_system_reportstxreportsm1%5Bcontroller%5D=Report';
+				$parameters[] = 'moduleToken=' . \TYPO3\CMS\Core\FormProtection\FormProtectionFactory::get()->generateToken('moduleCall', 'system_ReportsTxreportsm1');
 			}
 		}
 		return $baseUrl . implode('&', $parameters);
@@ -639,6 +640,10 @@ class tx_additionalreports_util {
 
 		if (self::intFromVer(TYPO3_version) >= 4006000) {
 			$installClass = 't3lib_install_Sql';
+		}
+
+		if (self::intFromVer(TYPO3_version) >= 6002000) {
+			$installClass = 'TYPO3\\CMS\\Install\\Service\\SqlSchemaMigrationService';
 		}
 
 		return $installClass;
