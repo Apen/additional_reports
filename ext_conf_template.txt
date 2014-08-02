@@ -1,0 +1,2 @@
+# cat=basic; type=text; label= Pagebrowser:Number of items per page
+itemsPerPage = 30
