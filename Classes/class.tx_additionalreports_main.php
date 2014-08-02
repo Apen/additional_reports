@@ -39,7 +39,7 @@ class tx_additionalreports_main {
 		return t3lib_extMgm::extRelPath('additional_reports') . 'Resources/Public/Css/tx_additionalreports.css';
 	}
 
-	public function getLl($key) {
+	public static function getLl($key) {
 		return $GLOBALS['LANG']->getLL($key);
 	}
 
@@ -48,7 +48,7 @@ class tx_additionalreports_main {
 	 *
 	 * @return string HTML code
 	 */
-	public function displayXclass() {
+	public static function displayXclass() {
 		$xclassList = array(
 			'BE' => $GLOBALS['TYPO3_CONF_VARS']['BE']['XCLASS'],
 			'FE' => $GLOBALS['TYPO3_CONF_VARS']['FE']['XCLASS']
@@ -70,7 +70,7 @@ class tx_additionalreports_main {
 	 *
 	 * @return string HTML code
 	 */
-	public function displayAjax() {
+	public static function displayAjax() {
 		$view = t3lib_div::makeInstance('Tx_Fluid_View_StandaloneView');
 		$view->setTemplatePathAndFilename(t3lib_extMgm::extPath('additional_reports') . 'Resources/Private/Templates/ajax-fluid.html');
 		$view->assign('ajax', $GLOBALS['TYPO3_CONF_VARS']['BE']['AJAX']);
@@ -82,7 +82,7 @@ class tx_additionalreports_main {
 	 *
 	 * @return string HTML code
 	 */
-	public function displayCliKeys() {
+	public static function displayCliKeys() {
 		$items = $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['GLOBAL']['cliKeys'];
 		$clikeys = array();
 
@@ -110,7 +110,7 @@ class tx_additionalreports_main {
 	 *
 	 * @return string HTML code
 	 */
-	public function displayEid() {
+	public static function displayEid() {
 		$items = $GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include'];
 		$eids = array();
 
@@ -139,7 +139,7 @@ class tx_additionalreports_main {
 	 *
 	 * @return string HTML code
 	 */
-	public function displayExtDirect() {
+	public static function displayExtDirect() {
 		$items = $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ExtDirect'];
 		$extdirects = array();
 
@@ -163,7 +163,7 @@ class tx_additionalreports_main {
 	 *
 	 * @return string HTML code
 	 */
-	public function displayExtensions() {
+	public static function displayExtensions() {
 		$extensionsToUpdate = 0;
 		$extensionsModified = 0;
 
@@ -225,7 +225,7 @@ class tx_additionalreports_main {
 	 * @param array $itemValue
 	 * @return array
 	 */
-	public function getExtensionInformations($itemValue) {
+	public static function getExtensionInformations($itemValue) {
 		$extKey = $itemValue['extkey'];
 		$listExtensionsTerItem = array();
 		$listExtensionsTerItem['icon'] = $itemValue['icon'];
@@ -326,7 +326,7 @@ class tx_additionalreports_main {
 	 *
 	 * @return string HTML code
 	 */
-	public function displayHooks() {
+	public static function displayHooks() {
 		$hooks = array();
 
 		// core hooks
@@ -375,7 +375,7 @@ class tx_additionalreports_main {
 	 *
 	 * @return string HTML code
 	 */
-	public function displayStatus() {
+	public static function displayStatus() {
 		$view = t3lib_div::makeInstance('Tx_Fluid_View_StandaloneView');
 		$view->setTemplatePathAndFilename(t3lib_extMgm::extPath('additional_reports') . 'Resources/Private/Templates/status-fluid.html');
 
@@ -528,7 +528,7 @@ class tx_additionalreports_main {
 	 *
 	 * @return string HTML code
 	 */
-	public function displayPlugins() {
+	public static function displayPlugins() {
 		$view = t3lib_div::makeInstance('Tx_Fluid_View_StandaloneView');
 		$view->setTemplatePathAndFilename(t3lib_extMgm::extPath('additional_reports') . 'Resources/Private/Templates/plugins-fluid.html');
 
@@ -582,7 +582,7 @@ class tx_additionalreports_main {
 	 * @param boolean $displayHidden
 	 * @return string HTML code
 	 */
-	public function getAllUsedPlugins($displayHidden = FALSE) {
+	public static function getAllUsedPlugins($displayHidden = FALSE) {
 
 		$allItems = array();
 
@@ -632,7 +632,7 @@ class tx_additionalreports_main {
 	 * @param boolean $displayHidden
 	 * @return string HTML code
 	 */
-	public function getAllUsedCtypes($displayHidden = FALSE) {
+	public static function getAllUsedCtypes($displayHidden = FALSE) {
 
 		$allItems = array();
 
@@ -680,7 +680,7 @@ class tx_additionalreports_main {
 	 * @param array $itemValue
 	 * @return array
 	 */
-	public function getContentInfos($itemValue) {
+	public static function getContentInfos($itemValue) {
 		$markersExt = array();
 
 		$domain = tx_additionalreports_util::getDomain($itemValue['pid']);
@@ -743,7 +743,7 @@ class tx_additionalreports_main {
 	 *
 	 * @return string HTML code
 	 */
-	public function getSummary() {
+	public static function getSummary() {
 
 		$plugins = array();
 		foreach ($GLOBALS['TCA']['tt_content']['columns']['list_type']['config']['items'] as $itemKey => $itemValue) {
@@ -815,7 +815,7 @@ class tx_additionalreports_main {
 	 *
 	 * @return string HTML code
 	 */
-	public function displayRealUrlErrors() {
+	public static function displayRealUrlErrors() {
 		$cmd = t3lib_div::_GP('cmd');
 
 		if ($cmd === 'deleteAll') {
@@ -874,7 +874,7 @@ class tx_additionalreports_main {
 	 *
 	 * @return string HTML code
 	 */
-	public function displayLogErrors() {
+	public static function displayLogErrors() {
 
 		// query
 		$query = array();
@@ -943,7 +943,7 @@ class tx_additionalreports_main {
 	 *
 	 * @return string HTML code
 	 */
-	public function displayWebsitesConf() {
+	public static function displayWebsitesConf() {
 		$items = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
 			'uid, title',
 			'pages',
@@ -1020,7 +1020,7 @@ class tx_additionalreports_main {
 	 *
 	 * @return string HTML code
 	 */
-	public function displayDbCheck() {
+	public static function displayDbCheck() {
 		$sqlStatements = tx_additionalreports_util::getSqlUpdateStatements();
 		$dbchecks = array();
 
