@@ -532,6 +532,7 @@ class tx_additionalreports_main {
 		$view = t3lib_div::makeInstance('Tx_Fluid_View_StandaloneView');
 		$view->setTemplatePathAndFilename(t3lib_extMgm::extPath('additional_reports') . 'Resources/Private/Templates/plugins-fluid.html');
 
+		$view->assign('extconf', unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['additional_reports']));
 		$view->assign('url', tx_additionalreports_util::getBaseUrl());
 		$view->assign('caution', tx_additionalreports_util::writeInformation(self::getLl('careful'), self::getLl('carefuldesc')));
 		$view->assign('checkedpluginsmode3', (tx_additionalreports_util::getPluginsDisplayMode() == 3) ? ' checked="checked"' : '');
@@ -865,6 +866,7 @@ class tx_additionalreports_main {
 
 		$view = t3lib_div::makeInstance('Tx_Fluid_View_StandaloneView');
 		$view->setTemplatePathAndFilename(t3lib_extMgm::extPath('additional_reports') . 'Resources/Private/Templates/realurlerrors-fluid.html');
+		$view->assign('extconf', unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['additional_reports']));
 		$view->assign('items', $realurlErrors);
 		return $view->render();
 	}
@@ -935,6 +937,7 @@ class tx_additionalreports_main {
 		$view->assign('items', $logErrors);
 		$view->assign('ordercounter', $ordercounter);
 		$view->assign('ordertstamp', $ordertstamp);
+		$view->assign('extconf', unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['additional_reports']));
 		return $content . $view->render();
 	}
 
