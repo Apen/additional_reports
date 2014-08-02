@@ -35,7 +35,7 @@ class tx_additionalreports_util {
 	 *
 	 * @return array
 	 */
-	public function getReportsList() {
+	public static function getReportsList() {
 		$reports = array(
 			'eid', 'clikeys', 'plugins', 'xclass', 'hooks', 'status', 'ajax', 'logerrors', 'websitesconf', 'dbcheck', 'realurlerrors', 'extensions'
 		);
@@ -52,7 +52,7 @@ class tx_additionalreports_util {
 	 *
 	 * @return string url
 	 */
-	public function getBaseUrl() {
+	public static function getBaseUrl() {
 		// since 6.0> extbase is using by reports module
 		$baseUrl = t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'mod.php?';
 		$parameters = array();
@@ -84,7 +84,7 @@ class tx_additionalreports_util {
 	 *
 	 * @return array
 	 */
-	public function getSubModules() {
+	public static function getSubModules() {
 		return array(
 			'displayAjax'          => $GLOBALS['LANG']->getLL('ajax_title'),
 			'displayEid'           => $GLOBALS['LANG']->getLL('eid_title'),
@@ -110,7 +110,7 @@ class tx_additionalreports_util {
 	 * @param  string $permsClause
 	 * @return string
 	 */
-	public function getTreeList($id, $depth, $begin = 0, $permsClause = '1=1') {
+	public static function getTreeList($id, $depth, $begin = 0, $permsClause = '1=1') {
 		$depth = intval($depth);
 		$begin = intval($begin);
 		$id = intval($id);
@@ -141,7 +141,7 @@ class tx_additionalreports_util {
 	 * @param string $where
 	 * @return int
 	 */
-	public function getCountPagesUids($listOfUids, $where = '1=1') {
+	public static function getCountPagesUids($listOfUids, $where = '1=1') {
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid', 'pages', 'uid IN (' . $listOfUids . ') AND ' . $where);
 		$count = $GLOBALS['TYPO3_DB']->sql_num_rows($res);
 		$GLOBALS['TYPO3_DB']->sql_free_result($res);
@@ -187,7 +187,7 @@ class tx_additionalreports_util {
 	 * @param    string $ver A string with a version range.
 	 * @return   array
 	 */
-	public function splitVersionRange($ver) {
+	public static function splitVersionRange($ver) {
 		$versionRange = array();
 		if (strstr($ver, '-')) {
 			$versionRange = explode('-', $ver, 2);
@@ -316,7 +316,7 @@ class tx_additionalreports_util {
 	 * @param array $extInfo
 	 * @return array
 	 */
-	public function getFilesMDArray($extInfo) {
+	public static function getFilesMDArray($extInfo) {
 		$filesMD5Array = array();
 		$fileArr = array();
 		$extPath = self::typePath($extInfo['type']) . $extInfo['extkey'] . '/';
@@ -338,7 +338,7 @@ class tx_additionalreports_util {
 	 * @param string $version
 	 * @return array
 	 */
-	public function getFilesMDArrayFromT3x($extension, $version) {
+	public static function getFilesMDArrayFromT3x($extension, $version) {
 		$firstLetter = strtolower(substr($extension, 0, 1));
 		$secondLetter = strtolower(substr($extension, 1, 1));
 		$from = 'http://typo3.org/fileadmin/ter/' . $firstLetter . '/' . $secondLetter . '/' . $extension . '_' . $version . '.t3x';
@@ -379,7 +379,7 @@ class tx_additionalreports_util {
 	 * @param string $type
 	 * @return string
 	 */
-	public function typePath($type) {
+	public static function typePath($type) {
 		if ($type === 'S') {
 			return PATH_typo3 . 'sysext/';
 		} elseif ($type === 'G') {
@@ -477,7 +477,7 @@ class tx_additionalreports_util {
 	 * @param string $extKey
 	 * @return array
 	 */
-	public function getExtensionType($extKey) {
+	public static function getExtensionType($extKey) {
 		if (@is_dir(PATH_typo3conf . 'ext/' . $extKey . '/')) {
 			return array(
 				'type'         => 'L',
@@ -497,6 +497,7 @@ class tx_additionalreports_util {
 				'typo3RelPath' => 'sysext/' . $extKey . '/'
 			);
 		}
+		return NULL;
 	}
 
 	/**
@@ -553,7 +554,7 @@ class tx_additionalreports_util {
 	 *
 	 * @return array
 	 */
-	public function getSqlUpdateStatements() {
+	public static function getSqlUpdateStatements() {
 		if (self::intFromVer(TYPO3_version) < 6001000) {
 			$tblFileContent = t3lib_div::getUrl(PATH_t3lib . 'stddb/tables.sql');
 		} else {
@@ -635,7 +636,7 @@ class tx_additionalreports_util {
 	 *
 	 * @return string
 	 */
-	public function getInstallSqlClass() {
+	public static function getInstallSqlClass() {
 		$installClass = 't3lib_install';
 
 		if (self::intFromVer(TYPO3_version) >= 4006000) {
@@ -1156,6 +1157,9 @@ class tx_additionalreports_util {
 	/**
 	 * Return an array with current version infos
 	 *
+	 * @param $jsonVersions
+	 * @param $version
+	 *
 	 * @return array
 	 */
 	public static function getCurrentVersionInfos($jsonVersions, $version) {
@@ -1165,6 +1169,9 @@ class tx_additionalreports_util {
 
 	/**
 	 * Return an array with current branch infos
+	 *
+	 * @param $jsonVersions
+	 * @param $version
 	 *
 	 * @return array
 	 */
@@ -1176,6 +1183,8 @@ class tx_additionalreports_util {
 	/**
 	 * Return an array with latest stable infos
 	 *
+	 * @param $jsonVersions
+	 *
 	 * @return array
 	 */
 	public static function getLatestStableInfos($jsonVersions) {
@@ -1185,6 +1194,8 @@ class tx_additionalreports_util {
 
 	/**
 	 * Return an array with latest LTS infos
+	 *
+	 * @param $jsonVersions
 	 *
 	 * @return array
 	 */
