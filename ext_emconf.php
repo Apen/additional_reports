@@ -11,11 +11,11 @@
  ***************************************************************/
 
 $EM_CONF[$_EXTKEY] = array (
-	'title' => 'Useful informations in reports module',
-	'description' => 'Useful informations in the reports module : xclass, ajax, cliKeys, eID, general status of the system (encoding, DB, php vars...), hooks, compare local and TER extension (diff), used content type, used plugins, ExtDirect... It can really help you during migration or new existing project (to have a global reports of the system).',
+	'title' => 'Useful information in reports module',
+	'description' => 'Useful information in the reports module: xclass, ajax, cliKeys, eID, general status of the system (encoding, DB, php vars...), hooks, compare local and TER extension (diff), used content type, used plugins, ExtDirect... It can really help you during migration or new existing project (to have global reports of the system).',
 	'category' => 'misc',
 	'shy' => true,
-	'version' => '2.6.10',
+	'version' => '2.6.11',
 	'dependencies' => '',
 	'conflicts' => '',
 	'priority' => '',
