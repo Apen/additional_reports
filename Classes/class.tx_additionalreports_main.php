@@ -238,15 +238,23 @@ class tx_additionalreports_main {
         if (version_compare($itemValue['EM_CONF']['version'], $itemValue['lastversion']['version'], '<')) {
             $listExtensionsTerItem['versionlast'] = '<span style="color:green;font-weight:bold;">' . $itemValue['lastversion']['version'] . '&nbsp;(' . $itemValue['lastversion']['updatedate'] . ')</span>';
             $compareUrl = t3lib_div::getIndpEnv('TYPO3_SITE_URL');
-            $compareUrl .= 'index.php?eID=additional_reports_compareFiles';
+            $compareUrl .= 'typo3/ajax.php?ajaxID=additional_reports::compareFiles';
             $compareUrl .= '&extKey=' . $extKey . '&mode=compareExtension&extVersion=' . $itemValue['lastversion']['version'];
-            $compareLabem = $extKey . ' : ' . $itemValue['EM_CONF']['version'] . ' <--> ' . $itemValue['lastversion']['version'];
+            $compareLabem = $extKey . ' : ' . $itemValue['EM_CONF']['version'] . ' <--> TER ' . $itemValue['lastversion']['version'];
             $js = 'Shadowbox.open({content:\'' . $compareUrl . '\',player:\'iframe\',title:\'' . $compareLabem . '\',height:600,width:800});';
             $listExtensionsTerItem['versionlastcompare'] = '<input type="button" onclick="' . $js . '" value="+" title="' . $compareLabem . '"/>';
         } else {
             $listExtensionsTerItem['versionlast'] = $itemValue['lastversion']['version'] . '&nbsp;(' . $itemValue['lastversion']['updatedate'] . ')';
             $listExtensionsTerItem['versionlastcompare'] = '&nbsp;';
         }
+
+        // version compare
+        $compareUrl = t3lib_div::getIndpEnv('TYPO3_SITE_URL');
+        $compareUrl .= 'typo3/ajax.php?ajaxID=additional_reports::compareFiles';
+        $compareUrl .= '&extKey=' . $extKey . '&mode=compareExtension&extVersion=' . $itemValue['EM_CONF']['version'];
+        $compareLabem = $extKey . ' : ' . $itemValue['EM_CONF']['version'] . ' <--> TER ' . $itemValue['EM_CONF']['version'];
+        $js = 'Shadowbox.open({content:\'' . $compareUrl . '\',player:\'iframe\',title:\'' . $compareLabem . '\',height:600,width:800});';
+        $listExtensionsTerItem['versioncompare'] = '<input type="button" onclick="' . $js . '" value="+" title="' . $compareLabem . '"/>';
 
         $listExtensionsTerItem['downloads'] = $itemValue['lastversion']['alldownloadcounter'];
 
@@ -303,7 +311,7 @@ class tx_additionalreports_main {
             $contentUl = '<div style="display:none;" id="' . $id . '"><ul>';
             foreach ($itemValue['affectedfiles'] as $affectedFile) {
                 $compareUrl = t3lib_div::getIndpEnv('TYPO3_SITE_URL');
-                $compareUrl .= 'index.php?eID=additional_reports_compareFiles';
+                $compareUrl .= 'typo3/ajax.php?ajaxID=additional_reports::compareFiles';
                 $compareUrl .= '&extKey=' . $extKey . '&extFile=' . $affectedFile . '&extVersion=' . $itemValue['EM_CONF']['version'];
                 $contentUl .= '<li><a rel="shadowbox;height=600;width=800;" href = "' . $compareUrl . '" target = "_blank"';
                 $contentUl .= 'title="' . $affectedFile . ' : ' . $extKey . ' ' . $itemValue['EM_CONF']['version'] . '" > ';

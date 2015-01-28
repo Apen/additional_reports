@@ -1281,13 +1281,17 @@ class tx_additionalreports_util {
      * @param $extFile
      * @return array
      */
-    public static function downloadT3x($extension, $version, $extFile) {
+    public static function downloadT3x($extension, $version, $extFile = NULL) {
         $firstLetter = strtolower(substr($extension, 0, 1));
         $secondLetter = strtolower(substr($extension, 1, 1));
         $from = 'http://typo3.org/fileadmin/ter/' . $firstLetter . '/' . $secondLetter . '/' . $extension . '_' . $version . '.t3x';
         $content = t3lib_div::getURL($from);
         $t3xfiles = self::extractExtensionDataFromT3x($content);
-        return $t3xfiles['FILES'][$extFile]['content'];
+        if (empty($extFile)) {
+            return $t3xfiles;
+        } else {
+            return $t3xfiles['FILES'][$extFile]['content'];
+        }
     }
 
     /**
