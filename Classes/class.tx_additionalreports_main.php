@@ -413,6 +413,17 @@ class tx_additionalreports_main {
         $content .= tx_additionalreports_util::writeInformation('maxFileSize', $GLOBALS['TYPO3_CONF_VARS']['BE']['maxFileSize']);
 
         $extensions = explode(',', $GLOBALS['TYPO3_CONF_VARS']['EXT']['extList']);
+
+        if (is_file(PATH_site . 'typo3conf/PackageStates.php')) {
+            $extensions = array();
+            $packages = include(PATH_site . 'typo3conf/PackageStates.php');
+            foreach ($packages['packages'] as $extensionKey => $package) {
+                if ($package['state'] === 'active') {
+                    $extensions[] = $extensionKey;
+                }
+            }
+        }
+
         sort($extensions);
         foreach ($extensions as $aKey => $extension) {
             $extensions[$aKey] = $extension . ' (' . tx_additionalreports_util::getExtensionVersion($extension) . ')';
@@ -422,6 +433,18 @@ class tx_additionalreports_main {
         );
 
         $view->assign('typo3', $content);
+
+        // Debug
+        $content = '';
+        $vars = t3lib_div::getIndpEnv('_ARRAY');
+        foreach ($vars as $varKey => $varValue) {
+            $content .= tx_additionalreports_util::writeInformation($varKey, $varValue);
+        }
+        $gE_keys = explode(',', 'HTTP_ACCEPT,HTTP_ACCEPT_ENCODING,HTTP_CONNECTION,HTTP_COOKIE,REMOTE_PORT,SERVER_ADDR,SERVER_ADMIN,SERVER_NAME,SERVER_PORT,SERVER_SIGNATURE,SERVER_SOFTWARE,GATEWAY_INTERFACE,SERVER_PROTOCOL,REQUEST_METHOD,PATH_TRANSLATED');
+        foreach ($gE_keys as $k) {
+            $content .= tx_additionalreports_util::writeInformation($k, getenv($k));
+        }
+        $view->assign('getIndpEnv', $content);
 
         // PHP
         $content = tx_additionalreports_util::writeInformation(self::getLl('status_version'), phpversion());
