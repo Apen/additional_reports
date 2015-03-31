@@ -100,6 +100,10 @@ class Tx_AdditionalReports_ViewHelpers_Widget_Controller_PaginateQueryController
             TRUE
         );
 
+        if (empty($this->configuration['itemsPerPage'])) {
+            $this->configuration['itemsPerPage'] = 50;
+        }
+
         $res = $GLOBALS['TYPO3_DB']->exec_SELECT_queryArray($this->query);
         $this->numberOfItems = $GLOBALS['TYPO3_DB']->sql_num_rows($res);
         $this->numberOfPages = ceil($this->numberOfItems / (integer)$this->configuration['itemsPerPage']);
