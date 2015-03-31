@@ -93,6 +93,11 @@ class Tx_AdditionalReports_ViewHelpers_Widget_Controller_PaginateController exte
             (array)$this->widgetConfiguration['configuration'],
             TRUE
         );
+
+        if (empty($this->configuration['itemsPerPage'])) {
+            $this->configuration['itemsPerPage'] = 50;
+        }
+        
         $this->numberOfPages = ceil(count($this->objects) / (integer)$this->configuration['itemsPerPage']);
         $this->pagesBefore = (integer)$this->configuration['pagesBefore'];
         $this->pagesAfter = (integer)$this->configuration['pagesAfter'];

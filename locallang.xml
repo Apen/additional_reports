@@ -120,6 +120,8 @@
             <label index="latestbranch">Lastest from this branch</label>
             <label index="lateststable">Lastest stable</label>
             <label index="latestlts">Lastest LTS</label>
+            <label index="comparesame">Compare with same version</label>
+            <label index="comparelast">Compare with last version</label>
         </languageKey>
         <languageKey index="fr" type="array">
             <label index="noresults">Aucune donnée à afficher</label>
@@ -236,6 +238,8 @@
             <label index="latestbranch">Dernière pour cette branche</label>
             <label index="lateststable">Dernière stable</label>
             <label index="latestlts">Dernière LTS</label>
+            <label index="comparesame">Comparer avec la même version</label>
+            <label index="comparelast">Comparer avec la dernière version</label>
         </languageKey>
         <languageKey index="de" type="array">
             <label index="ajax_description">Auflistung aller registrierten ajax.php-Methoden mit Informationen</label>
