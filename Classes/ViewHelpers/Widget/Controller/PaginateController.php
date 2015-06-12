@@ -2,7 +2,7 @@
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2012 Yohann CERDAN <cerdanyohann@yahoo.fr>
+ *  (c) 2015 Yohann CERDAN <cerdanyohann@yahoo.fr>
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -29,7 +29,7 @@
  * @package    TYPO3
  * @subpackage AdditionalReports
  */
-class Tx_AdditionalReports_ViewHelpers_Widget_Controller_PaginateController extends Tx_Fluid_Core_Widget_AbstractWidgetController {
+class Tx_AdditionalReports_ViewHelpers_Widget_Controller_PaginateController extends \TYPO3\CMS\Fluid\Core\Widget\AbstractWidgetController {
 
     /**
      * @var array
@@ -47,7 +47,7 @@ class Tx_AdditionalReports_ViewHelpers_Widget_Controller_PaginateController exte
     );
 
     /**
-     * @var Tx_Extbase_Persistence_QueryResultInterface
+     * @var \TYPO3\CMS\Extbase\Persistence\QueryResultInterface
      */
     protected $objects;
 
@@ -88,7 +88,7 @@ class Tx_AdditionalReports_ViewHelpers_Widget_Controller_PaginateController exte
      */
     public function initializeAction() {
         $this->objects = $this->widgetConfiguration['objects'];
-        $this->configuration = t3lib_div::array_merge_recursive_overrule(
+        $this->configuration = \TYPO3\CMS\Core\Utility\ArrayUtility::mergeRecursiveWithOverrule(
             $this->configuration,
             (array)$this->widgetConfiguration['configuration'],
             TRUE
@@ -97,7 +97,7 @@ class Tx_AdditionalReports_ViewHelpers_Widget_Controller_PaginateController exte
         if (empty($this->configuration['itemsPerPage'])) {
             $this->configuration['itemsPerPage'] = 50;
         }
-        
+
         $this->numberOfPages = ceil(count($this->objects) / (integer)$this->configuration['itemsPerPage']);
         $this->pagesBefore = (integer)$this->configuration['pagesBefore'];
         $this->pagesAfter = (integer)$this->configuration['pagesAfter'];
@@ -164,7 +164,7 @@ class Tx_AdditionalReports_ViewHelpers_Widget_Controller_PaginateController exte
         // modify query
         $itemsPerPage = (integer)$this->configuration['itemsPerPage'];
 
-        if (is_a($this->objects, 'Tx_Extbase_Persistence_QueryResultInterface')) {
+        if (is_a($this->objects, '\TYPO3\CMS\Extbase\Persistence\QueryResultInterface')) {
             $query = $this->objects->getQuery();
 
             // limit should only be used if needed and pagination only if results > itemsPerPage

@@ -2,7 +2,7 @@
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2012 Yohann CERDAN <cerdanyohann@yahoo.fr>
+ *  (c) 2015 Yohann CERDAN <cerdanyohann@yahoo.fr>
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -29,7 +29,7 @@
  * @package    TYPO3
  * @subpackage AdditionalReports
  */
-class Tx_AdditionalReports_ViewHelpers_Widget_Controller_PaginateQueryController extends Tx_Fluid_Core_Widget_AbstractWidgetController {
+class Tx_AdditionalReports_ViewHelpers_Widget_Controller_PaginateQueryController extends \TYPO3\CMS\Fluid\Core\Widget\AbstractWidgetController {
 
     /**
      * @var array
@@ -94,7 +94,7 @@ class Tx_AdditionalReports_ViewHelpers_Widget_Controller_PaginateQueryController
      */
     public function initializeAction() {
         $this->query = $this->widgetConfiguration['query'];
-        $this->configuration = t3lib_div::array_merge_recursive_overrule(
+        $this->configuration = \TYPO3\CMS\Core\Utility\ArrayUtility::mergeRecursiveWithOverrule(
             $this->configuration,
             (array)$this->widgetConfiguration['configuration'],
             TRUE
@@ -167,7 +167,7 @@ class Tx_AdditionalReports_ViewHelpers_Widget_Controller_PaginateQueryController
         $this->currentPage = (integer)$currentPage;
         if ($this->currentPage < 1) {
             $this->currentPage = 1;
-        } elseif ($this->currentPage > $this->numberOfPages) {
+        } elseif (!empty($this->numberOfPages) && ($this->currentPage > $this->numberOfPages)) {
             $this->currentPage = $this->numberOfPages;
         }
 

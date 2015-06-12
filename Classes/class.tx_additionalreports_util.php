@@ -3,7 +3,7 @@
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2012 CERDAN Yohann <cerdanyohann@yahoo.fr>
+ *  (c) 2015 CERDAN Yohann <cerdanyohann@yahoo.fr>
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -37,13 +37,8 @@ class tx_additionalreports_util {
      */
     public static function getReportsList() {
         $reports = array(
-            'eid', 'clikeys', 'plugins', 'xclass', 'hooks', 'status', 'ajax', 'logerrors', 'websitesconf', 'dbcheck', 'realurlerrors', 'extensions'
+            'eid', 'clikeys', 'plugins', 'xclass', 'hooks', 'status', 'ajax', 'logerrors', 'websitesconf', 'dbcheck', 'realurlerrors', 'extensions', 'extdirect'
         );
-
-        if (self::intFromVer(TYPO3_version) >= 4005000) {
-            $reports[] = 'extdirect';
-        }
-
         return $reports;
     }
 
@@ -54,28 +49,15 @@ class tx_additionalreports_util {
      */
     public static function getBaseUrl() {
         // since 6.0> extbase is using by reports module
-        $baseUrl = t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'mod.php?';
+        $baseUrl = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR') . 'mod.php?';
         $parameters = array();
-        if (self::intFromVer(TYPO3_version) < 6000000) {
-            $parameters[] = 'M=tools_txreportsM1';
-        } else {
-            if (tx_additionalreports_util::intFromVer(TYPO3_version) < 6002000) {
-                $vars = t3lib_div::_GET('tx_reports_tools_reportstxreportsm1');
-                $parameters[] = 'M=tools_ReportsTxreportsm1';
-                $parameters[] = 'tx_reports_tools_reportstxreportsm1%5Bextension%5D=additional_reports';
-                $parameters[] = 'tx_reports_tools_reportstxreportsm1%5Breport%5D=' . $vars['report'];
-                $parameters[] = 'tx_reports_tools_reportstxreportsm1%5Baction%5D=detail';
-                $parameters[] = 'tx_reports_tools_reportstxreportsm1%5Bcontroller%5D=Report';
-            } else {
-                $vars = t3lib_div::_GET('tx_reports_system_reportstxreportsm1');
-                $parameters[] = 'M=system_ReportsTxreportsm1';
-                $parameters[] = 'tx_reports_system_reportstxreportsm1%5Bextension%5D=additional_reports';
-                $parameters[] = 'tx_reports_system_reportstxreportsm1%5Breport%5D=' . $vars['report'];
-                $parameters[] = 'tx_reports_system_reportstxreportsm1%5Baction%5D=detail';
-                $parameters[] = 'tx_reports_system_reportstxreportsm1%5Bcontroller%5D=Report';
-                $parameters[] = 'moduleToken=' . \TYPO3\CMS\Core\FormProtection\FormProtectionFactory::get()->generateToken('moduleCall', 'system_ReportsTxreportsm1');
-            }
-        }
+        $vars = \TYPO3\CMS\Core\Utility\GeneralUtility::_GET('tx_reports_system_reportstxreportsm1');
+        $parameters[] = 'M=system_ReportsTxreportsm1';
+        $parameters[] = 'tx_reports_system_reportstxreportsm1%5Bextension%5D=additional_reports';
+        $parameters[] = 'tx_reports_system_reportstxreportsm1%5Breport%5D=' . $vars['report'];
+        $parameters[] = 'tx_reports_system_reportstxreportsm1%5Baction%5D=detail';
+        $parameters[] = 'tx_reports_system_reportstxreportsm1%5Bcontroller%5D=Report';
+        $parameters[] = 'moduleToken=' . \TYPO3\CMS\Core\FormProtection\FormProtectionFactory::get()->generateToken('moduleCall', 'system_ReportsTxreportsm1');
         return $baseUrl . implode('&', $parameters);
     }
 
@@ -120,7 +102,7 @@ class tx_additionalreports_util {
             $theList = '';
         }
         if ($id && $depth > 0) {
-            $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid', 'pages', 'pid=' . $id . ' ' . t3lib_BEfunc::deleteClause('pages') . ' AND ' . $permsClause);
+            $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid', 'pages', 'pid=' . $id . ' ' . \TYPO3\CMS\Backend\Utility\BackendUtility::deleteClause('pages') . ' AND ' . $permsClause);
             while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
                 if ($begin <= 0) {
                     $theList .= ',' . $row['uid'];
@@ -156,11 +138,11 @@ class tx_additionalreports_util {
      * @return bool
      */
     public static function isUsedInTv($uid, $pid) {
-        $apiObj = t3lib_div::makeInstance('tx_templavoila_api', 'pages');
-        $rootElementRecord = t3lib_BEfunc::getRecordWSOL('pages', $pid, '*');
+        $apiObj = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_templavoila_api', 'pages');
+        $rootElementRecord = \TYPO3\CMS\Backend\Utility\BackendUtility::getRecordWSOL('pages', $pid, '*');
         $contentTreeData = $apiObj->getContentTree('pages', $rootElementRecord);
         $usedUids = array_keys($contentTreeData['contentElementUsage']);
-        if (t3lib_div::inList(implode(',', $usedUids), $uid)) {
+        if (\TYPO3\CMS\Core\Utility\GeneralUtility::inList(implode(',', $usedUids), $uid)) {
             return TRUE;
         } else {
             return FALSE;
@@ -214,7 +196,7 @@ class tx_additionalreports_util {
     public static function getInstExtList($path, $dbSchema) {
         $list = array();
         if (@is_dir($path)) {
-            $extList = t3lib_div::get_dirs($path);
+            $extList = \TYPO3\CMS\Core\Utility\GeneralUtility::get_dirs($path);
             if (is_array($extList)) {
                 foreach ($extList as $extKey) {
                     if (@is_file($path . $extKey . '/ext_emconf.php')) {
@@ -224,7 +206,7 @@ class tx_additionalreports_util {
                             $currentExt['extkey'] = $extKey;
                             $currentExt['installed'] = t3lib_extMgm::isLoaded($extKey);
                             $currentExt['EM_CONF'] = $emConf;
-                            $currentExt['files'] = t3lib_div::getFilesInDir($path . $extKey, '', 0, '', NULL);
+                            $currentExt['files'] = \TYPO3\CMS\Core\Utility\GeneralUtility::getFilesInDir($path . $extKey, '', 0, '', NULL);
                             $currentExt['lastversion'] = tx_additionalreports_util::checkExtensionUpdate($currentExt);
                             $currentExt['affectedfiles'] = tx_additionalreports_util::getExtAffectedFiles($currentExt);
                             $currentExt['icon'] = tx_additionalreports_util::getExtIcon($extKey);
@@ -273,18 +255,10 @@ class tx_additionalreports_util {
      * @return array        EMconf array values.
      */
     public static function checkExtensionUpdate($extInfo) {
-        if (self::intFromVer(TYPO3_version) < 6000000) {
-            $lastVersion = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'cache_extensions', 'extkey="' . $extInfo['extkey'] . '" AND lastversion=1');
-            if ($lastVersion) {
-                $lastVersion[0]['updatedate'] = date('d/m/Y', $lastVersion[0]['lastuploaddate']);
-                return $lastVersion[0];
-            }
-        } else {
-            $lastVersion = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'tx_extensionmanager_domain_model_extension', 'extension_key="' . $extInfo['extkey'] . '" AND current_version=1');
-            if ($lastVersion) {
-                $lastVersion[0]['updatedate'] = date('d/m/Y', $lastVersion[0]['last_updated']);
-                return $lastVersion[0];
-            }
+        $lastVersion = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'tx_extensionmanager_domain_model_extension', 'extension_key="' . $extInfo['extkey'] . '" AND current_version=1');
+        if ($lastVersion) {
+            $lastVersion[0]['updatedate'] = date('d/m/Y', $lastVersion[0]['last_updated']);
+            return $lastVersion[0];
         }
         return NULL;
     }
@@ -320,11 +294,11 @@ class tx_additionalreports_util {
         $filesMD5Array = array();
         $fileArr = array();
         $extPath = self::typePath($extInfo['type']) . $extInfo['extkey'] . '/';
-        $fileArr = t3lib_div::getAllFilesAndFoldersInPath($fileArr, $extPath, '', 0, 99, $GLOBALS['TYPO3_CONF_VARS']['EXT']['excludeForPackaging']);
+        $fileArr = \TYPO3\CMS\Core\Utility\GeneralUtility::getAllFilesAndFoldersInPath($fileArr, $extPath, '', 0, 99, $GLOBALS['TYPO3_CONF_VARS']['EXT']['excludeForPackaging']);
         foreach ($fileArr as $file) {
             $relFileName = substr($file, strlen($extPath));
             if ($relFileName != 'ext_emconf.php') {
-                $content = t3lib_div::getUrl($file);
+                $content = \TYPO3\CMS\Core\Utility\GeneralUtility::getUrl($file);
                 $filesMD5Array[$relFileName] = substr(md5($content), 0, 4);
             }
         }
@@ -342,7 +316,7 @@ class tx_additionalreports_util {
         $firstLetter = strtolower(substr($extension, 0, 1));
         $secondLetter = strtolower(substr($extension, 1, 1));
         $from = 'http://typo3.org/fileadmin/ter/' . $firstLetter . '/' . $secondLetter . '/' . $extension . '_' . $version . '.t3x';
-        $content = t3lib_div::getURL($from);
+        $content = \TYPO3\CMS\Core\Utility\GeneralUtility::getURL($from);
         $t3xfiles = self::extractExtensionDataFromT3x($content);
         $filesMD5Array = array();
         foreach ($t3xfiles['FILES'] as $file => $infos) {
@@ -398,7 +372,13 @@ class tx_additionalreports_util {
      */
     public static function getExtIcon($extKey) {
         $extType = self::getExtensionType($extKey);
-        return t3lib_div::getIndpEnv('TYPO3_SITE_URL') . $extType['siteRelPath'] . 'ext_icon.gif';
+        if (is_file(PATH_site . $extType['siteRelPath'] . 'ext_icon.gif')) {
+            $path = $extType['siteRelPath'] . 'ext_icon.gif';
+        }
+        if (is_file(PATH_site . $extType['siteRelPath'] . 'ext_icon.png')) {
+            $path = $extType['siteRelPath'] . 'ext_icon.png';
+        }
+        return \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_URL') . $path;
     }
 
     /**
@@ -410,11 +390,11 @@ class tx_additionalreports_util {
     public static function getContentTypeIcon($path) {
         $icon = NULL;
         if (is_file(PATH_site . 'typo3/sysext/t3skin/icons/gfx/' . $path)) {
-            $icon = t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/' . $path;
+            $icon = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/' . $path;
         } elseif (preg_match('/^\.\./', $path, $temp)) {
-            $icon = t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . $path;
+            $icon = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR') . $path;
         } elseif (preg_match('/^EXT:(.*)$/', $path, $temp)) {
-            $icon = t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . '../typo3conf/ext/' . $temp[1];
+            $icon = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR') . '../typo3conf/ext/' . $temp[1];
         }
         return $icon;
     }
@@ -425,8 +405,8 @@ class tx_additionalreports_util {
      * @return string
      */
     public static function getIconZoom() {
-        $typo3Dir = t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR');
-        return '<img src="' . $typo3Dir . 'sysext/t3skin/icons/gfx/zoom.gif"/>';
+        $typo3Dir = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR');
+        return '<img src="' . $typo3Dir . '../typo3conf/ext/additional_reports/Resources/Public/Icons/zoom.gif"/>';
     }
 
     /**
@@ -435,7 +415,7 @@ class tx_additionalreports_util {
      * @return string
      */
     public static function getIconDomain() {
-        $typo3Dir = t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR');
+        $typo3Dir = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR');
         return '<img src="' . $typo3Dir . 'sysext/t3skin/icons/gfx/i/domain.gif"/>';
     }
 
@@ -445,8 +425,8 @@ class tx_additionalreports_util {
      * @return string
      */
     public static function getIconWebPage() {
-        $typo3Dir = t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR');
-        return '<img src="' . $typo3Dir . 'sysext/t3skin/icons/module_web_layout.gif"/>';
+        $typo3Dir = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR');
+        return '<img src="' . $typo3Dir . '../typo3conf/ext/additional_reports/Resources/Public/Icons/module_web_layout.gif"/>';
     }
 
     /**
@@ -455,8 +435,8 @@ class tx_additionalreports_util {
      * @return string
      */
     public static function getIconWebList() {
-        $typo3Dir = t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR');
-        return '<img src="' . $typo3Dir . 'sysext/t3skin/icons/module_web_list.gif"/>';
+        $typo3Dir = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR');
+        return '<img src="' . $typo3Dir . '../typo3conf/ext/additional_reports/Resources/Public/Icons/module_web_list.gif"/>';
     }
 
     /**
@@ -466,7 +446,7 @@ class tx_additionalreports_util {
      * @return string
      */
     public static function getIconPage($hidden = FALSE) {
-        $typo3Dir = t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR');
+        $typo3Dir = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR');
         if ($hidden === TRUE) {
             return '<img src="' . $typo3Dir . 'sysext/t3skin/icons/gfx/i/pages__h.gif"/>';
         } else {
@@ -481,7 +461,7 @@ class tx_additionalreports_util {
      * @return string
      */
     public static function getIconContent($hidden = FALSE) {
-        $typo3Dir = t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR');
+        $typo3Dir = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR');
         if ($hidden === TRUE) {
             return '<img src="' . $typo3Dir . 'sysext/t3skin/icons/gfx/i/tt_content__h.gif"/>';
         } else {
@@ -525,10 +505,7 @@ class tx_additionalreports_util {
      * @return mixed
      */
     public static function getRootLine($pageUid) {
-        if (tx_additionalreports_util::intFromVer(TYPO3_version) < 6002000) {
-            require_once(PATH_t3lib . 'class.t3lib_page.php');
-        }
-        $sysPage = t3lib_div::makeInstance('t3lib_pageSelect');
+        $sysPage = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Frontend\\Page\\PageRepository');
         return $sysPage->getRootLine($pageUid);
     }
 
@@ -539,9 +516,9 @@ class tx_additionalreports_util {
      * @return mixed
      */
     public static function getDomain($pageUid) {
-        $domain = t3lib_BEfunc::firstDomainRecord(self::getRootLine($pageUid));
+        $domain = \TYPO3\CMS\Backend\Utility\BackendUtility::firstDomainRecord(self::getRootLine($pageUid));
         if (empty($domain)) {
-            $domain = t3lib_div::getIndpEnv('TYPO3_HOST_ONLY');
+            $domain = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_HOST_ONLY');
         }
         if (empty($domain)) {
             $domain = 'localhost';
@@ -573,22 +550,15 @@ class tx_additionalreports_util {
      * @return array
      */
     public static function getSqlUpdateStatements() {
-        if (self::intFromVer(TYPO3_version) < 6001000) {
-            $tblFileContent = t3lib_div::getUrl(PATH_t3lib . 'stddb/tables.sql');
-        } else {
-            $tblFileContent = t3lib_div::getUrl(PATH_typo3 . 'sysext/core/ext_tables.sql');
-        }
+        $tblFileContent = \TYPO3\CMS\Core\Utility\GeneralUtility::getUrl(PATH_typo3 . 'sysext/core/ext_tables.sql');
 
         foreach ($GLOBALS['TYPO3_LOADED_EXT'] as $loadedExtConf) {
             if (is_array($loadedExtConf) && $loadedExtConf['ext_tables.sql']) {
-                $tblFileContent .= chr(10) . chr(10) . chr(10) . chr(10) . t3lib_div::getUrl($loadedExtConf['ext_tables.sql']);
+                $tblFileContent .= chr(10) . chr(10) . chr(10) . chr(10) . \TYPO3\CMS\Core\Utility\GeneralUtility::getUrl($loadedExtConf['ext_tables.sql']);
             }
         }
 
-        // include cache tables form 4.6>=
-        if (self::intFromVer(TYPO3_version) >= 4006000) {
-            $tblFileContent .= t3lib_cache::getDatabaseTableDefinitions();
-        }
+        $tblFileContent .= \TYPO3\CMS\Core\Cache\Cache::getDatabaseTableDefinitions();
 
         $installClass = self::getInstallSqlClass();
         $instObj = new $installClass();
@@ -633,7 +603,7 @@ class tx_additionalreports_util {
         $installClass = self::getInstallSqlClass();
 
         if (is_array($extInfo['files']) && in_array('ext_tables.sql', $extInfo['files'])) {
-            $fileContent = t3lib_div::getUrl(self::getExtPath($extInfo['extkey'], $extInfo['type']) . 'ext_tables.sql');
+            $fileContent = \TYPO3\CMS\Core\Utility\GeneralUtility::getUrl(self::getExtPath($extInfo['extkey'], $extInfo['type']) . 'ext_tables.sql');
         }
 
         $instObj = new $installClass();
@@ -655,16 +625,7 @@ class tx_additionalreports_util {
      * @return string
      */
     public static function getInstallSqlClass() {
-        $installClass = 't3lib_install';
-
-        if (self::intFromVer(TYPO3_version) >= 4006000) {
-            $installClass = 't3lib_install_Sql';
-        }
-
-        if (self::intFromVer(TYPO3_version) >= 6002000) {
-            $installClass = 'TYPO3\\CMS\\Install\\Service\\SqlSchemaMigrationService';
-        }
-
+        $installClass = 'TYPO3\\CMS\\Install\\Service\\SqlSchemaMigrationService';
         return $installClass;
     }
 
@@ -741,7 +702,7 @@ class tx_additionalreports_util {
      */
     public static function viewArray($arrayIn) {
         if (is_array($arrayIn)) {
-            $result = '<table class="debug" border="1" cellpadding="0" cellspacing="0" bgcolor="white" width="100%">';
+            $result = '<table class="debug" border="1" cellpadding="0" cellspacing="0" bgcolor="white" width="100%" style="background-color:white;">';
             if (count($arrayIn) == 0) {
                 $result .= '<tr><td><strong>EMPTY!</strong></td></tr>';
             } else {
@@ -782,7 +743,7 @@ class tx_additionalreports_util {
      * @return string
      */
     public static function goToModuleList($uid, $urlOnly = FALSE) {
-        $url = t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'db_list.php?id=' . $uid;
+        $url = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR') . 'db_list.php?id=' . $uid;
         if ($urlOnly === TRUE) {
             return $url;
         } else {
@@ -798,7 +759,7 @@ class tx_additionalreports_util {
      * @return string
      */
     public static function goToModulePage($uid, $urlOnly = FALSE) {
-        $url = t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/cms/layout/db_layout.php?id=' . $uid;
+        $url = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/cms/layout/db_layout.php?id=' . $uid;
         if ($urlOnly === TRUE) {
             return $url;
         } else {
@@ -814,7 +775,7 @@ class tx_additionalreports_util {
      * @return string
      */
     public static function goToModulePageTv($uid, $urlOnly = FALSE) {
-        $url = t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . '../typo3conf/ext/templavoila/mod1/index.php?id=' . $uid;
+        $url = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR') . '../typo3conf/ext/templavoila/mod1/index.php?id=' . $uid;
         if ($urlOnly === TRUE) {
             return $url;
         } else {
@@ -887,7 +848,7 @@ class tx_additionalreports_util {
         $cacheFilePrefix = 'temp_CACHED' . $cacheFileSuffix;
 
         if ($extensionCacheBehaviour == 1) {
-            $cacheFilePrefix .= '_ps' . substr(t3lib_div::shortMD5(PATH_site . '|' . $GLOBALS['TYPO_VERSION']), 0, 4);
+            $cacheFilePrefix .= '_ps' . substr(\TYPO3\CMS\Core\Utility\GeneralUtility::shortMD5(PATH_site . '|' . $GLOBALS['TYPO_VERSION']), 0, 4);
         }
 
         return $cacheFilePrefix;
@@ -1008,7 +969,7 @@ class tx_additionalreports_util {
      */
     public static function getAllDifferentPluginsSelect($displayHidden) {
         $where = ($displayHidden === TRUE) ? '' : ' AND tt_content.hidden=0 AND pages.hidden=0 ';
-        $getFiltersCat = t3lib_div::_GP('filtersCat');
+        $getFiltersCat = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('filtersCat');
         $pluginsList = self::getAllDifferentPlugins($where);
         $filterCat = '';
 
@@ -1032,8 +993,8 @@ class tx_additionalreports_util {
         $content = '<select name="filtersCat" id="filtersCat">' . $filterCat . '</select>';
         $content .= '<a href="#"  onClick="jumpToUrl(\'' . $listUrlOrig;
         $content .= '&filtersCat=\'+document.getElementById(\'filtersCat\').value);">';
-        $content .= '&nbsp;<img width="16" height="16" title="" alt="" src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR');
-        $content .= '../typo3/sysext/t3skin/icons/gfx/refresh_n.gif"></a>';
+        $content .= '&nbsp;<img width="16" height="16" title="" alt="" src="' . \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR');
+        $content .= '../typo3conf/ext/additional_reports/Resources/Public/Icons/refresh_n.gif"></a>';
 
         return $content;
     }
@@ -1062,7 +1023,7 @@ class tx_additionalreports_util {
      */
     public static function getAllDifferentCtypesSelect($displayHidden) {
         $where = ($displayHidden === TRUE) ? '' : ' AND tt_content.hidden=0 AND pages.hidden=0 ';
-        $getFiltersCat = t3lib_div::_GP('filtersCat');
+        $getFiltersCat = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('filtersCat');
         $pluginsList = self::getAllDifferentCtypes($where);
         $filterCat = '';
 
@@ -1086,8 +1047,8 @@ class tx_additionalreports_util {
         $content = '<select name="filtersCat" id="filtersCat">' . $filterCat . '</select>';
         $content .= '<a href="#"  onClick="jumpToUrl(\'' . $listUrlOrig;
         $content .= '&filtersCat=\'+document.getElementById(\'filtersCat\').value);">';
-        $content .= '&nbsp;<img width="16" height="16" title="" alt="" src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR');
-        $content .= '../typo3/sysext/t3skin/icons/gfx/refresh_n.gif"></a>';
+        $content .= '&nbsp;<img width="16" height="16" title="" alt="" src="' . \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR');
+        $content .= '../typo3conf/ext/additional_reports/Resources/Public/Icons/refresh_n.gif"></a>';
 
         return $content;
     }
@@ -1191,7 +1152,7 @@ class tx_additionalreports_util {
      * @return array
      */
     public static function getJsonVersionInfos() {
-        return json_decode(t3lib_div::getUrl('http://get.typo3.org/json'), TRUE);
+        return json_decode(\TYPO3\CMS\Core\Utility\GeneralUtility::getUrl('http://get.typo3.org/json'), TRUE);
     }
 
     /**
@@ -1217,7 +1178,7 @@ class tx_additionalreports_util {
      */
     public static function getCurrentBranchInfos($jsonVersions, $version) {
         $currentVersion = explode('.', $version);
-        return reset($jsonVersions[$currentVersion[0] . '.' . $currentVersion[1]]['releases']);
+        return @reset($jsonVersions[$currentVersion[0] . '.' . $currentVersion[1]]['releases']);
     }
 
     /**
@@ -1253,7 +1214,7 @@ class tx_additionalreports_util {
         $displayMode = NULL;
 
         // Check the display mode
-        $display = t3lib_div::_GP('display');
+        $display = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('display');
         if ($display !== NULL) {
             $GLOBALS['BE_USER']->setAndSaveSessionData('additional_reports_menu', $display);
             $displayMode = $display;
@@ -1285,7 +1246,7 @@ class tx_additionalreports_util {
         $firstLetter = strtolower(substr($extension, 0, 1));
         $secondLetter = strtolower(substr($extension, 1, 1));
         $from = 'http://typo3.org/fileadmin/ter/' . $firstLetter . '/' . $secondLetter . '/' . $extension . '_' . $version . '.t3x';
-        $content = t3lib_div::getURL($from);
+        $content = \TYPO3\CMS\Core\Utility\GeneralUtility::getURL($from);
         $t3xfiles = self::extractExtensionDataFromT3x($content);
         if (empty($extFile)) {
             return $t3xfiles;
@@ -1328,29 +1289,12 @@ class tx_additionalreports_util {
      * @param $id
      */
     public static function initTSFE($id) {
-        if (tx_additionalreports_util::intFromVer(TYPO3_version) < 6002000) {
-            require_once(PATH_t3lib . 'class.t3lib_befunc.php');
-            require_once(PATH_t3lib . 'stddb/tables.php');
-            require_once(PATH_tslib . 'class.tslib_pagegen.php');
-            require_once(PATH_tslib . 'class.tslib_fe.php');
-            require_once(PATH_t3lib . 'class.t3lib_page.php');
-            require_once(PATH_tslib . 'class.tslib_content.php');
-            require_once(PATH_t3lib . 'class.t3lib_userauth.php');
-            require_once(PATH_tslib . 'class.tslib_feuserauth.php');
-            require_once(PATH_t3lib . 'class.t3lib_tstemplate.php');
-            require_once(PATH_t3lib . 'class.t3lib_cs.php');
-        }
 
         if (!is_object($GLOBALS['TT'])) {
-            $GLOBALS['TT'] = t3lib_div::makeInstance('t3lib_TimeTrackNull');
+            $GLOBALS['TT'] = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('t3lib_TimeTrackNull');
         }
 
-        if (version_compare(TYPO3_version, '4.3.0', '<')) {
-            $tsfeClassName = t3lib_div::makeInstanceClassName('tslib_fe');
-            $GLOBALS['TSFE'] = new $tsfeClassName($GLOBALS['TYPO3_CONF_VARS'], $id, '');
-        } else {
-            $GLOBALS['TSFE'] = t3lib_div::makeInstance('tslib_fe', $GLOBALS['TYPO3_CONF_VARS'], $id, '');
-        }
+        $GLOBALS['TSFE'] = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tslib_fe', $GLOBALS['TYPO3_CONF_VARS'], $id, '');
         $GLOBALS['TSFE']->connectToDB();
         $GLOBALS['TSFE']->initFEuser();
         //$GLOBALS['TSFE']->checkAlternativeIdMethods();
@@ -1387,7 +1331,7 @@ class tx_additionalreports_util {
             else if (strpos($hook, ".php") !== FALSE) {
                 $hookArray = explode(".php", $hook);
                 if (!empty($hookArray) && is_array($hookArray)) {
-                    $file = t3lib_div::getFileAbsFileName($hookArray[0] . ".php");
+                    $file = \TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName($hookArray[0] . ".php");
                     if (file_exists($file)) {
                         $isHook = TRUE;
                     }

@@ -8,7 +8,7 @@ class UtilTest extends Tx_Phpunit_TestCase {
 
 	public function setUp() {
 		$this->testingFramework = new Tx_Phpunit_Framework('additional_reports');
-		t3lib_extMgm::removeCacheFiles();
+		\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::removeCacheFiles();
 	}
 
 	/**
@@ -52,7 +52,7 @@ class UtilTest extends Tx_Phpunit_TestCase {
 	 */
 	public function isUsedInTv() {
 		// test only in my instance
-		if (t3lib_extMgm::isLoaded('templavoila') && PATH_site == '/home/html/dev/packagedev/') {
+		if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('templavoila') && PATH_site == '/home/html/dev/packagedev/') {
 			$this->assertTrue(tx_additionalreports_util::isUsedInTv(192, 6));
 			$this->assertFalse(tx_additionalreports_util::isUsedInTv(99999, 6));
 		}
@@ -178,51 +178,51 @@ class UtilTest extends Tx_Phpunit_TestCase {
 	 * @test
 	 */
 	public function getExtIcon() {
-		$this->assertTrue(tx_additionalreports_util::getExtIcon('additional_reports') == t3lib_div::getIndpEnv('TYPO3_SITE_URL') . 'typo3conf/ext/additional_reports/ext_icon.gif');
+		$this->assertTrue(tx_additionalreports_util::getExtIcon('additional_reports') == \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_URL') . 'typo3conf/ext/additional_reports/ext_icon.gif');
 	}
 
 	/**
 	 * @test
 	 */
 	public function getIconZoom() {
-		$this->assertTrue(tx_additionalreports_util::getIconZoom() == '<img src="' . t3lib_div::getIndpEnv('TYPO3_SITE_URL') . 'typo3/sysext/t3skin/icons/gfx/zoom.gif"/>');
+		$this->assertTrue(tx_additionalreports_util::getIconZoom() == '<img src="' . \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_URL') . 'typo3/sysext/t3skin/icons/gfx/zoom.gif"/>');
 	}
 
 	/**
 	 * @test
 	 */
 	public function getIconDomain() {
-		$this->assertTrue(tx_additionalreports_util::getIconDomain() == '<img src="' . t3lib_div::getIndpEnv('TYPO3_SITE_URL') . 'typo3/sysext/t3skin/icons/gfx/i/domain.gif"/>');
+		$this->assertTrue(tx_additionalreports_util::getIconDomain() == '<img src="' . \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_URL') . 'typo3/sysext/t3skin/icons/gfx/i/domain.gif"/>');
 	}
 
 	/**
 	 * @test
 	 */
 	public function getIconWebPage() {
-		$this->assertTrue(tx_additionalreports_util::getIconWebPage() == '<img src="' . t3lib_div::getIndpEnv('TYPO3_SITE_URL') . 'typo3/sysext/t3skin/icons/module_web_layout.gif"/>');
+		$this->assertTrue(tx_additionalreports_util::getIconWebPage() == '<img src="' . \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_URL') . 'typo3/sysext/t3skin/icons/module_web_layout.gif"/>');
 	}
 
 	/**
 	 * @test
 	 */
 	public function getIconWebList() {
-		$this->assertTrue(tx_additionalreports_util::getIconWebList() == '<img src="' . t3lib_div::getIndpEnv('TYPO3_SITE_URL') . 'typo3/sysext/t3skin/icons/module_web_list.gif"/>');
+		$this->assertTrue(tx_additionalreports_util::getIconWebList() == '<img src="' . \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_URL') . 'typo3/sysext/t3skin/icons/module_web_list.gif"/>');
 	}
 
 	/**
 	 * @test
 	 */
 	public function getIconPage() {
-		$this->assertTrue(tx_additionalreports_util::getIconPage() == '<img src="' . t3lib_div::getIndpEnv('TYPO3_SITE_URL') . 'typo3/sysext/t3skin/icons/gfx/i/pages.gif"/>');
-		$this->assertTrue(tx_additionalreports_util::getIconPage(TRUE) == '<img src="' . t3lib_div::getIndpEnv('TYPO3_SITE_URL') . 'typo3/sysext/t3skin/icons/gfx/i/pages__h.gif"/>');
+		$this->assertTrue(tx_additionalreports_util::getIconPage() == '<img src="' . \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_URL') . 'typo3/sysext/t3skin/icons/gfx/i/pages.gif"/>');
+		$this->assertTrue(tx_additionalreports_util::getIconPage(TRUE) == '<img src="' . \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_URL') . 'typo3/sysext/t3skin/icons/gfx/i/pages__h.gif"/>');
 	}
 
 	/**
 	 * @test
 	 */
 	public function getIconContent() {
-		$this->assertTrue(tx_additionalreports_util::getIconContent() == '<img src="' . t3lib_div::getIndpEnv('TYPO3_SITE_URL') . 'typo3/sysext/t3skin/icons/gfx/i/tt_content.gif"/>');
-		$this->assertTrue(tx_additionalreports_util::getIconContent(TRUE) == '<img src="' . t3lib_div::getIndpEnv('TYPO3_SITE_URL') . 'typo3/sysext/t3skin/icons/gfx/i/tt_content__h.gif"/>');
+		$this->assertTrue(tx_additionalreports_util::getIconContent() == '<img src="' . \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_URL') . 'typo3/sysext/t3skin/icons/gfx/i/tt_content.gif"/>');
+		$this->assertTrue(tx_additionalreports_util::getIconContent(TRUE) == '<img src="' . \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_URL') . 'typo3/sysext/t3skin/icons/gfx/i/tt_content__h.gif"/>');
 	}
 
 	/**
@@ -503,7 +503,7 @@ class UtilTest extends Tx_Phpunit_TestCase {
 	 * @test
 	 */
 	public function extractExtensionDataFromT3x() {
-		$content = t3lib_div::getURL('http://typo3.org/fileadmin/ter/a/d/additional_reports_2.6.4.t3x');
+		$content = \TYPO3\CMS\Core\Utility\GeneralUtility::getURL('http://typo3.org/fileadmin/ter/a/d/additional_reports_2.6.4.t3x');
 		$testExplode = explode(':', $content, 3);
 		$this->assertTrue(preg_match('/^[a-f0-9]{32}$/', $testExplode[0]) > 0);
 		$this->assertTrue($testExplode[1] === 'gzcompress');

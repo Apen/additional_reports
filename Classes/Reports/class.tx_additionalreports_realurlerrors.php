@@ -2,7 +2,7 @@
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2010 CERDAN Yohann <cerdanyohann@yahoo.fr>
+ *  (c) 2015 CERDAN Yohann <cerdanyohann@yahoo.fr>
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -29,34 +29,34 @@
  * @author         CERDAN Yohann <cerdanyohann@yahoo.fr>
  * @package        TYPO3
  */
-class tx_additionalreports_realurlerrors extends tx_additionalreports_report implements tx_reports_Report {
+class tx_additionalreports_realurlerrors extends tx_additionalreports_report implements \TYPO3\CMS\Reports\ReportInterface {
 
-	/**
-	 * Constructor for class tx_additionalreports_xclass
-	 *
-	 * @param    object    Back-reference to the calling reports module
-	 */
-	public function __construct($reportObject) {
-		parent::__construct($reportObject);
-	}
+    /**
+     * Constructor for class tx_additionalreports_xclass
+     *
+     * @param    object    Back-reference to the calling reports module
+     */
+    public function __construct($reportObject) {
+        parent::__construct($reportObject);
+    }
 
-	/**
-	 * This method renders the report
-	 *
-	 * @return    string    The status report as HTML
-	 */
-	public function getReport() {
-		$actionURL = tx_additionalreports_util::getBaseUrl() . '&cmd=deleteAll';
-		$content = '<a href="' . $actionURL . '"><img src="' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/garbage.gif"/> ' . $GLOBALS['LANG']->getLL('flushalllog') . '</a>';
-		$content .= tx_additionalreports_main::displayRealUrlErrors();
-		return $content;
-	}
+    /**
+     * This method renders the report
+     *
+     * @return    string    The status report as HTML
+     */
+    public function getReport() {
+        $actionURL = tx_additionalreports_util::getBaseUrl() . '&cmd=deleteAll';
+        $content = '<a href="' . $actionURL . '"><img src="' . \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR') . '../typo3conf/ext/additional_reports/Resources/Public/Icons/garbage.gif"/> ' . $GLOBALS['LANG']->getLL('flushalllog') . '</a>';
+        $content .= tx_additionalreports_main::displayRealUrlErrors();
+        return $content;
+    }
 
 }
 
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/additional_reports/Classes/Reports/class.tx_additionalreports_realurlerrors.php']) {
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/additional_reports/Classes/Reports/class.tx_additionalreports_realurlerrors.php']);
+    include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/additional_reports/Classes/Reports/class.tx_additionalreports_realurlerrors.php']);
 }
 
 ?>
