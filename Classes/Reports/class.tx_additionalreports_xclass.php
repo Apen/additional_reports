@@ -2,7 +2,7 @@
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2010 CERDAN Yohann <cerdanyohann@yahoo.fr>
+ *  (c) 2015 CERDAN Yohann <cerdanyohann@yahoo.fr>
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -29,23 +29,23 @@
  * @author         CERDAN Yohann <cerdanyohann@yahoo.fr>
  * @package        TYPO3
  */
-class tx_additionalreports_xclass extends tx_additionalreports_report implements tx_reports_Report {
+class tx_additionalreports_xclass extends tx_additionalreports_report implements \TYPO3\CMS\Reports\ReportInterface {
 
-	/**
-	 * This method renders the report
-	 *
-	 * @return    string    The status report as HTML
-	 */
-	public function getReport() {
-		$content = '<p class="help">' . $GLOBALS['LANG']->getLL('xclass_description') . '</p>';
-		$content .= tx_additionalreports_main::displayXclass();
-		return $content;
-	}
+    /**
+     * This method renders the report
+     *
+     * @return    string    The status report as HTML
+     */
+    public function getReport() {
+        $content = '<p class="help">' . $GLOBALS['LANG']->getLL('xclass_description') . '</p>';
+        $content .= tx_additionalreports_main::displayXclass();
+        return $content;
+    }
 
 }
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/additional_reports/Classes/Reports/class.tx_additionalreports_xclass.php']) {
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/additional_reports/Classes/Reports/class.tx_additionalreports_xclass.php']);
+    include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/additional_reports/Classes/Reports/class.tx_additionalreports_xclass.php']);
 }
 
 ?>

@@ -10,14 +10,14 @@
         <tr class="c-headLine">
             <td class="cell" width="100">
                 <f:translate key="LLL:EXT:additional_reports/locallang.xml:counter"/>
-                <a href="{baseUrl}&orderby=nb%20DESC,tstamp%20DESC"><img src="{requestDir}sysext/t3skin/icons/gfx/reddown.gif"/></a>
-                <a href="{baseUrl}&orderby=nb%20ASC,tstamp%20DESC"><img src="{requestDir}sysext/t3skin/icons/gfx/redup.gif"/></a>
+                <a href="{baseUrl}&orderby=nb%20DESC,tstamp%20DESC"><img src="{requestDir}../typo3conf/ext/additional_reports/Resources/Public/Icons/reddown.gif"/></a>
+                <a href="{baseUrl}&orderby=nb%20ASC,tstamp%20DESC"><img src="{requestDir}../typo3conf/ext/additional_reports/Resources/Public/Icons/redup.gif"/></a>
                 <ar:raw>{ordercounter}</ar:raw>
             </td>
             <td class="cell" width="100">
                 <f:translate key="LLL:EXT:additional_reports/locallang.xml:tstamp"/>
-                <a href="{baseUrl}&orderby=tstamp%20DESC,nb%20DESC"><img src="{requestDir}sysext/t3skin/icons/gfx/reddown.gif"/></a>
-                <a href="{baseUrl}&orderby=tstamp%20ASC,nb%20DESC"><img src="{requestDir}sysext/t3skin/icons/gfx/redup.gif"/></a>
+                <a href="{baseUrl}&orderby=tstamp%20DESC,nb%20DESC"><img src="{requestDir}../typo3conf/ext/additional_reports/Resources/Public/Icons/reddown.gif"/></a>
+                <a href="{baseUrl}&orderby=tstamp%20ASC,nb%20DESC"><img src="{requestDir}../typo3conf/ext/additional_reports/Resources/Public/Icons/redup.gif"/></a>
                 <ar:raw>{ordertstamp}</ar:raw>
             </td>
             <td class="cell">
@@ -32,7 +32,7 @@
                 </td>
                 <td class="cell">
                     {item.details}<br/>
-                    <img src="{requestDir}sysext/t3skin/icons/gfx/garbage.gif"/>DELETE FROM sys_log WHERE error>0 AND details = "{item.details}"
+                    <img src="{requestDir}../typo3conf/ext/additional_reports/Resources/Public/Icons/garbage.gif"/>DELETE FROM sys_log WHERE error>0 AND details = "{item.details}"
                 </td>
             </tr>
         </f:for>

@@ -2,7 +2,7 @@
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2012 Yohann CERDAN <cerdanyohann@yahoo.fr>
+ *  (c) 2015 Yohann CERDAN <cerdanyohann@yahoo.fr>
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -38,7 +38,7 @@
  * @package    TYPO3
  * @subpackage AdditionalReports
  */
-class Tx_AdditionalReports_ViewHelpers_Widget_PaginateQueryViewHelper extends Tx_Fluid_Core_Widget_AbstractWidgetViewHelper {
+class Tx_AdditionalReports_ViewHelpers_Widget_PaginateQueryViewHelper extends \TYPO3\CMS\Fluid\Core\Widget\AbstractWidgetViewHelper {
 
     /**
      * @var Tx_AdditionalReports_ViewHelpers_Widget_Controller_PaginateQueryController

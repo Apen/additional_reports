@@ -2,8 +2,8 @@
 
 if (!defined('TYPO3_MODE')) die ('Access denied.');
 
-require_once(t3lib_extMgm::extPath('additional_reports') . 'Classes/class.tx_additionalreports_main.php');
-require_once(t3lib_extMgm::extPath('additional_reports') . 'Classes/class.tx_additionalreports_util.php');
+require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('additional_reports') . 'Classes/class.tx_additionalreports_main.php');
+require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('additional_reports') . 'Classes/class.tx_additionalreports_util.php');
 
 if (TYPO3_MODE == 'BE') {
 	$reports = tx_additionalreports_util::getReportsList();

@@ -2,7 +2,7 @@
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2010 CERDAN Yohann <cerdanyohann@yahoo.fr>
+ *  (c) 2015 CERDAN Yohann <cerdanyohann@yahoo.fr>
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -29,22 +29,22 @@
  * @author         CERDAN Yohann <cerdanyohann@yahoo.fr>
  * @package        TYPO3
  */
-class tx_additionalreports_status extends tx_additionalreports_report implements tx_reports_Report {
+class tx_additionalreports_status extends tx_additionalreports_report implements \TYPO3\CMS\Reports\ReportInterface {
 
-	/**
-	 * This method renders the report
-	 *
-	 * @return    string    The status report as HTML
-	 */
-	public function getReport() {
-		$content = '<p class="help">' . $GLOBALS['LANG']->getLL('status_description') . '</p>';
+    /**
+     * This method renders the report
+     *
+     * @return    string    The status report as HTML
+     */
+    public function getReport() {
+        $content = '<p class="help">' . $GLOBALS['LANG']->getLL('status_description') . '</p>';
 
-		if (!isset($this->reportObject->doc)) {
-			$this->reportObject->doc = t3lib_div::makeInstance('template');
-		}
+        if (!isset($this->reportObject->doc)) {
+            $this->reportObject->doc = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Backend\\Template\\DocumentTemplate');
+        }
 
-		$this->reportObject->doc->getPageRenderer()->loadExtJS();
-		$this->reportObject->doc->getPageRenderer()->addExtOnReadyCode('
+        $this->reportObject->doc->getPageRenderer()->loadExtJS();
+        $this->reportObject->doc->getPageRenderer()->addExtOnReadyCode('
 			Ext.select("h2.section-header").each(function(element){
 				element.on("click", function(event, tag) {
 					var state = 0,
@@ -75,17 +75,17 @@ class tx_additionalreports_status extends tx_additionalreports_report implements
 				});
 			});
 		'
-		);
+        );
 
-		$content .= tx_additionalreports_main::displayStatus();
-		return $content;
-	}
+        $content .= tx_additionalreports_main::displayStatus();
+        return $content;
+    }
 
 }
 
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/additional_reports/Classes/Reports/class.tx_additionalreports_status.php']) {
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/additional_reports/Classes/Reports/class.tx_additionalreports_status.php']);
+    include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/additional_reports/Classes/Reports/class.tx_additionalreports_status.php']);
 }
 
 ?>

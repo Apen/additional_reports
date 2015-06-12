@@ -2,7 +2,7 @@
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2010 CERDAN Yohann <cerdanyohann@yahoo.fr>
+ *  (c) 2015 CERDAN Yohann <cerdanyohann@yahoo.fr>
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -28,31 +28,31 @@
  * @author  CERDAN Yohann <cerdanyohann@yahoo.fr>
  * @package TYPO3
  */
-class tx_additionalreports_plugins extends tx_additionalreports_report implements tx_reports_Report {
+class tx_additionalreports_plugins extends tx_additionalreports_report implements \TYPO3\CMS\Reports\ReportInterface {
 
-	/**
-	 * Constructor for class tx_additionalreports_plugins
-	 *
-	 * @param object $reportObject Back-reference to the calling reports module
-	 */
-	public function __construct($reportObject) {
-		parent::__construct($reportObject);
-	}
+    /**
+     * Constructor for class tx_additionalreports_plugins
+     *
+     * @param object $reportObject Back-reference to the calling reports module
+     */
+    public function __construct($reportObject) {
+        parent::__construct($reportObject);
+    }
 
-	/**
-	 * This method renders the report
-	 *
-	 * @return string The status report as HTML
-	 */
-	public function getReport() {
-		$content = tx_additionalreports_main::displayPlugins();
-		return $content;
-	}
+    /**
+     * This method renders the report
+     *
+     * @return string The status report as HTML
+     */
+    public function getReport() {
+        $content = tx_additionalreports_main::displayPlugins();
+        return $content;
+    }
 
 }
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/additional_reports/Classes/Reports/class.tx_additionalreports_plugins.php']) {
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/additional_reports/Classes/Reports/class.tx_additionalreports_plugins.php']);
+    include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/additional_reports/Classes/Reports/class.tx_additionalreports_plugins.php']);
 }
 
 ?>

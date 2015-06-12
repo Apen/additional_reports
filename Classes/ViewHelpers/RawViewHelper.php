@@ -2,7 +2,7 @@
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2012 Yohann CERDAN <cerdanyohann@yahoo.fr>
+ *  (c) 2015 Yohann CERDAN <cerdanyohann@yahoo.fr>
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -55,28 +55,27 @@
  * @package    TYPO3
  * @subpackage t3devapi
  */
-class Tx_AdditionalReports_ViewHelpers_RawViewHelper extends Tx_Fluid_Core_ViewHelper_AbstractViewHelper
-{
+class Tx_AdditionalReports_ViewHelpers_RawViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper {
 
-	/**
-	 * Disable the escaping interceptor because otherwise the child nodes would be escaped before this view helper
-	 * can decode the text's entities.
-	 *
-	 * @var boolean
-	 */
-	protected $escapingInterceptorEnabled = FALSE;
+    /**
+     * Disable the escaping interceptor because otherwise the child nodes would be escaped before this view helper
+     * can decode the text's entities.
+     *
+     * @var boolean
+     */
+    protected $escapingInterceptorEnabled = FALSE;
 
-	/**
-	 * @param mixed $value The value to output
-	 * @return string
-	 */
-	public function render($value = NULL) {
-		if ($value === NULL) {
-			return $this->renderChildren();
-		} else {
-			return $value;
-		}
-	}
+    /**
+     * @param mixed $value The value to output
+     * @return string
+     */
+    public function render($value = NULL) {
+        if ($value === NULL) {
+            return $this->renderChildren();
+        } else {
+            return $value;
+        }
+    }
 
 }
 

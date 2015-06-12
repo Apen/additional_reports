@@ -1,3 +1,5 @@
+{namespace ar=Tx_AdditionalReports_ViewHelpers}
+
 <f:if condition="{ajax}">
     <f:then>
         <table cellspacing="1" cellpadding="2" border="0" class="tx_sv_reportlist typo3-dblist">
@@ -15,7 +17,7 @@
             <f:for each="{ajax}" as="path" key="name">
                 <tr class="db_list_normal">
                     <td class="cell">typo3/ajax.php?ajaxID=<strong>{name}</strong></td>
-                    <td class="cell">{path}</td>
+                    <td class="cell"><ar:raw>{path}</ar:raw></td>
                 </tr>
             </f:for>
         </table>

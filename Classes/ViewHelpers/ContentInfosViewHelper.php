@@ -2,7 +2,7 @@
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2014 Yohann CERDAN <cerdanyohann@yahoo.fr>
+ *  (c) 2015 Yohann CERDAN <cerdanyohann@yahoo.fr>
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -31,7 +31,7 @@
  * @package    TYPO3
  * @subpackage AdditionalReports
  */
-class Tx_AdditionalReports_ViewHelpers_ContentInfosViewHelper extends Tx_Fluid_Core_ViewHelper_AbstractConditionViewHelper {
+class Tx_AdditionalReports_ViewHelpers_ContentInfosViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractConditionViewHelper {
 
     public function initializeArguments() {
         $this->registerArgument('item', 'array', 'Current item array', FALSE, NULL);
@@ -60,7 +60,7 @@ class Tx_AdditionalReports_ViewHelpers_ContentInfosViewHelper extends Tx_Fluid_C
                 if (trim($itemValue[1]) == $item['list_type']) {
                     preg_match('/EXT:(.*?)\//', $itemValue[0], $ext);
                     preg_match('/^LLL:(EXT:.*?):(.*)/', $itemValue[0], $llfile);
-                    $localLang = t3lib_div::readLLfile($llfile[1], $GLOBALS['LANG']->lang);
+                    $localLang = \TYPO3\CMS\Core\Utility\GeneralUtility::readLLfile($llfile[1], $GLOBALS['LANG']->lang);
                     $item['iconext'] = tx_additionalreports_util::getExtIcon($ext[1]);
                     $item['extension'] = $ext[1];
                     $item['plugin'] = $GLOBALS['LANG']->getLLL($llfile[2], $localLang) . ' (' . $item['list_type'] . ')';
@@ -76,7 +76,7 @@ class Tx_AdditionalReports_ViewHelpers_ContentInfosViewHelper extends Tx_Fluid_C
                 if ($itemValue[1] != '--div--') {
                     if (trim($itemValue[1]) == $item['CType']) {
                         preg_match('/^LLL:(EXT:.*?):(.*)/', $itemValue[0], $llfile);
-                        $localLang = t3lib_div::readLLfile($llfile[1], $GLOBALS['LANG']->lang);
+                        $localLang = \TYPO3\CMS\Core\Utility\GeneralUtility::readLLfile($llfile[1], $GLOBALS['LANG']->lang);
                         $item['iconext'] = tx_additionalreports_util::getContentTypeIcon($itemValue[2]);
                         $item['ctype'] = $GLOBALS['LANG']->getLLL($llfile[2], $localLang) . ' (' . $item['CType'] . ')';
                     } else {

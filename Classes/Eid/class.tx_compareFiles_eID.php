@@ -7,17 +7,12 @@
 <body style="background:white;">
 <?php
 
-require_once(t3lib_extMgm::extPath('additional_reports') . 'Classes/class.tx_additionalreports_util.php');
+require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('additional_reports') . 'Classes/class.tx_additionalreports_util.php');
 
-if (tx_additionalreports_util::intFromVer(TYPO3_version) < 6002000) {
-    require_once(PATH_t3lib . 'class.t3lib_befunc.php');
-    require_once(PATH_t3lib . 'stddb/tables.php');
-}
-
-$mode = t3lib_div::_GP('mode');
-$extKey = t3lib_div::_GP('extKey');
-$extFile = t3lib_div::_GP('extFile');
-$extVersion = t3lib_div::_GP('extVersion');
+$mode = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('mode');
+$extKey = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('extKey');
+$extFile = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('extFile');
+$extVersion = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('extVersion');
 $file1 = realpath(t3lib_extMgm::extPath($extKey, $extFile));
 $realPathExt = realpath(PATH_site . 'typo3conf/ext/' . $extKey);
 
@@ -31,7 +26,7 @@ switch ($mode) {
             die ('Access denied.');
         }
         $terFileContent = tx_additionalreports_util::downloadT3x($extKey, $extVersion, $extFile);
-        t3Diff(t3lib_div::getURL($file1), $terFileContent);
+        t3Diff(\TYPO3\CMS\Core\Utility\GeneralUtility::getURL($file1), $terFileContent);
         break;
     case 'compareExtension':
         $t3xfiles = tx_additionalreports_util::downloadT3x($extKey, $extVersion);
@@ -39,7 +34,7 @@ switch ($mode) {
         $diff = 0;
 
         foreach ($t3xfiles['FILES'] as $filePath => $file) {
-            $currentFileContent = t3lib_div::getURL($realPathExt . '/' . $filePath);
+            $currentFileContent = \TYPO3\CMS\Core\Utility\GeneralUtility::getURL($realPathExt . '/' . $filePath);
             if ($file['content_md5'] !== md5($currentFileContent)) {
                 $diff++;
                 echo '<h1>' . $filePath . '</h1>';
@@ -55,7 +50,7 @@ switch ($mode) {
 }
 
 function t3Diff($file1, $file2) {
-    $diff = t3lib_div::makeInstance('t3lib_diff');
+    $diff = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Utility\\DiffUtility');
     $diff->diffOptions = '-bu';
     $sourcesDiff = $diff->getDiff($file1, $file2);
     printT3Diff($sourcesDiff);

@@ -17,11 +17,18 @@
 }
 
 .message-left {
+    float: left;
+    width: 400px;
     color: #4C73A1 !important;
 }
 
 .message-right {
+    float: left;
     color: #4C73A1 !important;
+}
+
+.message-body {
+    clear: left;
 }
 
 .typo3-message .message-header {
@@ -45,8 +52,15 @@
     color: #fff;
 }
 
+table.typo3-dblist {
+    margin-bottom: 1.5em;
+    width: 100%;
+    border: 1px solid #d7d7d7;
+    border-collapse: separate;
+}
+
 table.typo3-dblist tr td {
-    padding: 3px 1px 3px 6px;
+    padding: 3px 6px 3px 6px;
 }
 
 .t3-row-header {
@@ -104,6 +118,12 @@ table.typo3-dblist tr td.col-icon {
     width: 20px;
 }
 
+table.typo3-dblist tr td.col-icon img {
+    max-height: 18px;
+    width: auto;
+    vertical-align: middle;
+}
+
 table.typo3-dblist tr td.typo3-message {
     padding: 12px 12px 12px 36px;
     width: 50px;
@@ -140,4 +160,8 @@ table.debug {
 
 table.debug td.debugvar {
     color: red;
+}
+
+#filtersCat {
+    margin: 10px;
 }

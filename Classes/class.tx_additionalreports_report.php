@@ -2,7 +2,7 @@
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2012 CERDAN Yohann <cerdanyohann@yahoo.fr>
+ *  (c) 2015 CERDAN Yohann <cerdanyohann@yahoo.fr>
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -29,60 +29,55 @@
  * @author         CERDAN Yohann <cerdanyohann@yahoo.fr>
  * @package        TYPO3
  */
-
 class tx_additionalreports_report {
 
-	/**
-	 * Back-reference to the calling reports module
-	 *
-	 * @var    object $reportObject
-	 */
-	protected $reportObject;
+    /**
+     * Back-reference to the calling reports module
+     *
+     * @var    object $reportObject
+     */
+    protected $reportObject;
 
-	/**
-	 * Constructor for class tx_additionalreports_report
-	 *
-	 * @param    object    Back-reference to the calling reports module
-	 */
-	public function __construct($reportObject) {
-		$this->reportObject = $reportObject;
-		// include Css files
-		$this->setCss(tx_additionalreports_main::getCss());
-		// include LL
-		$GLOBALS['LANG']->includeLLFile('EXT:additional_reports/locallang.xml');
-	}
+    /**
+     * Constructor for class tx_additionalreports_report
+     *
+     * @param    object    Back-reference to the calling reports module
+     */
+    public function __construct($reportObject) {
+        $this->reportObject = $reportObject;
+        // include Css files
+        $this->setCss(tx_additionalreports_main::getCss());
+        // include LL
+        $GLOBALS['LANG']->includeLLFile('EXT:additional_reports/locallang.xml');
+    }
 
-	/**
-	 * Set a Css
-	 *
-	 * @param $path
-	 * @return void
-	 */
-	public function setCss($path) {
-		if (isset($this->reportObject->doc)) {
-			$this->reportObject->doc->getPageRenderer()->addCssFile($path);
-		}
-		if (tx_additionalreports_util::intFromVer(TYPO3_version) >= 6000000) {
-			$doc = t3lib_div::makeInstance('template');
-			$pageRenderer = $doc->getPageRenderer()->addCssFile($path);
-		}
-	}
+    /**
+     * Set a Css
+     *
+     * @param $path
+     * @return void
+     */
+    public function setCss($path) {
+        if (isset($this->reportObject->doc)) {
+            $this->reportObject->doc->getPageRenderer()->addCssFile($path);
+        }
+        $doc = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Backend\\Template\\DocumentTemplate');
+        $pageRenderer = $doc->getPageRenderer()->addCssFile($path);
+    }
 
-	/**
-	 * Set a Js
-	 *
-	 * @param $path
-	 * @return void
-	 */
-	public function setJs($path) {
-		if (isset($this->reportObject->doc)) {
-			$this->reportObject->doc->getPageRenderer()->addJsFile($path);
-		}
-		if (tx_additionalreports_util::intFromVer(TYPO3_version) >= 6000000) {
-			$doc = t3lib_div::makeInstance('template');
-			$pageRenderer = $doc->getPageRenderer()->addJsFile($path);
-		}
-	}
+    /**
+     * Set a Js
+     *
+     * @param $path
+     * @return void
+     */
+    public function setJs($path) {
+        if (isset($this->reportObject->doc)) {
+            $this->reportObject->doc->getPageRenderer()->addJsFile($path);
+        }
+        $doc = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Backend\\Template\\DocumentTemplate');
+        $pageRenderer = $doc->getPageRenderer()->addJsFile($path);
+    }
 
 }
 
