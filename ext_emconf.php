@@ -3,7 +3,7 @@
 /***************************************************************
  * Extension Manager/Repository config file for ext "additional_reports".
  *
- * Auto generated 04-12-2015 14:42
+ * Auto generated 04-12-2015 14:43
  *
  * Manual updates:
  * Only the data in the array - everything else is removed by next
@@ -14,17 +14,17 @@ $EM_CONF[$_EXTKEY] = array (
 	'title' => 'Useful information in reports module',
 	'description' => 'Useful information in the reports module: xclass, ajax, cliKeys, eID, general status of the system (encoding, DB, php vars...), hooks, compare local and TER extension (diff), used content type, used plugins, ExtDirect... It can really help you during migration or new existing project (to have global reports of the system).',
 	'category' => 'misc',
-	'shy' => false,
-	'version' => '3.0.0',
+	'shy' => true,
+	'version' => '3.0.1',
 	'dependencies' => '',
 	'conflicts' => '',
 	'priority' => '',
 	'loadOrder' => '',
-	'TYPO3_version' => '6.2.0-7.2.99',
-	'PHP_version' => '5.3.0-5.5.99',
+	'TYPO3_version' => '6.2.0-7.3.99',
+	'PHP_version' => '5.3.0-5.6.99',
 	'module' => '',
 	'state' => 'stable',
-	'uploadfolder' => false,
+	'uploadfolder' => true,
 	'createDirs' => '',
 	'modify_tables' => '',
 	'clearcacheonload' => true,
