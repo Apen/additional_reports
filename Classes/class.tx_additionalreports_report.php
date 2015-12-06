@@ -29,7 +29,8 @@
  * @author         CERDAN Yohann <cerdanyohann@yahoo.fr>
  * @package        TYPO3
  */
-class tx_additionalreports_report {
+class tx_additionalreports_report
+{
 
     /**
      * Back-reference to the calling reports module
@@ -43,7 +44,8 @@ class tx_additionalreports_report {
      *
      * @param    object    Back-reference to the calling reports module
      */
-    public function __construct($reportObject) {
+    public function __construct($reportObject)
+    {
         $this->reportObject = $reportObject;
         // include Css files
         $this->setCss(tx_additionalreports_main::getCss());
@@ -57,7 +59,8 @@ class tx_additionalreports_report {
      * @param $path
      * @return void
      */
-    public function setCss($path) {
+    public function setCss($path)
+    {
         if (isset($this->reportObject->doc)) {
             $this->reportObject->doc->getPageRenderer()->addCssFile($path);
         }
@@ -71,7 +74,8 @@ class tx_additionalreports_report {
      * @param $path
      * @return void
      */
-    public function setJs($path) {
+    public function setJs($path)
+    {
         if (isset($this->reportObject->doc)) {
             $this->reportObject->doc->getPageRenderer()->addJsFile($path);
         }
