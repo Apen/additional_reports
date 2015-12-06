@@ -13,16 +13,16 @@ $mode = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('mode');
 $extKey = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('extKey');
 $extFile = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('extFile');
 $extVersion = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('extVersion');
-$file1 = realpath(t3lib_extMgm::extPath($extKey, $extFile));
+$file1 = realpath(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath($extKey, $extFile));
 $realPathExt = realpath(PATH_site . 'typo3conf/ext/' . $extKey);
 
-if ($mode === NULL) {
+if ($mode === null) {
     $mode = 'compareFile';
 }
 
 switch ($mode) {
     case 'compareFile':
-        if (strstr($file1, $realPathExt) === FALSE) {
+        if (strstr($file1, $realPathExt) === false) {
             die ('Access denied.');
         }
         $terFileContent = tx_additionalreports_util::downloadT3x($extKey, $extVersion, $extFile);
@@ -49,40 +49,51 @@ switch ($mode) {
         break;
 }
 
-function t3Diff($file1, $file2) {
+function t3Diff($file1, $file2)
+{
     $diff = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Utility\\DiffUtility');
-    $diff->diffOptions = '-bu';
-    $sourcesDiff = $diff->getDiff($file1, $file2);
+    if (version_compare(TYPO3_version, '7.6.0', '>=')) {
+        $sourcesDiff = $diff->makeDiffDisplay($file1, $file2);
+    } else {
+        $diff->diffOptions = '-bu';
+        $sourcesDiff = $diff->getDiff($file1, $file2);
+    }
     printT3Diff($sourcesDiff);
 }
 
-function printT3Diff($sourcesDiff) {
+function printT3Diff($sourcesDiff)
+{
     $out = '<pre width="10"><table border="0" cellspacing="0" cellpadding="0" style="width:780px;padding:8px;">';
     $out .= '<tr><td style="background-color: #FDD;"><strong>Local file</strong></td></tr>';
     $out .= '<tr><td style="background-color: #DFD;"><strong>TER file</strong></td></tr>';
-    unset($sourcesDiff[0]);
-    unset($sourcesDiff[1]);
-    foreach ($sourcesDiff as $line => $content) {
-        switch (substr($content, 0, 1)) {
-            case '+':
-                $out .= '<tr><td style="background-color: #DFD;">' . formatcode($content) . '</td></tr>';
-                break;
-            case '-':
-                $out .= '<tr><td style="background-color: #FDD;">' . formatcode($content) . '</td></tr>';
-                break;
-            case '@' :
-                $out .= '<tr><td><br/><br/><br/></td></tr>';
-                $out .= '<tr><td><strong>' . formatcode($content) . '</strong></td></tr>';
-                break;
-            default:
-                $out .= '<tr><td>' . formatcode($content) . '</td></tr>';
+    if (version_compare(TYPO3_version, '7.6.0', '>=')) {
+        $out .= $sourcesDiff;
+    } else {
+        unset($sourcesDiff[0]);
+        unset($sourcesDiff[1]);
+        foreach ($sourcesDiff as $line => $content) {
+            switch (substr($content, 0, 1)) {
+                case '+':
+                    $out .= '<tr><td style="background-color: #DFD;">' . formatcode($content) . '</td></tr>';
+                    break;
+                case '-':
+                    $out .= '<tr><td style="background-color: #FDD;">' . formatcode($content) . '</td></tr>';
+                    break;
+                case '@' :
+                    $out .= '<tr><td><br/><br/><br/></td></tr>';
+                    $out .= '<tr><td><strong>' . formatcode($content) . '</strong></td></tr>';
+                    break;
+                default:
+                    $out .= '<tr><td>' . formatcode($content) . '</td></tr>';
+            }
         }
     }
     $out .= '</table></pre>';
     echo $out;
 }
 
-function formatcode($code) {
+function formatcode($code)
+{
     $code = htmlentities($code);
     return $code;
 }
