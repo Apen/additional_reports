@@ -17,5 +17,5 @@ Useful informations in the reports module:
 It can really help you during migration or new existing project (to have a global reports of the system).
 Do not hesitate to contact me if you have any good ideas.
 
-TER url : http://typo3.org/extensions/repository/view/additional_reports
-DOC : http://docs.typo3.org/typo3cms/extensions/additional_reports/ 
+* TER url : http://typo3.org/extensions/repository/view/additional_reports
+* DOC : http://docs.typo3.org/typo3cms/extensions/additional_reports/
