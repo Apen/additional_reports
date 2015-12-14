@@ -3,7 +3,7 @@
 /***************************************************************
  * Extension Manager/Repository config file for ext "additional_reports".
  *
- * Auto generated 14-12-2015 16:00
+ * Auto generated 14-12-2015 16:21
  *
  * Manual updates:
  * Only the data in the array - everything else is removed by next
