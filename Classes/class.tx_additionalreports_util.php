@@ -606,7 +606,7 @@ class tx_additionalreports_util
             $tableDefinitions = \TYPO3\CMS\Core\Category\CategoryRegistry::getInstance()->addCategoryDatabaseSchemaToTablesDefinition(array());
             $tblFileContent .= $tableDefinitions['sqlString '];
             $objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager');
-            $cachingFrameworkDatabaseSchemaService = $objectManager->get('\TYPO3\CMS\Core\Cache\DatabaseSchemaService::class');
+            $cachingFrameworkDatabaseSchemaService = $objectManager->get('TYPO3\CMS\Core\Cache\DatabaseSchemaService');
             $tableDefinitionsCache = $cachingFrameworkDatabaseSchemaService->addCachingFrameworkRequiredDatabaseSchemaForSqlExpectedSchemaService(array());
             $tblFileContent .= implode(LF, $tableDefinitionsCache[0]);
         } else {
