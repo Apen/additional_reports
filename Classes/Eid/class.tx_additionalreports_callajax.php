@@ -1,6 +1,6 @@
 <?php
 
-class tx_additionalreports_ajax
+class tx_additionalreports_callajax
 {
     public function main()
     {
