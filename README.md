@@ -1,4 +1,4 @@
-recordsmanager : records management in a backend module
+additional_reports : Useful information in reports module
 =======================================================
 >  Display useful informations in the reports module.
 
