@@ -601,7 +601,7 @@ class tx_additionalreports_util
             }
         }
 
-        if (class_exists('\TYPO3\CMS\Core\Category\CategoryRegistry')) {
+        if (class_exists('\TYPO3\CMS\Core\Category\CategoryRegistry') && version_compare(TYPO3_version, '7.6.0', '>=')) {
             $tblFileContent .= \TYPO3\CMS\Core\Category\CategoryRegistry::getInstance()->getDatabaseTableDefinitions();
             $tableDefinitions = \TYPO3\CMS\Core\Category\CategoryRegistry::getInstance()->addCategoryDatabaseSchemaToTablesDefinition(array());
             $tblFileContent .= $tableDefinitions['sqlString '];
