@@ -38,7 +38,8 @@
  * @package    TYPO3
  * @subpackage AdditionalReports
  */
-class Tx_AdditionalReports_ViewHelpers_Widget_PaginateViewHelper extends \TYPO3\CMS\Fluid\Core\Widget\AbstractWidgetViewHelper {
+class Tx_AdditionalReports_ViewHelpers_Widget_PaginateViewHelper extends \TYPO3\CMS\Fluid\Core\Widget\AbstractWidgetViewHelper
+{
 
     /**
      * @var Tx_AdditionalReports_ViewHelpers_Widget_Controller_PaginateController
@@ -51,7 +52,8 @@ class Tx_AdditionalReports_ViewHelpers_Widget_PaginateViewHelper extends \TYPO3\
      * @param Tx_AdditionalReports_ViewHelpers_Widget_Controller_PaginateController $controller
      * @return void
      */
-    public function injectController(Tx_AdditionalReports_ViewHelpers_Widget_Controller_PaginateController $controller) {
+    public function injectController(Tx_AdditionalReports_ViewHelpers_Widget_Controller_PaginateController $controller)
+    {
         $this->controller = $controller;
     }
 
@@ -63,7 +65,8 @@ class Tx_AdditionalReports_ViewHelpers_Widget_PaginateViewHelper extends \TYPO3\
      * @param mixed                                               $configuration
      * @return string
      */
-    public function render($objects, $as, $configuration = array('itemsPerPage' => 10, 'insertAbove' => FALSE, 'insertBelow' => TRUE)) {
+    public function render($objects, $as, $configuration = array('itemsPerPage' => 10, 'insertAbove' => false, 'insertBelow' => true))
+    {
         return $this->initiateSubRequest();
     }
 }

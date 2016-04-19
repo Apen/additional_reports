@@ -29,14 +29,16 @@
  * @author         CERDAN Yohann <cerdanyohann@yahoo.fr>
  * @package        TYPO3
  */
-class tx_additionalreports_hooks extends tx_additionalreports_report implements \TYPO3\CMS\Reports\ReportInterface {
+class tx_additionalreports_hooks extends tx_additionalreports_report implements \TYPO3\CMS\Reports\ReportInterface
+{
 
     /**
      * This method renders the report
      *
      * @return    string    The status report as HTML
      */
-    public function getReport() {
+    public function getReport()
+    {
         $content = '<p class="help">' . $GLOBALS['LANG']->getLL('hooks_description') . '</p>';
         $content .= tx_additionalreports_main::displayHooks();
         return $content;

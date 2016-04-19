@@ -23,21 +23,23 @@
  ***************************************************************/
 
 /**
- * ViewHelper to check if a variable is in a list
+ * ViewHelper to get all infos on a plugin or content
  *
  * Example
- * <AdditionalReports:inList list="{AdditionalReports:session(index:'agenda', identifier:'dates')}" item="{eventDate.filtre}">...</AdditionalReports:inList>
+ * <ar:contentInfos item="{item}" as="item" ctype="TRUE"/>
  *
  * @package    TYPO3
  * @subpackage AdditionalReports
  */
-class Tx_AdditionalReports_ViewHelpers_ContentInfosViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractConditionViewHelper {
+class Tx_AdditionalReports_ViewHelpers_ContentInfosViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractConditionViewHelper
+{
 
-    public function initializeArguments() {
-        $this->registerArgument('item', 'array', 'Current item array', FALSE, NULL);
-        $this->registerArgument('as', 'string', 'Name of the items array', FALSE, NULL);
-        $this->registerArgument('plugin', 'boolean', 'Is it a plugin?', FALSE, NULL);
-        $this->registerArgument('ctype', 'boolean', 'Is it a CType?', FALSE, NULL);
+    public function initializeArguments()
+    {
+        $this->registerArgument('item', 'array', 'Current item array', false, null);
+        $this->registerArgument('as', 'string', 'Name of the items array', false, null);
+        $this->registerArgument('plugin', 'boolean', 'Is it a plugin?', false, null);
+        $this->registerArgument('ctype', 'boolean', 'Is it a CType?', false, null);
     }
 
 
@@ -48,14 +50,15 @@ class Tx_AdditionalReports_ViewHelpers_ContentInfosViewHelper extends \TYPO3\CMS
      * @param string $item
      * @return string
      */
-    public function render() {
+    public function render()
+    {
         $item = $this->arguments['item'];
         $as = $this->arguments['as'];
         $plugin = $this->arguments['plugin'];
         $ctype = $this->arguments['ctype'];
 
         // plugin
-        if ($plugin === TRUE) {
+        if ($plugin === true) {
             foreach ($GLOBALS['TCA']['tt_content']['columns']['list_type']['config']['items'] as $itemKey => $itemValue) {
                 if (trim($itemValue[1]) == $item['list_type']) {
                     preg_match('/EXT:(.*?)\//', $itemValue[0], $ext);
@@ -71,7 +74,7 @@ class Tx_AdditionalReports_ViewHelpers_ContentInfosViewHelper extends \TYPO3\CMS
         }
 
         // CType
-        if ($ctype === TRUE) {
+        if ($ctype === true) {
             foreach ($GLOBALS['TCA']['tt_content']['columns']['CType']['config']['items'] as $itemValue) {
                 if ($itemValue[1] != '--div--') {
                     if (trim($itemValue[1]) == $item['CType']) {
