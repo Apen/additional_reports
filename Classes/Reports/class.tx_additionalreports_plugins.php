@@ -28,14 +28,16 @@
  * @author  CERDAN Yohann <cerdanyohann@yahoo.fr>
  * @package TYPO3
  */
-class tx_additionalreports_plugins extends tx_additionalreports_report implements \TYPO3\CMS\Reports\ReportInterface {
+class tx_additionalreports_plugins extends tx_additionalreports_report implements \TYPO3\CMS\Reports\ReportInterface
+{
 
     /**
      * Constructor for class tx_additionalreports_plugins
      *
      * @param object $reportObject Back-reference to the calling reports module
      */
-    public function __construct($reportObject) {
+    public function __construct($reportObject)
+    {
         parent::__construct($reportObject);
     }
 
@@ -44,7 +46,8 @@ class tx_additionalreports_plugins extends tx_additionalreports_report implement
      *
      * @return string The status report as HTML
      */
-    public function getReport() {
+    public function getReport()
+    {
         $content = tx_additionalreports_main::displayPlugins();
         return $content;
     }

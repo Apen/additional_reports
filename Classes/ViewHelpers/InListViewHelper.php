@@ -31,17 +31,26 @@
  * @package    TYPO3
  * @subpackage AdditionalReports
  */
-class Tx_AdditionalReports_ViewHelpers_InListViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractConditionViewHelper {
+class Tx_AdditionalReports_ViewHelpers_InListViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractConditionViewHelper
+{
+
+    /**
+     * @return void
+     */
+    public function initializeArguments()
+    {
+        $this->registerArgument('list', 'string', 'List');
+        $this->registerArgument('item', 'string', 'Item');
+    }
 
     /**
      * Renders else-child or else-argument if variable $item is in $list
      *
-     * @param string $list
-     * @param string $item
      * @return string
      */
-    public function render($list, $item) {
-        if (\TYPO3\CMS\Core\Utility\GeneralUtility::inList($list, $item) === TRUE) {
+    public function render()
+    {
+        if (\TYPO3\CMS\Core\Utility\GeneralUtility::inList($this->arguments['list'], $this->arguments['item']) === true) {
             return $this->renderThenChild();
         }
         return $this->renderElseChild();

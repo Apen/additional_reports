@@ -29,14 +29,16 @@
  * @author         CERDAN Yohann <cerdanyohann@yahoo.fr>
  * @package        TYPO3
  */
-class tx_additionalreports_websitesconf extends tx_additionalreports_report implements \TYPO3\CMS\Reports\ReportInterface {
+class tx_additionalreports_websitesconf extends tx_additionalreports_report implements \TYPO3\CMS\Reports\ReportInterface
+{
 
     /**
      * This method renders the report
      *
      * @return    string    The status report as HTML
      */
-    public function getReport() {
+    public function getReport()
+    {
         $content = '';
         $content .= tx_additionalreports_main::displayWebsitesConf();
         return $content;

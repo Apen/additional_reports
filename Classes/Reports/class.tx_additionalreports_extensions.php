@@ -28,14 +28,16 @@
  * @author         CERDAN Yohann <cerdanyohann@yahoo.fr>
  * @package        TYPO3
  */
-class tx_additionalreports_extensions extends tx_additionalreports_report implements \TYPO3\CMS\Reports\ReportInterface {
+class tx_additionalreports_extensions extends tx_additionalreports_report implements \TYPO3\CMS\Reports\ReportInterface
+{
 
     /**
      * This method renders the report
      *
      * @return    string    The status report as HTML
      */
-    public function getReport() {
+    public function getReport()
+    {
         $this->setCss(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('additional_reports') . 'Resources/Public/Shadowbox/shadowbox.css');
         $this->setJs(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('additional_reports') . 'Resources/Public/Shadowbox/shadowbox.js');
         $content = tx_additionalreports_main::displayExtensions();

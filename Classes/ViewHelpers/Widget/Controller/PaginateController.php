@@ -29,21 +29,22 @@
  * @package    TYPO3
  * @subpackage AdditionalReports
  */
-class Tx_AdditionalReports_ViewHelpers_Widget_Controller_PaginateController extends \TYPO3\CMS\Fluid\Core\Widget\AbstractWidgetController {
+class Tx_AdditionalReports_ViewHelpers_Widget_Controller_PaginateController extends \TYPO3\CMS\Fluid\Core\Widget\AbstractWidgetController
+{
 
     /**
      * @var array
      */
     protected $configuration = array(
         'itemsPerPage'           => 10,
-        'insertAbove'            => FALSE,
-        'insertBelow'            => TRUE,
+        'insertAbove'            => false,
+        'insertBelow'            => true,
         'pagesAfter'             => 3,
         'pagesBefore'            => 3,
-        'lessPages'              => TRUE,
+        'lessPages'              => true,
         'forcedNumberOfLinks'    => 5,
-        'forceFirstPrevNextlast' => FALSE,
-        'showFirstLast'          => TRUE
+        'forceFirstPrevNextlast' => false,
+        'showFirstLast'          => true
     );
 
     /**
@@ -69,7 +70,7 @@ class Tx_AdditionalReports_ViewHelpers_Widget_Controller_PaginateController exte
     /**
      * @var boolean
      */
-    protected $lessPages = FALSE;
+    protected $lessPages = false;
 
     /**
      * @var integer
@@ -86,12 +87,13 @@ class Tx_AdditionalReports_ViewHelpers_Widget_Controller_PaginateController exte
      *
      * @return void
      */
-    public function initializeAction() {
+    public function initializeAction()
+    {
         $this->objects = $this->widgetConfiguration['objects'];
         $this->configuration = \TYPO3\CMS\Core\Utility\ArrayUtility::mergeRecursiveWithOverrule(
             $this->configuration,
             (array)$this->widgetConfiguration['configuration'],
-            TRUE
+            true
         );
 
         if (empty($this->configuration['itemsPerPage'])) {
@@ -111,7 +113,8 @@ class Tx_AdditionalReports_ViewHelpers_Widget_Controller_PaginateController exte
      *
      * @return void
      */
-    protected function adjustForForcedNumberOfLinks() {
+    protected function adjustForForcedNumberOfLinks()
+    {
         $forcedNumberOfLinks = $this->forcedNumberOfLinks;
         if ($forcedNumberOfLinks > $this->numberOfPages) {
             $forcedNumberOfLinks = $this->numberOfPages;
@@ -141,7 +144,8 @@ class Tx_AdditionalReports_ViewHelpers_Widget_Controller_PaginateController exte
      * @param integer $currentPage
      * @return void
      */
-    public function indexAction($currentPage = 1) {
+    public function indexAction($currentPage = 1)
+    {
         // ugly patch to work without extbase (sry for that)
 
         $widgetIdentifier = '__widget_0';
@@ -195,7 +199,8 @@ class Tx_AdditionalReports_ViewHelpers_Widget_Controller_PaginateController exte
      *
      * @return array
      */
-    public function buildPagination() {
+    public function buildPagination()
+    {
         $this->adjustForForcedNumberOfLinks();
 
         $pages = array();
@@ -229,12 +234,12 @@ class Tx_AdditionalReports_ViewHelpers_Widget_Controller_PaginateController exte
 
         // less pages (before current)
         if ($start > 0 && $this->lessPages) {
-            $pagination['lessPages'] = TRUE;
+            $pagination['lessPages'] = true;
         }
 
         // next pages (after current)
         if ($end != $this->numberOfPages && $this->lessPages) {
-            $pagination['morePages'] = TRUE;
+            $pagination['morePages'] = true;
         }
 
         return $pagination;

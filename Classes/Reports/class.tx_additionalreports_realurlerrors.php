@@ -29,14 +29,16 @@
  * @author         CERDAN Yohann <cerdanyohann@yahoo.fr>
  * @package        TYPO3
  */
-class tx_additionalreports_realurlerrors extends tx_additionalreports_report implements \TYPO3\CMS\Reports\ReportInterface {
+class tx_additionalreports_realurlerrors extends tx_additionalreports_report implements \TYPO3\CMS\Reports\ReportInterface
+{
 
     /**
      * Constructor for class tx_additionalreports_xclass
      *
      * @param    object    Back-reference to the calling reports module
      */
-    public function __construct($reportObject) {
+    public function __construct($reportObject)
+    {
         parent::__construct($reportObject);
     }
 
@@ -45,7 +47,8 @@ class tx_additionalreports_realurlerrors extends tx_additionalreports_report imp
      *
      * @return    string    The status report as HTML
      */
-    public function getReport() {
+    public function getReport()
+    {
         $actionURL = tx_additionalreports_util::getBaseUrl() . '&cmd=deleteAll';
         $content = '<a href="' . $actionURL . '"><img src="' . \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR') . '../typo3conf/ext/additional_reports/Resources/Public/Icons/garbage.gif"/> ' . $GLOBALS['LANG']->getLL('flushalllog') . '</a>';
         $content .= tx_additionalreports_main::displayRealUrlErrors();

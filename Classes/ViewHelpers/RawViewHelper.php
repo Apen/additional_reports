@@ -55,7 +55,8 @@
  * @package    TYPO3
  * @subpackage t3devapi
  */
-class Tx_AdditionalReports_ViewHelpers_RawViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper {
+class Tx_AdditionalReports_ViewHelpers_RawViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper
+{
 
     /**
      * Disable the escaping interceptor because otherwise the child nodes would be escaped before this view helper
@@ -63,14 +64,15 @@ class Tx_AdditionalReports_ViewHelpers_RawViewHelper extends \TYPO3\CMS\Fluid\Co
      *
      * @var boolean
      */
-    protected $escapingInterceptorEnabled = FALSE;
+    protected $escapingInterceptorEnabled = false;
 
     /**
      * @param mixed $value The value to output
      * @return string
      */
-    public function render($value = NULL) {
-        if ($value === NULL) {
+    public function render($value = null)
+    {
+        if ($value === null) {
             return $this->renderChildren();
         } else {
             return $value;
