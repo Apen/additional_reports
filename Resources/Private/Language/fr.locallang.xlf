@@ -1,0 +1,468 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" target-language="fr" datatype="plaintext" original="messages" date="2017-04-18T14:32:01Z">
+		<header>
+			<type>module</type>
+			<description>Language labels for module 'Additional reports'</description>
+			<generator>LFEditor</generator>
+		</header>
+		<body>
+		<trans-unit id="ajax_description" approved="yes" xml:space="preserve">
+			<source>List of all the ajax.php methods with informations and status for each of them.
+            </source>
+			<target>Liste de toutes les methodes ajax.php avec des informations pour chacune.</target>
+		</trans-unit>
+		<trans-unit id="ajax_title" approved="yes">
+			<source>Additional reports - ajax</source>
+			<target>Additional reports - ajax</target>
+		</trans-unit>
+		<trans-unit id="all" approved="yes">
+			<source>All</source>
+			<target>Tous</target>
+		</trans-unit>
+		<trans-unit id="careful" approved="yes">
+			<source>Careful</source>
+			<target>Attention</target>
+		</trans-unit>
+		<trans-unit id="carefuldesc" approved="yes">
+			<source>A plugin/ctype can be also called in typoscript, typoscript file, php file...</source>
+			<target>Un plugin/ctype peut aussi être appelé en typoscript, fichier typoscript, fichier php...</target>
+		</trans-unit>
+		<trans-unit id="clikeys_description" approved="yes">
+			<source>List of all the cliKeys with informations and status for each of them.</source>
+			<target>Liste de tous les cliKeys avec des informations pour chacun.</target>
+		</trans-unit>
+		<trans-unit id="clikeys_title" approved="yes">
+			<source>Additional reports - cliKeys</source>
+			<target>Additional reports - cliKeys</target>
+		</trans-unit>
+		<trans-unit id="comparelast" approved="yes">
+			<source>Compare with last version</source>
+			<target>Comparer avec la dernière version</target>
+		</trans-unit>
+		<trans-unit id="comparesame" approved="yes">
+			<source>Compare with same version</source>
+			<target>Comparer avec la même version</target>
+		</trans-unit>
+		<trans-unit id="content" approved="yes">
+			<source>Content</source>
+			<target>Contenu</target>
+		</trans-unit>
+		<trans-unit id="counter" approved="yes">
+			<source>Counter</source>
+			<target>Compteur</target>
+		</trans-unit>
+		<trans-unit id="crdate" approved="yes">
+			<source>First time</source>
+			<target>Première fois</target>
+		</trans-unit>
+		<trans-unit id="ctype" approved="yes">
+			<source>Content type</source>
+			<target>Type de contenu</target>
+		</trans-unit>
+		<trans-unit id="dbcheck_description" approved="yes">
+			<source>Check the database integrity.</source>
+			<target>Vérifie l'intégrité de la base de données.</target>
+		</trans-unit>
+		<trans-unit id="dbcheck_title" approved="yes">
+			<source>Additional reports - check the database</source>
+			<target>Additional reports - vérifier la base de données</target>
+		</trans-unit>
+		<trans-unit id="domain" approved="yes">
+			<source>Domain</source>
+			<target>Domaine</target>
+		</trans-unit>
+		<trans-unit id="domains" approved="yes">
+			<source>Domain(s)</source>
+			<target>Domaine(s)</target>
+		</trans-unit>
+		<trans-unit id="downloads" approved="yes">
+			<source>Downloads</source>
+			<target>Téléchargements</target>
+		</trans-unit>
+		<trans-unit id="eid_description" approved="yes">
+			<source>List of all the eID with informations and status for each of them.</source>
+			<target>Liste de tous les eID avec des informations pour chacun.</target>
+		</trans-unit>
+		<trans-unit id="eid_title" approved="yes">
+			<source>Additional reports - eID</source>
+			<target>Additional reports - eID</target>
+		</trans-unit>
+		<trans-unit id="eminfo" approved="yes">
+			<source>Extension manager</source>
+			<target>Gest d'extensions</target>
+		</trans-unit>
+		<trans-unit id="emlink" approved="yes">
+			<source>EM Link</source>
+			<target>Lien vers le Gest Ext</target>
+		</trans-unit>
+		<trans-unit id="error" approved="yes">
+			<source>Error</source>
+			<target>Erreur</target>
+		</trans-unit>
+		<trans-unit id="extdirect_description" approved="yes">
+			<source>List of all the ExtDirect with informations and status for each of them.</source>
+			<target>Liste de tous les ExtDirect avec des informations pour chacun.</target>
+		</trans-unit>
+		<trans-unit id="extdirect_title" approved="yes">
+			<source>Additional reports - ExtDirect</source>
+			<target>Additional reports - ExtDirect</target>
+		</trans-unit>
+		<trans-unit id="extension" approved="yes">
+			<source>Extension</source>
+			<target>Extension</target>
+		</trans-unit>
+		<trans-unit id="extensions_confintegrity" approved="yes">
+			<source>Need extConf update ?</source>
+			<target>Mise à jour du extConf ?</target>
+		</trans-unit>
+		<trans-unit id="extensions_description" approved="yes" xml:space="preserve">
+			<source>List of all the extension with informations for each of them.</source>
+			<target>Liste de toutes les extensions avec des informations utiles pour chacune.
+            </target>
+		</trans-unit>
+		<trans-unit id="extensions_dev" approved="yes">
+			<source>specific developpment(s)</source>
+			<target>développement(s) spécifique(s)</target>
+		</trans-unit>
+		<trans-unit id="extensions_extensions" approved="yes">
+			<source>loaded extension(s)</source>
+			<target>extension(s) chargée(s)</target>
+		</trans-unit>
+		<trans-unit id="extensions_extensionsmodified" approved="yes">
+			<source>modified extension(s)</source>
+			<target>extension(s) modifiée(s)</target>
+		</trans-unit>
+		<trans-unit id="extensions_files" approved="yes">
+			<source>Modified files !!!</source>
+			<target>Fichiers modifiés !!!</target>
+		</trans-unit>
+		<trans-unit id="extensions_filesmodified" approved="yes">
+			<source>modified(s) file(s) in this extension</source>
+			<target>fichier(s) modifié(s) dans cette extension</target>
+		</trans-unit>
+		<trans-unit id="extensions_tables" approved="yes">
+			<source>Tables and fields</source>
+			<target>Tables et champs</target>
+		</trans-unit>
+		<trans-unit id="extensions_tablesintegrity" approved="yes">
+			<source>Need DB update ?</source>
+			<target>Mise à jour de la BD ?</target>
+		</trans-unit>
+		<trans-unit id="extensions_tablesmodified" approved="yes">
+			<source>table(s) in this extension</source>
+			<target>table(s) dans cette extension</target>
+		</trans-unit>
+		<trans-unit id="extensions_ter" approved="yes">
+			<source>extension(s) from the TER</source>
+			<target>extension(s) du TER</target>
+		</trans-unit>
+		<trans-unit id="extensions_title" approved="yes">
+			<source>Additional reports - loaded extension list</source>
+			<target>Additional reports - liste des extensions chargées</target>
+		</trans-unit>
+		<trans-unit id="extensions_toupdate" approved="yes">
+			<source>extension(s) to update</source>
+			<target>extension(s) à mettre à jour</target>
+		</trans-unit>
+		<trans-unit id="extensions_unloaded" approved="yes">
+			<source>unloaded extension(s)</source>
+			<target>extension(s) non chargées</target>
+		</trans-unit>
+		<trans-unit id="extensions_updateter" approved="yes">
+			<source>You need to update the extension list in the Extension Manager.</source>
+			<target>Vous devez mettre à jour la liste des extensions dans l'Extension Manager.</target>
+		</trans-unit>
+		<trans-unit id="filterByCat" approved="yes">
+			<source>Filter by category</source>
+			<target>Filtrer par catégorie</target>
+		</trans-unit>
+		<trans-unit id="first" approved="yes">
+			<source>First</source>
+			<target>Premier</target>
+		</trans-unit>
+		<trans-unit id="flushalllog" approved="yes">
+			<source>Flush all log</source>
+			<target>Vider tous les logs</target>
+		</trans-unit>
+		<trans-unit id="hooks_core" approved="yes">
+			<source>Core hooks</source>
+			<target>Hooks du core</target>
+		</trans-unit>
+		<trans-unit id="hooks_corefile" approved="yes">
+			<source>Core file</source>
+			<target>Fichier du core</target>
+		</trans-unit>
+		<trans-unit id="hooks_description" approved="yes">
+			<source>List of all the hooks with the name and the path for each of them.</source>
+			<target>Liste de tous les hooks avec des informations pour chacun.</target>
+		</trans-unit>
+		<trans-unit id="hooks_extension" approved="yes">
+			<source>Extension hooks (experimental)</source>
+			<target>Hooks d'extension (experimental)</target>
+		</trans-unit>
+		<trans-unit id="hooks_file" approved="yes">
+			<source>File or class</source>
+			<target>Fichier ou classe</target>
+		</trans-unit>
+		<trans-unit id="hooks_line" approved="yes">
+			<source>Line with the hook in the ext_localconf.php file of the extension</source>
+			<target>Ligne contenant le hook dans le fichier ext_localconf.php de l'extension</target>
+		</trans-unit>
+		<trans-unit id="hooks_name" approved="yes">
+			<source>Hook name</source>
+			<target>Nom du hook</target>
+		</trans-unit>
+		<trans-unit id="hooks_title" approved="yes">
+			<source>Additional reports - hooks</source>
+			<target>Additional reports - hooks</target>
+		</trans-unit>
+		<trans-unit id="last" approved="yes">
+			<source>Last</source>
+			<target>Dernier</target>
+		</trans-unit>
+		<trans-unit id="last_referer" approved="yes">
+			<source>Referer</source>
+			<target>Referer</target>
+		</trans-unit>
+		<trans-unit id="latestbranch" approved="yes">
+			<source>Lastest from this branch</source>
+			<target>Dernière pour cette branche</target>
+		</trans-unit>
+		<trans-unit id="latestlts" approved="yes">
+			<source>Lastest LTS</source>
+			<target>Dernière LTS</target>
+		</trans-unit>
+		<trans-unit id="lateststable" approved="yes">
+			<source>Lastest stable</source>
+			<target>Dernière stable</target>
+		</trans-unit>
+		<trans-unit id="locallang" approved="yes">
+			<source>Locallang</source>
+			<target>Locallang</target>
+		</trans-unit>
+		<trans-unit id="logerrors_description" approved="yes">
+			<source>List of all the errors in the log.</source>
+			<target>Liste de toutes les erreurs présentent dans les logs.</target>
+		</trans-unit>
+		<trans-unit id="logerrors_title" approved="yes">
+			<source>Additional reports - log errors</source>
+			<target>Additional reports - erreurs des logs</target>
+		</trans-unit>
+		<trans-unit id="name" approved="yes">
+			<source>Name</source>
+			<target>Nom</target>
+		</trans-unit>
+		<trans-unit id="newwindow" approved="yes">
+			<source>New window</source>
+			<target>Nouvelle fenêtre</target>
+		</trans-unit>
+		<trans-unit id="next" approved="yes">
+			<source>Next</source>
+			<target>Suivant</target>
+		</trans-unit>
+		<trans-unit id="no" approved="yes">
+			<source>No</source>
+			<target>Non</target>
+		</trans-unit>
+		<trans-unit id="noresults" approved="yes">
+			<source>There is no results to display</source>
+			<target>Aucune donnée à afficher</target>
+		</trans-unit>
+		<trans-unit id="notspecified" approved="yes">
+			<source>Not specified</source>
+			<target>Non spécifiée</target>
+		</trans-unit>
+		<trans-unit id="nottested" approved="yes">
+			<source>Not tested</source>
+			<target>Non testée</target>
+		</trans-unit>
+		<trans-unit id="pageIndicator" approved="yes">
+			<source>Page %1$s of %2$d</source>
+			<target>Page %1$s sur %2$d</target>
+		</trans-unit>
+		<trans-unit id="pagetitle" approved="yes">
+			<source>Page title</source>
+			<target>Titre de la page</target>
+		</trans-unit>
+		<trans-unit id="path" approved="yes">
+			<source>Path</source>
+			<target>Chemin</target>
+		</trans-unit>
+		<trans-unit id="pid" approved="yes">
+			<source>Page uid</source>
+			<target>UID de la page</target>
+		</trans-unit>
+		<trans-unit id="plugin" approved="yes">
+			<source>Plugin</source>
+			<target>Plugin</target>
+		</trans-unit>
+		<trans-unit id="plugins_description" approved="yes" xml:space="preserve">
+			<source>List of all the plugins and contents type with informations and status for each of
+                them. With this report you can easily know if a plugin or a content
+                type is used on the system (and where it is used).
+            </source>
+			<target>Liste de tous les plugins et types de contenu avec des informations pour chacun.
+                Avec ce module, vous pouvez facilement savoir si un plugin ou un type de
+                contenu est utilisé (et où il est utilisé).
+            </target>
+		</trans-unit>
+		<trans-unit id="plugins_title" approved="yes">
+			<source>Additional reports - plugins &amp; content type</source>
+			<target>Additional reports - plugins &amp; content type</target>
+		</trans-unit>
+		<trans-unit id="pluginschoose" approved="yes">
+			<source>Choose a display mode :</source>
+			<target>Choisissez le mode d'affichage :</target>
+		</trans-unit>
+		<trans-unit id="pluginsmode1" approved="yes">
+			<source>List of all the plugins</source>
+			<target>Liste de tous les plugins</target>
+		</trans-unit>
+		<trans-unit id="pluginsmode2" approved="yes">
+			<source>List of all the content types</source>
+			<target>Liste de tous les types de contenu</target>
+		</trans-unit>
+		<trans-unit id="pluginsmode3" approved="yes">
+			<source>List of used content types</source>
+			<target>Liste de tous les types de contenu utilisés</target>
+		</trans-unit>
+		<trans-unit id="pluginsmode3hidden" approved="yes">
+			<source>List of used content types (and hidden)</source>
+			<target>Liste de tous les types de contenu utilisés (et cachés)</target>
+		</trans-unit>
+		<trans-unit id="pluginsmode4" approved="yes">
+			<source>List of used plugins</source>
+			<target>Liste de tous les plugins utilisés</target>
+		</trans-unit>
+		<trans-unit id="pluginsmode4hidden" approved="yes">
+			<source>List of used plugins (and hidden)</source>
+			<target>Liste de tous les plugins utilisés (et cachés)</target>
+		</trans-unit>
+		<trans-unit id="pluginsmode5" approved="yes">
+			<source>Summary</source>
+			<target>Resumé</target>
+		</trans-unit>
+		<trans-unit id="pluginssubmit" approved="yes">
+			<source>Display</source>
+			<target>Afficher</target>
+		</trans-unit>
+		<trans-unit id="preview" approved="yes">
+			<source>Preview</source>
+			<target>Aperçu</target>
+		</trans-unit>
+		<trans-unit id="previous" approved="yes">
+			<source>Previous</source>
+			<target>Précédent</target>
+		</trans-unit>
+		<trans-unit id="rangeIndicator" approved="yes">
+			<source>Records %1$d - %2$d</source>
+			<target>Enregistrements %1$d - %2$d</target>
+		</trans-unit>
+		<trans-unit id="realurlerrors_description" approved="yes">
+			<source>List of all the errors in realurl.</source>
+			<target>Liste de toutes les erreurs realurl.</target>
+		</trans-unit>
+		<trans-unit id="realurlerrors_title" approved="yes">
+			<source>Additional reports - realurl errors</source>
+			<target>Additional reports - erreurs realurl</target>
+		</trans-unit>
+		<trans-unit id="references" approved="yes">
+			<source>References</source>
+			<target>Références</target>
+		</trans-unit>
+		<trans-unit id="status_description" approved="yes">
+			<source>List of all the usefull informations about your installation.</source>
+			<target>Liste de toutes les informations importantes de votre installation.</target>
+		</trans-unit>
+		<trans-unit id="status_im" approved="yes">
+			<source>ImageMagick</source>
+			<target>ImageMagick</target>
+		</trans-unit>
+		<trans-unit id="status_lastversion" approved="yes">
+			<source>Last version</source>
+			<target>Dernière version</target>
+		</trans-unit>
+		<trans-unit id="status_loadedextensions" approved="yes">
+			<source>Loaded extensions</source>
+			<target>Extensions chargées</target>
+		</trans-unit>
+		<trans-unit id="status_nocrontab" approved="yes">
+			<source>No crontab</source>
+			<target>Pas de tâche planifiée</target>
+		</trans-unit>
+		<trans-unit id="status_path" approved="yes">
+			<source>Path</source>
+			<target>Chemin</target>
+		</trans-unit>
+		<trans-unit id="status_sitename" approved="yes">
+			<source>Sitename</source>
+			<target>Nom du site</target>
+		</trans-unit>
+		<trans-unit id="status_title" approved="yes">
+			<source>Additional reports - general status</source>
+			<target>Additional reports - statut général</target>
+		</trans-unit>
+		<trans-unit id="status_version" approved="yes">
+			<source>Version</source>
+			<target>Version</target>
+		</trans-unit>
+		<trans-unit id="switch" approved="yes">
+			<source>Switch to</source>
+			<target>Changer vers</target>
+		</trans-unit>
+		<trans-unit id="tstamp" approved="yes">
+			<source>Last time</source>
+			<target>Dernière fois</target>
+		</trans-unit>
+		<trans-unit id="tvused" approved="yes">
+			<source>Used by templavoila ?</source>
+			<target>Utilisé par templavoila ?</target>
+		</trans-unit>
+		<trans-unit id="uid" approved="yes">
+			<source>Content uid</source>
+			<target>UID du contenu</target>
+		</trans-unit>
+		<trans-unit id="unknown" approved="yes">
+			<source>Unknown</source>
+			<target>Inconnue</target>
+		</trans-unit>
+		<trans-unit id="used" approved="yes">
+			<source>Used ?</source>
+			<target>Utilisé ?</target>
+		</trans-unit>
+		<trans-unit id="user" approved="yes">
+			<source>Backend user</source>
+			<target>Utilisateur backend</target>
+		</trans-unit>
+		<trans-unit id="versioncheck" approved="yes">
+			<source>Version check</source>
+			<target>Verif. version</target>
+		</trans-unit>
+		<trans-unit id="websitesconf_description" approved="yes">
+			<source>Check the conf of websites and domains.</source>
+			<target>Vérifie la configuration des sites et des domaines.</target>
+		</trans-unit>
+		<trans-unit id="websitesconf_title" approved="yes">
+			<source>Additional reports - websites/domains conf</source>
+			<target>Additional reports - configurations des sites/domaines</target>
+		</trans-unit>
+		<trans-unit id="xclass_description" approved="yes">
+			<source>List of all the XCLASS with the name and the path for each of them.</source>
+			<target>Liste de toutes les XCLASS avec des informations pour chacune.</target>
+		</trans-unit>
+		<trans-unit id="xclass_title" approved="yes">
+			<source>Additional reports - XCLASS</source>
+			<target>Additional reports - XCLASS</target>
+		</trans-unit>
+		<trans-unit id="xclasscarefuldesc" approved="yes">
+			<source>No autoload XCLASS found, maybe you need to clear caches and refresh the page</source>
+			<target>Aucune autoload XCLASS trouvée, peut être devez vous vider les caches et recharger la page</target>
+		</trans-unit>
+		<trans-unit id="yes" approved="yes">
+			<source>Yes</source>
+			<target>Oui</target>
+		</trans-unit>
+		</body>
+	</file>
+</xliff>

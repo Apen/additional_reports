@@ -7,7 +7,7 @@
 <body style="background:white;">
 <?php
 
-require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('additional_reports') . 'Classes/class.tx_additionalreports_util.php');
+require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('additional_reports') . 'Classes/Utility.php');
 
 $mode = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('mode');
 $extKey = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('extKey');
@@ -25,11 +25,11 @@ switch ($mode) {
         if (strstr($file1, $realPathExt) === false) {
             die ('Access denied.');
         }
-        $terFileContent = tx_additionalreports_util::downloadT3x($extKey, $extVersion, $extFile);
+        $terFileContent = \Sng\AdditionalReports\Utility::downloadT3x($extKey, $extVersion, $extFile);
         t3Diff(\TYPO3\CMS\Core\Utility\GeneralUtility::getURL($file1), $terFileContent);
         break;
     case 'compareExtension':
-        $t3xfiles = tx_additionalreports_util::downloadT3x($extKey, $extVersion);
+        $t3xfiles = \Sng\AdditionalReports\Utility::downloadT3x($extKey, $extVersion);
 
         $diff = 0;
 

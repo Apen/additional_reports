@@ -1,4 +1,7 @@
 <?php
+
+namespace Sng\AdditionalReports\ViewHelpers\Widget\Controller;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -29,7 +32,7 @@
  * @package    TYPO3
  * @subpackage AdditionalReports
  */
-class Tx_AdditionalReports_ViewHelpers_Widget_Controller_PaginateQueryController extends \TYPO3\CMS\Fluid\Core\Widget\AbstractWidgetController
+class PaginateQueryController extends \TYPO3\CMS\Fluid\Core\Widget\AbstractWidgetController
 {
 
     /**
@@ -159,7 +162,7 @@ class Tx_AdditionalReports_ViewHelpers_Widget_Controller_PaginateQueryController
         // ugly patch to work without extbase (sry for that)
 
         $widgetIdentifier = '__widget_0';
-        if (tx_additionalreports_util::intFromVer(TYPO3_version) >= 6002000) {
+        if (\Sng\AdditionalReports\Utility::intFromVer(TYPO3_version) >= 6002000) {
             $widgetIdentifier = '@widget_0';
         }
 

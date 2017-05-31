@@ -1,4 +1,7 @@
 <?php
+
+namespace Sng\AdditionalReports\ViewHelpers;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -22,6 +25,8 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 /**
  * ViewHelper to get all infos on a plugin or content
  *
@@ -31,7 +36,7 @@
  * @package    TYPO3
  * @subpackage AdditionalReports
  */
-class Tx_AdditionalReports_ViewHelpers_ContentInfosViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractConditionViewHelper
+class ContentInfosViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractConditionViewHelper
 {
 
     public function initializeArguments()
@@ -41,7 +46,6 @@ class Tx_AdditionalReports_ViewHelpers_ContentInfosViewHelper extends \TYPO3\CMS
         $this->registerArgument('plugin', 'boolean', 'Is it a plugin?', false, null);
         $this->registerArgument('ctype', 'boolean', 'Is it a CType?', false, null);
     }
-
 
     /**
      * Renders else-child or else-argument if variable $item is in $list
@@ -57,14 +61,16 @@ class Tx_AdditionalReports_ViewHelpers_ContentInfosViewHelper extends \TYPO3\CMS
         $plugin = $this->arguments['plugin'];
         $ctype = $this->arguments['ctype'];
 
+        $languageFactory = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Localization\LocalizationFactory::class);
+
         // plugin
         if ($plugin === true) {
             foreach ($GLOBALS['TCA']['tt_content']['columns']['list_type']['config']['items'] as $itemKey => $itemValue) {
                 if (trim($itemValue[1]) == $item['list_type']) {
                     preg_match('/EXT:(.*?)\//', $itemValue[0], $ext);
                     preg_match('/^LLL:(EXT:.*?):(.*)/', $itemValue[0], $llfile);
-                    $localLang = \TYPO3\CMS\Core\Utility\GeneralUtility::readLLfile($llfile[1], $GLOBALS['LANG']->lang);
-                    $item['iconext'] = tx_additionalreports_util::getExtIcon($ext[1]);
+                    $localLang = $languageFactory->getParsedData($llfile[1], $GLOBALS['LANG']->lang);
+                    $item['iconext'] = \Sng\AdditionalReports\Utility::getExtIcon($ext[1]);
                     $item['extension'] = $ext[1];
                     $item['plugin'] = $GLOBALS['LANG']->getLLL($llfile[2], $localLang) . ' (' . $item['list_type'] . ')';
                 } else {
@@ -79,8 +85,8 @@ class Tx_AdditionalReports_ViewHelpers_ContentInfosViewHelper extends \TYPO3\CMS
                 if ($itemValue[1] != '--div--') {
                     if (trim($itemValue[1]) == $item['CType']) {
                         preg_match('/^LLL:(EXT:.*?):(.*)/', $itemValue[0], $llfile);
-                        $localLang = \TYPO3\CMS\Core\Utility\GeneralUtility::readLLfile($llfile[1], $GLOBALS['LANG']->lang);
-                        $item['iconext'] = tx_additionalreports_util::getContentTypeIcon($itemValue[2]);
+                        $localLang = $languageFactory->getParsedData($llfile[1], $GLOBALS['LANG']->lang);
+                        $item['iconext'] = \Sng\AdditionalReports\Utility::getContentTypeIcon($itemValue[2]);
                         $item['ctype'] = $GLOBALS['LANG']->getLLL($llfile[2], $localLang) . ' (' . $item['CType'] . ')';
                     } else {
                         $item['ctype'] = $item['CType'];
@@ -89,7 +95,7 @@ class Tx_AdditionalReports_ViewHelpers_ContentInfosViewHelper extends \TYPO3\CMS
             }
         }
 
-        $item = array_merge($item, tx_additionalreports_main::getContentInfos($item));
+        $item = array_merge($item, \Sng\AdditionalReports\Main::getContentInfos($item));
 
         if ($this->templateVariableContainer->exists($as)) {
             $this->templateVariableContainer->remove($as);

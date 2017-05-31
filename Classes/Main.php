@@ -1,35 +1,27 @@
 <?php
 
-/***************************************************************
- *  Copyright notice
+namespace Sng\AdditionalReports;
+
+/*
+ * This file is part of the TYPO3 CMS project.
  *
- *  (c) 2015 CERDAN Yohann <cerdanyohann@yahoo.fr>
- *  All rights reserved
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
  *
- *  This script is part of the TYPO3 project. The TYPO3 project is
- *  free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
  *
- *  The GNU General Public License can be found at
- *  http://www.gnu.org/copyleft/gpl.html.
- *
- *  This script is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  This copyright notice MUST APPEAR in all copies of the script!
- ***************************************************************/
+ * The TYPO3 project - inspiring people to share!
+ */
+
+use \TYPO3\CMS\Backend\Routing\Router;
+use \TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * This class provides methods to generate the reports
- *
- * @author         CERDAN Yohann <cerdanyohann@yahoo.fr>
- * @package        TYPO3
  */
-class tx_additionalreports_main
+class Main
 {
     /**
      * Get the global css path
@@ -43,7 +35,7 @@ class tx_additionalreports_main
 
     public static function getLl($key)
     {
-        return $GLOBALS['LANG']->getLL($key);
+        return $GLOBALS['LANG']->sL('LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:' . $key);
     }
 
     /**
@@ -58,12 +50,12 @@ class tx_additionalreports_main
             'FE' => $GLOBALS['TYPO3_CONF_VARS']['FE']['XCLASS']
         );
 
-        $xclassList['autoload'] = tx_additionalreports_util::getAutoloadXlass();
+        $xclassList['autoload'] = \Sng\AdditionalReports\Utility::getAutoloadXlass();
 
         $view = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Fluid\\View\\StandaloneView');
         $view->setTemplatePathAndFilename(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('additional_reports') . 'Resources/Private/Templates/xclass-fluid.html');
         $view->assign('xclass', $xclassList);
-        $view->assign('typo3version', tx_additionalreports_util::intFromVer(TYPO3_version));
+        $view->assign('typo3version', \Sng\AdditionalReports\Utility::intFromVer(TYPO3_version));
         return $view->render();
     }
 
@@ -78,7 +70,7 @@ class tx_additionalreports_main
         $view->setTemplatePathAndFilename(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('additional_reports') . 'Resources/Private/Templates/ajax-fluid.html');
         $ajax = $GLOBALS['TYPO3_CONF_VARS']['BE']['AJAX'];
         foreach ($ajax as $name => $path) {
-            $ajax[$name] = tx_additionalreports_util::viewArray($path);
+            $ajax[$name] = \Sng\AdditionalReports\Utility::viewArray($path);
         }
         $view->assign('ajax', $ajax);
         return $view->render();
@@ -99,7 +91,7 @@ class tx_additionalreports_main
                 if (is_string($itemValue[0])) {
                     preg_match('/EXT:(.*?)\//', $itemValue[0], $ext);
                     $clikeys[] = array(
-                        'icon'      => tx_additionalreports_util::getExtIcon($ext[1]),
+                        'icon'      => \Sng\AdditionalReports\Utility::getExtIcon($ext[1]),
                         'extension' => $ext[1],
                         'name'      => $itemKey,
                         'path'      => $itemValue[0],
@@ -130,7 +122,7 @@ class tx_additionalreports_main
                 preg_match('/EXT:(.*?)\//', $itemValue, $ext);
                 if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded($ext[1])) {
                     $eids[] = array(
-                        'icon'      => tx_additionalreports_util::getExtIcon($ext[1]),
+                        'icon'      => \Sng\AdditionalReports\Utility::getExtIcon($ext[1]),
                         'extension' => $ext[1],
                         'name'      => $itemKey,
                         'path'      => $itemValue
@@ -159,7 +151,7 @@ class tx_additionalreports_main
             foreach ($items as $itemKey => $itemValue) {
                 $extdirects[] = array(
                     'name' => $itemKey,
-                    'path' => tx_additionalreports_util::viewArray($itemValue)
+                    'path' => \Sng\AdditionalReports\Utility::viewArray($itemValue)
                 );
             }
         }
@@ -180,8 +172,8 @@ class tx_additionalreports_main
         $extensionsToUpdate = 0;
         $extensionsModified = 0;
 
-        $dbSchema = tx_additionalreports_util::getDatabaseSchema();
-        $allExtension = tx_additionalreports_util::getInstExtList(PATH_typo3conf . 'ext/', $dbSchema);
+        $dbSchema = \Sng\AdditionalReports\Utility::getDatabaseSchema();
+        $allExtension = \Sng\AdditionalReports\Utility::getInstExtList(PATH_typo3conf . 'ext/', $dbSchema);
 
         $listExtensionsTer = array();
         $listExtensionsDev = array();
@@ -222,7 +214,7 @@ class tx_additionalreports_main
         $addContent .= $extensionsToUpdate . ' ' . self::getLl('extensions_toupdate');
         $addContent .= '  /  ';
         $addContent .= $extensionsModified . ' ' . self::getLl('extensions_extensionsmodified');
-        $addContentItem = tx_additionalreports_util::writeInformation(self::getLl('pluginsmode5') . '<br/>' . self::getLl('extensions_updateter') . '', $addContent);
+        $addContentItem = \Sng\AdditionalReports\Utility::writeInformation(self::getLl('pluginsmode5') . '<br/>' . self::getLl('extensions_updateter') . '', $addContent);
 
         $view = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Fluid\\View\\StandaloneView');
         $view->setTemplatePathAndFilename(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('additional_reports') . 'Resources/Private/Templates/extensions-fluid.html');
@@ -244,13 +236,17 @@ class tx_additionalreports_main
         $listExtensionsTerItem = array();
         $listExtensionsTerItem['icon'] = $itemValue['icon'];
         $listExtensionsTerItem['extension'] = $extKey;
-        $listExtensionsTerItem['extensionlink'] = '<a href="#" onclick="' . tx_additionalreports_util::goToModuleEm($extKey) . '">' . tx_additionalreports_util::getIconZoom() . '</a>';
         $listExtensionsTerItem['version'] = $itemValue['EM_CONF']['version'];
-        $listExtensionsTerItem['versioncheck'] = tx_additionalreports_util::versionCompare($itemValue['EM_CONF']['constraints']['depends']['typo3']);
+        $listExtensionsTerItem['versioncheck'] = \Sng\AdditionalReports\Utility::versionCompare($itemValue['EM_CONF']['constraints']['depends']['typo3']);
 
         // version compare
         $compareUrl = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_URL');
-        $compareUrl .= 'typo3/ajax.php?ajaxID=additional_reports::compareFiles';
+
+        $uriBuilder = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Backend\Routing\UriBuilder::class);
+        $routeIdentifier = 'additional_reports_compareFiles';
+        $uri = (string)$uriBuilder->buildUriFromRoute($routeIdentifier, array());
+
+        $compareUrl .= $uri;
         $compareUrl .= '&extKey=' . $extKey . '&mode=compareExtension&extVersion=' . $itemValue['EM_CONF']['version'];
         $compareLabem = $extKey . ' : ' . $itemValue['EM_CONF']['version'] . ' <--> TER ' . $itemValue['EM_CONF']['version'];
         $js = 'Shadowbox.open({content:\'' . $compareUrl . '\',player:\'iframe\',title:\'' . $compareLabem . '\',height:600,width:800});';
@@ -277,7 +273,7 @@ class tx_additionalreports_main
         if (count($itemValue['fdfile']) > 0) {
             $id = 'sql' . $extKey;
             $dumpTf1 = count($itemValue['fdfile']) . ' ' . self::getLl('extensions_tablesmodified');
-            $dumpTf2 = tx_additionalreports_util::writePopUp($id, $extKey, tx_additionalreports_util::viewArray($itemValue['fdfile']));
+            $dumpTf2 = \Sng\AdditionalReports\Utility::writePopUp($id, $extKey, \Sng\AdditionalReports\Utility::viewArray($itemValue['fdfile']));
         }
         $listExtensionsTerItem['tables'] = $dumpTf1;
         $listExtensionsTerItem['tableslink'] = $dumpTf2;
@@ -290,7 +286,7 @@ class tx_additionalreports_main
         }
 
         // need extconf update
-        $absPath = tx_additionalreports_util::getExtPath($extKey, $itemValue['type']);
+        $absPath = \Sng\AdditionalReports\Utility::getExtPath($extKey, $itemValue['type']);
         if (is_file($absPath . 'ext_conf_template.txt')) {
             $configTemplate = \TYPO3\CMS\Core\Utility\GeneralUtility::getUrl($absPath . 'ext_conf_template.txt');
             /** @var $tsparserObj \TYPO3\CMS\Core\TypoScript\Parser\TypoScriptParser */
@@ -304,12 +300,12 @@ class tx_additionalreports_main
             }
             if (count($diffConf) > 0) {
                 $id = 'extconf' . $extKey;
-                $datas = '<span style="color:white;">Diff : </span>' . tx_additionalreports_util::viewArray($diffConf);
+                $datas = '<span style="color:white;">Diff : </span>' . \Sng\AdditionalReports\Utility::viewArray($diffConf);
                 $datas .= '<span style="color:white;">$GLOBALS[\'TYPO3_CONF_VARS\'][\'EXT\'][\'extConf\'][\'' . $extKey . '\'] : </span>';
-                $datas .= tx_additionalreports_util::viewArray($arr);
+                $datas .= \Sng\AdditionalReports\Utility::viewArray($arr);
                 $datas .= '<span style="color:white;">ext_conf_template.txt : </span>';
-                $datas .= tx_additionalreports_util::viewArray($tsparserObj->setup);
-                $dumpExtConf = tx_additionalreports_util::writePopUp($id, $extKey, $datas);
+                $datas .= \Sng\AdditionalReports\Utility::viewArray($tsparserObj->setup);
+                $dumpExtConf = \Sng\AdditionalReports\Utility::writePopUp($id, $extKey, $datas);
                 $listExtensionsTerItem['confintegrity'] = self::getLl('yes') . '&nbsp;&nbsp;' . $dumpExtConf;
             } else {
                 $listExtensionsTerItem['confintegrity'] = self::getLl('no');
@@ -357,12 +353,12 @@ class tx_additionalreports_main
             foreach ($items as $itemKey => $itemValue) {
                 if (preg_match('/.*?\/.*?\.php/', $itemKey, $matches)) {
                     foreach ($itemValue as $hookName => $hookList) {
-                        $hookList = tx_additionalreports_util::getHook($hookList);
+                        $hookList = \Sng\AdditionalReports\Utility::getHook($hookList);
                         if (!empty($hookList)) {
                             $hooks['core'][] = array(
                                 'corefile' => $itemKey,
                                 'name'     => $hookName,
-                                'file'     => tx_additionalreports_util::viewArray($hookList)
+                                'file'     => \Sng\AdditionalReports\Utility::viewArray($hookList)
                             );
                         }
                     }
@@ -374,12 +370,12 @@ class tx_additionalreports_main
         if (count($items) > 0) {
             foreach ($items as $itemKey => $itemValue) {
                 foreach ($itemValue as $hookName => $hookList) {
-                    $hookList = tx_additionalreports_util::getHook($hookList);
+                    $hookList = \Sng\AdditionalReports\Utility::getHook($hookList);
                     if (!empty($hookList)) {
                         $hooks['extensions'][] = array(
                             'corefile' => $itemKey,
                             'name'     => $hookName,
-                            'file'     => tx_additionalreports_util::viewArray($hookList)
+                            'file'     => \Sng\AdditionalReports\Utility::viewArray($hookList)
                         );
                     }
                 }
@@ -403,11 +399,11 @@ class tx_additionalreports_main
         $view->setTemplatePathAndFilename(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('additional_reports') . 'Resources/Private/Templates/status-fluid.html');
 
         // infos about typo3 versions
-        $jsonVersions = tx_additionalreports_util::getJsonVersionInfos();
-        $currentVersionInfos = tx_additionalreports_util::getCurrentVersionInfos($jsonVersions, TYPO3_version);
-        $currentBranch = tx_additionalreports_util::getCurrentBranchInfos($jsonVersions, TYPO3_version);
-        $latestStable = tx_additionalreports_util::getLatestStableInfos($jsonVersions);
-        $latestLts = tx_additionalreports_util::getLatestLtsInfos($jsonVersions);
+        $jsonVersions = \Sng\AdditionalReports\Utility::getJsonVersionInfos();
+        $currentVersionInfos = \Sng\AdditionalReports\Utility::getCurrentVersionInfos($jsonVersions, TYPO3_version);
+        $currentBranch = \Sng\AdditionalReports\Utility::getCurrentBranchInfos($jsonVersions, TYPO3_version);
+        $latestStable = \Sng\AdditionalReports\Utility::getLatestStableInfos($jsonVersions);
+        $latestLts = \Sng\AdditionalReports\Utility::getLatestLtsInfos($jsonVersions);
         $headerVersions = self::getLl('status_version') . '<br/>';
         $headerVersions .= self::getLl('latestbranch') . '<br/>';
         $headerVersions .= self::getLl('lateststable') . '<br/>';
@@ -418,22 +414,22 @@ class tx_additionalreports_main
         $htmlVersions .= '<br/>' . $latestLts['version'] . ' [' . $latestLts['date'] . ']';
 
         // TYPO3
-        $content = tx_additionalreports_util::writeInformation(self::getLl('status_sitename'), $GLOBALS['TYPO3_CONF_VARS']['SYS']['sitename']);
-        $content .= tx_additionalreports_util::writeInformation($headerVersions, $htmlVersions);
-        $content .= tx_additionalreports_util::writeInformation(self::getLl('status_path'), PATH_site);
-        $content .= tx_additionalreports_util::writeInformation('TYPO3_db<br/>TYPO3_db_username<br/>TYPO3_db_host', TYPO3_db . '<br/>' . TYPO3_db_username . '<br/>' . TYPO3_db_host);
+        $content = \Sng\AdditionalReports\Utility::writeInformation(self::getLl('status_sitename'), $GLOBALS['TYPO3_CONF_VARS']['SYS']['sitename']);
+        $content .= \Sng\AdditionalReports\Utility::writeInformation($headerVersions, $htmlVersions);
+        $content .= \Sng\AdditionalReports\Utility::writeInformation(self::getLl('status_path'), PATH_site);
+        $content .= \Sng\AdditionalReports\Utility::writeInformation('TYPO3_db<br/>TYPO3_db_username<br/>TYPO3_db_host', TYPO3_db . '<br/>' . TYPO3_db_username . '<br/>' . TYPO3_db_host);
         if ($GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path'] != '') {
             $cmd = \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', '-version');
             exec($cmd, $ret);
-            $content .= tx_additionalreports_util::writeInformation(
+            $content .= \Sng\AdditionalReports\Utility::writeInformation(
                 self::getLl('status_im'), $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path'] . ' (' . $ret[0] . ')'
             );
         }
-        $content .= tx_additionalreports_util::writeInformation('forceCharset', $GLOBALS['TYPO3_CONF_VARS']['BE']['forceCharset']);
-        $content .= tx_additionalreports_util::writeInformation('setDBinit', $GLOBALS['TYPO3_CONF_VARS']['SYS']['setDBinit']);
-        $content .= tx_additionalreports_util::writeInformation('no_pconnect', $GLOBALS['TYPO3_CONF_VARS']['SYS']['no_pconnect']);
-        $content .= tx_additionalreports_util::writeInformation('displayErrors', $GLOBALS['TYPO3_CONF_VARS']['SYS']['displayErrors']);
-        $content .= tx_additionalreports_util::writeInformation('maxFileSize', $GLOBALS['TYPO3_CONF_VARS']['BE']['maxFileSize']);
+        $content .= \Sng\AdditionalReports\Utility::writeInformation('forceCharset', $GLOBALS['TYPO3_CONF_VARS']['BE']['forceCharset']);
+        $content .= \Sng\AdditionalReports\Utility::writeInformation('setDBinit', $GLOBALS['TYPO3_CONF_VARS']['SYS']['setDBinit']);
+        $content .= \Sng\AdditionalReports\Utility::writeInformation('no_pconnect', $GLOBALS['TYPO3_CONF_VARS']['SYS']['no_pconnect']);
+        $content .= \Sng\AdditionalReports\Utility::writeInformation('displayErrors', $GLOBALS['TYPO3_CONF_VARS']['SYS']['displayErrors']);
+        $content .= \Sng\AdditionalReports\Utility::writeInformation('maxFileSize', $GLOBALS['TYPO3_CONF_VARS']['BE']['maxFileSize']);
 
         $extensions = explode(',', $GLOBALS['TYPO3_CONF_VARS']['EXT']['extList']);
 
@@ -449,9 +445,9 @@ class tx_additionalreports_main
 
         sort($extensions);
         foreach ($extensions as $aKey => $extension) {
-            $extensions[$aKey] = $extension . ' (' . tx_additionalreports_util::getExtensionVersion($extension) . ')';
+            $extensions[$aKey] = $extension . ' (' . \Sng\AdditionalReports\Utility::getExtensionVersion($extension) . ')';
         }
-        $content .= tx_additionalreports_util::writeInformationList(
+        $content .= \Sng\AdditionalReports\Utility::writeInformationList(
             self::getLl('status_loadedextensions'), $extensions
         );
 
@@ -461,35 +457,35 @@ class tx_additionalreports_main
         $content = '';
         $vars = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('_ARRAY');
         foreach ($vars as $varKey => $varValue) {
-            $content .= tx_additionalreports_util::writeInformation($varKey, $varValue);
+            $content .= \Sng\AdditionalReports\Utility::writeInformation($varKey, $varValue);
         }
         $gE_keys = explode(',', 'HTTP_ACCEPT,HTTP_ACCEPT_ENCODING,HTTP_CONNECTION,HTTP_COOKIE,REMOTE_PORT,SERVER_ADDR,SERVER_ADMIN,SERVER_NAME,SERVER_PORT,SERVER_SIGNATURE,SERVER_SOFTWARE,GATEWAY_INTERFACE,SERVER_PROTOCOL,REQUEST_METHOD,PATH_TRANSLATED');
         foreach ($gE_keys as $k) {
-            $content .= tx_additionalreports_util::writeInformation($k, getenv($k));
+            $content .= \Sng\AdditionalReports\Utility::writeInformation($k, getenv($k));
         }
         $view->assign('getIndpEnv', $content);
 
         // PHP
-        $content = tx_additionalreports_util::writeInformation(self::getLl('status_version'), phpversion());
-        $content .= tx_additionalreports_util::writeInformation('memory_limit', ini_get('memory_limit'));
-        $content .= tx_additionalreports_util::writeInformation('max_execution_time', ini_get('max_execution_time'));
-        $content .= tx_additionalreports_util::writeInformation('post_max_size', ini_get('post_max_size'));
-        $content .= tx_additionalreports_util::writeInformation('upload_max_filesize', ini_get('upload_max_filesize'));
-        $content .= tx_additionalreports_util::writeInformation('display_errors', ini_get('display_errors'));
-        $content .= tx_additionalreports_util::writeInformation('error_reporting', ini_get('error_reporting'));
+        $content = \Sng\AdditionalReports\Utility::writeInformation(self::getLl('status_version'), phpversion());
+        $content .= \Sng\AdditionalReports\Utility::writeInformation('memory_limit', ini_get('memory_limit'));
+        $content .= \Sng\AdditionalReports\Utility::writeInformation('max_execution_time', ini_get('max_execution_time'));
+        $content .= \Sng\AdditionalReports\Utility::writeInformation('post_max_size', ini_get('post_max_size'));
+        $content .= \Sng\AdditionalReports\Utility::writeInformation('upload_max_filesize', ini_get('upload_max_filesize'));
+        $content .= \Sng\AdditionalReports\Utility::writeInformation('display_errors', ini_get('display_errors'));
+        $content .= \Sng\AdditionalReports\Utility::writeInformation('error_reporting', ini_get('error_reporting'));
         if (function_exists('posix_getpwuid') && function_exists('posix_getgrgid')) {
             $apacheUser = posix_getpwuid(posix_getuid());
             $apacheGroup = posix_getgrgid(posix_getgid());
-            $content .= tx_additionalreports_util::writeInformation(
+            $content .= \Sng\AdditionalReports\Utility::writeInformation(
                 'Apache user', $apacheUser['name'] . ' (' . $apacheUser['uid'] . ')'
             );
-            $content .= tx_additionalreports_util::writeInformation(
+            $content .= \Sng\AdditionalReports\Utility::writeInformation(
                 'Apache group', $apacheGroup['name'] . ' (' . $apacheGroup['gid'] . ')'
             );
         }
         $extensions = array_map('strtolower', get_loaded_extensions());
         natcasesort($extensions);
-        $content .= tx_additionalreports_util::writeInformationList(
+        $content .= \Sng\AdditionalReports\Utility::writeInformationList(
             self::getLl('status_loadedextensions'), $extensions
         );
 
@@ -499,10 +495,10 @@ class tx_additionalreports_main
         if (function_exists('apache_get_version') && function_exists('apache_get_modules')) {
             $extensions = apache_get_modules();
             natcasesort($extensions);
-            $content = tx_additionalreports_util::writeInformation(
+            $content = \Sng\AdditionalReports\Utility::writeInformation(
                 self::getLl('status_version'), apache_get_version()
             );
-            $content .= tx_additionalreports_util::writeInformationList(
+            $content .= \Sng\AdditionalReports\Utility::writeInformationList(
                 self::getLl('status_loadedextensions'), $extensions
             );
             $view->assign('apache', $content);
@@ -510,28 +506,35 @@ class tx_additionalreports_main
             $view->assign('apache', self::getLl('noresults'));
         }
 
+        $connection = self::getDatabaseConnection();
+        $connectionParams = $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections'][\TYPO3\CMS\Core\Database\ConnectionPool::DEFAULT_CONNECTION_NAME];
+
         // MySQL
-        if (function_exists('mysqli_get_server_info')) {
-            $content = tx_additionalreports_util::writeInformation('Version', mysqli_get_server_info($GLOBALS['TYPO3_DB']->getDatabaseHandle()));
-        }
-        $items = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
-            'default_character_set_name, default_collation_name',
-            'information_schema.schemata',
-            'schema_name = \'' . TYPO3_db . '\''
-        );
-        $content .= tx_additionalreports_util::writeInformation(
+        $content = \Sng\AdditionalReports\Utility::writeInformation('Version', $connection->getServerVersion());
+
+        $items = self::getQueryBuilder()
+            ->select('default_character_set_name', 'default_collation_name')
+            ->from('information_schema.schemata')
+            ->where('schema_name = \'' . $connectionParams['dbname'] . '\'')
+            ->execute()
+            ->fetchAll();
+
+        $content .= \Sng\AdditionalReports\Utility::writeInformation(
             'default_character_set_name', $items[0]['default_character_set_name']
         );
-        $content .= tx_additionalreports_util::writeInformation('default_collation_name', $items[0]['default_collation_name']);
-        $content .= tx_additionalreports_util::writeInformation('query_cache', tx_additionalreports_util::getMySqlCacheInformations());
-        $content .= tx_additionalreports_util::writeInformation('character_set', tx_additionalreports_util::getMySqlCharacterSet());
+        $content .= \Sng\AdditionalReports\Utility::writeInformation('default_collation_name', $items[0]['default_collation_name']);
+        $content .= \Sng\AdditionalReports\Utility::writeInformation('query_cache', \Sng\AdditionalReports\Utility::getMySqlCacheInformations());
+        $content .= \Sng\AdditionalReports\Utility::writeInformation('character_set', \Sng\AdditionalReports\Utility::getMySqlCharacterSet());
 
         // TYPO3 database
-        $items = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
-            'table_name, engine, table_collation, table_rows, ((data_length+index_length)/1024/1024) as "size"',
-            'information_schema.tables',
-            'table_schema = \'' . TYPO3_db . '\'', '', 'table_name'
-        );
+        $items = self::getQueryBuilder()
+            ->select('table_name', 'engine', 'table_collation', 'table_rows')
+            ->add('select', '((data_length+index_length)/1024/1024) as "size"', true)
+            ->from('information_schema.tables')
+            ->where('table_schema = \'' . $connectionParams['dbname'] . '\'')
+            ->orderBy('table_name')
+            ->execute()
+            ->fetchAll();
 
         $tables = array();
         $size = 0;
@@ -563,7 +566,7 @@ class tx_additionalreports_main
                 }
             }
         }
-        $content = tx_additionalreports_util::writeInformation('Crontab', $crontabString);
+        $content = \Sng\AdditionalReports\Utility::writeInformation('Crontab', $crontabString);
         $view->assign('crontab', $content);
 
         return $view->render();
@@ -576,36 +579,36 @@ class tx_additionalreports_main
      */
     public static function displayPlugins()
     {
-        $view = TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Fluid\\View\\StandaloneView');
+        $view = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Fluid\\View\\StandaloneView');
         $view->setTemplatePathAndFilename(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('additional_reports') . 'Resources/Private/Templates/plugins-fluid.html');
 
         $view->assign('extconf', unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['additional_reports']));
-        $view->assign('url', tx_additionalreports_util::getBaseUrl());
-        $view->assign('caution', tx_additionalreports_util::writeInformation(self::getLl('careful'), self::getLl('carefuldesc')));
-        $view->assign('checkedpluginsmode3', (tx_additionalreports_util::getPluginsDisplayMode() == 3) ? ' checked="checked"' : '');
-        $view->assign('checkedpluginsmode4', (tx_additionalreports_util::getPluginsDisplayMode() == 4) ? ' checked="checked"' : '');
-        $view->assign('checkedpluginsmode5', (tx_additionalreports_util::getPluginsDisplayMode() == 5) ? ' checked="checked"' : '');
-        $view->assign('checkedpluginsmode6', (tx_additionalreports_util::getPluginsDisplayMode() == 6) ? ' checked="checked"' : '');
-        $view->assign('checkedpluginsmode7', (tx_additionalreports_util::getPluginsDisplayMode() == 7) ? ' checked="checked"' : '');
+        $view->assign('url', \Sng\AdditionalReports\Utility::getBaseUrl());
+        $view->assign('caution', \Sng\AdditionalReports\Utility::writeInformation(self::getLl('careful'), self::getLl('carefuldesc')));
+        $view->assign('checkedpluginsmode3', (\Sng\AdditionalReports\Utility::getPluginsDisplayMode() == 3) ? ' checked="checked"' : '');
+        $view->assign('checkedpluginsmode4', (\Sng\AdditionalReports\Utility::getPluginsDisplayMode() == 4) ? ' checked="checked"' : '');
+        $view->assign('checkedpluginsmode5', (\Sng\AdditionalReports\Utility::getPluginsDisplayMode() == 5) ? ' checked="checked"' : '');
+        $view->assign('checkedpluginsmode6', (\Sng\AdditionalReports\Utility::getPluginsDisplayMode() == 6) ? ' checked="checked"' : '');
+        $view->assign('checkedpluginsmode7', (\Sng\AdditionalReports\Utility::getPluginsDisplayMode() == 7) ? ' checked="checked"' : '');
 
-        switch (tx_additionalreports_util::getPluginsDisplayMode()) {
+        switch (\Sng\AdditionalReports\Utility::getPluginsDisplayMode()) {
             case 3 :
-                $view->assign('filtersCat', tx_additionalreports_util::getAllDifferentCtypesSelect(false));
+                $view->assign('filtersCat', \Sng\AdditionalReports\Utility::getAllDifferentCtypesSelect(false));
                 $view->assign('items', self::getAllUsedCtypes());
                 break;
             case 4 :
-                $view->assign('filtersCat', tx_additionalreports_util::getAllDifferentPluginsSelect(false));
+                $view->assign('filtersCat', \Sng\AdditionalReports\Utility::getAllDifferentPluginsSelect(false));
                 $view->assign('items', self::getAllUsedPlugins());
                 break;
             case 5 :
                 $view->assign('items', self::getSummary());
                 break;
             case 6 :
-                $view->assign('filtersCat', tx_additionalreports_util::getAllDifferentPluginsSelect(true));
+                $view->assign('filtersCat', \Sng\AdditionalReports\Utility::getAllDifferentPluginsSelect(true));
                 $view->assign('items', self::getAllUsedPlugins(true));
                 break;
             case 7 :
-                $view->assign('filtersCat', tx_additionalreports_util::getAllDifferentCtypesSelect(true));
+                $view->assign('filtersCat', \Sng\AdditionalReports\Utility::getAllDifferentCtypesSelect(true));
                 $view->assign('items', self::getAllUsedCtypes(true));
                 break;
             default:
@@ -613,7 +616,7 @@ class tx_additionalreports_main
                 break;
         }
 
-        $view->assign('display', tx_additionalreports_util::getPluginsDisplayMode());
+        $view->assign('display', \Sng\AdditionalReports\Utility::getPluginsDisplayMode());
 
         if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('templavoila') && class_exists('tx_templavoila_api')) {
             $view->assign('tvused', true);
@@ -632,10 +635,10 @@ class tx_additionalreports_main
      */
     public static function getAllUsedPlugins($displayHidden = false)
     {
-        $getFiltersCat = TYPO3\CMS\Core\Utility\GeneralUtility::_GP('filtersCat');
+        $getFiltersCat = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('filtersCat');
         $addhidden = ($displayHidden === true) ? '' : ' AND tt_content.hidden=0 AND pages.hidden=0 ';
         $addWhere = (($getFiltersCat !== null) && ($getFiltersCat != 'all')) ? ' AND tt_content.list_type=\'' . $getFiltersCat . '\'' : '';
-        return tx_additionalreports_util::getAllPlugins($addhidden . $addWhere, '', true);
+        return \Sng\AdditionalReports\Utility::getAllPlugins($addhidden . $addWhere, '', true);
     }
 
     /**
@@ -646,10 +649,10 @@ class tx_additionalreports_main
      */
     public static function getAllUsedCtypes($displayHidden = false)
     {
-        $getFiltersCat = TYPO3\CMS\Core\Utility\GeneralUtility::_GP('filtersCat');
+        $getFiltersCat = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('filtersCat');
         $addhidden = ($displayHidden === true) ? '' : ' AND tt_content.hidden=0 AND pages.hidden=0 ';
         $addWhere = (($getFiltersCat !== null) && ($getFiltersCat != 'all')) ? ' AND tt_content.CType=\'' . $getFiltersCat . '\'' : '';
-        return tx_additionalreports_util::getAllCtypes($addhidden . $addWhere, '', true);
+        return \Sng\AdditionalReports\Utility::getAllCtypes($addhidden . $addWhere, '', true);
     }
 
     /**
@@ -662,11 +665,11 @@ class tx_additionalreports_main
     {
         $markersExt = array();
 
-        $domain = tx_additionalreports_util::getDomain($itemValue['pid']);
-        $markersExt['domain'] = tx_additionalreports_util::getIconDomain() . $domain;
+        $domain = \Sng\AdditionalReports\Utility::getDomain($itemValue['pid']);
+        $markersExt['domain'] = \Sng\AdditionalReports\Utility::getIconDomain() . $domain;
 
-        $iconPage = ($itemValue['hiddenpages'] == 0) ? tx_additionalreports_util::getIconPage() : tx_additionalreports_util::getIconPage(true);
-        $iconContent = ($itemValue['hiddentt_content'] == 0) ? tx_additionalreports_util::getIconContent() : tx_additionalreports_util::getIconContent(true);
+        $iconPage = ($itemValue['hiddenpages'] == 0) ? \Sng\AdditionalReports\Utility::getIconPage() : \Sng\AdditionalReports\Utility::getIconPage(true);
+        $iconContent = ($itemValue['hiddentt_content'] == 0) ? \Sng\AdditionalReports\Utility::getIconContent() : \Sng\AdditionalReports\Utility::getIconContent(true);
 
         $markersExt['pid'] = $iconPage . ' ' . $itemValue['pid'];
         $markersExt['uid'] = $iconContent . ' ' . $itemValue['uid'];
@@ -674,19 +677,19 @@ class tx_additionalreports_main
 
         if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('templavoila') && class_exists('tx_templavoila_api')) {
 
-            $linkAtt = array('href' => '#', 'title' => self::getLl('switch'), 'onclick' => tx_additionalreports_util::goToModuleList($itemValue['pid']));
-            $markersExt['db'] = tx_additionalreports_util::generateLink($linkAtt, tx_additionalreports_util::getIconWebList());
+            $linkAtt = array('href' => '#', 'title' => self::getLl('switch'), 'onclick' => \Sng\AdditionalReports\Utility::goToModuleList($itemValue['pid']));
+            $markersExt['db'] = \Sng\AdditionalReports\Utility::generateLink($linkAtt, \Sng\AdditionalReports\Utility::getIconWebList());
 
-            $linkAtt = array('href' => tx_additionalreports_util::goToModuleList($itemValue['pid'], true), 'target' => '_blank', 'title' => self::getLl('newwindow'));
-            $markersExt['db'] .= tx_additionalreports_util::generateLink($linkAtt, tx_additionalreports_util::getIconWebList());
+            $linkAtt = array('href' => \Sng\AdditionalReports\Utility::goToModuleList($itemValue['pid'], true), 'target' => '_blank', 'title' => self::getLl('newwindow'));
+            $markersExt['db'] .= \Sng\AdditionalReports\Utility::generateLink($linkAtt, \Sng\AdditionalReports\Utility::getIconWebList());
 
-            $linkAtt = array('href' => '#', 'title' => self::getLl('switch'), 'onclick' => tx_additionalreports_util::goToModulePageTv($itemValue['pid']));
-            $markersExt['page'] = tx_additionalreports_util::generateLink($linkAtt, tx_additionalreports_util::getIconWebPage());
+            $linkAtt = array('href' => '#', 'title' => self::getLl('switch'), 'onclick' => \Sng\AdditionalReports\Utility::goToModulePageTv($itemValue['pid']));
+            $markersExt['page'] = \Sng\AdditionalReports\Utility::generateLink($linkAtt, \Sng\AdditionalReports\Utility::getIconWebPage());
 
-            $linkAtt = array('href' => tx_additionalreports_util::goToModulePageTv($itemValue['pid'], true), 'target' => '_blank', 'title' => self::getLl('newwindow'));
-            $markersExt['page'] .= tx_additionalreports_util::generateLink($linkAtt, tx_additionalreports_util::getIconWebPage());
+            $linkAtt = array('href' => \Sng\AdditionalReports\Utility::goToModulePageTv($itemValue['pid'], true), 'target' => '_blank', 'title' => self::getLl('newwindow'));
+            $markersExt['page'] .= \Sng\AdditionalReports\Utility::generateLink($linkAtt, \Sng\AdditionalReports\Utility::getIconWebPage());
 
-            if (tx_additionalreports_util::isUsedInTv($itemValue['uid'], $itemValue['pid'])) {
+            if (\Sng\AdditionalReports\Utility::isUsedInTv($itemValue['uid'], $itemValue['pid'])) {
                 $markersExt['usedtv'] = self::getLl('yes');
                 $markersExt['usedtvclass'] = ' typo3-message message-ok';
             } else {
@@ -697,21 +700,21 @@ class tx_additionalreports_main
             $markersExt['usedtv'] = '';
             $markersExt['usedtvclass'] = '';
 
-            $linkAtt = array('href' => '#', 'title' => self::getLl('switch'), 'onclick' => tx_additionalreports_util::goToModuleList($itemValue['pid']));
-            $markersExt['db'] = tx_additionalreports_util::generateLink($linkAtt, tx_additionalreports_util::getIconWebList());
+            $linkAtt = array('href' => '#', 'title' => self::getLl('switch'), 'onclick' => \Sng\AdditionalReports\Utility::goToModuleList($itemValue['pid']), 'class' => 'btn btn-default');
+            $markersExt['db'] = \Sng\AdditionalReports\Utility::generateLink($linkAtt, \Sng\AdditionalReports\Utility::getIconWebList());
 
-            $linkAtt = array('href' => tx_additionalreports_util::goToModuleList($itemValue['pid'], true), 'target' => '_blank', 'title' => self::getLl('newwindow'));
-            $markersExt['db'] .= tx_additionalreports_util::generateLink($linkAtt, tx_additionalreports_util::getIconWebList());
+            $linkAtt = array('href' => \Sng\AdditionalReports\Utility::goToModuleList($itemValue['pid'], true), 'target' => '_blank', 'title' => self::getLl('newwindow'), 'class' => 'btn btn-default');
+            $markersExt['db'] .= \Sng\AdditionalReports\Utility::generateLink($linkAtt, \Sng\AdditionalReports\Utility::getIconWebList());
 
-            $linkAtt = array('href' => '#', 'title' => self::getLl('switch'), 'onclick' => tx_additionalreports_util::goToModulePage($itemValue['pid']));
-            $markersExt['page'] = tx_additionalreports_util::generateLink($linkAtt, tx_additionalreports_util::getIconWebPage());
+            $linkAtt = array('href' => '#', 'title' => self::getLl('switch'), 'onclick' => \Sng\AdditionalReports\Utility::goToModulePage($itemValue['pid']), 'class' => 'btn btn-default');
+            $markersExt['page'] = \Sng\AdditionalReports\Utility::generateLink($linkAtt, \Sng\AdditionalReports\Utility::getIconWebPage());
 
-            $linkAtt = array('href' => tx_additionalreports_util::goToModulePage($itemValue['pid'], true), 'target' => '_blank', 'title' => self::getLl('newwindow'));
-            $markersExt['page'] .= tx_additionalreports_util::generateLink($linkAtt, tx_additionalreports_util::getIconWebPage());
+            $linkAtt = array('href' => \Sng\AdditionalReports\Utility::goToModulePage($itemValue['pid'], true), 'target' => '_blank', 'title' => self::getLl('newwindow'), 'class' => 'btn btn-default');
+            $markersExt['page'] .= \Sng\AdditionalReports\Utility::generateLink($linkAtt, \Sng\AdditionalReports\Utility::getIconWebPage());
         }
 
-        $markersExt['preview'] = '<a target="_blank" href="http://' . $domain . '/index.php?id=' . $itemValue['pid'] . '">';
-        $markersExt['preview'] .= tx_additionalreports_util::getIconZoom();
+        $markersExt['preview'] = '<a target="_blank" class="btn btn-default" href="http://' . $domain . '/index.php?id=' . $itemValue['pid'] . '">';
+        $markersExt['preview'] .= \Sng\AdditionalReports\Utility::getIconZoom();
         $markersExt['preview'] .= '</a>';
 
         return $markersExt;
@@ -755,28 +758,29 @@ class tx_additionalreports_main
         );
 
         $allItems = array();
+        $languageFactory = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Localization\LocalizationFactory::class);
 
         foreach ($items as $itemKey => $itemValue) {
             $itemTemp = array();
             if ($itemValue['CType'] == 'list') {
                 preg_match('/EXT:(.*?)\//', $plugins[$itemValue['list_type']][0], $ext);
                 preg_match('/^LLL:(EXT:.*?):(.*)/', $plugins[$itemValue['list_type']][0], $llfile);
-                $localLang = TYPO3\CMS\Core\Utility\GeneralUtility::readLLfile($llfile[1], $GLOBALS['LANG']->lang);
+                $localLang = $languageFactory->getParsedData($llfile[1], $GLOBALS['LANG']->lang);
                 if ($plugins[$itemValue['list_type']][2]) {
-                    $itemTemp['iconext'] = TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR') . $plugins[$itemValue['list_type']][2];
+                    $itemTemp['iconext'] = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR') . $plugins[$itemValue['list_type']][2];
                 } else {
                     $itemTemp['iconext'] = '';
                 }
                 $itemTemp['content'] = $GLOBALS['LANG']->getLLL($llfile[2], $localLang) . ' (' . $itemValue['list_type'] . ')';
             } else {
                 preg_match('/^LLL:(EXT:.*?):(.*)/', $ctypes[$itemValue['CType']][0], $llfile);
-                $localLang = TYPO3\CMS\Core\Utility\GeneralUtility::readLLfile($llfile[1], $GLOBALS['LANG']->lang);
+                $localLang = $languageFactory->getParsedData($llfile[1], $GLOBALS['LANG']->lang);
                 if (is_file(PATH_site . '/typo3/sysext/t3skin/icons/gfx/' . $ctypes[$itemValue['CType']][2])) {
-                    $itemTemp['iconext'] = TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/' . $ctypes[$itemValue['CType']][2];
+                    $itemTemp['iconext'] = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/' . $ctypes[$itemValue['CType']][2];
                 } elseif (preg_match('/^\.\./', $ctypes[$itemValue['CType']][2], $temp)) {
-                    $itemTemp['iconext'] = TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR') . $ctypes[$itemValue['CType']][2];
+                    $itemTemp['iconext'] = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR') . $ctypes[$itemValue['CType']][2];
                 } elseif (preg_match('/^EXT:(.*)$/', $ctypes[$itemValue['CType']][2], $temp)) {
-                    $itemTemp['iconext'] = TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR') . '../typo3conf/ext/' . $temp[1];
+                    $itemTemp['iconext'] = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR') . '../typo3conf/ext/' . $temp[1];
                 } else {
                     $itemTemp['iconext'] = '';
                 }
@@ -797,7 +801,7 @@ class tx_additionalreports_main
      */
     public static function displayRealUrlErrors()
     {
-        $cmd = TYPO3\CMS\Core\Utility\GeneralUtility::_GP('cmd');
+        $cmd = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('cmd');
 
         if ($cmd === 'deleteAll') {
             $GLOBALS['TYPO3_DB']->exec_DELETEquery(
@@ -807,7 +811,7 @@ class tx_additionalreports_main
         }
 
         if ($cmd === 'delete') {
-            $delete = TYPO3\CMS\Core\Utility\GeneralUtility::_GP('delete');
+            $delete = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('delete');
             $GLOBALS['TYPO3_DB']->exec_DELETEquery(
                 'tx_realurl_errorlog',
                 'url_hash=' . $GLOBALS['TYPO3_DB']->fullQuoteStr($delete, null)
@@ -820,11 +824,11 @@ class tx_additionalreports_main
             'ORDERBY' => 'counter DESC'
         );
 
-        $view = TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Fluid\\View\\StandaloneView');
+        $view = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Fluid\\View\\StandaloneView');
         $view->setTemplatePathAndFilename(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('additional_reports') . 'Resources/Private/Templates/realurlerrors-fluid.html');
         $view->assign('extconf', unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['additional_reports']));
-        $view->assign('baseUrl', tx_additionalreports_util::getBaseUrl());
-        $view->assign('requestDir', TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR'));
+        $view->assign('baseUrl', \Sng\AdditionalReports\Utility::getBaseUrl());
+        $view->assign('requestDir', \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR'));
         $view->assign('query', $query);
         return $view->render();
     }
@@ -846,22 +850,22 @@ class tx_additionalreports_main
         $query['ORDERBY'] = 'nb DESC,tstamp DESC';
         $query['LIMIT'] = '';
 
-        $orderby = TYPO3\CMS\Core\Utility\GeneralUtility::_GP('orderby');
+        $orderby = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('orderby');
         if ($orderby !== null) {
             $query['ORDERBY'] = $orderby;
         }
 
-        $content = tx_additionalreports_util::writeInformation(
+        $content = \Sng\AdditionalReports\Utility::writeInformation(
             self::getLl('flushalllog'), 'DELETE FROM sys_log WHERE error>0;'
         );
 
         $logErrors = array();
 
-        $view = TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Fluid\\View\\StandaloneView');
+        $view = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Fluid\\View\\StandaloneView');
         $view->setTemplatePathAndFilename(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('additional_reports') . 'Resources/Private/Templates/logerrors-fluid.html');
         $view->assign('extconf', unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['additional_reports']));
-        $view->assign('baseUrl', tx_additionalreports_util::getBaseUrl());
-        $view->assign('requestDir', TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR'));
+        $view->assign('baseUrl', \Sng\AdditionalReports\Utility::getBaseUrl());
+        $view->assign('requestDir', \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR'));
         $view->assign('query', $query);
         return $content . $view->render();
     }
@@ -896,12 +900,12 @@ class tx_additionalreports_main
                 );
 
                 $websiteconfItem['pid'] = $itemValue['uid'];
-                $websiteconfItem['pagetitle'] = tx_additionalreports_util::getIconPage() . $itemValue['title'];
+                $websiteconfItem['pagetitle'] = \Sng\AdditionalReports\Utility::getIconPage() . $itemValue['title'];
                 $websiteconfItem['domains'] = '';
                 $websiteconfItem['template'] = '';
 
                 foreach ($domainRecords as $domain) {
-                    $websiteconfItem['domains'] .= tx_additionalreports_util::getIconDomain() . $domain['domainName'] . '<br/>';
+                    $websiteconfItem['domains'] .= \Sng\AdditionalReports\Utility::getIconDomain() . $domain['domainName'] . '<br/>';
                 }
 
                 $templates = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
@@ -912,33 +916,31 @@ class tx_additionalreports_main
                     'sorting'
                 );
 
-
                 foreach ($templates as $templateObj) {
-                    $websiteconfItem['template'] .= '<img src="' . TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR');
-                    $websiteconfItem['template'] .= 'sysext/t3skin/icons/gfx/i/template.gif"/> ' . $templateObj['title'] . ' ';
+                    $websiteconfItem['template'] .= \Sng\AdditionalReports\Utility::getIconTemplate() . ' ' . $templateObj['title'] . ' ';
                     $websiteconfItem['template'] .= '[uid=' . $templateObj['uid'] . ',root=' . $templateObj['root'] . ']<br/>';
                 }
 
                 // baseurl
-                $tmpl = TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\TypoScript\\ExtendedTemplateService');
+                $tmpl = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\TypoScript\\ExtendedTemplateService');
                 $tmpl->tt_track = 0;
                 $tmpl->init();
-                $tmpl->runThroughTemplates(tx_additionalreports_util::getRootLine($itemValue['uid']), 0);
+                $tmpl->runThroughTemplates(\Sng\AdditionalReports\Utility::getRootLine($itemValue['uid']), 0);
                 $tmpl->generateConfig();
                 $websiteconfItem['baseurl'] = $tmpl->setup['config.']['baseURL'];
 
                 // count pages
-                $list = tx_additionalreports_util::getTreeList($itemValue['uid'], 99, 0, '1=1');
+                $list = \Sng\AdditionalReports\Utility::getTreeList($itemValue['uid'], 99, 0, '1=1');
                 $listArray = explode(',', $list);
                 $websiteconfItem['pages'] = (count($listArray) - 1);
-                $websiteconfItem['pageshidden'] = (tx_additionalreports_util::getCountPagesUids($list, 'hidden=1'));
-                $websiteconfItem['pagesnosearch'] = (tx_additionalreports_util::getCountPagesUids($list, 'no_search=1'));
+                $websiteconfItem['pageshidden'] = (\Sng\AdditionalReports\Utility::getCountPagesUids($list, 'hidden=1'));
+                $websiteconfItem['pagesnosearch'] = (\Sng\AdditionalReports\Utility::getCountPagesUids($list, 'no_search=1'));
 
                 $websiteconf[] = $websiteconfItem;
             }
         }
 
-        $view = TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Fluid\\View\\StandaloneView');
+        $view = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Fluid\\View\\StandaloneView');
         $view->setTemplatePathAndFilename(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('additional_reports') . 'Resources/Private/Templates/websiteconf-fluid.html');
         $view->assign('items', $websiteconf);
         return $view->render();
@@ -951,7 +953,7 @@ class tx_additionalreports_main
      */
     public static function displayDbCheck()
     {
-        $sqlStatements = tx_additionalreports_util::getSqlUpdateStatements();
+        $sqlStatements = \Sng\AdditionalReports\Utility::getSqlUpdateStatements();
         $dbchecks = array();
 
         if (!empty($sqlStatements['update']['add'])) {
@@ -1026,10 +1028,28 @@ class tx_additionalreports_main
         $content = '<h3 class="uppercase">Dump SQL Structure (md5:' . md5($sqlStructure) . ')</h3>';
         $content .= '<textarea style="width:100%;height:200px;">' . $sqlStructure . '</textarea>';
 
-        $view = TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Fluid\\View\\StandaloneView');
+        $view = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Fluid\\View\\StandaloneView');
         $view->setTemplatePathAndFilename(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('additional_reports') . 'Resources/Private/Templates/dbcheck-fluid.html');
         $view->assign('dbchecks', $dbchecks);
         return $view->render() . $content;
+    }
+
+    /**
+     * @return \TYPO3\CMS\Core\Database\Connection
+     */
+    protected static function getDatabaseConnection()
+    {
+        return \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Database\ConnectionPool::class)->getConnectionByName(\TYPO3\CMS\Core\Database\ConnectionPool::DEFAULT_CONNECTION_NAME);
+    }
+
+    /**
+     * @return \TYPO3\CMS\Core\Database\Query\QueryBuilder
+     */
+    protected static function getQueryBuilder()
+    {
+        return \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Database\ConnectionPool::class)
+            ->getConnectionByName(\TYPO3\CMS\Core\Database\ConnectionPool::DEFAULT_CONNECTION_NAME)
+            ->createQueryBuilder();
     }
 
 }

@@ -1,0 +1,25 @@
+{
+  "name": "apen/additional_reports",
+  "type": "typo3-cms-extension",
+  "description": "Useful informations in the reports module : xclass, ajax, cliKeys, eID, general status of the system (encoding, DB, php vars...), hooks, compare local and TER extension (diff), used content type, used plugins, ExtDirect... It can really help you during migration or new existing project (to have a global reports of the system).",
+  "keywords": [
+    "TYPO3"
+  ],
+  "authors": [
+    {
+      "name": "Yohann Cerdan",
+      "email": "yohann@site-ngo.fr",
+      "role": "Developer",
+      "homepage": "www.site-ngo.fr"
+    }
+  ],
+  "license": "GPL-2.0+",
+  "require": {
+    "typo3/cms-core": "8^"
+  },
+  "autoload": {
+    "psr-4": {
+      "Sng\\AdditionalReports\\": "Classes"
+    }
+  }
+}
