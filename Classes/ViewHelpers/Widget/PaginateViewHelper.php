@@ -1,4 +1,7 @@
 <?php
+
+namespace Sng\AdditionalReports\ViewHelpers\Widget;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -38,21 +41,21 @@
  * @package    TYPO3
  * @subpackage AdditionalReports
  */
-class Tx_AdditionalReports_ViewHelpers_Widget_PaginateViewHelper extends \TYPO3\CMS\Fluid\Core\Widget\AbstractWidgetViewHelper
+class PaginateViewHelper extends \TYPO3\CMS\Fluid\Core\Widget\AbstractWidgetViewHelper
 {
 
     /**
-     * @var Tx_AdditionalReports_ViewHelpers_Widget_Controller_PaginateController
+     * @var \Sng\AdditionalReports\ViewHelpers\Widget\Controller\PaginateController
      */
     protected $controller;
 
     /**
      * Inject controller
      *
-     * @param Tx_AdditionalReports_ViewHelpers_Widget_Controller_PaginateController $controller
+     * @param \Sng\AdditionalReports\ViewHelpers\Widget\Controller\PaginateController $controller
      * @return void
      */
-    public function injectController(Tx_AdditionalReports_ViewHelpers_Widget_Controller_PaginateController $controller)
+    public function injectController(\Sng\AdditionalReports\ViewHelpers\Widget\Controller\PaginateController $controller)
     {
         $this->controller = $controller;
     }

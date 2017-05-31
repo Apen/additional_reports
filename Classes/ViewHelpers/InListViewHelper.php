@@ -1,4 +1,7 @@
 <?php
+
+namespace Sng\AdditionalReports\ViewHelpers;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -31,7 +34,7 @@
  * @package    TYPO3
  * @subpackage AdditionalReports
  */
-class Tx_AdditionalReports_ViewHelpers_InListViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractConditionViewHelper
+class InListViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractConditionViewHelper
 {
 
     /**

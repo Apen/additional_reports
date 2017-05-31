@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages" date="2017-04-18T14:32:01Z">
+		<header>
+			<type>module</type>
+			<description>Language labels for module 'Additional reports'</description>
+			<generator>LFEditor</generator>
+		</header>
+		<body>
+		<trans-unit id="ajax_description" xml:space="preserve">
+			<source>List of all the ajax.php methods with informations and status for each of them.
+            </source>
+		</trans-unit>
+		<trans-unit id="ajax_title">
+			<source>Additional reports - ajax</source>
+		</trans-unit>
+		<trans-unit id="all">
+			<source>All</source>
+		</trans-unit>
+		<trans-unit id="careful">
+			<source>Careful</source>
+		</trans-unit>
+		<trans-unit id="carefuldesc">
+			<source>A plugin/ctype can be also called in typoscript, typoscript file, php file...</source>
+		</trans-unit>
+		<trans-unit id="clikeys_description">
+			<source>List of all the cliKeys with informations and status for each of them.</source>
+		</trans-unit>
+		<trans-unit id="clikeys_title">
+			<source>Additional reports - cliKeys</source>
+		</trans-unit>
+		<trans-unit id="comparelast">
+			<source>Compare with last version</source>
+		</trans-unit>
+		<trans-unit id="comparesame">
+			<source>Compare with same version</source>
+		</trans-unit>
+		<trans-unit id="content">
+			<source>Content</source>
+		</trans-unit>
+		<trans-unit id="counter">
+			<source>Counter</source>
+		</trans-unit>
+		<trans-unit id="crdate">
+			<source>First time</source>
+		</trans-unit>
+		<trans-unit id="ctype">
+			<source>Content type</source>
+		</trans-unit>
+		<trans-unit id="dbcheck_description">
+			<source>Check the database integrity.</source>
+		</trans-unit>
+		<trans-unit id="dbcheck_title">
+			<source>Additional reports - check the database</source>
+		</trans-unit>
+		<trans-unit id="domain">
+			<source>Domain</source>
+		</trans-unit>
+		<trans-unit id="domains">
+			<source>Domain(s)</source>
+		</trans-unit>
+		<trans-unit id="downloads">
+			<source>Downloads</source>
+		</trans-unit>
+		<trans-unit id="eid_description">
+			<source>List of all the eID with informations and status for each of them.</source>
+		</trans-unit>
+		<trans-unit id="eid_title">
+			<source>Additional reports - eID</source>
+		</trans-unit>
+		<trans-unit id="eminfo">
+			<source>Extension manager</source>
+		</trans-unit>
+		<trans-unit id="emlink">
+			<source>EM Link</source>
+		</trans-unit>
+		<trans-unit id="error">
+			<source>Error</source>
+		</trans-unit>
+		<trans-unit id="extdirect_description">
+			<source>List of all the ExtDirect with informations and status for each of them.</source>
+		</trans-unit>
+		<trans-unit id="extdirect_title">
+			<source>Additional reports - ExtDirect</source>
+		</trans-unit>
+		<trans-unit id="extension">
+			<source>Extension</source>
+		</trans-unit>
+		<trans-unit id="extensions_confintegrity">
+			<source>Need extConf update ?</source>
+		</trans-unit>
+		<trans-unit id="extensions_description">
+			<source>List of all the extension with informations for each of them.</source>
+		</trans-unit>
+		<trans-unit id="extensions_dev">
+			<source>specific developpment(s)</source>
+		</trans-unit>
+		<trans-unit id="extensions_extensions">
+			<source>loaded extension(s)</source>
+		</trans-unit>
+		<trans-unit id="extensions_extensionsmodified">
+			<source>modified extension(s)</source>
+		</trans-unit>
+		<trans-unit id="extensions_files">
+			<source>Modified files !!!</source>
+		</trans-unit>
+		<trans-unit id="extensions_filesmodified">
+			<source>modified(s) file(s) in this extension</source>
+		</trans-unit>
+		<trans-unit id="extensions_tables">
+			<source>Tables and fields</source>
+		</trans-unit>
+		<trans-unit id="extensions_tablesintegrity">
+			<source>Need DB update ?</source>
+		</trans-unit>
+		<trans-unit id="extensions_tablesmodified">
+			<source>table(s) in this extension</source>
+		</trans-unit>
+		<trans-unit id="extensions_ter">
+			<source>extension(s) from the TER</source>
+		</trans-unit>
+		<trans-unit id="extensions_title">
+			<source>Additional reports - loaded extension list</source>
+		</trans-unit>
+		<trans-unit id="extensions_toupdate">
+			<source>extension(s) to update</source>
+		</trans-unit>
+		<trans-unit id="extensions_unloaded">
+			<source>unloaded extension(s)</source>
+		</trans-unit>
+		<trans-unit id="extensions_updateter">
+			<source>You need to update the extension list in the Extension Manager.</source>
+		</trans-unit>
+		<trans-unit id="filterByCat">
+			<source>Filter by category</source>
+		</trans-unit>
+		<trans-unit id="first">
+			<source>First</source>
+		</trans-unit>
+		<trans-unit id="flushalllog">
+			<source>Flush all log</source>
+		</trans-unit>
+		<trans-unit id="hooks_core">
+			<source>Core hooks</source>
+		</trans-unit>
+		<trans-unit id="hooks_corefile">
+			<source>Core file</source>
+		</trans-unit>
+		<trans-unit id="hooks_description">
+			<source>List of all the hooks with the name and the path for each of them.</source>
+		</trans-unit>
+		<trans-unit id="hooks_extension">
+			<source>Extension hooks (experimental)</source>
+		</trans-unit>
+		<trans-unit id="hooks_file">
+			<source>File or class</source>
+		</trans-unit>
+		<trans-unit id="hooks_line">
+			<source>Line with the hook in the ext_localconf.php file of the extension</source>
+		</trans-unit>
+		<trans-unit id="hooks_name">
+			<source>Hook name</source>
+		</trans-unit>
+		<trans-unit id="hooks_title">
+			<source>Additional reports - hooks</source>
+		</trans-unit>
+		<trans-unit id="last">
+			<source>Last</source>
+		</trans-unit>
+		<trans-unit id="last_referer">
+			<source>Referer</source>
+		</trans-unit>
+		<trans-unit id="latestbranch">
+			<source>Lastest from this branch</source>
+		</trans-unit>
+		<trans-unit id="latestlts">
+			<source>Lastest LTS</source>
+		</trans-unit>
+		<trans-unit id="lateststable">
+			<source>Lastest stable</source>
+		</trans-unit>
+		<trans-unit id="locallang">
+			<source>Locallang</source>
+		</trans-unit>
+		<trans-unit id="logerrors_description">
+			<source>List of all the errors in the log.</source>
+		</trans-unit>
+		<trans-unit id="logerrors_title">
+			<source>Additional reports - log errors</source>
+		</trans-unit>
+		<trans-unit id="name">
+			<source>Name</source>
+		</trans-unit>
+		<trans-unit id="newwindow">
+			<source>New window</source>
+		</trans-unit>
+		<trans-unit id="next">
+			<source>Next</source>
+		</trans-unit>
+		<trans-unit id="no">
+			<source>No</source>
+		</trans-unit>
+		<trans-unit id="noresults">
+			<source>There is no results to display</source>
+		</trans-unit>
+		<trans-unit id="notspecified">
+			<source>Not specified</source>
+		</trans-unit>
+		<trans-unit id="nottested">
+			<source>Not tested</source>
+		</trans-unit>
+		<trans-unit id="pageIndicator">
+			<source>Page %1$s of %2$d</source>
+		</trans-unit>
+		<trans-unit id="pagetitle">
+			<source>Page title</source>
+		</trans-unit>
+		<trans-unit id="path">
+			<source>Path</source>
+		</trans-unit>
+		<trans-unit id="pid">
+			<source>Page uid</source>
+		</trans-unit>
+		<trans-unit id="plugin">
+			<source>Plugin</source>
+		</trans-unit>
+		<trans-unit id="plugins_description" xml:space="preserve">
+			<source>List of all the plugins and contents type with informations and status for each of
+                them. With this report you can easily know if a plugin or a content
+                type is used on the system (and where it is used).
+            </source>
+		</trans-unit>
+		<trans-unit id="plugins_title">
+			<source>Additional reports - plugins &amp; content type</source>
+		</trans-unit>
+		<trans-unit id="pluginschoose">
+			<source>Choose a display mode :</source>
+		</trans-unit>
+		<trans-unit id="pluginsmode1">
+			<source>List of all the plugins</source>
+		</trans-unit>
+		<trans-unit id="pluginsmode2">
+			<source>List of all the content types</source>
+		</trans-unit>
+		<trans-unit id="pluginsmode3">
+			<source>List of used content types</source>
+		</trans-unit>
+		<trans-unit id="pluginsmode3hidden">
+			<source>List of used content types (and hidden)</source>
+		</trans-unit>
+		<trans-unit id="pluginsmode4">
+			<source>List of used plugins</source>
+		</trans-unit>
+		<trans-unit id="pluginsmode4hidden">
+			<source>List of used plugins (and hidden)</source>
+		</trans-unit>
+		<trans-unit id="pluginsmode5">
+			<source>Summary</source>
+		</trans-unit>
+		<trans-unit id="pluginssubmit">
+			<source>Display</source>
+		</trans-unit>
+		<trans-unit id="preview">
+			<source>Preview</source>
+		</trans-unit>
+		<trans-unit id="previous">
+			<source>Previous</source>
+		</trans-unit>
+		<trans-unit id="rangeIndicator">
+			<source>Records %1$d - %2$d</source>
+		</trans-unit>
+		<trans-unit id="realurlerrors_description">
+			<source>List of all the errors in realurl.</source>
+		</trans-unit>
+		<trans-unit id="realurlerrors_title">
+			<source>Additional reports - realurl errors</source>
+		</trans-unit>
+		<trans-unit id="references">
+			<source>References</source>
+		</trans-unit>
+		<trans-unit id="status_description">
+			<source>List of all the usefull informations about your installation.</source>
+		</trans-unit>
+		<trans-unit id="status_im">
+			<source>ImageMagick</source>
+		</trans-unit>
+		<trans-unit id="status_lastversion">
+			<source>Last version</source>
+		</trans-unit>
+		<trans-unit id="status_loadedextensions">
+			<source>Loaded extensions</source>
+		</trans-unit>
+		<trans-unit id="status_nocrontab">
+			<source>No crontab</source>
+		</trans-unit>
+		<trans-unit id="status_path">
+			<source>Path</source>
+		</trans-unit>
+		<trans-unit id="status_sitename">
+			<source>Sitename</source>
+		</trans-unit>
+		<trans-unit id="status_title">
+			<source>Additional reports - general status</source>
+		</trans-unit>
+		<trans-unit id="status_version">
+			<source>Version</source>
+		</trans-unit>
+		<trans-unit id="switch">
+			<source>Switch to</source>
+		</trans-unit>
+		<trans-unit id="tstamp">
+			<source>Last time</source>
+		</trans-unit>
+		<trans-unit id="tvused">
+			<source>Used by templavoila ?</source>
+		</trans-unit>
+		<trans-unit id="uid">
+			<source>Content uid</source>
+		</trans-unit>
+		<trans-unit id="unknown">
+			<source>Unknown</source>
+		</trans-unit>
+		<trans-unit id="used">
+			<source>Used ?</source>
+		</trans-unit>
+		<trans-unit id="user">
+			<source>Backend user</source>
+		</trans-unit>
+		<trans-unit id="versioncheck">
+			<source>Version check</source>
+		</trans-unit>
+		<trans-unit id="websitesconf_description">
+			<source>Check the conf of websites and domains.</source>
+		</trans-unit>
+		<trans-unit id="websitesconf_title">
+			<source>Additional reports - websites/domains conf</source>
+		</trans-unit>
+		<trans-unit id="xclass_description">
+			<source>List of all the XCLASS with the name and the path for each of them.</source>
+		</trans-unit>
+		<trans-unit id="xclass_title">
+			<source>Additional reports - XCLASS</source>
+		</trans-unit>
+		<trans-unit id="xclasscarefuldesc">
+			<source>No autoload XCLASS found, maybe you need to clear caches and refresh the page</source>
+		</trans-unit>
+		<trans-unit id="yes">
+			<source>Yes</source>
+		</trans-unit>
+		</body>
+	</file>
+</xliff>

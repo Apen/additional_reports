@@ -1,35 +1,28 @@
 <?php
 
-/***************************************************************
- *  Copyright notice
+namespace Sng\AdditionalReports;
+
+/*
+ * This file is part of the TYPO3 CMS project.
  *
- *  (c) 2015 CERDAN Yohann <cerdanyohann@yahoo.fr>
- *  All rights reserved
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
  *
- *  This script is part of the TYPO3 project. The TYPO3 project is
- *  free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
  *
- *  The GNU General Public License can be found at
- *  http://www.gnu.org/copyleft/gpl.html.
- *
- *  This script is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  This copyright notice MUST APPEAR in all copies of the script!
- ***************************************************************/
+ * The TYPO3 project - inspiring people to share!
+ */
+
+use TYPO3\CMS\Backend\Utility\BackendUtility;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Utility class
- *
- * @author         CERDAN Yohann <cerdanyohann@yahoo.fr>
- * @package        TYPO3
  */
-class tx_additionalreports_util
+class Utility
 {
     /**
      * Define all the reports
@@ -38,21 +31,19 @@ class tx_additionalreports_util
      */
     public static function getReportsList()
     {
-        $reports = array(
-            'eid',
-            'clikeys',
-            'plugins',
-            'xclass',
-            'hooks',
-            'status',
-            'ajax',
-            'logerrors',
-            'websitesconf',
-            'dbcheck',
-            'realurlerrors',
-            'extensions',
-            'extdirect'
-        );
+        $reports = [
+            ['Eid', 'eid'],
+            ['CliKeys', 'clikeys'],
+            ['Plugins', 'plugins'],
+            ['Xclass', 'xclass'],
+            ['Hooks', 'hooks'],
+            ['Status', 'status'],
+            ['Ajax', 'ajax'],
+            ['LogErrors', 'logerrors'],
+            ['WebsiteConf', 'websitesconf'],
+            ['DbCheck', 'dbcheck'],
+            ['Extensions', 'extensions']
+        ];
         return $reports;
     }
 
@@ -64,15 +55,15 @@ class tx_additionalreports_util
     public static function getBaseUrl()
     {
         // since 6.0> extbase is using by reports module
-        $baseUrl = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR') . 'mod.php?';
+        $baseUrl = BackendUtility::getModuleUrl(\TYPO3\CMS\Core\Utility\GeneralUtility::_GET('M')) . '&';
         $parameters = array();
         $vars = \TYPO3\CMS\Core\Utility\GeneralUtility::_GET('tx_reports_system_reportstxreportsm1');
-        $parameters[] = 'M=system_ReportsTxreportsm1';
+        //$parameters[] = 'M=system_ReportsTxreportsm1';
         $parameters[] = 'tx_reports_system_reportstxreportsm1%5Bextension%5D=additional_reports';
         $parameters[] = 'tx_reports_system_reportstxreportsm1%5Breport%5D=' . $vars['report'];
         $parameters[] = 'tx_reports_system_reportstxreportsm1%5Baction%5D=detail';
         $parameters[] = 'tx_reports_system_reportstxreportsm1%5Bcontroller%5D=Report';
-        $parameters[] = 'moduleToken=' . \TYPO3\CMS\Core\FormProtection\FormProtectionFactory::get()->generateToken('moduleCall', 'system_ReportsTxreportsm1');
+        //$parameters[] = 'moduleToken=' . \TYPO3\CMS\Core\FormProtection\FormProtectionFactory::get()->generateToken('moduleCall', 'system_ReportsTxreportsm1');
         return $baseUrl . implode('&', $parameters);
     }
 
@@ -229,14 +220,14 @@ class tx_additionalreports_util
                             $currentExt['installed'] = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded($extKey);
                             $currentExt['EM_CONF'] = $emConf;
                             $currentExt['files'] = \TYPO3\CMS\Core\Utility\GeneralUtility::getFilesInDir($path . $extKey, '', 0, '', null);
-                            $currentExt['lastversion'] = tx_additionalreports_util::checkExtensionUpdate($currentExt);
-                            $currentExt['affectedfiles'] = tx_additionalreports_util::getExtAffectedFiles($currentExt);
-                            $currentExt['icon'] = tx_additionalreports_util::getExtIcon($extKey);
+                            $currentExt['lastversion'] = \Sng\AdditionalReports\Utility::checkExtensionUpdate($currentExt);
+                            $currentExt['affectedfiles'] = \Sng\AdditionalReports\Utility::getExtAffectedFiles($currentExt);
+                            $currentExt['icon'] = \Sng\AdditionalReports\Utility::getExtIcon($extKey);
 
                             // db infos
                             $fdFile = array();
                             $updateStatements = array();
-                            tx_additionalreports_util::getExtSqlUpdateStatements($currentExt, $dbSchema, $fdFile, $updateStatements);
+                            \Sng\AdditionalReports\Utility::getExtSqlUpdateStatements($currentExt, $dbSchema, $fdFile, $updateStatements);
                             $currentExt['fdfile'] = $fdFile;
                             $currentExt['updatestatements'] = $updateStatements;
 
@@ -403,12 +394,7 @@ class tx_additionalreports_util
     public static function getExtIcon($extKey)
     {
         $extType = self::getExtensionType($extKey);
-        if (is_file(PATH_site . $extType['siteRelPath'] . 'ext_icon.gif')) {
-            $path = $extType['siteRelPath'] . 'ext_icon.gif';
-        }
-        if (is_file(PATH_site . $extType['siteRelPath'] . 'ext_icon.png')) {
-            $path = $extType['siteRelPath'] . 'ext_icon.png';
-        }
+        $path = $extType['siteRelPath'] . ExtensionManagementUtility::getExtensionIcon(PATH_site . $extType['siteRelPath']);
         return \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_URL') . $path;
     }
 
@@ -438,8 +424,23 @@ class tx_additionalreports_util
      */
     public static function getIconZoom()
     {
-        $typo3Dir = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR');
-        return '<img src="' . $typo3Dir . '../typo3conf/ext/additional_reports/Resources/Public/Icons/zoom.gif"/>';
+        return \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Imaging\IconFactory::class)->getIcon(
+            'actions-version-workspace-preview',
+            \TYPO3\CMS\Core\Imaging\Icon::SIZE_SMALL
+        )->render();
+    }
+
+    /**
+     * Get the icon path of refresh icon
+     *
+     * @return string
+     */
+    public static function getIconRefresh()
+    {
+        return \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Imaging\IconFactory::class)->getIcon(
+            'actions-system-refresh',
+            \TYPO3\CMS\Core\Imaging\Icon::SIZE_SMALL
+        )->render();
     }
 
     /**
@@ -449,8 +450,10 @@ class tx_additionalreports_util
      */
     public static function getIconDomain()
     {
-        $typo3Dir = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR');
-        return '<img src="' . $typo3Dir . 'sysext/t3skin/icons/gfx/i/domain.gif"/>';
+        return \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Imaging\IconFactory::class)->getIcon(
+            'apps-pagetree-page-domain',
+            \TYPO3\CMS\Core\Imaging\Icon::SIZE_SMALL
+        )->render();
     }
 
     /**
@@ -460,8 +463,23 @@ class tx_additionalreports_util
      */
     public static function getIconWebPage()
     {
-        $typo3Dir = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR');
-        return '<img src="' . $typo3Dir . '../typo3conf/ext/additional_reports/Resources/Public/Icons/module_web_layout.gif"/>';
+        return \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Imaging\IconFactory::class)->getIcon(
+            'actions-version-page-open',
+            \TYPO3\CMS\Core\Imaging\Icon::SIZE_SMALL
+        )->render();
+    }
+
+    /**
+     * Get the icon path of template
+     *
+     * @return string
+     */
+    public static function getIconTemplate()
+    {
+        return \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Imaging\IconFactory::class)->getIcon(
+            'mimetypes-x-content-template',
+            \TYPO3\CMS\Core\Imaging\Icon::SIZE_SMALL
+        )->render();
     }
 
     /**
@@ -471,8 +489,10 @@ class tx_additionalreports_util
      */
     public static function getIconWebList()
     {
-        $typo3Dir = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR');
-        return '<img src="' . $typo3Dir . '../typo3conf/ext/additional_reports/Resources/Public/Icons/module_web_list.gif"/>';
+        return \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Imaging\IconFactory::class)->getIcon(
+            'actions-system-list-open',
+            \TYPO3\CMS\Core\Imaging\Icon::SIZE_SMALL
+        )->render();
     }
 
     /**
@@ -483,11 +503,17 @@ class tx_additionalreports_util
      */
     public static function getIconPage($hidden = false)
     {
-        $typo3Dir = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR');
         if ($hidden === true) {
-            return '<img src="' . $typo3Dir . 'sysext/t3skin/icons/gfx/i/pages__h.gif"/>';
+            return \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Imaging\IconFactory::class)->getIcon(
+                'apps-pagetree-page-default',
+                \TYPO3\CMS\Core\Imaging\Icon::SIZE_SMALL,
+                'overlay-hidden'
+            )->render();
         } else {
-            return '<img src="' . $typo3Dir . 'sysext/t3skin/icons/gfx/i/pages.gif"/>';
+            return \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Imaging\IconFactory::class)->getIcon(
+                'apps-pagetree-page-default',
+                \TYPO3\CMS\Core\Imaging\Icon::SIZE_SMALL
+            )->render();
         }
     }
 
@@ -499,11 +525,17 @@ class tx_additionalreports_util
      */
     public static function getIconContent($hidden = false)
     {
-        $typo3Dir = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR');
         if ($hidden === true) {
-            return '<img src="' . $typo3Dir . 'sysext/t3skin/icons/gfx/i/tt_content__h.gif"/>';
+            return \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Imaging\IconFactory::class)->getIcon(
+                'content-text',
+                \TYPO3\CMS\Core\Imaging\Icon::SIZE_SMALL,
+                'overlay-hidden'
+            )->render();
         } else {
-            return '<img src="' . $typo3Dir . 'sysext/t3skin/icons/gfx/i/tt_content.gif"/>';
+            return \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Imaging\IconFactory::class)->getIcon(
+                'content-text',
+                \TYPO3\CMS\Core\Imaging\Icon::SIZE_SMALL
+            )->render();
         }
     }
 
@@ -802,7 +834,7 @@ class tx_additionalreports_util
      */
     public static function goToModuleList($uid, $urlOnly = false)
     {
-        $url = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR') . 'db_list.php?id=' . $uid;
+        $url = BackendUtility::getModuleUrl('web_list') . '&id=' . $uid;
         if ($urlOnly === true) {
             return $url;
         } else {
@@ -819,7 +851,7 @@ class tx_additionalreports_util
      */
     public static function goToModulePage($uid, $urlOnly = false)
     {
-        $url = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/cms/layout/db_layout.php?id=' . $uid;
+        $url = BackendUtility::getModuleUrl('web_layout') . '&id=' . $uid;
         if ($urlOnly === true) {
             return $url;
         } else {
@@ -842,17 +874,6 @@ class tx_additionalreports_util
         } else {
             return 'top.nextLoadModuleUrl=\'' . $url . '\';top.goToModule(\'web_txtemplavoilaM1\');';
         }
-    }
-
-    /**
-     * Return a link to the module EM
-     *
-     * @param int $extKey
-     * @return string
-     */
-    public static function goToModuleEm($extKey)
-    {
-        return 'top.goToModule(\'tools_em\', 1, \'CMD[showExt]=' . $extKey . '&SET[singleDetails]=info\');';
     }
 
     /**
@@ -971,13 +992,14 @@ class tx_additionalreports_util
     public static function writeInformation($label, $value)
     {
         return '
-			<div class="typo3-message message-information">
-				<div class="header-container">
-					<div class="message-header message-left">' . $label . '</div>
-					<div class="message-header message-right">' . $value . '&nbsp;</div>
-				</div>
-				<div class="message-body"></div>
-			</div>
+        <table class="table table-striped table-hover">
+            <tbody>
+			<tr>
+				<td class="notice col-xs-6">' . $label . '</td>
+				<td class="notice col-xs-6">' . $value . '</td>
+			</tr>
+		    </tbody>
+		</table>
 		';
     }
 
@@ -1064,13 +1086,12 @@ class tx_additionalreports_util
             }
         }
 
-        $listUrlOrig = tx_additionalreports_util::getBaseUrl() . '&display=' . tx_additionalreports_util::getPluginsDisplayMode();
+        $listUrlOrig = \Sng\AdditionalReports\Utility::getBaseUrl() . '&display=' . \Sng\AdditionalReports\Utility::getPluginsDisplayMode();
 
         $content = '<select name="filtersCat" id="filtersCat">' . $filterCat . '</select>';
-        $content .= '<a href="#"  onClick="jumpToUrl(\'' . $listUrlOrig;
+        $content .= '<a class="btn btn-default" href="#"  onClick="jumpToUrl(\'' . $listUrlOrig;
         $content .= '&filtersCat=\'+document.getElementById(\'filtersCat\').value);">';
-        $content .= '&nbsp;<img width="16" height="16" title="" alt="" src="' . \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR');
-        $content .= '../typo3conf/ext/additional_reports/Resources/Public/Icons/refresh_n.gif"></a>';
+        $content .= self::getIconRefresh() . '</a>';
 
         return $content;
     }
@@ -1120,13 +1141,12 @@ class tx_additionalreports_util
             }
         }
 
-        $listUrlOrig = tx_additionalreports_util::getBaseUrl() . '&display=' . tx_additionalreports_util::getPluginsDisplayMode();
+        $listUrlOrig = \Sng\AdditionalReports\Utility::getBaseUrl() . '&display=' . \Sng\AdditionalReports\Utility::getPluginsDisplayMode();
 
         $content = '<select name="filtersCat" id="filtersCat">' . $filterCat . '</select>';
-        $content .= '<a href="#"  onClick="jumpToUrl(\'' . $listUrlOrig;
+        $content .= '<a class="btn btn-default" href="#"  onClick="jumpToUrl(\'' . $listUrlOrig;
         $content .= '&filtersCat=\'+document.getElementById(\'filtersCat\').value);">';
-        $content .= '&nbsp;<img width="16" height="16" title="" alt="" src="' . \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR');
-        $content .= '../typo3conf/ext/additional_reports/Resources/Public/Icons/refresh_n.gif"></a>';
+        $content .= self::getIconRefresh() . '</a>';
 
         return $content;
     }

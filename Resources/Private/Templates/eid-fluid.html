@@ -1,28 +1,32 @@
-<table cellspacing="1" cellpadding="2" border="0" class="tx_sv_reportlist typo3-dblist">
-    <tr class="t3-row-header">
-        <td colspan="4">
-            <f:translate key="LLL:EXT:additional_reports/locallang.xml:eid_description"/>
-        </td>
+<table cellspacing="1" cellpadding="2" border="0" class="table table-striped table-hover">
+    <thead>
+    <tr>
+        <th colspan="4">
+            <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:eid_description"/>
+        </th>
     </tr>
-    <tr class="c-headLine">
-        <td class="cell">&nbsp;</td>
-        <td class="cell">
-            <f:translate key="LLL:EXT:additional_reports/locallang.xml:extension"/>
-        </td>
-        <td class="cell">
-            <f:translate key="LLL:EXT:additional_reports/locallang.xml:name"/>
-        </td>
-        <td class="cell">
-            <f:translate key="LLL:EXT:additional_reports/locallang.xml:path"/>
-        </td>
+    <tr>
+        <th class="cell">&nbsp;</th>
+        <th class="cell">
+            <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:extension"/>
+        </th>
+        <th class="cell">
+            <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:name"/>
+        </th>
+        <th class="cell">
+            <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:path"/>
+        </th>
     </tr>
+    </thead>
+    <tbody>
     <f:for each="{eids}" as="eid">
-        <tr class="db_list_normal">
+        <tr>
             <td class="col-icon"><img src="{eid.icon}"/></td>
-            <td class="cell">{eid.extension}</td>
-            <td class="cell">{eid.name}</td>
-            <td class="cell">{eid.path}</td>
+            <td>{eid.extension}</td>
+            <td>{eid.name}</td>
+            <td>{eid.path}</td>
         </tr>
     </f:for>
+    </tbody>
 </table>
 

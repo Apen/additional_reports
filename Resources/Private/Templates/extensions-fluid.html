@@ -1,149 +1,164 @@
-{namespace ar=Tx_AdditionalReports_ViewHelpers}
+{namespace ar=Sng\AdditionalReports\ViewHelpers}
 
 <f:be.container loadJQuery="true">
-<script type="text/javascript">
-    Shadowbox.init({displayNav: true, displayCounter: false, overlayOpacity: 0.8});
-</script>
+    <script type="text/javascript">
+        Shadowbox.init({displayNav: true, displayCounter: false, overlayOpacity: 0.8});
+        $.ajax({
+            url: TYPO3.settings.ajaxUrls['compareFiles'],
+            method: 'post',
+            data: {"data": data},
+            dataType: 'json',
+            success: function (response) {
+                console.log(response);
+            }
+        });
+    </script>
 
-<f:if condition="{listExtensionsTer}">
-    <table cellspacing="1" cellpadding="2" border="0" class="tx_sv_reportlist typo3-dblist">
-        <tr class="t3-row-header">
-            <td colspan="13">
-                <f:count subject="{listExtensionsTer}"/>
-                <f:translate key="LLL:EXT:additional_reports/locallang.xml:extensions_ter"/>
-            </td>
-        </tr>
-        <tr class="c-headLine">
-            <td class="cell">&nbsp;</td>
-            <td class="cell" width="150">
-                <f:translate key="LLL:EXT:additional_reports/locallang.xml:extension"/>
-            </td>
-            <td class="cell" width="40" style="text-align:center;">
-                <f:translate key="LLL:EXT:additional_reports/locallang.xml:status_version"/>
-            </td>
-            <td class="cell" width="60" style="text-align:center;">
-                <f:translate key="LLL:EXT:additional_reports/locallang.xml:status_lastversion"/>
-            </td>
-            <td class="cell" colspan="2" style="text-align:center;">
-                <f:translate key="LLL:EXT:additional_reports/locallang.xml:extensions_tables"/>
-            </td>
-            <td class="cell" width="80" style="text-align:center;">
-                <f:translate key="LLL:EXT:additional_reports/locallang.xml:extensions_tablesintegrity"/>
-            </td>
-            <td class="cell" width="80" style="text-align:center;">
-                <f:translate key="LLL:EXT:additional_reports/locallang.xml:extensions_confintegrity"/>
-            </td>
-            <td class="cell" style="text-align:center;">
-                <f:translate key="LLL:EXT:additional_reports/locallang.xml:extensions_files"/>
-            </td>
-        </tr>
-        <f:for each="{listExtensionsTer}" as="extension">
-            <tr class="db_list_normal">
-                <td class="col-icon"><img src="{extension.icon}"/></td>
-                <td class="cell" align="center">{extension.extension}</td>
-                <td class="cell" align="center">{extension.version}</td>
-                <td class="cell" align="center">
-                    <ar:raw>{extension.versionlast}</ar:raw>
-                </td>
-                <td class="cell" align="center">{extension.tables}</td>
-                <td class="cell" align="center" width="30">
-                    <ar:raw>{extension.tableslink}</ar:raw>
-                </td>
-                <td class="cell" align="center">
-                    <ar:raw>{extension.tablesintegrity}</ar:raw>
-                </td>
-                <td class="cell" align="center">
-                    <ar:raw>{extension.confintegrity}</ar:raw>
-                </td>
-                <td class="cell" align="center" width="30">
-                    <ar:raw>{extension.versioncompare}</ar:raw>
-                </td>
+    <f:if condition="{listExtensionsTer}">
+        <table cellspacing="1" cellpadding="2" border="0" class="table table-striped table-hover">
+            <thead>
+            <tr>
+                <th colspan="13">
+                    <f:count subject="{listExtensionsTer}"/>
+                    <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:extensions_ter"/>
+                </th>
             </tr>
-        </f:for>
-    </table>
-</f:if>
+            <tr>
+                <th>&nbsp;</th>
+                <th width="150">
+                    <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:extension"/>
+                </th>
+                <th width="40" style="text-align:center;">
+                    <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:status_version"/>
+                </th>
+                <th width="60" style="text-align:center;">
+                    <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:status_lastversion"/>
+                </th>
+                <th colspan="2" style="text-align:center;">
+                    <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:extensions_tables"/>
+                </th>
+                <th width="80" style="text-align:center;">
+                    <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:extensions_tablesintegrity"/>
+                </th>
+                <th width="80" style="text-align:center;">
+                    <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:extensions_confintegrity"/>
+                </th>
+                <th style="text-align:center;">
+                    <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:extensions_files"/>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <f:for each="{listExtensionsTer}" as="extension">
+                <tr>
+                    <td class="col-icon"><img class="ext-icon" src="{extension.icon}"/></td>
+                    <td align="center">{extension.extension}</td>
+                    <td align="center">{extension.version}</td>
+                    <td align="center">
+                        <f:format.raw>{extension.versionlast}</f:format.raw>
+                    </td>
+                    <td align="center">{extension.tables}</td>
+                    <td align="center" width="30">
+                        <f:format.raw>{extension.tableslink}</f:format.raw>
+                    </td>
+                    <td align="center">
+                        <f:format.raw>{extension.tablesintegrity}</f:format.raw>
+                    </td>
+                    <td align="center">
+                        <f:format.raw>{extension.confintegrity}</f:format.raw>
+                    </td>
+                    <td align="center" width="30">
+                        <f:format.raw>{extension.versioncompare}</f:format.raw>
+                    </td>
+                </tr>
+            </f:for>
+            </tbody>
+        </table>
+    </f:if>
 
-<f:if condition="{listExtensionsDev}">
-    <table cellspacing="1" cellpadding="2" border="0" class="tx_sv_reportlist typo3-dblist">
-        <tr class="t3-row-header">
-            <td colspan="15">
-                <f:count subject="{listExtensionsDev}"/>
-                <f:translate key="LLL:EXT:additional_reports/locallang.xml:extensions_dev"/>
-            </td>
-        </tr>
-        <tr class="c-headLine">
-            <td class="cell">&nbsp;</td>
-            <td class="cell" width="150" colspan="2">
-                <f:translate key="LLL:EXT:additional_reports/locallang.xml:extension"/>
-            </td>
-            <td class="cell" width="40" style="text-align:center;">
-                <f:translate key="LLL:EXT:additional_reports/locallang.xml:status_version"/>
-            </td>
-            <td class="cell" colspan="2">
-                <f:translate key="LLL:EXT:additional_reports/locallang.xml:extensions_tables"/>
-            </td>
-            <td class="cell" width="80" style="text-align:center;">
-                <f:translate key="LLL:EXT:additional_reports/locallang.xml:extensions_tablesintegrity"/>
-            </td>
-        </tr>
-        <f:for each="{listExtensionsDev}" as="extension">
-            <tr class="db_list_normal">
-                <td class="col-icon"><img src="{extension.icon}"/></td>
-                <td class="cell" align="center">{extension.extension}</td>
-                <td class="cell" align="center" width="30">
-                    <ar:raw>{extension.extensionlink}</ar:raw>
-                </td>
-                <td class="cell" align="center">{extension.version}</td>
-                <td class="cell" align="center">
-                    <ar:raw>{extension.tables}</ar:raw>
-                </td>
-                <td class="cell" align="center" width="30">
-                    <ar:raw>{extension.tableslink}</ar:raw>
-                </td>
-                <td class="cell" align="center">
-                    <ar:raw>{extension.tablesintegrity}</ar:raw>
-                </td>
+    <f:if condition="{listExtensionsDev}">
+        <table cellspacing="1" cellpadding="2" border="0" class="table table-striped table-hover">
+            <thead>
+            <tr>
+                <th colspan="15">
+                    <f:count subject="{listExtensionsDev}"/>
+                    <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:extensions_dev"/>
+                </th>
             </tr>
-        </f:for>
-    </table>
-</f:if>
+            <tr>
+                <th>&nbsp;</th>
+                <th width="150">
+                    <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:extension"/>
+                </th>
+                <th width="40" style="text-align:center;">
+                    <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:status_version"/>
+                </th>
+                <th colspan="2">
+                    <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:extensions_tables"/>
+                </th>
+                <th width="80" style="text-align:center;">
+                    <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:extensions_tablesintegrity"/>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <f:for each="{listExtensionsDev}" as="extension">
+                <tr>
+                    <td class="col-icon"><img src="{extension.icon}"/></td>
+                    <td align="center">{extension.extension}</td>
+                    <td align="center">{extension.version}</td>
+                    <td align="center">
+                        <f:format.raw>{extension.tables}</f:format.raw>
+                    </td>
+                    <td align="center" width="30">
+                        <f:format.raw>{extension.tableslink}</f:format.raw>
+                    </td>
+                    <td align="center">
+                        <f:format.raw>{extension.tablesintegrity}</f:format.raw>
+                    </td>
+                </tr>
+            </f:for>
+            </tbody>
+        </table>
+    </f:if>
 
-<f:if condition="{listExtensionsUnloaded}">
-    <table cellspacing="1" cellpadding="2" border="0" class="tx_sv_reportlist typo3-dblist">
-        <tr class="t3-row-header">
-            <td colspan="15">
-                <f:count subject="{listExtensionsUnloaded}"/>
-                <f:translate key="LLL:EXT:additional_reports/locallang.xml:extensions_unloaded"/>
-            </td>
-        </tr>
-        <tr class="c-headLine">
-            <td class="cell">&nbsp;</td>
-            <td class="cell" width="150" colspan="2">
-                <f:translate key="LLL:EXT:additional_reports/locallang.xml:extension"/>
-            </td>
-            <td class="cell" width="40" style="text-align:center;">
-                <f:translate key="LLL:EXT:additional_reports/locallang.xml:status_version"/>
-            </td>
-            <td class="cell" colspan="2">
-                <f:translate key="LLL:EXT:additional_reports/locallang.xml:extensions_tables"/>
-            </td>
-        </tr>
-        <f:for each="{listExtensionsUnloaded}" as="extension">
-            <tr class="db_list_normal">
-                <td class="col-icon"><img src="{extension.icon}"/></td>
-                <td class="cell" align="center">{extension.extension}</td>
-                <td class="cell" align="center" width="30">
-                    <ar:raw>{extension.extensionlink}</ar:raw>
-                </td>
-                <td class="cell" align="center">{extension.version}</td>
-                <td class="cell" align="center">
-                    <ar:raw>{extension.tables}</ar:raw>
-                </td>
-                <td class="cell" align="center" width="30">
-                    <ar:raw>{extension.tableslink}</ar:raw>
-                </td>
+    <f:if condition="{listExtensionsUnloaded}">
+        <table cellspacing="1" cellpadding="2" border="0" class="table table-striped table-hover">
+            <thead>
+            <tr>
+                <th colspan="15">
+                    <f:count subject="{listExtensionsUnloaded}"/>
+                    <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:extensions_unloaded"/>
+                </th>
             </tr>
-        </f:for>
-    </table>
-</f:if>
-    </f:be.container>
+            <tr>
+                <th>&nbsp;</th>
+                <th width="150">
+                    <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:extension"/>
+                </th>
+                <th width="40" style="text-align:center;">
+                    <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:status_version"/>
+                </th>
+                <th colspan="2">
+                    <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:extensions_tables"/>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <f:for each="{listExtensionsUnloaded}" as="extension">
+                <tr>
+                    <td class="col-icon"><img src="{extension.icon}"/></td>
+                    <td align="center">{extension.extension}</td>
+                    <td align="center">{extension.version}</td>
+                    <td align="center">
+                        <f:format.raw>{extension.tables}</f:format.raw>
+                    </td>
+                    <td align="center" width="30">
+                        <f:format.raw>{extension.tableslink}</f:format.raw>
+                    </td>
+                </tr>
+            </f:for>
+            </tbody>
+        </table>
+    </f:if>
+</f:be.container>

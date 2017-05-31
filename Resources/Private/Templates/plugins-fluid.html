@@ -1,4 +1,4 @@
-{namespace ar=Tx_AdditionalReports_ViewHelpers}
+{namespace ar=Sng\AdditionalReports\ViewHelpers}
 
 <script type="text/javascript">
     function jumpToUrl(URL) {
@@ -6,20 +6,20 @@
     }
 </script>
 
-<ar:raw>{caution}</ar:raw>
+<f:format.raw>{caution}</f:format.raw>
 
 <table>
     <tr>
         <td>
             <input onClick="jumpToUrl('{url}&display=4');" style="margin-right:4px;" type="radio" name="display" value="1" id="radio4"{checkedpluginsmode4}/>
             <label for="radio4" style="margin-right:10px;">
-                <f:translate key="LLL:EXT:additional_reports/locallang.xml:pluginsmode4"/>
+                <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:pluginsmode4"/>
             </label>
         </td>
         <td>
             <input onClick="jumpToUrl('{url}&display=6');" style="margin-right:4px;" type="radio" name="display" value="1" id="radio6"{checkedpluginsmode6}/>
             <label for="radio6" style="margin-right:10px;">
-                <f:translate key="LLL:EXT:additional_reports/locallang.xml:pluginsmode4hidden"/>
+                <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:pluginsmode4hidden"/>
             </label>
         </td>
     </tr>
@@ -27,13 +27,13 @@
         <td>
             <input onClick="jumpToUrl('{url}&display=3');" style="margin-right:4px;" type="radio" name="display" value="1" id="radio3"{checkedpluginsmode3}/>
             <label for="radio3" style="margin-right:10px;">
-                <f:translate key="LLL:EXT:additional_reports/locallang.xml:pluginsmode3"/>
+                <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:pluginsmode3"/>
             </label>
         </td>
         <td>
             <input onClick="jumpToUrl('{url}&display=7');" style="margin-right:4px;" type="radio" name="display" value="1" id="radio7"{checkedpluginsmode7}/>
             <label for="radio7" style="margin-right:10px;">
-                <f:translate key="LLL:EXT:additional_reports/locallang.xml:pluginsmode3hidden"/>
+                <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:pluginsmode3hidden"/>
             </label>
         </td>
     </tr>
@@ -41,7 +41,7 @@
         <td>
             <input onClick="jumpToUrl('{url}&display=5');" style="margin-right:4px;" type="radio" name="display" value="1" id="radio5"{checkedpluginsmode5}/>
             <label for="radio5" style="margin-right:10px;">
-                <f:translate key="LLL:EXT:additional_reports/locallang.xml:pluginsmode5"/>
+                <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:pluginsmode5"/>
             </label>
         </td>
     </tr>
@@ -51,186 +51,198 @@
 <!-- summary -->
 
 <f:if condition="{display} == 5">
-    <table cellspacing="1" cellpadding="2" border="0" class="tx_sv_reportlist typo3-dblist">
-        <tr class="t3-row-header">
-            <td colspan="4">
-                <f:translate key="LLL:EXT:additional_reports/locallang.xml:pluginsmode5"/>
-            </td>
+    <table cellspacing="1" cellpadding="2" border="0" class="table table-striped table-hover">
+        <thead>
+        <tr>
+            <th colspan="4">
+                <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:pluginsmode5"/>
+            </th>
         </tr>
-        <tr class="c-headLine">
-            <td class="cell">&nbsp;</td>
-            <td class="cell">
-                <f:translate key="LLL:EXT:additional_reports/locallang.xml:content"/>
-            </td>
-            <td class="cell">
-                <f:translate key="LLL:EXT:additional_reports/locallang.xml:references"/>
-            </td>
-            <td class="cell">%</td>
+        <tr>
+            <th>&nbsp;</th>
+            <th>
+                <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:content"/>
+            </th>
+            <th>
+                <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:references"/>
+            </th>
+            <th>%</th>
         </tr>
+        </thead>
+        <tbody>
         <f:for each="{items}" as="item">
-            <tr class="db_list_normal">
+            <tr>
                 <td class="col-icon"><img src="{item.iconext}"/></td>
-                <td class="cell">{item.content}</td>
-                <td class="cell">{item.references}</td>
-                <td class="cell">{item.pour}%</td>
+                <td>{item.content}</td>
+                <td>{item.references}</td>
+                <td>{item.pourc}%</td>
             </tr>
         </f:for>
+        </tbody>
     </table>
 </f:if>
 
 <!-- ctype -->
 
 <ar:inList item="{display}" list="3,7">
-    <ar:raw>{filtersCat}</ar:raw>
+    <f:format.raw>{filtersCat}</f:format.raw>
     <ar:widget.paginateQuery query="{items}" as="paginatedItems" configuration="{itemsPerPage: extconf.itemsPerPage, insertAbove: 1, insertBelow: 1, pagesAfter: 1, pagesBefore: 1, forceFirstPrevNextlast: 1}">
-        <table cellspacing="1" cellpadding="2" border="0" class="tx_sv_reportlist typo3-dblist">
-            <tr class="t3-row-header">
-                <td colspan="15">
-                    <f:translate key="LLL:EXT:additional_reports/locallang.xml:pluginsmode3"/>
-                </td>
+        <table cellspacing="1" cellpadding="2" border="0" class="table table-striped table-hover">
+            <thead>
+            <tr>
+                <th colspan="15">
+                    <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:pluginsmode3"/>
+                </th>
             </tr>
-            <tr class="c-headLine">
-                <td class="cell">&nbsp;</td>
-                <td class="cell">
-                    <f:translate key="LLL:EXT:additional_reports/locallang.xml:ctype"/>
-                </td>
-                <td class="cell">
-                    <f:translate key="LLL:EXT:additional_reports/locallang.xml:domain"/>
-                </td>
-                <td class="cell">
-                    <f:translate key="LLL:EXT:additional_reports/locallang.xml:pid"/>
-                </td>
-                <td class="cell">
-                    <f:translate key="LLL:EXT:additional_reports/locallang.xml:uid"/>
-                </td>
-                <td class="cell">
-                    <f:translate key="LLL:EXT:additional_reports/locallang.xml:pagetitle"/>
-                </td>
-                <td class="cell">DB mode</td>
+            <tr>
+                <th>&nbsp;</th>
+                <th>
+                    <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:ctype"/>
+                </th>
+                <th>
+                    <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:domain"/>
+                </th>
+                <th>
+                    <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:pid"/>
+                </th>
+                <th>
+                    <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:uid"/>
+                </th>
+                <th>
+                    <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:pagetitle"/>
+                </th>
+                <th>DB mode</th>
                 <f:if condition="{tvused}">
                     <f:then>
-                        <td class="cell">Page TV</td>
-                        <td class="cell">
-                            <f:translate key="LLL:EXT:additional_reports/locallang.xml:tvused"/>
-                        </td>
+                        <th>Page TV</th>
+                        <th>
+                            <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:tvused"/>
+                        </th>
                     </f:then>
                     <f:else>
-                        <td class="cell">Page</td>
+                        <th>Page</th>
                     </f:else>
                 </f:if>
-                <td class="cell">
-                    <f:translate key="LLL:EXT:additional_reports/locallang.xml:preview"/>
-                </td>
+                <th>
+                    <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:preview"/>
+                </th>
             </tr>
+            </thead>
+            <tbody>
             <f:for each="{paginatedItems}" as="item">
                 <ar:contentInfos item="{item}" as="item" ctype="TRUE"/>
-                <tr class="db_list_normal">
+                <tr>
                     <td class="col-icon"><img src="{item.iconext}"/></td>
-                    <td class="cell">{item.ctype}</td>
-                    <td class="cell">
-                        <ar:raw>{item.domain}</ar:raw>
+                    <td>{item.ctype}</td>
+                    <td>
+                        <f:format.raw>{item.domain}</f:format.raw>
                     </td>
-                    <td class="cell">
-                        <ar:raw>{item.pid}</ar:raw>
+                    <td>
+                        <f:format.raw>{item.pid}</f:format.raw>
                     </td>
-                    <td class="cell">
-                        <ar:raw>{item.uid}</ar:raw>
+                    <td>
+                        <f:format.raw>{item.uid}</f:format.raw>
                     </td>
-                    <td class="cell">{item.pagetitle}</td>
-                    <td class="cell">
-                        <ar:raw>{item.db}</ar:raw>
+                    <td>{item.pagetitle}</td>
+                    <td>
+                        <f:format.raw>{item.db}</f:format.raw>
                     </td>
-                    <td class="cell">
-                        <ar:raw>{item.page}</ar:raw>
+                    <td>
+                        <f:format.raw>{item.page}</f:format.raw>
                     </td>
                     <f:if condition="{tvused}">
-                        <td class="cell">{item.usedtv}</td>
+                        <td>{item.usedtv}</td>
                     </f:if>
-                    <td class="cell">
-                        <ar:raw>{item.preview}</ar:raw>
+                    <td>
+                        <f:format.raw>{item.preview}</f:format.raw>
                     </td>
                 </tr>
             </f:for>
+            </tbody>
         </table>
     </ar:widget.paginateQuery>
 </ar:inList>
 
 <!-- plugins -->
 <ar:inList item="{display}" list="4,6">
-    <ar:raw>{filtersCat}</ar:raw>
+    <f:format.raw>{filtersCat}</f:format.raw>
     <ar:widget.paginateQuery query="{items}" as="paginatedItems" configuration="{itemsPerPage: extconf.itemsPerPage, insertAbove: 1, insertBelow: 1, pagesAfter: 1, pagesBefore: 1, forceFirstPrevNextlast: 1}">
-        <table cellspacing="1" cellpadding="2" border="0" class="tx_sv_reportlist typo3-dblist">
-            <tr class="t3-row-header">
-                <td colspan="15">
-                    <f:translate key="LLL:EXT:additional_reports/locallang.xml:pluginsmode4"/>
-                </td>
+        <table cellspacing="1" cellpadding="2" border="0" class="table table-striped table-hover">
+           <thead>
+            <tr>
+                <th colspan="15">
+                    <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:pluginsmode4"/>
+                </th>
             </tr>
-            <tr class="c-headLine">
-                <td class="cell">&nbsp;</td>
-                <td class="cell">
-                    <f:translate key="LLL:EXT:additional_reports/locallang.xml:extension"/>
-                </td>
-                <td class="cell">
-                    <f:translate key="LLL:EXT:additional_reports/locallang.xml:plugin"/>
-                </td>
-                <td class="cell">
-                    <f:translate key="LLL:EXT:additional_reports/locallang.xml:domain"/>
-                </td>
-                <td class="cell">
-                    <f:translate key="LLL:EXT:additional_reports/locallang.xml:pid"/>
-                </td>
-                <td class="cell">
-                    <f:translate key="LLL:EXT:additional_reports/locallang.xml:uid"/>
-                </td>
-                <td class="cell">
-                    <f:translate key="LLL:EXT:additional_reports/locallang.xml:pagetitle"/>
-                </td>
-                <td class="cell">DB mode</td>
+            <tr>
+                <th>&nbsp;</th>
+                <th>
+                    <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:extension"/>
+                </th>
+                <th>
+                    <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:plugin"/>
+                </th>
+                <th>
+                    <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:domain"/>
+                </th>
+                <th>
+                    <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:pid"/>
+                </th>
+                <th>
+                    <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:uid"/>
+                </th>
+                <th>
+                    <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:pagetitle"/>
+                </th>
+                <th>DB mode</th>
                 <f:if condition="{tvused}">
                     <f:then>
-                        <td class="cell">Page TV</td>
-                        <td class="cell">
-                            <f:translate key="LLL:EXT:additional_reports/locallang.xml:tvused"/>
-                        </td>
+                        <th>Page TV</th>
+                        <th>
+                            <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:tvused"/>
+                        </th>
                     </f:then>
                     <f:else>
-                        <td class="cell">Page</td>
+                        <th>Page</th>
                     </f:else>
                 </f:if>
-                <td class="cell">
-                    <f:translate key="LLL:EXT:additional_reports/locallang.xml:preview"/>
-                </td>
+                <th>
+                    <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:preview"/>
+                </th>
             </tr>
+           </thead>
+            <tbody>
             <f:for each="{paginatedItems}" as="item">
                 <ar:contentInfos item="{item}" as="item" plugin="TRUE"/>
-                <tr class="db_list_normal">
+                <tr>
                     <td class="col-icon"><img src="{item.iconext}"/></td>
-                    <td class="cell">{item.extension}</td>
-                    <td class="cell">{item.plugin}</td>
-                    <td class="cell">
-                        <ar:raw>{item.domain}</ar:raw>
+                    <td>{item.extension}</td>
+                    <td>{item.plugin}</td>
+                    <td>
+                        <f:format.raw>{item.domain}</f:format.raw>
                     </td>
-                    <td class="cell">
-                        <ar:raw>{item.pid}</ar:raw>
+                    <td>
+                        <f:format.raw>{item.pid}</f:format.raw>
                     </td>
-                    <td class="cell">
-                        <ar:raw>{item.uid}</ar:raw>
+                    <td>
+                        <f:format.raw>{item.uid}</f:format.raw>
                     </td>
-                    <td class="cell">{item.pagetitle}</td>
-                    <td class="cell">
-                        <ar:raw>{item.db}</ar:raw>
+                    <td>{item.pagetitle}</td>
+                    <td>
+                        <f:format.raw>{item.db}</f:format.raw>
                     </td>
-                    <td class="cell">
-                        <ar:raw>{item.page}</ar:raw>
+                    <td>
+                        <f:format.raw>{item.page}</f:format.raw>
                     </td>
                     <f:if condition="{tvused}">
-                        <td class="cell">{item.usedtv}</td>
+                        <td>{item.usedtv}</td>
                     </f:if>
-                    <td class="cell">
-                        <ar:raw>{item.preview}</ar:raw>
+                    <td>
+                        <f:format.raw>{item.preview}</f:format.raw>
                     </td>
                 </tr>
             </f:for>
+            </tbody>
         </table>
     </ar:widget.paginateQuery>
 </ar:inList>

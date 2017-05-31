@@ -14,7 +14,7 @@ class MainTest extends Tx_Phpunit_TestCase {
 	 * @test
 	 */
 	public function getCss() {
-		$str = tx_additionalreports_main::getCss();
+		$str = \Sng\AdditionalReports\Main::getCss();
 		$this->assertTrue(!empty($str));
 	}
 
@@ -22,7 +22,7 @@ class MainTest extends Tx_Phpunit_TestCase {
 	 * @test
 	 */
 	public function getLl() {
-//		$str = tx_additionalreports_main::getLl('extensions_extensions');
+//		$str = \Sng\AdditionalReports\Main::getLl('extensions_extensions');
 //		$this->assertTrue(!empty($str));
 	}
 
@@ -30,7 +30,7 @@ class MainTest extends Tx_Phpunit_TestCase {
 	 * @test
 	 */
 	public function displayXclass() {
-		$str = tx_additionalreports_main::displayXclass();
+		$str = \Sng\AdditionalReports\Main::displayXclass();
 		$this->assertTrue(!empty($str));
 	}
 
@@ -38,7 +38,7 @@ class MainTest extends Tx_Phpunit_TestCase {
 	 * @test
 	 */
 	public function displayAjax() {
-		$str = tx_additionalreports_main::displayAjax();
+		$str = \Sng\AdditionalReports\Main::displayAjax();
 		$this->assertTrue(!empty($str));
 	}
 
@@ -46,7 +46,7 @@ class MainTest extends Tx_Phpunit_TestCase {
 	 * @test
 	 */
 	public function displayCliKeys() {
-		$str = tx_additionalreports_main::displayCliKeys();
+		$str = \Sng\AdditionalReports\Main::displayCliKeys();
 		$this->assertTrue(!empty($str));
 	}
 
@@ -54,7 +54,7 @@ class MainTest extends Tx_Phpunit_TestCase {
 	 * @test
 	 */
 	public function displayEid() {
-		$str = tx_additionalreports_main::displayEid();
+		$str = \Sng\AdditionalReports\Main::displayEid();
 		$this->assertTrue(!empty($str));
 	}
 
@@ -62,7 +62,7 @@ class MainTest extends Tx_Phpunit_TestCase {
 	 * @test
 	 */
 	public function displayExtDirect() {
-		$str = tx_additionalreports_main::displayExtDirect();
+		$str = \Sng\AdditionalReports\Main::displayExtDirect();
 		$this->assertTrue(!empty($str));
 	}
 
@@ -70,7 +70,7 @@ class MainTest extends Tx_Phpunit_TestCase {
 	 * @test
 	 */
 	public function displayExtensions() {
-		$str = tx_additionalreports_main::displayExtensions();
+		$str = \Sng\AdditionalReports\Main::displayExtensions();
 		$this->assertTrue(!empty($str));
 	}
 
@@ -78,7 +78,7 @@ class MainTest extends Tx_Phpunit_TestCase {
 	 * @test
 	 */
 	public function displayHooks() {
-		$str = tx_additionalreports_main::displayHooks();
+		$str = \Sng\AdditionalReports\Main::displayHooks();
 		$this->assertTrue(!empty($str));
 	}
 
@@ -86,7 +86,7 @@ class MainTest extends Tx_Phpunit_TestCase {
 	 * @test
 	 */
 	public function displayStatus() {
-		$str = tx_additionalreports_main::displayStatus();
+		$str = \Sng\AdditionalReports\Main::displayStatus();
 		$this->assertTrue(!empty($str));
 	}
 
@@ -94,25 +94,25 @@ class MainTest extends Tx_Phpunit_TestCase {
 	 * @test
 	 */
 	public function displayPlugins() {
-		$str = tx_additionalreports_main::displayPlugins();
+		$str = \Sng\AdditionalReports\Main::displayPlugins();
 		$this->assertTrue(!empty($str));
 		$_GET['display'] = 1;
-		$str = tx_additionalreports_main::displayPlugins();
+		$str = \Sng\AdditionalReports\Main::displayPlugins();
 		$this->assertTrue(!empty($str));
 		$_GET['display'] = 3;
-		$str = tx_additionalreports_main::displayPlugins();
+		$str = \Sng\AdditionalReports\Main::displayPlugins();
 		$this->assertTrue(!empty($str));
 		$_GET['display'] = 4;
-		$str = tx_additionalreports_main::displayPlugins();
+		$str = \Sng\AdditionalReports\Main::displayPlugins();
 		$this->assertTrue(!empty($str));
 		$_GET['display'] = 5;
-		$str = tx_additionalreports_main::displayPlugins();
+		$str = \Sng\AdditionalReports\Main::displayPlugins();
 		$this->assertTrue(!empty($str));
 		$_GET['display'] = 6;
-		$str = tx_additionalreports_main::displayPlugins();
+		$str = \Sng\AdditionalReports\Main::displayPlugins();
 		$this->assertTrue(!empty($str));
 		$_GET['display'] = 7;
-		$str = tx_additionalreports_main::displayPlugins();
+		$str = \Sng\AdditionalReports\Main::displayPlugins();
 		$this->assertTrue(!empty($str));
 	}
 
@@ -120,7 +120,7 @@ class MainTest extends Tx_Phpunit_TestCase {
 	 * @test
 	 */
 	public function displayRealUrlErrors() {
-		$str = tx_additionalreports_main::displayRealUrlErrors();
+		$str = \Sng\AdditionalReports\Main::displayRealUrlErrors();
 		$this->assertTrue(!empty($str));
 	}
 
@@ -128,7 +128,7 @@ class MainTest extends Tx_Phpunit_TestCase {
 	 * @test
 	 */
 	public function displayLogErrors() {
-		$str = tx_additionalreports_main::displayLogErrors();
+		$str = \Sng\AdditionalReports\Main::displayLogErrors();
 		$this->assertTrue(!empty($str));
 	}
 
@@ -136,7 +136,7 @@ class MainTest extends Tx_Phpunit_TestCase {
 	 * @test
 	 */
 	public function displayWebsitesConf() {
-		$str = tx_additionalreports_main::displayWebsitesConf();
+		$str = \Sng\AdditionalReports\Main::displayWebsitesConf();
 		$this->assertTrue(!empty($str));
 	}
 
@@ -144,7 +144,7 @@ class MainTest extends Tx_Phpunit_TestCase {
 	 * @test
 	 */
 	public function displayDbCheck() {
-		$str = tx_additionalreports_main::displayDbCheck();
+		$str = \Sng\AdditionalReports\Main::displayDbCheck();
 		$this->assertTrue(!empty($str));
 	}
 }

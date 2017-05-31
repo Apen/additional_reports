@@ -1,4 +1,7 @@
 <?php
+
+namespace Sng\AdditionalReports\ViewHelpers;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -55,7 +58,8 @@
  * @package    TYPO3
  * @subpackage t3devapi
  */
-class Tx_AdditionalReports_ViewHelpers_RawViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper
+
+class RawViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper
 {
 
     /**
