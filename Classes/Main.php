@@ -45,10 +45,9 @@ class Main
      */
     public static function displayXclass()
     {
-        $xclassList = array(
-            'BE' => $GLOBALS['TYPO3_CONF_VARS']['BE']['XCLASS'],
-            'FE' => $GLOBALS['TYPO3_CONF_VARS']['FE']['XCLASS']
-        );
+        $xclassList = array();
+
+        $xclassList['objects'] = $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'];
 
         $xclassList['autoload'] = \Sng\AdditionalReports\Utility::getAutoloadXlass();
 
@@ -420,9 +419,7 @@ class Main
             $extensions = array();
             $packages = include(PATH_site . 'typo3conf/PackageStates.php');
             foreach ($packages['packages'] as $extensionKey => $package) {
-                if ($package['state'] === 'active') {
-                    $extensions[] = $extensionKey;
-                }
+                $extensions[] = $extensionKey;
             }
         }
 
