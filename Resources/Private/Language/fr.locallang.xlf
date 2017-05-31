@@ -28,13 +28,13 @@
 			<source>A plugin/ctype can be also called in typoscript, typoscript file, php file...</source>
 			<target>Un plugin/ctype peut aussi être appelé en typoscript, fichier typoscript, fichier php...</target>
 		</trans-unit>
-		<trans-unit id="clikeys_description" approved="yes">
-			<source>List of all the cliKeys with informations and status for each of them.</source>
-			<target>Liste de tous les cliKeys avec des informations pour chacun.</target>
+		<trans-unit id="commandcontrollers_description" approved="yes">
+			<source>List of all the CommandControllers.  Execute "typo3/cli_dispatch.phpsh extbase help" to list them.</source>
+			<target>Liste de tous les CommandControllers.  Executez "typo3/cli_dispatch.phpsh extbase help" pour les lister.</target>
 		</trans-unit>
-		<trans-unit id="clikeys_title" approved="yes">
-			<source>Additional reports - cliKeys</source>
-			<target>Additional reports - cliKeys</target>
+		<trans-unit id="commandcontrollers_title" approved="yes">
+			<source>Additional reports - CommandControllers</source>
+			<target>Additional reports - CommandControllers</target>
 		</trans-unit>
 		<trans-unit id="comparelast" approved="yes">
 			<source>Compare with last version</source>

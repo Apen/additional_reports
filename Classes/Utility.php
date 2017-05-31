@@ -33,7 +33,7 @@ class Utility
     {
         $reports = [
             ['Eid', 'eid'],
-            ['CliKeys', 'clikeys'],
+            ['CommandControllers', 'commandcontrollers'],
             ['Plugins', 'plugins'],
             ['Xclass', 'xclass'],
             ['Hooks', 'hooks'],
