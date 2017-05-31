@@ -17,7 +17,7 @@ namespace Sng\AdditionalReports\Reports;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-class CliKeys extends \Sng\AdditionalReports\Reports\AbstractReport implements \TYPO3\CMS\Reports\ReportInterface
+class CommandControllers extends \Sng\AdditionalReports\Reports\AbstractReport implements \TYPO3\CMS\Reports\ReportInterface
 {
 
     /**
@@ -27,7 +27,7 @@ class CliKeys extends \Sng\AdditionalReports\Reports\AbstractReport implements \
      */
     public function getReport()
     {
-        $content = \Sng\AdditionalReports\Main::displayCliKeys();
+        $content = \Sng\AdditionalReports\Main::displayCommandControllers();
         return $content;
     }
 

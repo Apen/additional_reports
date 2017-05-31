@@ -77,33 +77,16 @@ class Main
     }
 
     /**
-     * Generate the cli keys report
+     * Generate the CommandControllers report
      *
      * @return string HTML code
      */
-    public static function displayCliKeys()
+    public static function displayCommandControllers()
     {
-        $items = $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['GLOBAL']['cliKeys'];
-        $clikeys = array();
-
-        if (count($items) > 0) {
-            foreach ($items as $itemKey => $itemValue) {
-                if (is_string($itemValue[0])) {
-                    preg_match('/EXT:(.*?)\//', $itemValue[0], $ext);
-                    $clikeys[] = array(
-                        'icon'      => \Sng\AdditionalReports\Utility::getExtIcon($ext[1]),
-                        'extension' => $ext[1],
-                        'name'      => $itemKey,
-                        'path'      => $itemValue[0],
-                        'user'      => $itemValue[1]
-                    );
-                }
-            }
-        }
-
+        $items = $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['extbase']['commandControllers'];
         $view = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Fluid\\View\\StandaloneView');
-        $view->setTemplatePathAndFilename(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('additional_reports') . 'Resources/Private/Templates/clikeys-fluid.html');
-        $view->assign('clikeys', $clikeys);
+        $view->setTemplatePathAndFilename(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('additional_reports') . 'Resources/Private/Templates/commandcontrollers-fluid.html');
+        $view->assign('items', $items);
         return $view->render();
     }
 
