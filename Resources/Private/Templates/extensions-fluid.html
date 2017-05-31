@@ -3,22 +3,13 @@
 <f:be.container loadJQuery="true">
     <script type="text/javascript">
         Shadowbox.init({displayNav: true, displayCounter: false, overlayOpacity: 0.8});
-        $.ajax({
-            url: TYPO3.settings.ajaxUrls['compareFiles'],
-            method: 'post',
-            data: {"data": data},
-            dataType: 'json',
-            success: function (response) {
-                console.log(response);
-            }
-        });
     </script>
 
     <f:if condition="{listExtensionsTer}">
         <table cellspacing="1" cellpadding="2" border="0" class="table table-striped table-hover">
             <thead>
             <tr>
-                <th colspan="13">
+                <th colspan="9">
                     <f:count subject="{listExtensionsTer}"/>
                     <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:extensions_ter"/>
                 </th>
@@ -80,7 +71,7 @@
         <table cellspacing="1" cellpadding="2" border="0" class="table table-striped table-hover">
             <thead>
             <tr>
-                <th colspan="15">
+                <th colspan="6">
                     <f:count subject="{listExtensionsDev}"/>
                     <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:extensions_dev"/>
                 </th>
@@ -126,7 +117,7 @@
         <table cellspacing="1" cellpadding="2" border="0" class="table table-striped table-hover">
             <thead>
             <tr>
-                <th colspan="15">
+                <th colspan="5">
                     <f:count subject="{listExtensionsUnloaded}"/>
                     <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:extensions_unloaded"/>
                 </th>
