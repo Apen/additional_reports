@@ -1071,6 +1071,8 @@ class Utility
         $pluginsList = self::getAllDifferentPlugins($where);
         $filterCat = '';
 
+        if (!is_array($pluginsList)) return;
+
         if ($getFiltersCat == 'all') {
             $filterCat .= '<option value="all" selected="selected">' . $GLOBALS['LANG']->getLL('all') . '</option>';
         } else {
@@ -1109,7 +1111,7 @@ class Utility
             'tt_content,pages',
             'tt_content.pid=pages.uid AND pages.pid>=0 AND tt_content.deleted=0 AND pages.deleted=0 ' . $where . 'AND tt_content.CType<>\'list\'',
             '',
-            'tt_content.list_type'
+            'tt_content.CType'
         );
     }
 
@@ -1125,6 +1127,8 @@ class Utility
         $getFiltersCat = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('filtersCat');
         $pluginsList = self::getAllDifferentCtypes($where);
         $filterCat = '';
+
+        if (!is_array($pluginsList)) return;
 
         if ($getFiltersCat == 'all') {
             $filterCat .= '<option value="all" selected="selected">' . $GLOBALS['LANG']->getLL('all') . '</option>';
