@@ -1,8 +1,16 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-    "http://www.w3.org/TR/html4/loose.dtd">
+        "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
     <title>additional_reports : Compare files</title>
+    <style>
+        del {
+            background-color: #FDD;
+        }
+        ins {
+            background-color: #DFD;
+        }
+    </style>
 </head>
 <body style="background:white;">
 <?php
@@ -37,7 +45,7 @@ switch ($mode) {
             $currentFileContent = \TYPO3\CMS\Core\Utility\GeneralUtility::getURL($realPathExt . '/' . $filePath);
             if ($file['content_md5'] !== md5($currentFileContent)) {
                 $diff++;
-                echo '<h1>' . $filePath . '</h1>';
+                echo '<h2>' . $filePath . '</h2>';
                 t3Diff($currentFileContent, $file['content']);
             }
         }
@@ -53,6 +61,7 @@ function t3Diff($file1, $file2)
 {
     $diff = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Utility\\DiffUtility');
     if (version_compare(TYPO3_version, '7.6.0', '>=')) {
+        $diff->stripTags = false;
         $sourcesDiff = $diff->makeDiffDisplay($file1, $file2);
     } else {
         $diff->diffOptions = '-bu';
@@ -67,7 +76,7 @@ function printT3Diff($sourcesDiff)
     $out .= '<tr><td style="background-color: #FDD;"><strong>Local file</strong></td></tr>';
     $out .= '<tr><td style="background-color: #DFD;"><strong>TER file</strong></td></tr>';
     if (version_compare(TYPO3_version, '7.6.0', '>=')) {
-        $out .= $sourcesDiff;
+        $out = $out . $sourcesDiff;
     } else {
         unset($sourcesDiff[0]);
         unset($sourcesDiff[1]);
