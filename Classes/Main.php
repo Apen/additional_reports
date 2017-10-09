@@ -228,6 +228,11 @@ class Main
         $routeIdentifier = 'additional_reports_compareFiles';
         $uri = (string)$uriBuilder->buildUriFromRoute($routeIdentifier, array());
 
+        // Bugfix for wrong CompareUrl in case of TYPO3 is installed in a subdirectory
+        if (strpos($uri, 'typo3/index.php') > 0) {
+            $uri = substr($uri, strpos($uri, 'typo3'));
+        }
+
         $compareUrl .= $uri;
         $compareUrl .= '&extKey=' . $extKey . '&mode=compareExtension&extVersion=' . $itemValue['EM_CONF']['version'];
         $compareLabem = $extKey . ' : ' . $itemValue['EM_CONF']['version'] . ' <--> TER ' . $itemValue['EM_CONF']['version'];
