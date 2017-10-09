@@ -230,7 +230,7 @@ class Main
 
         // Bugfix for wrong CompareUrl in case of TYPO3 is installed in a subdirectory
         if (strpos($uri, 'typo3/index.php') > 0) {
-            $uri = substr($uri, strpos($uri, 'typo3'));
+            $uri = substr($uri, strpos($uri, 'typo3/index.php'));
         }
 
         $compareUrl .= $uri;
