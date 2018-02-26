@@ -38,7 +38,6 @@ class Utility
             ['Xclass', 'xclass'],
             ['Hooks', 'hooks'],
             ['Status', 'status'],
-            ['Ajax', 'ajax'],
             ['LogErrors', 'logerrors'],
             ['WebsiteConf', 'websitesconf'],
             ['DbCheck', 'dbcheck'],
