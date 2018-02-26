@@ -59,23 +59,6 @@ class Main
     }
 
     /**
-     * Generate the ajax report
-     *
-     * @return string HTML code
-     */
-    public static function displayAjax()
-    {
-        $view = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Fluid\\View\\StandaloneView');
-        $view->setTemplatePathAndFilename(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('additional_reports') . 'Resources/Private/Templates/ajax-fluid.html');
-        $ajax = $GLOBALS['TYPO3_CONF_VARS']['BE']['AJAX'];
-        foreach ($ajax as $name => $path) {
-            $ajax[$name] = \Sng\AdditionalReports\Utility::viewArray($path);
-        }
-        $view->assign('ajax', $ajax);
-        return $view->render();
-    }
-
-    /**
      * Generate the CommandControllers report
      *
      * @return string HTML code
