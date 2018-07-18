@@ -387,7 +387,12 @@ class Main
         $content = \Sng\AdditionalReports\Utility::writeInformation(self::getLl('status_sitename'), $GLOBALS['TYPO3_CONF_VARS']['SYS']['sitename']);
         $content .= \Sng\AdditionalReports\Utility::writeInformation($headerVersions, $htmlVersions);
         $content .= \Sng\AdditionalReports\Utility::writeInformation(self::getLl('status_path'), PATH_site);
-        $content .= \Sng\AdditionalReports\Utility::writeInformation('TYPO3_db<br/>TYPO3_db_username<br/>TYPO3_db_host', TYPO3_db . '<br/>' . TYPO3_db_username . '<br/>' . TYPO3_db_host);
+        $content .= \Sng\AdditionalReports\Utility::writeInformation(
+            'TYPO3_db<br/>TYPO3_db_username<br/>TYPO3_db_host',
+            $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['dbname'] . '<br/>'
+            . $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['user'] . '<br/>'
+            . $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['host']
+        );
         if ($GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path'] != '') {
             $cmd = \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', '-version');
             exec($cmd, $ret);
@@ -521,7 +526,7 @@ class Main
         $view->assign('mysql', $content);
         $view->assign('tables', $tables);
         $view->assign('tablessize', round($size, 2));
-        $view->assign('typo3db', TYPO3_db);
+        $view->assign('typo3db', $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['dbname']);
 
         // Crontab
         exec('crontab -l', $crontab);
@@ -981,7 +986,7 @@ class Main
         $items = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
             'table_name',
             'information_schema.tables',
-            'table_schema = \'' . TYPO3_db . '\'', '', 'table_name'
+            'table_schema = \'' . $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['dbname'] . '\'', '', 'table_name'
         );
 
         $sqlStructure = '';
