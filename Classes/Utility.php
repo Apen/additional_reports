@@ -724,7 +724,7 @@ class Utility
     {
         $installClass = self::getInstallSqlClass();
         $instObj = new $installClass();
-        return $instObj->getFieldDefinitions_database(TYPO3_db);
+        return $instObj->getFieldDefinitions_database($GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['database']);
     }
 
     /**
