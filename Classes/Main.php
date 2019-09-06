@@ -30,7 +30,7 @@ class Main
      */
     public static function getCss()
     {
-        return \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('additional_reports') . 'Resources/Public/Css/tx_additionalreports.css';
+        return \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('additional_reports') . 'Resources/Public/Css/tx_additionalreports.css';
     }
 
     public static function getLl($key)
