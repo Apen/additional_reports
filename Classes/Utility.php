@@ -283,7 +283,7 @@ class Utility
                             // db infos
                             $fdFile = array();
                             $updateStatements = array();
-                            \Sng\AdditionalReports\Utility::getExtSqlUpdateStatements($currentExt, $dbSchema, $fdFile, $updateStatements);
+//                            \Sng\AdditionalReports\Utility::getExtSqlUpdateStatements($currentExt, $dbSchema, $fdFile, $updateStatements);
                             $currentExt['fdfile'] = $fdFile;
                             $currentExt['updatestatements'] = $updateStatements;
 
