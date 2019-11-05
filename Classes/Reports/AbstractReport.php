@@ -33,15 +33,13 @@ class AbstractReport
     /**
      * Constructor for class \Sng\AdditionalReports\Reports\AbstractReport
      *
-     * @param    object    Back-reference to the calling reports module
+     * @param object    Back-reference to the calling reports module
      */
     public function __construct($reportObject)
     {
         $this->reportObject = $reportObject;
-        // include Css files
         $this->setCss(\Sng\AdditionalReports\Main::getCss());
-        // include LL
-        $GLOBALS['LANG']->includeLLFile('EXT:additional_reports/locallang.xml');
+        $GLOBALS['LANG']->includeLLFile('EXT:additional_reports/Resources/Private/Language/locallang.xlf');
     }
 
     /**
@@ -55,7 +53,6 @@ class AbstractReport
         if (isset($this->reportObject->doc)) {
             $this->reportObject->doc->getPageRenderer()->addCssFile($path);
         }
-        //$doc = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Backend\\Template\\DocumentTemplate');
         $pageRenderer = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Page\PageRenderer::class);
         $pageRenderer->addCssFile($path);
     }
@@ -71,12 +68,10 @@ class AbstractReport
         if (isset($this->reportObject->doc)) {
             $this->reportObject->doc->getPageRenderer()->addJsFile($path);
         }
-        //$doc = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Backend\\Template\\DocumentTemplate');
         $pageRenderer = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Page\PageRenderer::class);
         $pageRenderer->addJsFile($path);
     }
 
 }
-
 
 ?>
