@@ -9,6 +9,7 @@ namespace Sng\AdditionalReports;
  * LICENSE.txt file that was distributed with this source code.
  */
 
+use TYPO3\CMS\Backend\Routing\UriBuilder;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -47,17 +48,13 @@ class Utility
      */
     public static function getBaseUrl()
     {
-        // since 6.0> extbase is using by reports module
-        $baseUrl = BackendUtility::getModuleUrl(\TYPO3\CMS\Core\Utility\GeneralUtility::_GET('M')) . '&';
         $parameters = array();
-        $vars = \TYPO3\CMS\Core\Utility\GeneralUtility::_GET('tx_reports_system_reportstxreportsm1');
-        //$parameters[] = 'M=system_ReportsTxreportsm1';
-        $parameters[] = 'tx_reports_system_reportstxreportsm1%5Bextension%5D=additional_reports';
-        $parameters[] = 'tx_reports_system_reportstxreportsm1%5Breport%5D=' . $vars['report'];
-        $parameters[] = 'tx_reports_system_reportstxreportsm1%5Baction%5D=detail';
-        $parameters[] = 'tx_reports_system_reportstxreportsm1%5Bcontroller%5D=Report';
-        //$parameters[] = 'moduleToken=' . \TYPO3\CMS\Core\FormProtection\FormProtectionFactory::get()->generateToken('moduleCall', 'system_ReportsTxreportsm1');
-        return $baseUrl . implode('&', $parameters);
+        $parameters[] = 'extension=additional_reports';
+        $parameters[] = 'action=detail';
+        $parameters[] = 'report=' . \TYPO3\CMS\Core\Utility\GeneralUtility::_GET('report');
+        $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
+        $url = $uriBuilder->buildUriFromRoute('system_reports', $parameters);
+        return (string)$url;
     }
 
     /**
@@ -1496,4 +1493,3 @@ class Utility
 
 }
 
-?>
