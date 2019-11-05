@@ -9,8 +9,10 @@ namespace Sng\AdditionalReports;
  * LICENSE.txt file that was distributed with this source code.
  */
 
+use Doctrine\DBAL\Driver\ResultStatement;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
+use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -1489,6 +1491,62 @@ class Utility
     public static function getLl($key)
     {
         return $GLOBALS['LANG']->sL('LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:' . $key);
+    }
+
+    /**
+     * Executes a select based on input query parts array
+     *
+     * @param array $queryParts Query parts array
+     * @return bool|\mysqli_result|object MySQLi result object / DBAL object
+     */
+    public static function exec_SELECT_queryArray($queryParts)
+    {
+        return self::exec_SELECTquery($queryParts['SELECT'], $queryParts['FROM'], $queryParts['WHERE'], $queryParts['GROUPBY'], $queryParts['ORDERBY'], $queryParts['LIMIT']);
+    }
+
+    /**
+     * Creates and executes a SELECT SQL-statement
+     * Using this function specifically allow us to handle the LIMIT feature independently of DB.
+     *
+     * @param string $select_fields List of fields to select from the table. This is what comes right after "SELECT ...". Required value.
+     * @param string $from_table    Table(s) from which to select. This is what comes right after "FROM ...". Required value.
+     * @param string $where_clause  Additional WHERE clauses put in the end of the query. NOTICE: You must escape values in this argument with $this->fullQuoteStr() yourself! DO NOT PUT IN GROUP BY, ORDER BY or LIMIT!
+     * @param string $groupBy       Optional GROUP BY field(s), if none, supply blank string.
+     * @param string $orderBy       Optional ORDER BY field(s), if none, supply blank string.
+     * @param string $limit         Optional LIMIT value ([begin,]max), if none, supply blank string.
+     * @return \Doctrine\DBAL\Driver\Statement
+     */
+    public static function exec_SELECTquery($select_fields, $from_table, $where_clause, $groupBy = '', $orderBy = '', $limit = '')
+    {
+        $query = self::SELECTquery($select_fields, $from_table, $where_clause, $groupBy, $orderBy, $limit);
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('additional_reports');
+        $res = $queryBuilder->getConnection()->executeQuery($query);
+        return $res;
+    }
+
+    /**
+     * Creates a SELECT SQL-statement
+     *
+     * @param string $select_fields See exec_SELECTquery()
+     * @param string $from_table    See exec_SELECTquery()
+     * @param string $where_clause  See exec_SELECTquery()
+     * @param string $groupBy       See exec_SELECTquery()
+     * @param string $orderBy       See exec_SELECTquery()
+     * @param string $limit         See exec_SELECTquery()
+     * @return string Full SQL query for SELECT
+     */
+    public static function SELECTquery($select_fields, $from_table, $where_clause, $groupBy = '', $orderBy = '', $limit = '')
+    {
+        // Table and fieldnames should be "SQL-injection-safe" when supplied to this function
+        // Build basic query
+        $query = 'SELECT ' . $select_fields . ' FROM ' . $from_table . ((string)$where_clause !== '' ? ' WHERE ' . $where_clause : '');
+        // Group by
+        $query .= (string)$groupBy !== '' ? ' GROUP BY ' . $groupBy : '';
+        // Order by
+        $query .= (string)$orderBy !== '' ? ' ORDER BY ' . $orderBy : '';
+        // Group by
+        $query .= (string)$limit !== '' ? ' LIMIT ' . $limit : '';
+        return $query;
     }
 
 }

@@ -1,3 +1,5 @@
+{namespace ar=Sng\AdditionalReports\ViewHelpers}
+
 <f:if condition="{configuration.insertAbove}">
     <f:render section="paginator" arguments="{pagination: pagination,configuration:configuration}"/>
 </f:if>
@@ -11,12 +13,18 @@
 <f:section name="linkFirst">
     <f:if condition="{noLink}">
         <f:then>
-            <img width="16" height="16" src="sysext/t3skin/icons/gfx/control_first_disabled.gif">
+            <li class="disabled" style="display:inline;">
+                <span>
+                    <ar:spriteManagerIcon iconName="actions-view-paging-first"/>
+                </span>
+            </li>
         </f:then>
         <f:else>
-            <f:widget.link arguments="{currentPage: 0}">
-                <img width="16" height="16" src="sysext/t3skin/icons/gfx/control_first.gif">
-            </f:widget.link>
+            <li style="display:inline;">
+                <f:widget.link arguments="{currentPage: 0}" addQueryStringMethod="GET,POST">
+                    <ar:spriteManagerIcon iconName="actions-view-paging-first"/>
+                </f:widget.link>
+            </li>
         </f:else>
     </f:if>
 </f:section>
@@ -24,12 +32,18 @@
 <f:section name="linkPrevious">
     <f:if condition="{noLink}">
         <f:then>
-            <img width="16" height="16" src="sysext/t3skin/icons/gfx/control_previous_disabled.gif">
+            <li class="disabled" style="display:inline;">
+                <span>
+                     <ar:spriteManagerIcon iconName="actions-view-paging-previous"/>
+                </span>
+            </li>
         </f:then>
         <f:else>
-            <f:widget.link arguments="{currentPage: pagination.previousPage}">
-                <img width="16" height="16" src="sysext/t3skin/icons/gfx/control_previous.gif">
-            </f:widget.link>
+            <li style="display:inline;">
+                <f:widget.link arguments="{currentPage: pagination.previousPage}" addQueryStringMethod="GET,POST">
+                    <ar:spriteManagerIcon iconName="actions-view-paging-previous"/>
+                </f:widget.link>
+            </li>
         </f:else>
     </f:if>
 </f:section>
@@ -37,12 +51,18 @@
 <f:section name="linkNext">
     <f:if condition="{noLink}">
         <f:then>
-            <img width="16" height="16" src="sysext/t3skin/icons/gfx/control_next_disabled.gif">
+            <li class="disabled" style="display:inline;">
+                <span>
+                    <ar:spriteManagerIcon iconName="actions-view-paging-next"/>
+                </span>
+            </li>
         </f:then>
         <f:else>
-            <f:widget.link arguments="{currentPage: pagination.nextPage}">
-                <img width="16" height="16" src="sysext/t3skin/icons/gfx/control_next.gif">
-            </f:widget.link>
+            <li style="display:inline;">
+                <f:widget.link arguments="{currentPage: pagination.nextPage}" addQueryStringMethod="GET,POST">
+                    <ar:spriteManagerIcon iconName="actions-view-paging-next"/>
+                </f:widget.link>
+            </li>
         </f:else>
     </f:if>
 </f:section>
@@ -50,12 +70,18 @@
 <f:section name="linkLast">
     <f:if condition="{noLink}">
         <f:then>
-            <img width="16" height="16" src="sysext/t3skin/icons/gfx/control_last_disabled.gif">
+            <li class="disabled" style="display:inline;">
+                <span>
+                    <ar:spriteManagerIcon iconName="actions-view-paging-last"/>
+                </span>
+            </li>
         </f:then>
         <f:else>
-            <f:widget.link arguments="{currentPage: pagination.numberOfPages}">
-                <img width="16" height="16" src="sysext/t3skin/icons/gfx/control_last.gif">
-            </f:widget.link>
+            <li style="display:inline;">
+                <f:widget.link arguments="{currentPage: pagination.numberOfPages}" addQueryStringMethod="GET,POST">
+                    <ar:spriteManagerIcon iconName="actions-view-paging-last"/>
+                </f:widget.link>
+            </li>
         </f:else>
     </f:if>
 </f:section>
