@@ -150,7 +150,7 @@
 			<source>List of all the hooks with the name and the path for each of them.</source>
 		</trans-unit>
 		<trans-unit id="hooks_extension">
-			<source>Extension hooks (experimental)</source>
+			<source>Extension hooks</source>
 		</trans-unit>
 		<trans-unit id="hooks_file">
 			<source>File or class</source>
