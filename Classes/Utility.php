@@ -1205,43 +1205,6 @@ class Utility
     }
 
     /**
-     * Return a php array of autoload classes
-     *
-     * @param string $identifier
-     * @return mixed|null
-     */
-    public static function getAutoloadXlassFile($identifier)
-    {
-        $file = PATH_site . 'typo3temp/Cache/Code/cache_phpcode/' . $identifier . '.php';
-        if (is_file($file)) {
-            return require($file);
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * Return all the XCLASS from autoload class
-     *
-     * @return array|null
-     */
-    public static function getAutoloadXlass()
-    {
-        $identifier = 'autoload_' . sha1(TYPO3_version . PATH_site . 'autoload');
-        $classes = self::getAutoloadXlassFile($identifier);
-        if ($classes === null) {
-            return null;
-        }
-        $xclass = array();
-        foreach ($classes as $class => $file) {
-            if ((substr($class, 0, 3) === 'ux_') && ($file !== null)) {
-                $xclass[$class] = $file;
-            }
-        }
-        return $xclass;
-    }
-
-    /**
      * Return an array with all versions infos
      *
      * @return array
