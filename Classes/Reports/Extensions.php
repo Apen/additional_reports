@@ -125,7 +125,7 @@ class Extensions extends \Sng\AdditionalReports\Reports\AbstractReport implement
         if (version_compare($itemValue['EM_CONF']['version'], $itemValue['lastversion']['version'], '<')) {
             $listExtensionsTerItem['versionlast'] = '<span style="color:green;font-weight:bold;">' . $itemValue['lastversion']['version'] . '&nbsp;(' . $itemValue['lastversion']['updatedate'] . ')</span>';
             $compareUrl = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_URL');
-            $compareUrl .= 'typo3/ajax.php?ajaxID=additional_reports::compareFiles';
+            $compareUrl .= $uri;
             $compareUrl .= '&extKey=' . $extKey . '&mode=compareExtension&extVersion=' . $itemValue['lastversion']['version'];
             $compareLabem = $extKey . ' : ' . $itemValue['EM_CONF']['version'] . ' <--> TER ' . $itemValue['lastversion']['version'];
             $js = 'Shadowbox.open({content:\'' . $compareUrl . '\',player:\'iframe\',title:\'' . $compareLabem . '\',height:600,width:800});';
@@ -182,7 +182,7 @@ class Extensions extends \Sng\AdditionalReports\Reports\AbstractReport implement
             $contentUl = '<div style="display:none;" id="' . $id . '"><ul>';
             foreach ($itemValue['affectedfiles'] as $affectedFile) {
                 $compareUrl = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_URL');
-                $compareUrl .= 'typo3/ajax.php?ajaxID=additional_reports::compareFiles';
+                $compareUrl .= $uri;
                 $compareUrl .= '&extKey=' . $extKey . '&extFile=' . $affectedFile . '&extVersion=' . $itemValue['EM_CONF']['version'];
                 $contentUl .= '<li><a rel="shadowbox;height=600;width=800;" href = "' . $compareUrl . '" target = "_blank"';
                 $contentUl .= 'title="' . $affectedFile . ' : ' . $extKey . ' ' . $itemValue['EM_CONF']['version'] . '" > ';
