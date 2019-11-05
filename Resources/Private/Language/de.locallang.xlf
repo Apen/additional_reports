@@ -135,8 +135,8 @@
 			<target>Auflistung aller Hooks mit Namen und Pfad</target>
 		</trans-unit>
 		<trans-unit id="hooks_extension" approved="yes">
-			<source>Extension hooks (experimental)</source>
-			<target>Hooks in Erweiterungen (Experimentell)</target>
+			<source>Extension hooks</source>
+			<target>Hooks in Erweiterungen</target>
 		</trans-unit>
 		<trans-unit id="hooks_file" approved="yes">
 			<source>File or class</source>

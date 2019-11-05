@@ -198,8 +198,8 @@
 			<target>Liste de tous les hooks avec des informations pour chacun.</target>
 		</trans-unit>
 		<trans-unit id="hooks_extension" approved="yes">
-			<source>Extension hooks (experimental)</source>
-			<target>Hooks d'extension (experimental)</target>
+			<source>Extension hooks</source>
+			<target>Hooks d'extension</target>
 		</trans-unit>
 		<trans-unit id="hooks_file" approved="yes">
 			<source>File or class</source>
