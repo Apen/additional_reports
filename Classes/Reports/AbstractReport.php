@@ -38,7 +38,7 @@ class AbstractReport
     public function __construct($reportObject)
     {
         $this->reportObject = $reportObject;
-        $this->setCss(\Sng\AdditionalReports\Main::getCss());
+        $this->setCss(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('additional_reports') . 'Resources/Public/Css/tx_additionalreports.css');
         $GLOBALS['LANG']->includeLLFile('EXT:additional_reports/Resources/Private/Language/locallang.xlf');
     }
 
