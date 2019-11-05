@@ -403,13 +403,13 @@ class Main
             }
         }
 
-        $itemsCount = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
+        $itemsCount = \Sng\AdditionalReports\Utility::exec_SELECTgetRows(
             'COUNT( tt_content.uid ) as "nb"', 'tt_content,pages',
             'tt_content.pid=pages.uid AND pages.pid>=0 AND tt_content.hidden=0 ' .
             'AND tt_content.deleted=0 AND pages.hidden=0 AND pages.deleted=0'
         );
 
-        $items = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
+        $items = \Sng\AdditionalReports\Utility::exec_SELECTgetRows(
             'tt_content.CType,tt_content.list_type,count(*) as "nb"',
             'tt_content,pages',
             'tt_content.pid=pages.uid AND pages.pid>=0 AND tt_content.hidden=0 ' .
@@ -558,7 +558,7 @@ class Main
         }
 
         // dump sql structure
-        $items = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
+        $items = \Sng\AdditionalReports\Utility::exec_SELECTgetRows(
             'table_name',
             'information_schema.tables',
             'table_schema = \'' . $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['dbname'] . '\'', '', 'table_name'
@@ -567,7 +567,7 @@ class Main
         $sqlStructure = '';
 
         foreach ($items as $table) {
-            $resSqlDump = $GLOBALS['TYPO3_DB']->sql_query('SHOW CREATE TABLE ' . $table['table_name']);
+            $resSqlDump = \Sng\AdditionalReports\Utility::sql_query('SHOW CREATE TABLE ' . $table['table_name']);
             $sqlDump = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($resSqlDump);
             $sqlStructure .= $sqlDump['Create Table'] . "\r\n\r\n";
             $GLOBALS['TYPO3_DB']->sql_free_result($resSqlDump);
@@ -580,24 +580,6 @@ class Main
         $view->setTemplatePathAndFilename(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('additional_reports') . 'Resources/Private/Templates/dbcheck-fluid.html');
         $view->assign('dbchecks', $dbchecks);
         return $view->render() . $content;
-    }
-
-    /**
-     * @return \TYPO3\CMS\Core\Database\Connection
-     */
-    protected static function getDatabaseConnection()
-    {
-        return \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Database\ConnectionPool::class)->getConnectionByName(\TYPO3\CMS\Core\Database\ConnectionPool::DEFAULT_CONNECTION_NAME);
-    }
-
-    /**
-     * @return \TYPO3\CMS\Core\Database\Query\QueryBuilder
-     */
-    protected static function getQueryBuilder()
-    {
-        return \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Database\ConnectionPool::class)
-            ->getConnectionByName(\TYPO3\CMS\Core\Database\ConnectionPool::DEFAULT_CONNECTION_NAME)
-            ->createQueryBuilder();
     }
 
 }

@@ -61,7 +61,7 @@ class Status extends \Sng\AdditionalReports\Reports\AbstractReport implements \T
         $content .= \Sng\AdditionalReports\Utility::writeInformation($headerVersions, $htmlVersions);
         $content .= \Sng\AdditionalReports\Utility::writeInformation(\Sng\AdditionalReports\Utility::getLl('status_path'), PATH_site);
         $content .= \Sng\AdditionalReports\Utility::writeInformation(
-            'TYPO3_db<br/>TYPO3_db_username<br/>TYPO3_db_host',
+            'dbname<br/>user<br/>host',
             $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['dbname'] . '<br/>'
             . $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['user'] . '<br/>'
             . $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['host']
@@ -74,7 +74,7 @@ class Status extends \Sng\AdditionalReports\Reports\AbstractReport implements \T
             );
         }
         $content .= \Sng\AdditionalReports\Utility::writeInformation('forceCharset', $GLOBALS['TYPO3_CONF_VARS']['BE']['forceCharset']);
-        $content .= \Sng\AdditionalReports\Utility::writeInformation('setDBinit', $GLOBALS['TYPO3_CONF_VARS']['SYS']['setDBinit']);
+        $content .= \Sng\AdditionalReports\Utility::writeInformation('DB/Connections/Default/initCommands', $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['initCommands']);
         $content .= \Sng\AdditionalReports\Utility::writeInformation('no_pconnect', $GLOBALS['TYPO3_CONF_VARS']['SYS']['no_pconnect']);
         $content .= \Sng\AdditionalReports\Utility::writeInformation('displayErrors', $GLOBALS['TYPO3_CONF_VARS']['SYS']['displayErrors']);
         $content .= \Sng\AdditionalReports\Utility::writeInformation('maxFileSize', $GLOBALS['TYPO3_CONF_VARS']['BE']['maxFileSize']);
@@ -152,13 +152,13 @@ class Status extends \Sng\AdditionalReports\Reports\AbstractReport implements \T
             $view->assign('apache', \Sng\AdditionalReports\Utility::getLl('noresults'));
         }
 
-        $connection = self::getDatabaseConnection();
+        $connection = \Sng\AdditionalReports\Utility::getDatabaseConnection();
         $connectionParams = $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections'][\TYPO3\CMS\Core\Database\ConnectionPool::DEFAULT_CONNECTION_NAME];
 
         // MySQL
         $content = \Sng\AdditionalReports\Utility::writeInformation('Version', $connection->getServerVersion());
 
-        $items = self::getQueryBuilder()
+        $items = \Sng\AdditionalReports\Utility::getQueryBuilder()
             ->select('default_character_set_name', 'default_collation_name')
             ->from('information_schema.schemata')
             ->where('schema_name = \'' . $connectionParams['dbname'] . '\'')
@@ -173,7 +173,7 @@ class Status extends \Sng\AdditionalReports\Reports\AbstractReport implements \T
         $content .= \Sng\AdditionalReports\Utility::writeInformation('character_set', \Sng\AdditionalReports\Utility::getMySqlCharacterSet());
 
         // TYPO3 database
-        $items = self::getQueryBuilder()
+        $items = \Sng\AdditionalReports\Utility::getQueryBuilder()
             ->select('table_name', 'engine', 'table_collation', 'table_rows')
             ->add('select', '((data_length+index_length)/1024/1024) as "size"', true)
             ->from('information_schema.tables')

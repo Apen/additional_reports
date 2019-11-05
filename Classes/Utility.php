@@ -262,7 +262,7 @@ class Utility
      */
     public static function checkExtensionUpdate($extInfo)
     {
-        $lastVersion = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'tx_extensionmanager_domain_model_extension', 'extension_key="' . $extInfo['extkey'] . '" AND current_version=1');
+        $lastVersion = \Sng\AdditionalReports\Utility::exec_SELECTgetRows('*', 'tx_extensionmanager_domain_model_extension', 'extension_key="' . $extInfo['extkey'] . '" AND current_version=1');
         if ($lastVersion) {
             $lastVersion[0]['updatedate'] = date('d/m/Y', $lastVersion[0]['last_updated']);
             return $lastVersion[0];
@@ -941,17 +941,17 @@ class Utility
     {
         $queryCache = '';
 
-        $res = $GLOBALS['TYPO3_DB']->sql_query('SHOW VARIABLES LIKE "%query_cache%";');
-        while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+        $res = \Sng\AdditionalReports\Utility::sql_query('SHOW VARIABLES LIKE "%query_cache%";');
+        while ($row = $res->fetch()) {
             $queryCache .= $row['Variable_name'] . ' : ' . $row['Value'] . '<br />';
         }
-        $GLOBALS['TYPO3_DB']->sql_free_result($res);
+        $res->closeCursor();
 
-        $res = $GLOBALS['TYPO3_DB']->sql_query('SHOW STATUS LIKE "%Qcache%";');
-        while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+        $res = \Sng\AdditionalReports\Utility::sql_query('SHOW STATUS LIKE "%Qcache%";');
+        while ($row = $res->fetch()) {
             $queryCache .= $row['Variable_name'] . ' : ' . $row['Value'] . '<br />';
         }
-        $GLOBALS['TYPO3_DB']->sql_free_result($res);
+        $res->closeCursor();
 
         return $queryCache;
     }
@@ -965,11 +965,11 @@ class Utility
     {
         $sqlEncoding = '';
 
-        $res = $GLOBALS['TYPO3_DB']->sql_query('SHOW VARIABLES LIKE "%character%";');
-        while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+        $res = \Sng\AdditionalReports\Utility::sql_query('SHOW VARIABLES LIKE "%character%";');
+        while ($row = $res->fetch()) {
             $sqlEncoding .= $row['Variable_name'] . ' : ' . $row['Value'] . '<br />';
         }
-        $GLOBALS['TYPO3_DB']->sql_free_result($res);
+        $res->closeCursor();
 
         return $sqlEncoding;
     }
@@ -1041,7 +1041,7 @@ class Utility
      */
     public static function getAllDifferentPlugins($where)
     {
-        return $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
+        return \Sng\AdditionalReports\Utility::exec_SELECTgetRows(
             'DISTINCT tt_content.list_type',
             'tt_content,pages',
             'tt_content.pid=pages.uid AND pages.pid>=0 AND tt_content.deleted=0 AND pages.deleted=0 ' . $where . 'AND tt_content.CType=\'list\' AND tt_content.list_type<>""',
@@ -1096,7 +1096,7 @@ class Utility
      */
     public static function getAllDifferentCtypes($where)
     {
-        return $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
+        return \Sng\AdditionalReports\Utility::exec_SELECTgetRows(
             'DISTINCT tt_content.CType',
             'tt_content,pages',
             'tt_content.pid=pages.uid AND pages.pid>=0 AND tt_content.deleted=0 AND pages.deleted=0 ' . $where . 'AND tt_content.CType<>\'list\'',
@@ -1162,7 +1162,7 @@ class Utility
         if ($returnQuery === true) {
             return $query;
         } else {
-            return $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
+            return \Sng\AdditionalReports\Utility::exec_SELECTgetRows(
                 $query['SELECT'],
                 $query['FROM'],
                 $query['WHERE'],
@@ -1192,7 +1192,7 @@ class Utility
         if ($returnQuery === true) {
             return $query;
         } else {
-            return $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
+            return \Sng\AdditionalReports\Utility::exec_SELECTgetRows(
                 $query['SELECT'],
                 $query['FROM'],
                 $query['WHERE'],
@@ -1537,7 +1537,18 @@ class Utility
     public static function exec_SELECTquery($select_fields, $from_table, $where_clause, $groupBy = '', $orderBy = '', $limit = '')
     {
         $query = self::SELECTquery($select_fields, $from_table, $where_clause, $groupBy, $orderBy, $limit);
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('additional_reports');
+        return self::sql_query($query);
+    }
+
+    /**
+     * Executes query
+     *
+     * @param string $query Query to execute
+     * @return \Doctrine\DBAL\Driver\ResultStatement
+     */
+    public static function sql_query($query)
+    {
+        $queryBuilder = self::getQueryBuilder();
         $res = $queryBuilder->getConnection()->executeQuery($query);
         return $res;
     }
@@ -1565,6 +1576,22 @@ class Utility
         // Group by
         $query .= (string)$limit !== '' ? ' LIMIT ' . $limit : '';
         return $query;
+    }
+
+    /**
+     * @return \TYPO3\CMS\Core\Database\Connection
+     */
+    public static function getDatabaseConnection()
+    {
+        return \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Database\ConnectionPool::class)->getConnectionByName(\TYPO3\CMS\Core\Database\ConnectionPool::DEFAULT_CONNECTION_NAME);
+    }
+
+    /**
+     * @return \TYPO3\CMS\Core\Database\Query\QueryBuilder
+     */
+    public static function getQueryBuilder()
+    {
+        return self::getDatabaseConnection()->createQueryBuilder();
     }
 
 }
