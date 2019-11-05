@@ -99,43 +99,20 @@ class Utility
         $markersExt['uid'] = $iconContent . ' ' . $itemValue['uid'];
         $markersExt['pagetitle'] = $itemValue['title'];
 
-        if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('templavoila') && class_exists('tx_templavoila_api')) {
+        $markersExt['usedtv'] = '';
+        $markersExt['usedtvclass'] = '';
 
-            $linkAtt = array('href' => '#', 'title' => \Sng\AdditionalReports\Utility::getLl('switch'), 'onclick' => \Sng\AdditionalReports\Utility::goToModuleList($itemValue['pid']));
-            $markersExt['db'] = \Sng\AdditionalReports\Utility::generateLink($linkAtt, \Sng\AdditionalReports\Utility::getIconWebList());
+        $linkAtt = array('href' => '#', 'title' => \Sng\AdditionalReports\Utility::getLl('switch'), 'onclick' => \Sng\AdditionalReports\Utility::goToModuleList($itemValue['pid']), 'class' => 'btn btn-default');
+        $markersExt['db'] = \Sng\AdditionalReports\Utility::generateLink($linkAtt, \Sng\AdditionalReports\Utility::getIconWebList());
 
-            $linkAtt = array('href' => \Sng\AdditionalReports\Utility::goToModuleList($itemValue['pid'], true), 'target' => '_blank', 'title' => \Sng\AdditionalReports\Utility::getLl('newwindow'));
-            $markersExt['db'] .= \Sng\AdditionalReports\Utility::generateLink($linkAtt, \Sng\AdditionalReports\Utility::getIconWebList());
+        $linkAtt = array('href' => \Sng\AdditionalReports\Utility::goToModuleList($itemValue['pid'], true), 'target' => '_blank', 'title' => \Sng\AdditionalReports\Utility::getLl('newwindow'), 'class' => 'btn btn-default');
+        $markersExt['db'] .= \Sng\AdditionalReports\Utility::generateLink($linkAtt, \Sng\AdditionalReports\Utility::getIconWebList());
 
-            $linkAtt = array('href' => '#', 'title' => \Sng\AdditionalReports\Utility::getLl('switch'), 'onclick' => \Sng\AdditionalReports\Utility::goToModulePageTv($itemValue['pid']));
-            $markersExt['page'] = \Sng\AdditionalReports\Utility::generateLink($linkAtt, \Sng\AdditionalReports\Utility::getIconWebPage());
+        $linkAtt = array('href' => '#', 'title' => \Sng\AdditionalReports\Utility::getLl('switch'), 'onclick' => \Sng\AdditionalReports\Utility::goToModulePage($itemValue['pid']), 'class' => 'btn btn-default');
+        $markersExt['page'] = \Sng\AdditionalReports\Utility::generateLink($linkAtt, \Sng\AdditionalReports\Utility::getIconWebPage());
 
-            $linkAtt = array('href' => \Sng\AdditionalReports\Utility::goToModulePageTv($itemValue['pid'], true), 'target' => '_blank', 'title' => \Sng\AdditionalReports\Utility::getLl('newwindow'));
-            $markersExt['page'] .= \Sng\AdditionalReports\Utility::generateLink($linkAtt, \Sng\AdditionalReports\Utility::getIconWebPage());
-
-            if (\Sng\AdditionalReports\Utility::isUsedInTv($itemValue['uid'], $itemValue['pid'])) {
-                $markersExt['usedtv'] = \Sng\AdditionalReports\Utility::getLl('yes');
-                $markersExt['usedtvclass'] = ' typo3-message message-ok';
-            } else {
-                $markersExt['usedtv'] = \Sng\AdditionalReports\Utility::getLl('no');
-                $markersExt['usedtvclass'] = ' typo3-message message-error';
-            }
-        } else {
-            $markersExt['usedtv'] = '';
-            $markersExt['usedtvclass'] = '';
-
-            $linkAtt = array('href' => '#', 'title' => \Sng\AdditionalReports\Utility::getLl('switch'), 'onclick' => \Sng\AdditionalReports\Utility::goToModuleList($itemValue['pid']), 'class' => 'btn btn-default');
-            $markersExt['db'] = \Sng\AdditionalReports\Utility::generateLink($linkAtt, \Sng\AdditionalReports\Utility::getIconWebList());
-
-            $linkAtt = array('href' => \Sng\AdditionalReports\Utility::goToModuleList($itemValue['pid'], true), 'target' => '_blank', 'title' => \Sng\AdditionalReports\Utility::getLl('newwindow'), 'class' => 'btn btn-default');
-            $markersExt['db'] .= \Sng\AdditionalReports\Utility::generateLink($linkAtt, \Sng\AdditionalReports\Utility::getIconWebList());
-
-            $linkAtt = array('href' => '#', 'title' => \Sng\AdditionalReports\Utility::getLl('switch'), 'onclick' => \Sng\AdditionalReports\Utility::goToModulePage($itemValue['pid']), 'class' => 'btn btn-default');
-            $markersExt['page'] = \Sng\AdditionalReports\Utility::generateLink($linkAtt, \Sng\AdditionalReports\Utility::getIconWebPage());
-
-            $linkAtt = array('href' => \Sng\AdditionalReports\Utility::goToModulePage($itemValue['pid'], true), 'target' => '_blank', 'title' => \Sng\AdditionalReports\Utility::getLl('newwindow'), 'class' => 'btn btn-default');
-            $markersExt['page'] .= \Sng\AdditionalReports\Utility::generateLink($linkAtt, \Sng\AdditionalReports\Utility::getIconWebPage());
-        }
+        $linkAtt = array('href' => \Sng\AdditionalReports\Utility::goToModulePage($itemValue['pid'], true), 'target' => '_blank', 'title' => \Sng\AdditionalReports\Utility::getLl('newwindow'), 'class' => 'btn btn-default');
+        $markersExt['page'] .= \Sng\AdditionalReports\Utility::generateLink($linkAtt, \Sng\AdditionalReports\Utility::getIconWebPage());
 
         $markersExt['preview'] = '<a target="_blank" class="btn btn-default" href="http://' . $domain . '/index.php?id=' . $itemValue['pid'] . '">';
         $markersExt['preview'] .= \Sng\AdditionalReports\Utility::getIconZoom();
@@ -194,26 +171,6 @@ class Utility
     }
 
     /**
-     * Check if a content is used by TemplaVoila
-     *
-     * @param int $uid
-     * @param int $pid
-     * @return bool
-     */
-    public static function isUsedInTv($uid, $pid)
-    {
-        $apiObj = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_templavoila_api', 'pages');
-        $rootElementRecord = \TYPO3\CMS\Backend\Utility\BackendUtility::getRecordWSOL('pages', $pid, '*');
-        $contentTreeData = $apiObj->getContentTree('pages', $rootElementRecord);
-        $usedUids = array_keys($contentTreeData['contentElementUsage']);
-        if (\TYPO3\CMS\Core\Utility\GeneralUtility::inList(implode(',', $usedUids), $uid)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
      * Returns an integer from a three part version number, eg '4.12.3' -> 4012003
      *
      * @param string $verNumberStr number on format x.x.x
@@ -255,11 +212,10 @@ class Utility
     /**
      * Gathers all extensions in $path
      *
-     * @param string $path     Absolute path to local, global or system extensions
-     * @param array  $dbSchema array with all the tables
+     * @param string $path Absolute path to local, global or system extensions
      * @return    array        "Returns" content by reference
      */
-    public static function getInstExtList($path, $dbSchema)
+    public static function getInstExtList($path)
     {
         $list = array();
         if (@is_dir($path)) {
@@ -279,11 +235,11 @@ class Utility
                             $currentExt['icon'] = \Sng\AdditionalReports\Utility::getExtIcon($extKey);
 
                             // db infos
-                            $fdFile = array();
-                            $updateStatements = array();
-//                            \Sng\AdditionalReports\Utility::getExtSqlUpdateStatements($currentExt, $dbSchema, $fdFile, $updateStatements);
-                            $currentExt['fdfile'] = $fdFile;
-                            $currentExt['updatestatements'] = $updateStatements;
+                            $fileContent = '';
+                            if (is_array($currentExt['files']) && in_array('ext_tables.sql', $currentExt['files'])) {
+                                $fileContent = \TYPO3\CMS\Core\Utility\GeneralUtility::getUrl(self::getExtPath($currentExt['extkey'], $currentExt['type']) . 'ext_tables.sql');
+                            }
+                            $currentExt['fdfile'] = $fileContent;
 
                             if ($currentExt['installed']) {
                                 if ($currentExt['lastversion']) {
@@ -455,7 +411,7 @@ class Utility
     /**
      * Get the HTTP icon path of an extension
      *
-     * @param string $extKey
+     * @param string $path
      * @return string
      */
     public static function getContentTypeIcon($path)
@@ -673,116 +629,6 @@ class Utility
     }
 
     /**
-     * Get the update statement of the database
-     *
-     * @return array
-     */
-    public static function getSqlUpdateStatements()
-    {
-        $tblFileContent = \TYPO3\CMS\Core\Utility\GeneralUtility::getUrl(PATH_typo3 . 'sysext/core/ext_tables.sql');
-
-        foreach ($GLOBALS['TYPO3_LOADED_EXT'] as $loadedExtConf) {
-            if (is_array($loadedExtConf) && $loadedExtConf['ext_tables.sql']) {
-                $tblFileContent .= chr(10) . chr(10) . chr(10) . chr(10) . \TYPO3\CMS\Core\Utility\GeneralUtility::getUrl($loadedExtConf['ext_tables.sql']);
-            }
-        }
-
-        if (class_exists('\TYPO3\CMS\Core\Category\CategoryRegistry') && version_compare(TYPO3_version, '7.6.0', '>=')) {
-            $tblFileContent .= \TYPO3\CMS\Core\Category\CategoryRegistry::getInstance()->getDatabaseTableDefinitions();
-            $tableDefinitions = \TYPO3\CMS\Core\Category\CategoryRegistry::getInstance()->addCategoryDatabaseSchemaToTablesDefinition(array());
-            $tblFileContent .= $tableDefinitions['sqlString '];
-            $objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager');
-            $cachingFrameworkDatabaseSchemaService = $objectManager->get('TYPO3\CMS\Core\Cache\DatabaseSchemaService');
-            $tableDefinitionsCache = $cachingFrameworkDatabaseSchemaService->addCachingFrameworkRequiredDatabaseSchemaForSqlExpectedSchemaService(array());
-            $tblFileContent .= implode(LF, $tableDefinitionsCache[0]);
-        } else {
-            $tblFileContent .= \TYPO3\CMS\Core\Cache\Cache::getDatabaseTableDefinitions();
-        }
-
-        $installClass = self::getInstallSqlClass();
-        $instObj = new $installClass();
-        $fdDb = self::getDatabaseSchema();
-
-        if ($tblFileContent) {
-            $fileContent = implode(chr(10), $instObj->getStatementArray($tblFileContent, 1, '^CREATE TABLE '));
-
-            // just support for old version
-            if (method_exists($installClass, 'getFieldDefinitions_fileContent') === true) {
-                $fdFile = $instObj->getFieldDefinitions_fileContent($fileContent);
-            } else {
-                $fdFile = $instObj->getFieldDefinitions_sqlContent($fileContent);
-            }
-
-            $diff = $instObj->getDatabaseExtra($fdFile, $fdDb);
-            $updateStatements = $instObj->getUpdateSuggestions($diff);
-            $diff = $instObj->getDatabaseExtra($fdDb, $fdFile);
-            $removeStatements = $instObj->getUpdateSuggestions($diff, 'remove');
-
-            return array(
-                'update' => $updateStatements,
-                'remove' => $removeStatements
-            );
-        } else {
-            return array(
-                'update' => null,
-                'remove' => null
-            );
-        }
-    }
-
-    /**
-     * Get the sql statements of an extension define in ext_tables.sql
-     *
-     * @param string  $extInfo
-     * @param array   $dbSchema
-     * @param array  &$fdFile
-     * @param array  &$updateStatements
-     */
-    public static function getExtSqlUpdateStatements($extInfo, $dbSchema, &$fdFile, &$updateStatements)
-    {
-        $installClass = self::getInstallSqlClass();
-
-        if (is_array($extInfo['files']) && in_array('ext_tables.sql', $extInfo['files'])) {
-            $fileContent = \TYPO3\CMS\Core\Utility\GeneralUtility::getUrl(self::getExtPath($extInfo['extkey'], $extInfo['type']) . 'ext_tables.sql');
-        }
-
-        $instObj = new $installClass();
-
-        // just support for old version < 4.5
-        if (method_exists($installClass, 'getFieldDefinitions_fileContent') === true) {
-            $fdFile = $instObj->getFieldDefinitions_fileContent($fileContent);
-        } else {
-            $fdFile = $instObj->getFieldDefinitions_sqlContent($fileContent);
-        }
-
-        $diff = $instObj->getDatabaseExtra($fdFile, $dbSchema);
-        $updateStatements = $instObj->getUpdateSuggestions($diff);
-    }
-
-    /**
-     * Get the install class name (for compatibility)
-     *
-     * @return string
-     */
-    public static function getInstallSqlClass()
-    {
-        $installClass = 'TYPO3\\CMS\\Install\\Service\\SqlSchemaMigrationService';
-        return $installClass;
-    }
-
-    /**
-     * Get the entire database schema
-     *
-     * @return array
-     */
-    public static function getDatabaseSchema()
-    {
-        $installClass = self::getInstallSqlClass();
-        $instObj = new $installClass();
-        return $instObj->getFieldDefinitions_database($GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['database']);
-    }
-
-    /**
      * Compare 2 versions of an extension
      *
      * @param string $depV
@@ -968,30 +814,6 @@ class Utility
         include(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath($key) . 'ext_emconf.php');
 
         return $EM_CONF[$key]['version'];
-    }
-
-    /**
-     * Get the name of the temp_CACHED files
-     *
-     * @return string
-     */
-    public static function getCacheFilePrefix()
-    {
-        $extensionCacheBehaviour = intval($GLOBALS['TYPO3_CONF_VARS']['EXT']['extCache']);
-
-        // Caching of extensions is disabled when install tool is used:
-        if (defined('TYPO3_enterInstallScript') && TYPO3_enterInstallScript) {
-            $extensionCacheBehaviour = 0;
-        }
-
-        $cacheFileSuffix = (TYPO3_MODE == 'FE' ? '_FE' : '');
-        $cacheFilePrefix = 'temp_CACHED' . $cacheFileSuffix;
-
-        if ($extensionCacheBehaviour == 1) {
-            $cacheFilePrefix .= '_ps' . substr(\TYPO3\CMS\Core\Utility\GeneralUtility::shortMD5(PATH_site . '|' . $GLOBALS['TYPO_VERSION']), 0, 4);
-        }
-
-        return $cacheFilePrefix;
     }
 
     /**

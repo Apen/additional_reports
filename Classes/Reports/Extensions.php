@@ -37,8 +37,7 @@ class Extensions extends \Sng\AdditionalReports\Reports\AbstractReport implement
         $extensionsToUpdate = 0;
         $extensionsModified = 0;
 
-//        $dbSchema = \Sng\AdditionalReports\Utility::getDatabaseSchema();
-        $allExtension = \Sng\AdditionalReports\Utility::getInstExtList(PATH_typo3conf . 'ext/', $dbSchema);
+        $allExtension = \Sng\AdditionalReports\Utility::getInstExtList(PATH_typo3conf . 'ext/');
 
         $listExtensionsTer = array();
         $listExtensionsDev = array();
@@ -140,20 +139,20 @@ class Extensions extends \Sng\AdditionalReports\Reports\AbstractReport implement
         // show db
         $dumpTf1 = '';
         $dumpTf2 = '';
-        if (count($itemValue['fdfile']) > 0) {
+        if (!empty($itemValue['fdfile'])) {
             $id = 'sql' . $extKey;
-            $dumpTf1 = count($itemValue['fdfile']) . ' ' . \Sng\AdditionalReports\Utility::getLl('extensions_tablesmodified');
+            $dumpTf1 = \Sng\AdditionalReports\Utility::getLl('extensions_tablesmodified');
             $dumpTf2 = \Sng\AdditionalReports\Utility::writePopUp($id, $extKey, \Sng\AdditionalReports\Utility::viewArray($itemValue['fdfile']));
         }
         $listExtensionsTerItem['tables'] = $dumpTf1;
         $listExtensionsTerItem['tableslink'] = $dumpTf2;
 
         // need db update
-        if (count($itemValue['updatestatements']) > 0) {
-            $listExtensionsTerItem['tablesintegrity'] = \Sng\AdditionalReports\Utility::getLl('yes');
-        } else {
-            $listExtensionsTerItem['tablesintegrity'] = \Sng\AdditionalReports\Utility::getLl('no');
-        }
+//        if (count($itemValue['updatestatements']) > 0) {
+//            $listExtensionsTerItem['tablesintegrity'] = \Sng\AdditionalReports\Utility::getLl('yes');
+//        } else {
+//            $listExtensionsTerItem['tablesintegrity'] = \Sng\AdditionalReports\Utility::getLl('no');
+//        }
 
         // need extconf update
         $absPath = \Sng\AdditionalReports\Utility::getExtPath($extKey, $itemValue['type']);
