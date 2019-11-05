@@ -37,7 +37,6 @@ class Utility
             ['Status', 'status'],
             ['LogErrors', 'logerrors'],
             ['WebsiteConf', 'websitesconf'],
-            ['DbCheck', 'dbcheck'],
             ['Extensions', 'extensions']
         ];
         return $reports;
@@ -76,8 +75,7 @@ class Utility
             'displayStatus'       => $GLOBALS['LANG']->getLL('status_title'),
             'displayExtensions'   => $GLOBALS['LANG']->getLL('extensions_title'),
             'displayLogErrors'    => $GLOBALS['LANG']->getLL('logerrors_title'),
-            'displayWebsitesConf' => $GLOBALS['LANG']->getLL('websitesconf_title'),
-            'displayDbCheck'      => $GLOBALS['LANG']->getLL('dbcheck_title'),
+            'displayWebsitesConf' => $GLOBALS['LANG']->getLL('websitesconf_title')
         );
     }
 

@@ -60,14 +60,6 @@
 			<source>Content type</source>
 			<target>Type de contenu</target>
 		</trans-unit>
-		<trans-unit id="dbcheck_description" approved="yes">
-			<source>Check the database integrity.</source>
-			<target>Vérifie l'intégrité de la base de données.</target>
-		</trans-unit>
-		<trans-unit id="dbcheck_title" approved="yes">
-			<source>Additional reports - check the database</source>
-			<target>Additional reports - vérifier la base de données</target>
-		</trans-unit>
 		<trans-unit id="domain" approved="yes">
 			<source>Domain</source>
 			<target>Domaine</target>
