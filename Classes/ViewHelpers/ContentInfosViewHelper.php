@@ -76,7 +76,7 @@ class ContentInfosViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractCo
             }
         }
 
-        $item = array_merge($item, \Sng\AdditionalReports\Main::getContentInfos($item));
+        $item = array_merge($item, \Sng\AdditionalReports\Utility::getContentInfos($item));
 
         if ($this->templateVariableContainer->exists($as)) {
             $this->templateVariableContainer->remove($as);

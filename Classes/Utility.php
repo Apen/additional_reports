@@ -67,19 +67,83 @@ class Utility
     public static function getSubModules()
     {
         return array(
-            'displayAjax'          => $GLOBALS['LANG']->getLL('ajax_title'),
-            'displayEid'           => $GLOBALS['LANG']->getLL('eid_title'),
-            'displayCliKeys'       => $GLOBALS['LANG']->getLL('clikeys_title'),
-            'displayPlugins'       => $GLOBALS['LANG']->getLL('plugins_title'),
-            'displayXclass'        => $GLOBALS['LANG']->getLL('xclass_title'),
-            'displayHooks'         => $GLOBALS['LANG']->getLL('hooks_title'),
-            'displayStatus'        => $GLOBALS['LANG']->getLL('status_title'),
-            'displayExtensions'    => $GLOBALS['LANG']->getLL('extensions_title'),
-            'displayRealUrlErrors' => $GLOBALS['LANG']->getLL('realurlerrors_title'),
-            'displayLogErrors'     => $GLOBALS['LANG']->getLL('logerrors_title'),
-            'displayWebsitesConf'  => $GLOBALS['LANG']->getLL('websitesconf_title'),
-            'displayDbCheck'       => $GLOBALS['LANG']->getLL('dbcheck_title'),
+            'displayAjax'         => $GLOBALS['LANG']->getLL('ajax_title'),
+            'displayEid'          => $GLOBALS['LANG']->getLL('eid_title'),
+            'displayCliKeys'      => $GLOBALS['LANG']->getLL('clikeys_title'),
+            'displayPlugins'      => $GLOBALS['LANG']->getLL('plugins_title'),
+            'displayXclass'       => $GLOBALS['LANG']->getLL('xclass_title'),
+            'displayHooks'        => $GLOBALS['LANG']->getLL('hooks_title'),
+            'displayStatus'       => $GLOBALS['LANG']->getLL('status_title'),
+            'displayExtensions'   => $GLOBALS['LANG']->getLL('extensions_title'),
+            'displayLogErrors'    => $GLOBALS['LANG']->getLL('logerrors_title'),
+            'displayWebsitesConf' => $GLOBALS['LANG']->getLL('websitesconf_title'),
+            'displayDbCheck'      => $GLOBALS['LANG']->getLL('dbcheck_title'),
         );
+    }
+
+    /**
+     * Return informations about a ctype or plugin
+     *
+     * @param array $itemValue
+     * @return array
+     */
+    public static function getContentInfos($itemValue)
+    {
+        $markersExt = array();
+
+        $domain = \Sng\AdditionalReports\Utility::getDomain($itemValue['pid']);
+        $markersExt['domain'] = \Sng\AdditionalReports\Utility::getIconDomain() . $domain;
+
+        $iconPage = ($itemValue['hiddenpages'] == 0) ? \Sng\AdditionalReports\Utility::getIconPage() : \Sng\AdditionalReports\Utility::getIconPage(true);
+        $iconContent = ($itemValue['hiddentt_content'] == 0) ? \Sng\AdditionalReports\Utility::getIconContent() : \Sng\AdditionalReports\Utility::getIconContent(true);
+
+        $markersExt['pid'] = $iconPage . ' ' . $itemValue['pid'];
+        $markersExt['uid'] = $iconContent . ' ' . $itemValue['uid'];
+        $markersExt['pagetitle'] = $itemValue['title'];
+
+        if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('templavoila') && class_exists('tx_templavoila_api')) {
+
+            $linkAtt = array('href' => '#', 'title' => \Sng\AdditionalReports\Utility::getLl('switch'), 'onclick' => \Sng\AdditionalReports\Utility::goToModuleList($itemValue['pid']));
+            $markersExt['db'] = \Sng\AdditionalReports\Utility::generateLink($linkAtt, \Sng\AdditionalReports\Utility::getIconWebList());
+
+            $linkAtt = array('href' => \Sng\AdditionalReports\Utility::goToModuleList($itemValue['pid'], true), 'target' => '_blank', 'title' => \Sng\AdditionalReports\Utility::getLl('newwindow'));
+            $markersExt['db'] .= \Sng\AdditionalReports\Utility::generateLink($linkAtt, \Sng\AdditionalReports\Utility::getIconWebList());
+
+            $linkAtt = array('href' => '#', 'title' => \Sng\AdditionalReports\Utility::getLl('switch'), 'onclick' => \Sng\AdditionalReports\Utility::goToModulePageTv($itemValue['pid']));
+            $markersExt['page'] = \Sng\AdditionalReports\Utility::generateLink($linkAtt, \Sng\AdditionalReports\Utility::getIconWebPage());
+
+            $linkAtt = array('href' => \Sng\AdditionalReports\Utility::goToModulePageTv($itemValue['pid'], true), 'target' => '_blank', 'title' => \Sng\AdditionalReports\Utility::getLl('newwindow'));
+            $markersExt['page'] .= \Sng\AdditionalReports\Utility::generateLink($linkAtt, \Sng\AdditionalReports\Utility::getIconWebPage());
+
+            if (\Sng\AdditionalReports\Utility::isUsedInTv($itemValue['uid'], $itemValue['pid'])) {
+                $markersExt['usedtv'] = \Sng\AdditionalReports\Utility::getLl('yes');
+                $markersExt['usedtvclass'] = ' typo3-message message-ok';
+            } else {
+                $markersExt['usedtv'] = \Sng\AdditionalReports\Utility::getLl('no');
+                $markersExt['usedtvclass'] = ' typo3-message message-error';
+            }
+        } else {
+            $markersExt['usedtv'] = '';
+            $markersExt['usedtvclass'] = '';
+
+            $linkAtt = array('href' => '#', 'title' => \Sng\AdditionalReports\Utility::getLl('switch'), 'onclick' => \Sng\AdditionalReports\Utility::goToModuleList($itemValue['pid']), 'class' => 'btn btn-default');
+            $markersExt['db'] = \Sng\AdditionalReports\Utility::generateLink($linkAtt, \Sng\AdditionalReports\Utility::getIconWebList());
+
+            $linkAtt = array('href' => \Sng\AdditionalReports\Utility::goToModuleList($itemValue['pid'], true), 'target' => '_blank', 'title' => \Sng\AdditionalReports\Utility::getLl('newwindow'), 'class' => 'btn btn-default');
+            $markersExt['db'] .= \Sng\AdditionalReports\Utility::generateLink($linkAtt, \Sng\AdditionalReports\Utility::getIconWebList());
+
+            $linkAtt = array('href' => '#', 'title' => \Sng\AdditionalReports\Utility::getLl('switch'), 'onclick' => \Sng\AdditionalReports\Utility::goToModulePage($itemValue['pid']), 'class' => 'btn btn-default');
+            $markersExt['page'] = \Sng\AdditionalReports\Utility::generateLink($linkAtt, \Sng\AdditionalReports\Utility::getIconWebPage());
+
+            $linkAtt = array('href' => \Sng\AdditionalReports\Utility::goToModulePage($itemValue['pid'], true), 'target' => '_blank', 'title' => \Sng\AdditionalReports\Utility::getLl('newwindow'), 'class' => 'btn btn-default');
+            $markersExt['page'] .= \Sng\AdditionalReports\Utility::generateLink($linkAtt, \Sng\AdditionalReports\Utility::getIconWebPage());
+        }
+
+        $markersExt['preview'] = '<a target="_blank" class="btn btn-default" href="http://' . $domain . '/index.php?id=' . $itemValue['pid'] . '">';
+        $markersExt['preview'] .= \Sng\AdditionalReports\Utility::getIconZoom();
+        $markersExt['preview'] .= '</a>';
+
+        return $markersExt;
     }
 
     /**
