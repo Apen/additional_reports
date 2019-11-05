@@ -32,69 +32,9 @@ class Main
         return $GLOBALS['LANG']->sL('LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:' . $key);
     }
 
-    /**
-     * Generate the xclass report
-     *
-     * @return string HTML code
-     */
-    public static function displayXclass()
-    {
-        $xclassList = array();
 
-        $xclassList['objects'] = $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'];
 
-        $xclassList['autoload'] = \Sng\AdditionalReports\Utility::getAutoloadXlass();
 
-        $view = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Fluid\\View\\StandaloneView');
-        $view->setTemplatePathAndFilename(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('additional_reports') . 'Resources/Private/Templates/xclass-fluid.html');
-        $view->assign('xclass', $xclassList);
-        $view->assign('typo3version', \Sng\AdditionalReports\Utility::intFromVer(TYPO3_version));
-        return $view->render();
-    }
-
-    /**
-     * Generate the CommandControllers report
-     *
-     * @return string HTML code
-     */
-    public static function displayCommandControllers()
-    {
-        $items = $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['extbase']['commandControllers'];
-        $view = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Fluid\\View\\StandaloneView');
-        $view->setTemplatePathAndFilename(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('additional_reports') . 'Resources/Private/Templates/commandcontrollers-fluid.html');
-        $view->assign('items', $items);
-        return $view->render();
-    }
-
-    /**
-     * Generate the eid report
-     *
-     * @return string HTML code
-     */
-    public static function displayEid()
-    {
-        $items = $GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include'];
-        $eids = array();
-
-        if (count($items) > 0) {
-            foreach ($items as $itemKey => $itemValue) {
-                preg_match('/EXT:(.*?)\//', $itemValue, $ext);
-                if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded($ext[1])) {
-                    $eids[] = array(
-                        'icon'      => \Sng\AdditionalReports\Utility::getExtIcon($ext[1]),
-                        'extension' => $ext[1],
-                        'name'      => $itemKey,
-                        'path'      => $itemValue
-                    );
-                }
-            }
-        }
-
-        $view = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Fluid\\View\\StandaloneView');
-        $view->setTemplatePathAndFilename(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('additional_reports') . 'Resources/Private/Templates/eid-fluid.html');
-        $view->assign('eids', $eids);
-        return $view->render();
-    }
 
     /**
      * Generate the ext direct report

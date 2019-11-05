@@ -26,41 +26,6 @@
     </f:then>
 </f:if>
 
-<!-- 6.0> -->
-
-<f:if condition="{typo3version} >= 6000000">
-    <f:if condition="{xclass.autoload}">
-        <f:then>
-            <table cellspacing="1" cellpadding="2" border="0" class="table table-striped table-hover">
-                <thead>
-                <tr>
-                    <th colspan="2">Autoload XCLASS (6.0>)</th>
-                </tr>
-                <tr>
-                    <th>
-                        <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:name"/>
-                    </th>
-                    <th>
-                        <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:path"/>
-                    </th>
-                </tr>
-                </thead>
-                <tbody>
-                <f:for each="{xclass.autoload}" as="path" key="name">
-                    <tr>
-                        <td>{path}</td>
-                        <td>{name}</td>
-                    </tr>
-                </f:for>
-                </tbody>
-            </table>
-        </f:then>
-        <f:else>
-            <f:render section="info" arguments="{label:'{f:translate(key:\'LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:careful\')}',value:'{f:translate(key:\'LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:xclasscarefuldesc\')}'}"/>
-        </f:else>
-    </f:if>
-</f:if>
-
 <f:section name="info">
     <br/>
 

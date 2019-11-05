@@ -9,8 +9,6 @@ namespace Sng\AdditionalReports\Reports;
  * LICENSE.txt file that was distributed with this source code.
  */
 
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-
 class Xclass extends \Sng\AdditionalReports\Reports\AbstractReport implements \TYPO3\CMS\Reports\ReportInterface
 {
 
@@ -22,8 +20,24 @@ class Xclass extends \Sng\AdditionalReports\Reports\AbstractReport implements \T
     public function getReport()
     {
         $content = '<p class="help">' . $GLOBALS['LANG']->getLL('xclass_description') . '</p>';
-        $content .= \Sng\AdditionalReports\Main::displayXclass();
+        $content .= $this->display();
         return $content;
+    }
+
+    /**
+     * Generate the xclass report
+     *
+     * @return string HTML code
+     */
+    public function display()
+    {
+        $xclassList = array();
+        $xclassList['objects'] = $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'];
+        $view = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Fluid\\View\\StandaloneView');
+        $view->setTemplatePathAndFilename(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('additional_reports') . 'Resources/Private/Templates/xclass-fluid.html');
+        $view->assign('xclass', $xclassList);
+        $view->assign('typo3version', \Sng\AdditionalReports\Utility::intFromVer(TYPO3_version));
+        return $view->render();
     }
 
 }
