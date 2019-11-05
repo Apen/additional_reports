@@ -88,7 +88,7 @@
 
 <f:section name="paginator">
     <f:if condition="{pagination.numberOfPages} > 1">
-        <div id="typo3-dblist-pagination">
+        <ul class="typo3-dblist-pagination pagination pagination-block" style="padding-left:0; margin-bottom:15px;">
             <f:if condition="{pagination.previousPage}">
                 <f:then>
                     <f:if condition="{configuration.showFirstLast}">
@@ -105,11 +105,11 @@
                     </f:if>
                 </f:else>
             </f:if>
-            <span class="bar">&nbsp;</span>
-            <span class="pageIndicator">{f:translate(key:'LLL:EXT:lang/locallang_mod_web_list.xml:rangeIndicator',arguments:{0:'{pagination.firstPageItem}',1:'{pagination.lastPageItem}'})}</span>
-            <span class="bar">&nbsp;</span>
-            <span class="pageIndicator">{f:translate(key:'LLL:EXT:lang/locallang_mod_web_list.xml:pageIndicator',arguments:{0:'{pagination.current}',1:'{pagination.numberOfPages}'})}</span>
-            <span class="bar">&nbsp;</span>
+            <li style="display:inline;">
+                <span class="pageIndicator">{f:translate(key:'LLL:EXT:lang/Resources/Private/Language/locallang_mod_web_list.xlf:rangeIndicator',arguments:{0:'{pagination.firstPageItem}',1:'{pagination.lastPageItem}'})}
+                   /
+                {f:translate(key:'LLL:EXT:lang/Resources/Private/Language/locallang_mod_web_list.xlf:pageIndicator',arguments:{0:'{pagination.current}',1:'{pagination.numberOfPages}'})}</span>
+            </li>
             <f:if condition="{pagination.nextPage}">
                 <f:then>
                     <f:render section="linkNext" arguments="{pagination: pagination,configuration:configuration}"/>
@@ -126,6 +126,6 @@
                     </f:if>
                 </f:else>
             </f:if>
-        </div>
+        </ul>
     </f:if>
 </f:section>
