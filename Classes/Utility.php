@@ -906,10 +906,10 @@ class Utility
      */
     public static function writePopUp($divId, $title, $hideContent)
     {
-        $js = 'Shadowbox.open({content:\'<div>\'+TYPO3.jQuery(this).next().html()';
+        $js = 'Shadowbox.open({content:\'<div>\'+$(this).next().html()';
         $js .= '+\'</div>\',player:\'html\',title:\'' . $title . '\',height:600,width:800});';
         $content = '<input type="button" onclick="' . $js . '" value="+"/>';
-        $content .= '<div style="display:none;" id="' . $divId . '">' . $hideContent . '</div>';
+        $content .= '<pre style="display:none;" id="' . $divId . '"><div  style="color:white;padding:10px;">' . $hideContent . '</div></pre>';
         return $content;
     }
 

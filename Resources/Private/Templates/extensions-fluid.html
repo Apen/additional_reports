@@ -2,7 +2,13 @@
 
 <f:be.container>
     <script type="text/javascript">
-        Shadowbox.init({displayNav: true, displayCounter: false, overlayOpacity: 0.8});
+        define(['jquery'], function ($) {
+            Shadowbox.init({
+                displayNav: true,
+                displayCounter: false,
+                overlayOpacity: 0.8
+            });
+        });
     </script>
 
     <f:if condition="{listExtensionsTer}">
@@ -81,9 +87,6 @@
                 <th colspan="2">
                     <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:extensions_tables"/>
                 </th>
-                <th width="80" style="text-align:center;">
-                    <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:extensions_tablesintegrity"/>
-                </th>
             </tr>
             </thead>
             <tbody>
@@ -97,9 +100,6 @@
                     </td>
                     <td align="center" width="30">
                         <f:format.raw>{extension.tableslink}</f:format.raw>
-                    </td>
-                    <td align="center">
-                        <f:format.raw>{extension.tablesintegrity}</f:format.raw>
                     </td>
                 </tr>
             </f:for>
