@@ -102,8 +102,8 @@ class Utility
             $theList = '';
         }
         if ($id && $depth > 0) {
-            $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid', 'pages', 'pid=' . $id . ' ' . \TYPO3\CMS\Backend\Utility\BackendUtility::deleteClause('pages') . ' AND ' . $permsClause);
-            while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+            $res = self::exec_SELECTquery('uid', 'pages', 'pid=' . $id . ' ' . \TYPO3\CMS\Backend\Utility\BackendUtility::deleteClause('pages') . ' AND ' . $permsClause);
+            while ($row = $res->fetch()) {
                 if ($begin <= 0) {
                     $theList .= ',' . $row['uid'];
                 }
@@ -111,7 +111,7 @@ class Utility
                     $theList .= self::getTreeList($row['uid'], $depth - 1, $begin - 1, $permsClause);
                 }
             }
-            $GLOBALS['TYPO3_DB']->sql_free_result($res);
+            $res->closeCursor();
         }
         return $theList;
     }
@@ -125,9 +125,9 @@ class Utility
      */
     public static function getCountPagesUids($listOfUids, $where = '1=1')
     {
-        $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid', 'pages', 'uid IN (' . $listOfUids . ') AND ' . $where);
-        $count = $GLOBALS['TYPO3_DB']->sql_num_rows($res);
-        $GLOBALS['TYPO3_DB']->sql_free_result($res);
+        $res = self::exec_SELECTquery('uid', 'pages', 'uid IN (' . $listOfUids . ') AND ' . $where);
+        $count = $res->rowCount();
+        $res->closeCursor();
         return $count;
     }
 
@@ -1502,6 +1502,24 @@ class Utility
     public static function exec_SELECT_queryArray($queryParts)
     {
         return self::exec_SELECTquery($queryParts['SELECT'], $queryParts['FROM'], $queryParts['WHERE'], $queryParts['GROUPBY'], $queryParts['ORDERBY'], $queryParts['LIMIT']);
+    }
+
+    /**
+     * Creates and executes a SELECT SQL-statement AND traverse result set and returns array with records in.
+     *
+     * @param string $select_fields List of fields to select from the table. This is what comes right after "SELECT ...". Required value.
+     * @param string $from_table    Table(s) from which to select. This is what comes right after "FROM ...". Required value.
+     * @param string $where_clause  Additional WHERE clauses put in the end of the query. NOTICE: You must escape values in this argument with $this->fullQuoteStr() yourself! DO NOT PUT IN GROUP BY, ORDER BY or LIMIT!
+     * @param string $groupBy       Optional GROUP BY field(s), if none, supply blank string.
+     * @param string $orderBy       Optional ORDER BY field(s), if none, supply blank string.
+     * @param string $limit         Optional LIMIT value ([begin,]max), if none, supply blank string.
+     * @param string $uidIndexField If set, the result array will carry this field names value as index. Requires that field to be selected of course!
+     * @return array
+     */
+    public static function exec_SELECTgetRows($select_fields, $from_table, $where_clause, $groupBy = '', $orderBy = '', $limit = '', $uidIndexField = '')
+    {
+        $res = self::exec_SELECTquery($select_fields, $from_table, $where_clause, $groupBy, $orderBy, $limit);
+        return $res->fetchAll();
     }
 
     /**
