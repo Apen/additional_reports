@@ -31,10 +31,6 @@ Go to the reports module.
 
 ## Features
 
-### Ajax
-
-![](https://raw.githubusercontent.com/Apen/additional_reports/master/Resources/Public/Images/ajax.png)
-
 ### eID
 
 ![](https://raw.githubusercontent.com/Apen/additional_reports/master/Resources/Public/Images/eid.png)
@@ -63,29 +59,13 @@ Text diff with TER and last version version
 
 ![](https://raw.githubusercontent.com/Apen/additional_reports/master/Resources/Public/Images/xclass.png)
 
-### clikeys
-
-![](https://raw.githubusercontent.com/Apen/additional_reports/master/Resources/Public/Images/clikeys.png)
-
-### ExtDirect
-
-![](https://raw.githubusercontent.com/Apen/additional_reports/master/Resources/Public/Images/extdirect.png)
-
 ### Hooks
 
 ![](https://raw.githubusercontent.com/Apen/additional_reports/master/Resources/Public/Images/hooks.png)
 
-### realurl logs
-
-![](https://raw.githubusercontent.com/Apen/additional_reports/master/Resources/Public/Images/realurl.png)
-
 ### Grouped logs
 
 ![](https://raw.githubusercontent.com/Apen/additional_reports/master/Resources/Public/Images/logs.png)
-
-### SQL integrity
-
-![](https://raw.githubusercontent.com/Apen/additional_reports/master/Resources/Public/Images/sql.png)
 
 ### List of websites and domains
 
