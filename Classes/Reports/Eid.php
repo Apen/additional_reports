@@ -9,8 +9,6 @@ namespace Sng\AdditionalReports\Reports;
  * LICENSE.txt file that was distributed with this source code.
  */
 
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-
 class Eid extends \Sng\AdditionalReports\Reports\AbstractReport implements \TYPO3\CMS\Reports\ReportInterface
 {
 
@@ -21,8 +19,38 @@ class Eid extends \Sng\AdditionalReports\Reports\AbstractReport implements \TYPO
      */
     public function getReport()
     {
-        $content = \Sng\AdditionalReports\Main::displayEid();
+        $content = $this->display();
         return $content;
+    }
+
+    /**
+     * Generate the eid report
+     *
+     * @return string HTML code
+     */
+    public function display()
+    {
+        $items = $GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include'];
+        $eids = array();
+
+        if (count($items) > 0) {
+            foreach ($items as $itemKey => $itemValue) {
+                preg_match('/EXT:(.*?)\//', $itemValue, $ext);
+                if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded($ext[1])) {
+                    $eids[] = array(
+                        'icon'      => \Sng\AdditionalReports\Utility::getExtIcon($ext[1]),
+                        'extension' => $ext[1],
+                        'name'      => $itemKey,
+                        'path'      => $itemValue
+                    );
+                }
+            }
+        }
+
+        $view = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Fluid\\View\\StandaloneView');
+        $view->setTemplatePathAndFilename(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('additional_reports') . 'Resources/Private/Templates/eid-fluid.html');
+        $view->assign('eids', $eids);
+        return $view->render();
     }
 
 }
