@@ -47,12 +47,6 @@
 		<trans-unit id="ctype">
 			<source>Content type</source>
 		</trans-unit>
-		<trans-unit id="dbcheck_description">
-			<source>Check the database integrity.</source>
-		</trans-unit>
-		<trans-unit id="dbcheck_title">
-			<source>Additional reports - check the database</source>
-		</trans-unit>
 		<trans-unit id="domain">
 			<source>Domain</source>
 		</trans-unit>
