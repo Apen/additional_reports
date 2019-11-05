@@ -3,16 +3,10 @@
 namespace Sng\AdditionalReports;
 
 /*
- * This file is part of the TYPO3 CMS project.
- *
- * It is free software; you can redistribute it and/or modify it under
- * the terms of the GNU General Public License, either version 2
- * of the License, or any later version.
+ * This file is part of the "additional_reports" Extension for TYPO3 CMS.
  *
  * For the full copyright and license information, please read the
  * LICENSE.txt file that was distributed with this source code.
- *
- * The TYPO3 project - inspiring people to share!
  */
 
 use TYPO3\CMS\Backend\Utility\BackendUtility;
@@ -92,10 +86,10 @@ class Utility
     /**
      * Generates a list of Page-uid's from $id
      *
-     * @param  int    $id
-     * @param  int    $depth
-     * @param  int    $begin
-     * @param  string $permsClause
+     * @param int    $id
+     * @param int    $depth
+     * @param int    $begin
+     * @param string $permsClause
      * @return string
      */
     public static function getTreeList($id, $depth, $begin = 0, $permsClause = '1=1')
@@ -161,7 +155,7 @@ class Utility
     /**
      * Returns an integer from a three part version number, eg '4.12.3' -> 4012003
      *
-     * @param    string $verNumberStr number on format x.x.x
+     * @param string $verNumberStr number on format x.x.x
      * @return   integer   Integer version of version number (where each part can count to 999)
      */
     public static function intFromVer($verNumberStr)
@@ -176,7 +170,7 @@ class Utility
      * If a single version number is given, it is considered a minimum value.
      * If a dash is found, the numbers left and right are considered as minimum and maximum. Empty values are allowed.
      *
-     * @param    string $ver A string with a version range.
+     * @param string $ver A string with a version range.
      * @return   array
      */
     public static function splitVersionRange($ver)
@@ -200,8 +194,8 @@ class Utility
     /**
      * Gathers all extensions in $path
      *
-     * @param    string $path     Absolute path to local, global or system extensions
-     * @param    array  $dbSchema array with all the tables
+     * @param string $path     Absolute path to local, global or system extensions
+     * @param array  $dbSchema array with all the tables
      * @return    array        "Returns" content by reference
      */
     public static function getInstExtList($path, $dbSchema)
@@ -250,8 +244,8 @@ class Utility
     /**
      * Returns the $EM_CONF array from an extensions ext_emconf.php file
      *
-     * @param    string $path    Absolute path to EMCONF file.
-     * @param    string $_EXTKEY Extension key.
+     * @param string $path    Absolute path to EMCONF file.
+     * @param string $_EXTKEY Extension key.
      * @return    array        EMconf array values.
      */
     public static function includeEMCONF($path, $_EXTKEY)
@@ -280,8 +274,8 @@ class Utility
     /**
      * Compares two arrays with MD5-hash values for analysis of which files has changed.
      *
-     * @param    array $current Current values
-     * @param    array $past    Past values
+     * @param array $current Current values
+     * @param array $past    Past values
      * @return    array        Affected files
      */
     public static function findMD5ArrayDiff($current, $past)
@@ -678,8 +672,8 @@ class Utility
     /**
      * Get the sql statements of an extension define in ext_tables.sql
      *
-     * @param string $extInfo
-     * @param array  $dbSchema
+     * @param string  $extInfo
+     * @param array   $dbSchema
      * @param array  &$fdFile
      * @param array  &$updateStatements
      */
@@ -984,8 +978,8 @@ class Utility
     /**
      * Generate a special formated div (with icon)
      *
-     * @param   string $label
-     * @param   string $value
+     * @param string $label
+     * @param string $value
      * @return  string HTML code
      */
     public static function writeInformation($label, $value)
