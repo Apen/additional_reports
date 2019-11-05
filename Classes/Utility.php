@@ -906,11 +906,7 @@ class Utility
      */
     public static function writePopUp($divId, $title, $hideContent)
     {
-        if (version_compare(TYPO3_version, '7.6.0', '>=')) {
-            $js = 'Shadowbox.open({content:\'<div>\'+TYPO3.jQuery(this).next().html()';
-        } else {
-            $js = 'Shadowbox.open({content:\'<div>\'+$(\'#' . $divId . '\').innerHTML';
-        }
+        $js = 'Shadowbox.open({content:\'<div>\'+TYPO3.jQuery(this).next().html()';
         $js .= '+\'</div>\',player:\'html\',title:\'' . $title . '\',height:600,width:800});';
         $content = '<input type="button" onclick="' . $js . '" value="+"/>';
         $content .= '<div style="display:none;" id="' . $divId . '">' . $hideContent . '</div>';

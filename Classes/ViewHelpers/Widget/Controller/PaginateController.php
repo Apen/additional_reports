@@ -131,11 +131,7 @@ class PaginateController extends \TYPO3\CMS\Fluid\Core\Widget\AbstractWidgetCont
     public function indexAction($currentPage = 1)
     {
         // ugly patch to work without extbase (sry for that)
-
-        $widgetIdentifier = '__widget_0';
-        if (\Sng\AdditionalReports\Utility::intFromVer(TYPO3_version) >= 6002000) {
-            $widgetIdentifier = '@widget_0';
-        }
+        $widgetIdentifier = '@widget_0';
 
         if (($currentPage == 1) && (!empty($_GET['tx__'][$widgetIdentifier]['currentPage']))) {
             $currentPage = (int)$_GET['tx__'][$widgetIdentifier]['currentPage'];
