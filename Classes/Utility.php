@@ -1483,6 +1483,17 @@ class Utility
         return $hookPotential;
     }
 
+    /**
+     * Get a label
+     *
+     * @param string $key
+     * @return string
+     */
+    public static function getLl($key)
+    {
+        return $GLOBALS['LANG']->sL('LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:' . $key);
+    }
+
 }
 
 ?>
