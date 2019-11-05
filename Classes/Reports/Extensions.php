@@ -142,17 +142,10 @@ class Extensions extends \Sng\AdditionalReports\Reports\AbstractReport implement
         if (!empty($itemValue['fdfile'])) {
             $id = 'sql' . $extKey;
             $dumpTf1 = \Sng\AdditionalReports\Utility::getLl('extensions_tablesmodified');
-            $dumpTf2 = \Sng\AdditionalReports\Utility::writePopUp($id, $extKey, \Sng\AdditionalReports\Utility::viewArray($itemValue['fdfile']));
+            $dumpTf2 = \Sng\AdditionalReports\Utility::writePopUp($id, $extKey, nl2br(htmlspecialchars($itemValue['fdfile'])));
         }
         $listExtensionsTerItem['tables'] = $dumpTf1;
         $listExtensionsTerItem['tableslink'] = $dumpTf2;
-
-        // need db update
-//        if (count($itemValue['updatestatements']) > 0) {
-//            $listExtensionsTerItem['tablesintegrity'] = \Sng\AdditionalReports\Utility::getLl('yes');
-//        } else {
-//            $listExtensionsTerItem['tablesintegrity'] = \Sng\AdditionalReports\Utility::getLl('no');
-//        }
 
         // need extconf update
         $absPath = \Sng\AdditionalReports\Utility::getExtPath($extKey, $itemValue['type']);
