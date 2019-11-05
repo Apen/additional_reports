@@ -1,10 +1,10 @@
 <?php
 
-$EM_CONF[$_EXTKEY] = array(
+$EM_CONF['additional_reports'] = array(
     'title'            => 'Useful information in reports module',
     'description'      => 'Useful information in the reports module: xclass, ajax, cliKeys, eID, general status of the system (encoding, DB, php vars...), hooks, compare local and TER extension (diff), used content type, used plugins, ExtDirect... It can really help you during migration or new existing project (to have global reports of the system).',
     'category'         => 'misc',
-    'version'          => '3.1.4',
+    'version'          => '3.2.0-dev',
     'state'            => 'stable',
     'uploadfolder'     => '',
     'createDirs'       => '',
