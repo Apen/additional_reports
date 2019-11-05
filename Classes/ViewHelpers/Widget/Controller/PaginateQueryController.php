@@ -79,7 +79,7 @@ class PaginateQueryController extends \TYPO3\CMS\Fluid\Core\Widget\AbstractWidge
     public function initializeAction()
     {
         $this->query = $this->widgetConfiguration['query'];
-        $this->configuration = \TYPO3\CMS\Core\Utility\ArrayUtility::mergeRecursiveWithOverrule(
+        \TYPO3\CMS\Core\Utility\ArrayUtility::mergeRecursiveWithOverrule(
             $this->configuration,
             (array)$this->widgetConfiguration['configuration'],
             true
@@ -89,10 +89,10 @@ class PaginateQueryController extends \TYPO3\CMS\Fluid\Core\Widget\AbstractWidge
             $this->configuration['itemsPerPage'] = 50;
         }
 
-        $res = $GLOBALS['TYPO3_DB']->exec_SELECT_queryArray($this->query);
-        $this->numberOfItems = $GLOBALS['TYPO3_DB']->sql_num_rows($res);
+        $res = \Sng\AdditionalReports\Utility::exec_SELECT_queryArray($this->query);
+        $this->numberOfItems = $res->rowCount();
+        $res->closeCursor();
         $this->numberOfPages = ceil($this->numberOfItems / (integer)$this->configuration['itemsPerPage']);
-        $GLOBALS['TYPO3_DB']->sql_free_result($res);
 
         $this->pagesBefore = (integer)$this->configuration['pagesBefore'];
         $this->pagesAfter = (integer)$this->configuration['pagesAfter'];
@@ -162,15 +162,15 @@ class PaginateQueryController extends \TYPO3\CMS\Fluid\Core\Widget\AbstractWidge
         $itemsPerPage = (integer)$this->configuration['itemsPerPage'];
 
         $this->query['LIMIT'] = (integer)($itemsPerPage * ($this->currentPage - 1)) . ',' . $itemsPerPage;
-        $res = $GLOBALS['TYPO3_DB']->exec_SELECT_queryArray($this->query);
+        $res = \Sng\AdditionalReports\Utility::exec_SELECT_queryArray($this->query);
 
         $modifiedObjects = array();
 
-        while ($tempRow = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+        while ($tempRow = $res->fetch()) {
             $modifiedObjects[] = $tempRow;
         }
 
-        $GLOBALS['TYPO3_DB']->sql_free_result($res);
+        $res->closeCursor();
 
         $this->view->assign('contentArguments', array($this->widgetConfiguration['as'] => $modifiedObjects));
         $this->view->assign('configuration', $this->configuration);

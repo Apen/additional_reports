@@ -31,6 +31,18 @@ class PaginateQueryViewHelper extends \TYPO3\CMS\Fluid\Core\Widget\AbstractWidge
     protected $controller;
 
     /**
+     * Initialize arguments.
+     */
+    public function initializeArguments()
+    {
+        parent::initializeArguments();
+        $this->registerArgument('objects', \TYPO3\CMS\Extbase\Persistence\QueryResultInterface::class, 'The QueryResult containing all objects.', false);
+        $this->registerArgument('query', 'array', 'Array with a query', true);
+        $this->registerArgument('as', 'string', 'as', true);
+        $this->registerArgument('configuration', 'array', 'configuration', false, array('itemsPerPage' => 10, 'insertAbove' => false, 'insertBelow' => true));
+    }
+
+    /**
      * Inject controller
      *
      * @param \Sng\AdditionalReports\ViewHelpers\Widget\Controller\PaginateQueryController $controller
@@ -44,12 +56,9 @@ class PaginateQueryViewHelper extends \TYPO3\CMS\Fluid\Core\Widget\AbstractWidge
     /**
      * Render everything
      *
-     * @param array  $query
-     * @param string $as
-     * @param mixed  $configuration
      * @return string
      */
-    public function render($query, $as, $configuration = array('itemsPerPage' => 10, 'insertAbove' => false, 'insertBelow' => true))
+    public function render()
     {
         return $this->initiateSubRequest();
     }
