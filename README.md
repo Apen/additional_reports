@@ -9,12 +9,9 @@ Useful informations in the reports module:
 * list of xclass
 * list of ajax functions
 * list of hooks
-* list of cliKeys
+* list of Command
 * list of eID
-* list of ExtDirect
-* list of realurl errors
 * list of log errors (group by type)
-* quick check database integrity
 * list of used content type and plugins
 * list of extensions with tool to compare local and TER extension (diff)
 * general status of the system: TYPO3, PHP, Apache, MySQL, Crontab, encoding, php vars...
