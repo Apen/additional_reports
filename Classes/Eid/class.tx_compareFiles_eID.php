@@ -7,6 +7,7 @@
         del {
             background-color: #FDD;
         }
+
         ins {
             background-color: #DFD;
         }
@@ -60,13 +61,8 @@ switch ($mode) {
 function t3Diff($file1, $file2)
 {
     $diff = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Utility\\DiffUtility');
-    if (version_compare(TYPO3_version, '7.6.0', '>=')) {
-        $diff->stripTags = false;
-        $sourcesDiff = $diff->makeDiffDisplay($file1, $file2);
-    } else {
-        $diff->diffOptions = '-bu';
-        $sourcesDiff = $diff->getDiff($file1, $file2);
-    }
+    $diff->stripTags = false;
+    $sourcesDiff = $diff->makeDiffDisplay($file1, $file2);
     printT3Diff($sourcesDiff);
 }
 
@@ -75,28 +71,7 @@ function printT3Diff($sourcesDiff)
     $out = '<pre width="10"><table border="0" cellspacing="0" cellpadding="0" style="width:780px;padding:8px;">';
     $out .= '<tr><td style="background-color: #FDD;"><strong>Local file</strong></td></tr>';
     $out .= '<tr><td style="background-color: #DFD;"><strong>TER file</strong></td></tr>';
-    if (version_compare(TYPO3_version, '7.6.0', '>=')) {
-        $out = $out . $sourcesDiff;
-    } else {
-        unset($sourcesDiff[0]);
-        unset($sourcesDiff[1]);
-        foreach ($sourcesDiff as $line => $content) {
-            switch (substr($content, 0, 1)) {
-                case '+':
-                    $out .= '<tr><td style="background-color: #DFD;">' . formatcode($content) . '</td></tr>';
-                    break;
-                case '-':
-                    $out .= '<tr><td style="background-color: #FDD;">' . formatcode($content) . '</td></tr>';
-                    break;
-                case '@' :
-                    $out .= '<tr><td><br/><br/><br/></td></tr>';
-                    $out .= '<tr><td><strong>' . formatcode($content) . '</strong></td></tr>';
-                    break;
-                default:
-                    $out .= '<tr><td>' . formatcode($content) . '</td></tr>';
-            }
-        }
-    }
+    $out = $out . $sourcesDiff;
     $out .= '</table></pre>';
     echo $out;
 }
