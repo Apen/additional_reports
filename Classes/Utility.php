@@ -51,9 +51,9 @@ class Utility
     public static function getBaseUrl()
     {
         $parameters = array();
-        $parameters[] = 'extension=additional_reports';
-        $parameters[] = 'action=detail';
-        $parameters[] = 'report=' . \TYPO3\CMS\Core\Utility\GeneralUtility::_GET('report');
+        $parameters['extension'] = 'additional_reports';
+        $parameters['action'] = 'detail';
+        $parameters['report'] = \TYPO3\CMS\Core\Utility\GeneralUtility::_GET('report');
         $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
         $url = $uriBuilder->buildUriFromRoute('system_reports', $parameters);
         return (string)$url;
