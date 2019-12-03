@@ -21,8 +21,8 @@ class Extensions extends \Sng\AdditionalReports\Reports\AbstractReport implement
      */
     public function getReport()
     {
-        $this->setCss(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('additional_reports') . 'Resources/Public/Shadowbox/shadowbox.css');
-        $this->setJs(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('additional_reports') . 'Resources/Public/Shadowbox/shadowbox.js');
+        $this->setCss('EXT:additional_reports/Resources/Public/Shadowbox/shadowbox.css');
+        $this->setJs('EXT:additional_reports/Resources/Public/Shadowbox/shadowbox.js');
         $content = $this->display();
         return $content;
     }
