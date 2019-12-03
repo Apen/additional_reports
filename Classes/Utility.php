@@ -50,12 +50,22 @@ class Utility
     public static function getBaseUrl()
     {
         $parameters = array();
-        $parameters['extension'] = 'additional_reports';
-        $parameters['action'] = 'detail';
-        $parameters['report'] = \TYPO3\CMS\Core\Utility\GeneralUtility::_GET('report');
-        $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
-        $url = $uriBuilder->buildUriFromRoute('system_reports', $parameters);
-        return (string)$url;
+        if (version_compare(TYPO3_version, '9.0.0') >= 0) {
+            $parameters['extension'] = 'additional_reports';
+            $parameters['action'] = 'detail';
+            $parameters['report'] = \TYPO3\CMS\Core\Utility\GeneralUtility::_GET('report');
+            $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
+            $url = $uriBuilder->buildUriFromRoute('system_reports', $parameters);
+            return (string)$url;
+        } else {
+            $baseUrl = BackendUtility::getModuleUrl(\TYPO3\CMS\Core\Utility\GeneralUtility::_GET('M')) . '&';
+            $vars = \TYPO3\CMS\Core\Utility\GeneralUtility::_GET('tx_reports_system_reportstxreportsm1');
+            $parameters[] = 'tx_reports_system_reportstxreportsm1%5Bextension%5D=additional_reports';
+            $parameters[] = 'tx_reports_system_reportstxreportsm1%5Breport%5D=' . $vars['report'];
+            $parameters[] = 'tx_reports_system_reportstxreportsm1%5Baction%5D=detail';
+            $parameters[] = 'tx_reports_system_reportstxreportsm1%5Bcontroller%5D=Report';
+            return $baseUrl . implode('&', $parameters);
+        }
     }
 
     /**
