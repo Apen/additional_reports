@@ -9,6 +9,8 @@ namespace Sng\AdditionalReports\ViewHelpers;
  * LICENSE.txt file that was distributed with this source code.
  */
 
+use TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper;
+
 /**
  * Outputs an argument/value without any escaping. Is normally used to output
  * an ObjectAccessor which should not be escaped, but output as-is.
@@ -39,7 +41,7 @@ namespace Sng\AdditionalReports\ViewHelpers;
  * (Content of {string} without any conversion/escaping)
  * </output>
  */
-class RawViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper
+class RawViewHelper extends AbstractViewHelper
 {
 
     /**

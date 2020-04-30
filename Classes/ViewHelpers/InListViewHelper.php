@@ -9,13 +9,16 @@ namespace Sng\AdditionalReports\ViewHelpers;
  * LICENSE.txt file that was distributed with this source code.
  */
 
+use TYPO3\CMS\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 /**
  * ViewHelper to check if a variable is in a list
  *
  * Example
  * <AdditionalReports:inList list="{AdditionalReports:session(index:'agenda', identifier:'dates')}" item="{eventDate.filtre}">...</AdditionalReports:inList>
  */
-class InListViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractConditionViewHelper
+class InListViewHelper extends AbstractConditionViewHelper
 {
     public function initializeArguments()
     {
@@ -30,7 +33,7 @@ class InListViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractConditio
      */
     public function render()
     {
-        if (\TYPO3\CMS\Core\Utility\GeneralUtility::inList($this->arguments['list'], $this->arguments['item']) === true) {
+        if (GeneralUtility::inList($this->arguments['list'], $this->arguments['item'])) {
             return $this->renderThenChild();
         }
         return $this->renderElseChild();

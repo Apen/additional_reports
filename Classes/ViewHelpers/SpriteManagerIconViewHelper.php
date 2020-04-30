@@ -9,6 +9,8 @@ namespace Sng\AdditionalReports\ViewHelpers;
  * LICENSE.txt file that was distributed with this source code.
  */
 
+use TYPO3\CMS\Core\Imaging\Icon;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper;
 
@@ -32,7 +34,7 @@ class SpriteManagerIconViewHelper extends AbstractViewHelper
     {
         parent::initializeArguments();
         $this->registerArgument('iconName', 'string', 'as', true);
-        $this->registerArgument('size', 'integer', 'size', false, \TYPO3\CMS\Core\Imaging\Icon::SIZE_SMALL);
+        $this->registerArgument('size', 'integer', 'size', false, Icon::SIZE_SMALL);
     }
 
     /**
@@ -42,7 +44,7 @@ class SpriteManagerIconViewHelper extends AbstractViewHelper
      */
     public function render()
     {
-        $iconFactory = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(IconFactory::class);
+        $iconFactory = GeneralUtility::makeInstance(IconFactory::class);
         return $iconFactory->getIcon($this->arguments['iconName'], $this->arguments['size']);
     }
 }
