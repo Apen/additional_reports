@@ -39,11 +39,11 @@ class Extensions extends \Sng\AdditionalReports\Reports\AbstractReport implement
 
         $allExtension = \Sng\AdditionalReports\Utility::getInstExtList(PATH_typo3conf . 'ext/');
 
-        $listExtensionsTer = array();
-        $listExtensionsDev = array();
-        $listExtensionsUnloaded = array();
+        $listExtensionsTer = [];
+        $listExtensionsDev = [];
+        $listExtensionsUnloaded = [];
 
-        if (count($allExtension['ter']) > 0) {
+        if (!empty($allExtension['ter'])) {
             foreach ($allExtension['ter'] as $extKey => $itemValue) {
                 $currentExtension = $this->getExtensionInformations($itemValue);
                 if (version_compare($itemValue['EM_CONF']['version'], $itemValue['lastversion']['version'], '<')) {
@@ -56,24 +56,24 @@ class Extensions extends \Sng\AdditionalReports\Reports\AbstractReport implement
             }
         }
 
-        if (count($allExtension['dev']) > 0) {
+        if (!empty($allExtension['dev'])) {
             foreach ($allExtension['dev'] as $extKey => $itemValue) {
                 $listExtensionsDev[] = $this->getExtensionInformations($itemValue);
             }
         }
 
-        if (count($allExtension['unloaded']) > 0) {
+        if (!empty($allExtension['unloaded'])) {
             foreach ($allExtension['unloaded'] as $extKey => $itemValue) {
                 $listExtensionsUnloaded[] = $this->getExtensionInformations($itemValue);
             }
         }
 
         $addContent = '';
-        $addContent .= (count($allExtension['ter']) + count($allExtension['dev'])) . ' ' . \Sng\AdditionalReports\Utility::getLl('extensions_extensions');
+        $addContent .= (count($listExtensionsTer) + count($listExtensionsDev)) . ' ' . \Sng\AdditionalReports\Utility::getLl('extensions_extensions');
         $addContent .= '<br/>';
-        $addContent .= count($allExtension['ter']) . ' ' . \Sng\AdditionalReports\Utility::getLl('extensions_ter');
+        $addContent .= count($listExtensionsTer) . ' ' . \Sng\AdditionalReports\Utility::getLl('extensions_ter');
         $addContent .= '  /  ';
-        $addContent .= count($allExtension['dev']) . ' ' . \Sng\AdditionalReports\Utility::getLl('extensions_dev');
+        $addContent .= count($listExtensionsDev) . ' ' . \Sng\AdditionalReports\Utility::getLl('extensions_dev');
         $addContent .= '<br/>';
         $addContent .= $extensionsToUpdate . ' ' . \Sng\AdditionalReports\Utility::getLl('extensions_toupdate');
         $addContent .= '  /  ';
@@ -97,7 +97,7 @@ class Extensions extends \Sng\AdditionalReports\Reports\AbstractReport implement
     public function getExtensionInformations($itemValue)
     {
         $extKey = $itemValue['extkey'];
-        $listExtensionsTerItem = array();
+        $listExtensionsTerItem = [];
         $listExtensionsTerItem['icon'] = $itemValue['icon'];
         $listExtensionsTerItem['extension'] = $extKey;
         $listExtensionsTerItem['version'] = $itemValue['EM_CONF']['version'];
@@ -108,7 +108,7 @@ class Extensions extends \Sng\AdditionalReports\Reports\AbstractReport implement
 
         $uriBuilder = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Backend\Routing\UriBuilder::class);
         $routeIdentifier = 'additional_reports_compareFiles';
-        $uri = (string)$uriBuilder->buildUriFromRoute($routeIdentifier, array());
+        $uri = (string)$uriBuilder->buildUriFromRoute($routeIdentifier, []);
 
         // Bugfix for wrong CompareUrl in case of TYPO3 is installed in a subdirectory
         if (strpos($uri, 'typo3/index.php') > 0) {
@@ -155,7 +155,7 @@ class Extensions extends \Sng\AdditionalReports\Reports\AbstractReport implement
             $tsparserObj = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\TypoScript\\Parser\\TypoScriptParser');
             $tsparserObj->parse($configTemplate);
             $arr = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][$extKey]);
-            $arr = is_array($arr) ? $arr : array();
+            $arr = is_array($arr) ? $arr : [];
             $diffConf = array_diff_key($tsparserObj->setup, $arr);
             if (isset($diffConf['updateMessage'])) {
                 unset($diffConf['updateMessage']);
