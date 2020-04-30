@@ -17,10 +17,6 @@ namespace Sng\AdditionalReports\ViewHelpers;
  */
 class InListViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractConditionViewHelper
 {
-
-    /**
-     * @return void
-     */
     public function initializeArguments()
     {
         $this->registerArgument('list', 'string', 'List');
@@ -39,7 +35,4 @@ class InListViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractConditio
         }
         return $this->renderElseChild();
     }
-
 }
-
-?>

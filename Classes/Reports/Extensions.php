@@ -9,8 +9,6 @@ namespace Sng\AdditionalReports\Reports;
  * LICENSE.txt file that was distributed with this source code.
  */
 
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-
 class Extensions extends \Sng\AdditionalReports\Reports\AbstractReport implements \TYPO3\CMS\Reports\ReportInterface
 {
 
@@ -43,7 +41,7 @@ class Extensions extends \Sng\AdditionalReports\Reports\AbstractReport implement
         $listExtensionsDev = [];
         $listExtensionsUnloaded = [];
 
-        if (!empty($allExtension['ter'])) {
+        if (count($allExtension['ter']) > 0) {
             foreach ($allExtension['ter'] as $extKey => $itemValue) {
                 $currentExtension = $this->getExtensionInformations($itemValue);
                 if (version_compare($itemValue['EM_CONF']['version'], $itemValue['lastversion']['version'], '<')) {
@@ -56,24 +54,24 @@ class Extensions extends \Sng\AdditionalReports\Reports\AbstractReport implement
             }
         }
 
-        if (!empty($allExtension['dev'])) {
+        if (count($allExtension['dev']) > 0) {
             foreach ($allExtension['dev'] as $extKey => $itemValue) {
                 $listExtensionsDev[] = $this->getExtensionInformations($itemValue);
             }
         }
 
-        if (!empty($allExtension['unloaded'])) {
+        if (count($allExtension['unloaded']) > 0) {
             foreach ($allExtension['unloaded'] as $extKey => $itemValue) {
                 $listExtensionsUnloaded[] = $this->getExtensionInformations($itemValue);
             }
         }
 
         $addContent = '';
-        $addContent .= (count($listExtensionsTer) + count($listExtensionsDev)) . ' ' . \Sng\AdditionalReports\Utility::getLl('extensions_extensions');
+        $addContent .= (count($allExtension['ter']) + count($allExtension['dev'])) . ' ' . \Sng\AdditionalReports\Utility::getLl('extensions_extensions');
         $addContent .= '<br/>';
-        $addContent .= count($listExtensionsTer) . ' ' . \Sng\AdditionalReports\Utility::getLl('extensions_ter');
+        $addContent .= count($allExtension['ter']) . ' ' . \Sng\AdditionalReports\Utility::getLl('extensions_ter');
         $addContent .= '  /  ';
-        $addContent .= count($listExtensionsDev) . ' ' . \Sng\AdditionalReports\Utility::getLl('extensions_dev');
+        $addContent .= count($allExtension['dev']) . ' ' . \Sng\AdditionalReports\Utility::getLl('extensions_dev');
         $addContent .= '<br/>';
         $addContent .= $extensionsToUpdate . ' ' . \Sng\AdditionalReports\Utility::getLl('extensions_toupdate');
         $addContent .= '  /  ';
@@ -199,6 +197,4 @@ class Extensions extends \Sng\AdditionalReports\Reports\AbstractReport implement
 
         return $listExtensionsTerItem;
     }
-
 }
-

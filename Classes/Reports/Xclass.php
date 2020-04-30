@@ -31,7 +31,7 @@ class Xclass extends \Sng\AdditionalReports\Reports\AbstractReport implements \T
      */
     public function display()
     {
-        $xclassList = array();
+        $xclassList = [];
         $xclassList['objects'] = $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'];
         $view = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Fluid\\View\\StandaloneView');
         $view->setTemplatePathAndFilename(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('additional_reports') . 'Resources/Private/Templates/xclass-fluid.html');
@@ -39,6 +39,4 @@ class Xclass extends \Sng\AdditionalReports\Reports\AbstractReport implements \T
         $view->assign('typo3version', \Sng\AdditionalReports\Utility::intFromVer(TYPO3_version));
         return $view->render();
     }
-
 }
-

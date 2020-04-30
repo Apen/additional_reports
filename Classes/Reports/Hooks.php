@@ -9,8 +9,6 @@ namespace Sng\AdditionalReports\Reports;
  * LICENSE.txt file that was distributed with this source code.
  */
 
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-
 class Hooks extends \Sng\AdditionalReports\Reports\AbstractReport implements \TYPO3\CMS\Reports\ReportInterface
 {
 
@@ -33,7 +31,7 @@ class Hooks extends \Sng\AdditionalReports\Reports\AbstractReport implements \TY
      */
     public function display()
     {
-        $hooks = array();
+        $hooks = [];
 
         // core hooks
         $items = $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS'];
@@ -43,11 +41,11 @@ class Hooks extends \Sng\AdditionalReports\Reports\AbstractReport implements \TY
                     foreach ($itemValue as $hookName => $hookList) {
                         $hookList = \Sng\AdditionalReports\Utility::getHook($hookList);
                         if (!empty($hookList)) {
-                            $hooks['core'][] = array(
+                            $hooks['core'][] = [
                                 'corefile' => $itemKey,
                                 'name'     => $hookName,
                                 'file'     => \Sng\AdditionalReports\Utility::viewArray($hookList)
-                            );
+                            ];
                         }
                     }
                 }
@@ -60,11 +58,11 @@ class Hooks extends \Sng\AdditionalReports\Reports\AbstractReport implements \TY
                 foreach ($itemValue as $hookName => $hookList) {
                     $hookList = \Sng\AdditionalReports\Utility::getHook($hookList);
                     if (!empty($hookList)) {
-                        $hooks['extensions'][] = array(
+                        $hooks['extensions'][] = [
                             'corefile' => $itemKey,
                             'name'     => $hookName,
                             'file'     => \Sng\AdditionalReports\Utility::viewArray($hookList)
-                        );
+                        ];
                     }
                 }
             }
@@ -75,6 +73,4 @@ class Hooks extends \Sng\AdditionalReports\Reports\AbstractReport implements \TY
         $view->assign('hooks', $hooks);
         return $view->render();
     }
-
 }
-

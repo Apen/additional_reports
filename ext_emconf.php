@@ -24,4 +24,3 @@ $EM_CONF['additional_reports'] = [
                 [],
         ],
 ];
-

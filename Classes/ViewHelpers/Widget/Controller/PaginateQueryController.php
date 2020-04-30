@@ -19,7 +19,7 @@ class PaginateQueryController extends \TYPO3\CMS\Fluid\Core\Widget\AbstractWidge
     /**
      * @var array
      */
-    protected $configuration = array(
+    protected $configuration = [
         'itemsPerPage'           => 10,
         'insertAbove'            => false,
         'insertBelow'            => true,
@@ -29,7 +29,7 @@ class PaginateQueryController extends \TYPO3\CMS\Fluid\Core\Widget\AbstractWidge
         'forcedNumberOfLinks'    => 5,
         'forceFirstPrevNextlast' => false,
         'showFirstLast'          => true
-    );
+    ];
 
     /**
      * @var array
@@ -37,44 +37,42 @@ class PaginateQueryController extends \TYPO3\CMS\Fluid\Core\Widget\AbstractWidge
     protected $query;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $numberOfItems;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $currentPage = 1;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $pagesBefore = 1;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $pagesAfter = 1;
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $lessPages = false;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $forcedNumberOfLinks = 10;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $numberOfPages = 1;
 
     /**
      * Initialize the action and get correct configuration
-     *
-     * @return void
      */
     public function initializeAction()
     {
@@ -103,8 +101,6 @@ class PaginateQueryController extends \TYPO3\CMS\Fluid\Core\Widget\AbstractWidge
     /**
      * If a certain number of links should be displayed, adjust before and after
      * amounts accordingly.
-     *
-     * @return void
      */
     protected function adjustForForcedNumberOfLinks()
     {
@@ -115,7 +111,7 @@ class PaginateQueryController extends \TYPO3\CMS\Fluid\Core\Widget\AbstractWidge
         $totalNumberOfLinks = min($this->currentPage, $this->pagesBefore) +
             min($this->pagesAfter, $this->numberOfPages - $this->currentPage) + 1;
         if ($totalNumberOfLinks <= $forcedNumberOfLinks) {
-            $delta = intval(ceil(($forcedNumberOfLinks - $totalNumberOfLinks) / 2));
+            $delta = (int)(ceil(($forcedNumberOfLinks - $totalNumberOfLinks) / 2));
             $incr = ($forcedNumberOfLinks & 1) == 0 ? 1 : 0;
             if ($this->currentPage - ($this->pagesBefore + $delta) < 1) {
                 // Too little from the right to adjust
@@ -134,8 +130,7 @@ class PaginateQueryController extends \TYPO3\CMS\Fluid\Core\Widget\AbstractWidge
     /**
      * Main action which does all the fun
      *
-     * @param integer $currentPage
-     * @return void
+     * @param int $currentPage
      */
     public function indexAction($currentPage = 1)
     {
@@ -160,7 +155,7 @@ class PaginateQueryController extends \TYPO3\CMS\Fluid\Core\Widget\AbstractWidge
         $this->query['LIMIT'] = (integer)($itemsPerPage * ($this->currentPage - 1)) . ',' . $itemsPerPage;
         $res = \Sng\AdditionalReports\Utility::exec_SELECT_queryArray($this->query);
 
-        $modifiedObjects = array();
+        $modifiedObjects = [];
 
         while ($tempRow = $res->fetch()) {
             $modifiedObjects[] = $tempRow;
@@ -168,7 +163,7 @@ class PaginateQueryController extends \TYPO3\CMS\Fluid\Core\Widget\AbstractWidge
 
         $res->closeCursor();
 
-        $this->view->assign('contentArguments', array($this->widgetConfiguration['as'] => $modifiedObjects));
+        $this->view->assign('contentArguments', [$this->widgetConfiguration['as'] => $modifiedObjects]);
         $this->view->assign('configuration', $this->configuration);
         $this->view->assign('pagination', $this->buildPagination());
     }
@@ -183,15 +178,15 @@ class PaginateQueryController extends \TYPO3\CMS\Fluid\Core\Widget\AbstractWidge
     {
         $this->adjustForForcedNumberOfLinks();
 
-        $pages = array();
+        $pages = [];
         $start = max($this->currentPage - $this->pagesBefore, 0);
         $end = min($this->numberOfPages, $this->currentPage + $this->pagesAfter + 1);
         for ($i = $start; $i < $end; $i++) {
             $j = $i + 1;
-            $pages[] = array('number' => $j, 'isCurrent' => (intval($j) === intval($this->currentPage)));
+            $pages[] = ['number' => $j, 'isCurrent' => ((int)$j === (int)($this->currentPage))];
         }
 
-        $pagination = array(
+        $pagination = [
             'pages'         => $pages,
             'current'       => $this->currentPage,
             'numberOfPages' => $this->numberOfPages,
@@ -199,7 +194,7 @@ class PaginateQueryController extends \TYPO3\CMS\Fluid\Core\Widget\AbstractWidge
             'pagesBefore'   => $this->pagesBefore,
             'pagesAfter'    => $this->pagesAfter,
             'firstPageItem' => ($this->currentPage - 1) * (int)$this->configuration['itemsPerPage'] + 1
-        );
+        ];
         if ($this->currentPage < $this->numberOfPages) {
             $pagination['nextPage'] = $this->currentPage + 1;
             $pagination['lastPageItem'] = $this->currentPage * (integer)$this->configuration['itemsPerPage'];

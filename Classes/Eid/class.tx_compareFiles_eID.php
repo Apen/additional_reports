@@ -32,7 +32,7 @@ if ($mode === null) {
 switch ($mode) {
     case 'compareFile':
         if (strstr($file1, $realPathExt) === false) {
-            die ('Access denied.');
+            die('Access denied.');
         }
         $terFileContent = \Sng\AdditionalReports\Utility::downloadT3x($extKey, $extVersion, $extFile);
         t3Diff(\TYPO3\CMS\Core\Utility\GeneralUtility::getURL($file1), $terFileContent);

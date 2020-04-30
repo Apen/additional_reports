@@ -36,6 +36,4 @@ class CommandControllers extends \Sng\AdditionalReports\Reports\AbstractReport i
         $view->assign('items', $items);
         return $view->render();
     }
-
 }
-
