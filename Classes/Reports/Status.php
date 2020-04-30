@@ -187,7 +187,12 @@ class Status extends AbstractReport implements ReportInterface
 
         // TYPO3 database
         $items = Utility::getQueryBuilder()
-            ->select('table_name', 'engine', 'table_collation', 'table_rows')
+            ->select(
+                'table_name as table_name',
+                'engine as engine',
+                'table_collation as table_collation',
+                'table_rows as table_rows'
+            )
             ->add('select', '((data_length+index_length)/1024/1024) as "size"', true)
             ->from('information_schema.tables')
             ->where("table_schema = '" . $connectionParams['dbname'] . "'")
