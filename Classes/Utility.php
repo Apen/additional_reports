@@ -530,9 +530,9 @@ class Utility
             )->render();
         }
         return \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Imaging\IconFactory::class)->getIcon(
-                'apps-pagetree-page-default',
-                \TYPO3\CMS\Core\Imaging\Icon::SIZE_SMALL
-            )->render();
+            'apps-pagetree-page-default',
+            \TYPO3\CMS\Core\Imaging\Icon::SIZE_SMALL
+        )->render();
     }
 
     /**
@@ -551,9 +551,9 @@ class Utility
             )->render();
         }
         return \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Imaging\IconFactory::class)->getIcon(
-                'content-text',
-                \TYPO3\CMS\Core\Imaging\Icon::SIZE_SMALL
-            )->render();
+            'content-text',
+            \TYPO3\CMS\Core\Imaging\Icon::SIZE_SMALL
+        )->render();
     }
 
     /**
@@ -808,7 +808,7 @@ class Utility
     {
         $EM_CONF = [];
         if (!is_string($key) || empty($key)) {
-            throw new InvalidArgumentException('Extension key must be a non-empty string.');
+            throw new \InvalidArgumentException('Extension key must be a non-empty string.');
         }
         if (!\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded($key)) {
             return null;
@@ -1048,13 +1048,13 @@ class Utility
             return $query;
         }
         return \Sng\AdditionalReports\Utility::exec_SELECTgetRows(
-                $query['SELECT'],
-                $query['FROM'],
-                $query['WHERE'],
-                '',
-                $query['ORDERBY'],
-                $query['LIMIT']
-            );
+            $query['SELECT'],
+            $query['FROM'],
+            $query['WHERE'],
+            '',
+            $query['ORDERBY'],
+            $query['LIMIT']
+        );
     }
 
     /**
@@ -1077,13 +1077,13 @@ class Utility
             return $query;
         }
         return \Sng\AdditionalReports\Utility::exec_SELECTgetRows(
-                $query['SELECT'],
-                $query['FROM'],
-                $query['WHERE'],
-                '',
-                $query['ORDERBY'],
-                $query['LIMIT']
-            );
+            $query['SELECT'],
+            $query['FROM'],
+            $query['WHERE'],
+            '',
+            $query['ORDERBY'],
+            $query['LIMIT']
+        );
     }
 
     /**

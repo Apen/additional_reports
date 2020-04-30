@@ -9,6 +9,8 @@ namespace Sng\AdditionalReports\Reports;
  * LICENSE.txt file that was distributed with this source code.
  */
 
+use TYPO3\CMS\Core\Utility\CommandUtility;
+
 class Status extends \Sng\AdditionalReports\Reports\AbstractReport implements \TYPO3\CMS\Reports\ReportInterface
 {
 
@@ -65,7 +67,7 @@ class Status extends \Sng\AdditionalReports\Reports\AbstractReport implements \T
             . $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['host']
         );
         if ($GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path'] != '') {
-            $cmd = \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', '-version');
+            $cmd = CommandUtility::imageMagickCommand('convert', '-version');
             exec($cmd, $ret);
             $content .= \Sng\AdditionalReports\Utility::writeInformation(
                 \Sng\AdditionalReports\Utility::getLl('status_im'),
