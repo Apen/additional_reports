@@ -23,7 +23,7 @@ class Extensions extends AbstractReport implements ReportInterface
     /**
      * This method renders the report
      *
-     * @return       string    The status report as HTML
+     * @return string the status report as HTML
      */
     public function getReport()
     {

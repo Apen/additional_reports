@@ -21,7 +21,7 @@ class AbstractReport
     /**
      * Back-reference to the calling reports module
      *
-     * @var       object $reportObject
+     * @var object $reportObject
      */
     protected $reportObject;
 
