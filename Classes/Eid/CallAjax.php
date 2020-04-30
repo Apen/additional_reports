@@ -9,6 +9,11 @@ namespace Sng\AdditionalReports\Eid;
  * LICENSE.txt file that was distributed with this source code.
  */
 
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\ResponseInterface;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use Sng\AdditionalReports\Utility;
+use TYPO3\CMS\Core\Utility\DiffUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class CallAjax
@@ -18,13 +23,13 @@ class CallAjax
      * @param \Psr\Http\Message\ResponseInterface      $response
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function main(\Psr\Http\Message\ServerRequestInterface $request, \Psr\Http\Message\ResponseInterface $response)
+    public function main(ServerRequestInterface $request, ResponseInterface $response)
     {
         $mode = GeneralUtility::_GP('mode');
         $extKey = GeneralUtility::_GP('extKey');
         $extFile = GeneralUtility::_GP('extFile');
         $extVersion = GeneralUtility::_GP('extVersion');
-        $file1 = realpath(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath($extKey, $extFile));
+        $file1 = realpath(ExtensionManagementUtility::extPath($extKey, $extFile));
         $realPathExt = realpath(PATH_site . 'typo3conf/ext/' . $extKey);
 
         if ($mode === null) {
@@ -33,33 +38,26 @@ class CallAjax
 
         $content = '<div style="background:white;">';
 
-        switch ($mode) {
-            case 'compareFile':
-                if (strstr($file1, $realPathExt) === false) {
-                    die ('Access denied.');
+        if ($mode == 'compareFile') {
+            if (!strstr($file1, $realPathExt)) {
+                die ('Access denied.');
+            }
+            $terFileContent = Utility::downloadT3x($extKey, $extVersion, $extFile);
+            $content .= $this->t3Diff(GeneralUtility::getURL($file1), $terFileContent);
+        } elseif ($mode == 'compareExtension') {
+            $t3xfiles = Utility::downloadT3x($extKey, $extVersion);
+            $diff = 0;
+            foreach ($t3xfiles['FILES'] as $filePath => $file) {
+                $currentFileContent = GeneralUtility::getURL($realPathExt . '/' . $filePath);
+                if ($file['content_md5'] !== md5($currentFileContent)) {
+                    $diff++;
+                    $content .= '<h2>' . $filePath . '</h2>';
+                    $content .= $this->t3Diff($currentFileContent, $file['content']);
                 }
-                $terFileContent = \Sng\AdditionalReports\Utility::downloadT3x($extKey, $extVersion, $extFile);
-                $content .= $this->t3Diff(GeneralUtility::getURL($file1), $terFileContent);
-                break;
-            case 'compareExtension':
-                $t3xfiles = \Sng\AdditionalReports\Utility::downloadT3x($extKey, $extVersion);
-
-                $diff = 0;
-
-                foreach ($t3xfiles['FILES'] as $filePath => $file) {
-                    $currentFileContent = GeneralUtility::getURL($realPathExt . '/' . $filePath);
-                    if ($file['content_md5'] !== md5($currentFileContent)) {
-                        $diff++;
-                        $content .= '<h2>' . $filePath . '</h2>';
-                        $content .= $this->t3Diff($currentFileContent, $file['content']);
-                    }
-                }
-
-                if (empty($diff)) {
-                    $content .= 'No diff to show';
-                }
-
-                break;
+            }
+            if (empty($diff)) {
+                $content .= 'No diff to show';
+            }
         }
 
         $content .= '</div>';
@@ -74,7 +72,7 @@ class CallAjax
      */
     public function t3Diff($file1, $file2)
     {
-        $diff = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Utility\\DiffUtility');
+        $diff = GeneralUtility::makeInstance(DiffUtility::class);
         $diff->stripTags = false;
         $sourcesDiff = $diff->makeDiffDisplay($file1, $file2);
         return $this->printT3Diff($sourcesDiff);
@@ -90,7 +88,7 @@ class CallAjax
         $out .= '<table border="0" cellspacing="0" cellpadding="0" style="width:780px;padding:8px;">';
         $out .= '<tr><td style="background-color: #FDD;"><strong>Local file</strong></td></tr>';
         $out .= '<tr><td style="background-color: #DFD;"><strong>TER file</strong></td></tr>';
-        $out = $out . $sourcesDiff;
+        $out .= $sourcesDiff;
         $out .= '</table>';
         $out .= '</pre>';
         return $out;
