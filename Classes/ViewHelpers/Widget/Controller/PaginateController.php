@@ -9,8 +9,9 @@ namespace Sng\AdditionalReports\ViewHelpers\Widget\Controller;
  * LICENSE.txt file that was distributed with this source code.
  */
 
-use TYPO3\CMS\Fluid\Core\Widget\AbstractWidgetController;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
+use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
+use TYPO3\CMS\Fluid\Core\Widget\AbstractWidgetController;
 
 /**
  * Paginate controller to create the pagination.

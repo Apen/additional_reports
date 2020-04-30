@@ -9,11 +9,11 @@ namespace Sng\AdditionalReports;
  * LICENSE.txt file that was distributed with this source code.
  */
 
-use TYPO3\CMS\Core\Imaging\IconFactory;
-use TYPO3\CMS\Core\Imaging\Icon;
-use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
+use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Imaging\Icon;
+use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\Page\PageRepository;
@@ -190,9 +190,6 @@ class Utility
 
     /**
      * Splits a version range into an array.
-     *
-     * If a single version number is given, it is considered a minimum value.
-     * If a dash is found, the numbers left and right are considered as minimum and maximum. Empty values are allowed.
      *
      * @param string $ver A string with a version range.
      * @return array
@@ -1375,7 +1372,6 @@ class Utility
 
     /**
      * Creates and executes a SELECT SQL-statement
-     * Using this function specifically allow us to handle the LIMIT feature independently of DB.
      *
      * @param string $select_fields List of fields to select from the table. This is what comes right after "SELECT ...". Required value.
      * @param string $from_table    Table(s) from which to select. This is what comes right after "FROM ...". Required value.
