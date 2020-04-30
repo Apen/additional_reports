@@ -9,11 +9,15 @@ namespace Sng\AdditionalReports\ViewHelpers\Widget\Controller;
  * LICENSE.txt file that was distributed with this source code.
  */
 
+use TYPO3\CMS\Fluid\Core\Widget\AbstractWidgetController;
+use TYPO3\CMS\Core\Utility\ArrayUtility;
+use Sng\AdditionalReports\Utility;
+
 /**
  * PaginateQuery controller to create the pagination.
  * Extended version from fluid core
  */
-class PaginateQueryController extends \TYPO3\CMS\Fluid\Core\Widget\AbstractWidgetController
+class PaginateQueryController extends AbstractWidgetController
 {
 
     /**
@@ -34,7 +38,7 @@ class PaginateQueryController extends \TYPO3\CMS\Fluid\Core\Widget\AbstractWidge
     /**
      * @var array
      */
-    protected $query;
+    protected $query = [];
 
     /**
      * @var int
@@ -74,10 +78,10 @@ class PaginateQueryController extends \TYPO3\CMS\Fluid\Core\Widget\AbstractWidge
     /**
      * Initialize the action and get correct configuration
      */
-    public function initializeAction()
+    protected function initializeAction()
     {
         $this->query = $this->widgetConfiguration['query'];
-        \TYPO3\CMS\Core\Utility\ArrayUtility::mergeRecursiveWithOverrule(
+        ArrayUtility::mergeRecursiveWithOverrule(
             $this->configuration,
             (array)$this->widgetConfiguration['configuration'],
             true
@@ -87,7 +91,7 @@ class PaginateQueryController extends \TYPO3\CMS\Fluid\Core\Widget\AbstractWidge
             $this->configuration['itemsPerPage'] = 50;
         }
 
-        $res = \Sng\AdditionalReports\Utility::exec_SELECT_queryArray($this->query);
+        $res = Utility::exec_SELECT_queryArray($this->query);
         $this->numberOfItems = $res->rowCount();
         $res->closeCursor();
         $this->numberOfPages = ceil($this->numberOfItems / (integer)$this->configuration['itemsPerPage']);
@@ -112,7 +116,7 @@ class PaginateQueryController extends \TYPO3\CMS\Fluid\Core\Widget\AbstractWidge
             min($this->pagesAfter, $this->numberOfPages - $this->currentPage) + 1;
         if ($totalNumberOfLinks <= $forcedNumberOfLinks) {
             $delta = (int)(ceil(($forcedNumberOfLinks - $totalNumberOfLinks) / 2));
-            $incr = ($forcedNumberOfLinks & 1) == 0 ? 1 : 0;
+            $incr = ($forcedNumberOfLinks & 1) === 0 ? 1 : 0;
             if ($this->currentPage - ($this->pagesBefore + $delta) < 1) {
                 // Too little from the right to adjust
                 $this->pagesAfter = $forcedNumberOfLinks - $this->currentPage - 1;
@@ -137,7 +141,7 @@ class PaginateQueryController extends \TYPO3\CMS\Fluid\Core\Widget\AbstractWidge
         // ugly patch to work without extbase (sry for that)
         $widgetIdentifier = '@widget_0';
 
-        if (($currentPage == 1) && (!empty($_GET['tx__'][$widgetIdentifier]['currentPage']))) {
+        if (($currentPage === 1) && (!empty($_GET['tx__'][$widgetIdentifier]['currentPage']))) {
             $currentPage = (int)$_GET['tx__'][$widgetIdentifier]['currentPage'];
         }
 
@@ -153,7 +157,7 @@ class PaginateQueryController extends \TYPO3\CMS\Fluid\Core\Widget\AbstractWidge
         $itemsPerPage = (integer)$this->configuration['itemsPerPage'];
 
         $this->query['LIMIT'] = (integer)($itemsPerPage * ($this->currentPage - 1)) . ',' . $itemsPerPage;
-        $res = \Sng\AdditionalReports\Utility::exec_SELECT_queryArray($this->query);
+        $res = Utility::exec_SELECT_queryArray($this->query);
 
         $modifiedObjects = [];
 
@@ -213,7 +217,7 @@ class PaginateQueryController extends \TYPO3\CMS\Fluid\Core\Widget\AbstractWidge
         }
 
         // next pages (after current)
-        if ($end != $this->numberOfPages && $this->lessPages) {
+        if ($end !== $this->numberOfPages && $this->lessPages) {
             $pagination['morePages'] = true;
         }
 

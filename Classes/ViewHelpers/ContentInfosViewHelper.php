@@ -10,6 +10,9 @@ namespace Sng\AdditionalReports\ViewHelpers;
  */
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
+use TYPO3\CMS\Core\Localization\LocalizationFactory;
+use Sng\AdditionalReports\Utility;
 
 /**
  * ViewHelper to get all infos on a plugin or content
@@ -17,7 +20,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * Example
  * <ar:contentInfos item="{item}" as="item" ctype="TRUE"/>
  */
-class ContentInfosViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractConditionViewHelper
+class ContentInfosViewHelper extends AbstractConditionViewHelper
 {
     public function initializeArguments()
     {
@@ -41,16 +44,16 @@ class ContentInfosViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractCo
         $plugin = $this->arguments['plugin'];
         $ctype = $this->arguments['ctype'];
 
-        $languageFactory = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Localization\LocalizationFactory::class);
+        $languageFactory = GeneralUtility::makeInstance(LocalizationFactory::class);
 
         // plugin
         if ($plugin === true) {
-            foreach ($GLOBALS['TCA']['tt_content']['columns']['list_type']['config']['items'] as $itemKey => $itemValue) {
+            foreach ($GLOBALS['TCA']['tt_content']['columns']['list_type']['config']['items'] as $itemValue) {
                 if (trim($itemValue[1]) == $item['list_type']) {
-                    preg_match('/EXT:(.*?)\//', $itemValue[0], $ext);
-                    preg_match('/^LLL:(EXT:.*?):(.*)/', $itemValue[0], $llfile);
+                    preg_match('#EXT:(.*?)\/#', $itemValue[0], $ext);
+                    preg_match('#^LLL:(EXT:.*?):(.*)#', $itemValue[0], $llfile);
                     $localLang = $languageFactory->getParsedData($llfile[1], $GLOBALS['LANG']->lang);
-                    $item['iconext'] = \Sng\AdditionalReports\Utility::getExtIcon($ext[1]);
+                    $item['iconext'] = Utility::getExtIcon($ext[1]);
                     $item['extension'] = $ext[1];
                     $item['plugin'] = $GLOBALS['LANG']->getLLL($llfile[2], $localLang) . ' (' . $item['list_type'] . ')';
                 } else {
@@ -64,9 +67,9 @@ class ContentInfosViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractCo
             foreach ($GLOBALS['TCA']['tt_content']['columns']['CType']['config']['items'] as $itemValue) {
                 if ($itemValue[1] != '--div--') {
                     if (trim($itemValue[1]) == $item['CType']) {
-                        preg_match('/^LLL:(EXT:.*?):(.*)/', $itemValue[0], $llfile);
+                        preg_match('#^LLL:(EXT:.*?):(.*)#', $itemValue[0], $llfile);
                         $localLang = $languageFactory->getParsedData($llfile[1], $GLOBALS['LANG']->lang);
-                        $item['iconext'] = \Sng\AdditionalReports\Utility::getContentTypeIcon($itemValue[2]);
+                        $item['iconext'] = Utility::getContentTypeIcon($itemValue[2]);
                         $item['ctype'] = $GLOBALS['LANG']->getLLL($llfile[2], $localLang) . ' (' . $item['CType'] . ')';
                     } else {
                         $item['ctype'] = $item['CType'];
@@ -75,7 +78,7 @@ class ContentInfosViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractCo
             }
         }
 
-        $item = array_merge($item, \Sng\AdditionalReports\Utility::getContentInfos($item));
+        $item = array_merge($item, Utility::getContentInfos($item));
 
         if ($this->templateVariableContainer->exists($as)) {
             $this->templateVariableContainer->remove($as);
