@@ -9,11 +9,11 @@ namespace Sng\AdditionalReports\Eid;
  * LICENSE.txt file that was distributed with this source code.
  */
 
-use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use Psr\Http\Message\ServerRequestInterface;
 use Sng\AdditionalReports\Utility;
 use TYPO3\CMS\Core\Utility\DiffUtility;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class CallAjax
@@ -40,7 +40,7 @@ class CallAjax
 
         if ($mode == 'compareFile') {
             if (!strstr($file1, $realPathExt)) {
-                die ('Access denied.');
+                die('Access denied.');
             }
             $terFileContent = Utility::downloadT3x($extKey, $extVersion, $extFile);
             $content .= $this->t3Diff(GeneralUtility::getURL($file1), $terFileContent);
@@ -93,5 +93,4 @@ class CallAjax
         $out .= '</pre>';
         return $out;
     }
-
 }

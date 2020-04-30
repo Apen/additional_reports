@@ -9,10 +9,10 @@ namespace Sng\AdditionalReports\ViewHelpers;
  * LICENSE.txt file that was distributed with this source code.
  */
 
+use Sng\AdditionalReports\Utility;
+use TYPO3\CMS\Core\Localization\LocalizationFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
-use TYPO3\CMS\Core\Localization\LocalizationFactory;
-use Sng\AdditionalReports\Utility;
 
 /**
  * ViewHelper to get all infos on a plugin or content
