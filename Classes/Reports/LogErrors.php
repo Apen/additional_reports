@@ -9,18 +9,23 @@ namespace Sng\AdditionalReports\Reports;
  * LICENSE.txt file that was distributed with this source code.
  */
 
-class LogErrors extends \Sng\AdditionalReports\Reports\AbstractReport implements \TYPO3\CMS\Reports\ReportInterface
+use TYPO3\CMS\Fluid\View\StandaloneView;
+use TYPO3\CMS\Reports\ReportInterface;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use Sng\AdditionalReports\Utility;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+
+class LogErrors extends AbstractReport implements ReportInterface
 {
 
     /**
      * This method renders the report
      *
-     * @return    string    The status report as HTML
+     * @return       string    The status report as HTML
      */
     public function getReport()
     {
-        $content = $this->display();
-        return $content;
+        return $this->display();
     }
 
     /**
@@ -40,23 +45,23 @@ class LogErrors extends \Sng\AdditionalReports\Reports\AbstractReport implements
         $query['ORDERBY'] = 'nb DESC,tstamp DESC';
         $query['LIMIT'] = '';
 
-        $orderby = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('orderby');
+        $orderby = GeneralUtility::_GP('orderby');
         if ($orderby !== null) {
             $query['ORDERBY'] = $orderby;
         }
 
-        $content = \Sng\AdditionalReports\Utility::writeInformation(
-            \Sng\AdditionalReports\Utility::getLl('flushalllog'),
+        $content = Utility::writeInformation(
+            Utility::getLl('flushalllog'),
             'DELETE FROM sys_log WHERE error>0;'
         );
 
         $logErrors = [];
 
-        $view = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Fluid\\View\\StandaloneView');
-        $view->setTemplatePathAndFilename(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('additional_reports') . 'Resources/Private/Templates/logerrors-fluid.html');
+        $view = GeneralUtility::makeInstance(StandaloneView::class);
+        $view->setTemplatePathAndFilename(ExtensionManagementUtility::extPath('additional_reports') . 'Resources/Private/Templates/logerrors-fluid.html');
         $view->assign('extconf', unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['additional_reports']));
-        $view->assign('baseUrl', \Sng\AdditionalReports\Utility::getBaseUrl());
-        $view->assign('requestDir', \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR'));
+        $view->assign('baseUrl', Utility::getBaseUrl());
+        $view->assign('requestDir', GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR'));
         $view->assign('query', $query);
 
         return $content . $view->render();

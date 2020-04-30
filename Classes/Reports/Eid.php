@@ -9,18 +9,23 @@ namespace Sng\AdditionalReports\Reports;
  * LICENSE.txt file that was distributed with this source code.
  */
 
-class Eid extends \Sng\AdditionalReports\Reports\AbstractReport implements \TYPO3\CMS\Reports\ReportInterface
+use TYPO3\CMS\Fluid\View\StandaloneView;
+use TYPO3\CMS\Reports\ReportInterface;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use Sng\AdditionalReports\Utility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
+class Eid extends AbstractReport implements ReportInterface
 {
 
     /**
      * This method renders the report
      *
-     * @return    string    The status report as HTML
+     * @return       string    The status report as HTML
      */
     public function getReport()
     {
-        $content = $this->display();
-        return $content;
+        return $this->display();
     }
 
     /**
@@ -35,10 +40,10 @@ class Eid extends \Sng\AdditionalReports\Reports\AbstractReport implements \TYPO
 
         if (count($items) > 0) {
             foreach ($items as $itemKey => $itemValue) {
-                preg_match('/EXT:(.*?)\//', $itemValue, $ext);
-                if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded($ext[1])) {
+                preg_match('#EXT:(.*?)\/#', $itemValue, $ext);
+                if (ExtensionManagementUtility::isLoaded($ext[1])) {
                     $eids[] = [
-                        'icon'      => \Sng\AdditionalReports\Utility::getExtIcon($ext[1]),
+                        'icon'      => Utility::getExtIcon($ext[1]),
                         'extension' => $ext[1],
                         'name'      => $itemKey,
                         'path'      => $itemValue
@@ -47,8 +52,8 @@ class Eid extends \Sng\AdditionalReports\Reports\AbstractReport implements \TYPO
             }
         }
 
-        $view = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Fluid\\View\\StandaloneView');
-        $view->setTemplatePathAndFilename(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('additional_reports') . 'Resources/Private/Templates/eid-fluid.html');
+        $view = GeneralUtility::makeInstance(StandaloneView::class);
+        $view->setTemplatePathAndFilename(ExtensionManagementUtility::extPath('additional_reports') . 'Resources/Private/Templates/eid-fluid.html');
         $view->assign('eids', $eids);
         return $view->render();
     }
