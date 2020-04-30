@@ -46,7 +46,7 @@ class RawViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper
      * Disable the escaping interceptor because otherwise the child nodes would be escaped before this view helper
      * can decode the text's entities.
      *
-     * @var boolean
+     * @var bool
      */
     protected $escapingInterceptorEnabled = false;
 
@@ -58,11 +58,7 @@ class RawViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper
     {
         if ($value === null) {
             return $this->renderChildren();
-        } else {
-            return $value;
         }
+        return $value;
     }
-
 }
-
-?>

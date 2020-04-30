@@ -31,18 +31,18 @@ class Eid extends \Sng\AdditionalReports\Reports\AbstractReport implements \TYPO
     public function display()
     {
         $items = $GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include'];
-        $eids = array();
+        $eids = [];
 
         if (count($items) > 0) {
             foreach ($items as $itemKey => $itemValue) {
                 preg_match('/EXT:(.*?)\//', $itemValue, $ext);
                 if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded($ext[1])) {
-                    $eids[] = array(
+                    $eids[] = [
                         'icon'      => \Sng\AdditionalReports\Utility::getExtIcon($ext[1]),
                         'extension' => $ext[1],
                         'name'      => $itemKey,
                         'path'      => $itemValue
-                    );
+                    ];
                 }
             }
         }
@@ -52,6 +52,4 @@ class Eid extends \Sng\AdditionalReports\Reports\AbstractReport implements \TYPO
         $view->assign('eids', $eids);
         return $view->render();
     }
-
 }
-

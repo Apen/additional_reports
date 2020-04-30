@@ -45,5 +45,4 @@ class SpriteManagerIconViewHelper extends AbstractViewHelper
         $iconFactory = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(IconFactory::class);
         return $iconFactory->getIcon($this->arguments['iconName'], $this->arguments['size']);
     }
-
 }

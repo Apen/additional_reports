@@ -9,8 +9,6 @@ namespace Sng\AdditionalReports\Reports;
  * LICENSE.txt file that was distributed with this source code.
  */
 
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-
 class Status extends \Sng\AdditionalReports\Reports\AbstractReport implements \TYPO3\CMS\Reports\ReportInterface
 {
 
@@ -70,7 +68,8 @@ class Status extends \Sng\AdditionalReports\Reports\AbstractReport implements \T
             $cmd = \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', '-version');
             exec($cmd, $ret);
             $content .= \Sng\AdditionalReports\Utility::writeInformation(
-                \Sng\AdditionalReports\Utility::getLl('status_im'), $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path'] . ' (' . $ret[0] . ')'
+                \Sng\AdditionalReports\Utility::getLl('status_im'),
+                $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path'] . ' (' . $ret[0] . ')'
             );
         }
         $content .= \Sng\AdditionalReports\Utility::writeInformation('forceCharset', $GLOBALS['TYPO3_CONF_VARS']['BE']['forceCharset']);
@@ -82,7 +81,7 @@ class Status extends \Sng\AdditionalReports\Reports\AbstractReport implements \T
         $extensions = explode(',', $GLOBALS['TYPO3_CONF_VARS']['EXT']['extList']);
 
         if (is_file(PATH_site . 'typo3conf/PackageStates.php')) {
-            $extensions = array();
+            $extensions = [];
             $packages = include(PATH_site . 'typo3conf/PackageStates.php');
             foreach ($packages['packages'] as $extensionKey => $package) {
                 $extensions[] = $extensionKey;
@@ -94,7 +93,8 @@ class Status extends \Sng\AdditionalReports\Reports\AbstractReport implements \T
             $extensions[$aKey] = $extension . ' (' . \Sng\AdditionalReports\Utility::getExtensionVersion($extension) . ')';
         }
         $content .= \Sng\AdditionalReports\Utility::writeInformationList(
-            \Sng\AdditionalReports\Utility::getLl('status_loadedextensions'), $extensions
+            \Sng\AdditionalReports\Utility::getLl('status_loadedextensions'),
+            $extensions
         );
 
         $view->assign('typo3', $content);
@@ -123,16 +123,19 @@ class Status extends \Sng\AdditionalReports\Reports\AbstractReport implements \T
             $apacheUser = posix_getpwuid(posix_getuid());
             $apacheGroup = posix_getgrgid(posix_getgid());
             $content .= \Sng\AdditionalReports\Utility::writeInformation(
-                'Apache user', $apacheUser['name'] . ' (' . $apacheUser['uid'] . ')'
+                'Apache user',
+                $apacheUser['name'] . ' (' . $apacheUser['uid'] . ')'
             );
             $content .= \Sng\AdditionalReports\Utility::writeInformation(
-                'Apache group', $apacheGroup['name'] . ' (' . $apacheGroup['gid'] . ')'
+                'Apache group',
+                $apacheGroup['name'] . ' (' . $apacheGroup['gid'] . ')'
             );
         }
         $extensions = array_map('strtolower', get_loaded_extensions());
         natcasesort($extensions);
         $content .= \Sng\AdditionalReports\Utility::writeInformationList(
-            \Sng\AdditionalReports\Utility::getLl('status_loadedextensions'), $extensions
+            \Sng\AdditionalReports\Utility::getLl('status_loadedextensions'),
+            $extensions
         );
 
         $view->assign('php', $content);
@@ -142,10 +145,12 @@ class Status extends \Sng\AdditionalReports\Reports\AbstractReport implements \T
             $extensions = apache_get_modules();
             natcasesort($extensions);
             $content = \Sng\AdditionalReports\Utility::writeInformation(
-                \Sng\AdditionalReports\Utility::getLl('status_version'), apache_get_version()
+                \Sng\AdditionalReports\Utility::getLl('status_version'),
+                apache_get_version()
             );
             $content .= \Sng\AdditionalReports\Utility::writeInformationList(
-                \Sng\AdditionalReports\Utility::getLl('status_loadedextensions'), $extensions
+                \Sng\AdditionalReports\Utility::getLl('status_loadedextensions'),
+                $extensions
             );
             $view->assign('apache', $content);
         } else {
@@ -166,7 +171,8 @@ class Status extends \Sng\AdditionalReports\Reports\AbstractReport implements \T
             ->fetchAll();
 
         $content .= \Sng\AdditionalReports\Utility::writeInformation(
-            'default_character_set_name', $items[0]['default_character_set_name']
+            'default_character_set_name',
+            $items[0]['default_character_set_name']
         );
         $content .= \Sng\AdditionalReports\Utility::writeInformation('default_collation_name', $items[0]['default_collation_name']);
         $content .= \Sng\AdditionalReports\Utility::writeInformation('query_cache', \Sng\AdditionalReports\Utility::getMySqlCacheInformations());
@@ -182,17 +188,17 @@ class Status extends \Sng\AdditionalReports\Reports\AbstractReport implements \T
             ->execute()
             ->fetchAll();
 
-        $tables = array();
+        $tables = [];
         $size = 0;
 
         foreach ($items as $itemValue) {
-            $tables[] = array(
+            $tables[] = [
                 'name'      => $itemValue['table_name'],
                 'engine'    => $itemValue['engine'],
                 'collation' => $itemValue['table_collation'],
                 'rows'      => $itemValue['table_rows'],
                 'size'      => round($itemValue['size'], 2),
-            );
+            ];
             $size += round($itemValue['size'], 2);
         }
 
@@ -217,5 +223,4 @@ class Status extends \Sng\AdditionalReports\Reports\AbstractReport implements \T
 
         return $view->render();
     }
-
 }

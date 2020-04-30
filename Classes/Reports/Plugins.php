@@ -9,8 +9,6 @@ namespace Sng\AdditionalReports\Reports;
  * LICENSE.txt file that was distributed with this source code.
  */
 
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-
 class Plugins extends \Sng\AdditionalReports\Reports\AbstractReport implements \TYPO3\CMS\Reports\ReportInterface
 {
 
@@ -45,19 +43,19 @@ class Plugins extends \Sng\AdditionalReports\Reports\AbstractReport implements \
         $view->assign('checkedpluginsmode7', (\Sng\AdditionalReports\Utility::getPluginsDisplayMode() == 7) ? ' checked="checked"' : '');
 
         switch (\Sng\AdditionalReports\Utility::getPluginsDisplayMode()) {
-            case 3 :
+            case 3:
                 $view->assign('filtersCat', \Sng\AdditionalReports\Utility::getAllDifferentCtypesSelect(false));
                 $view->assign('items', self::getAllUsedCtypes());
                 break;
-            case 4 :
+            case 4:
                 $view->assign('filtersCat', \Sng\AdditionalReports\Utility::getAllDifferentPluginsSelect(false));
                 $view->assign('items', self::getAllUsedPlugins());
                 break;
-            case 6 :
+            case 6:
                 $view->assign('filtersCat', \Sng\AdditionalReports\Utility::getAllDifferentPluginsSelect(true));
                 $view->assign('items', self::getAllUsedPlugins(true));
                 break;
-            case 7 :
+            case 7:
                 $view->assign('filtersCat', \Sng\AdditionalReports\Utility::getAllDifferentCtypesSelect(true));
                 $view->assign('items', self::getAllUsedCtypes(true));
                 break;
@@ -84,15 +82,14 @@ class Plugins extends \Sng\AdditionalReports\Reports\AbstractReport implements \
      */
     public static function getSummary()
     {
-
-        $plugins = array();
+        $plugins = [];
         foreach ($GLOBALS['TCA']['tt_content']['columns']['list_type']['config']['items'] as $itemKey => $itemValue) {
             if (trim($itemValue[1]) != '') {
                 $plugins[$itemValue[1]] = $itemValue;
             }
         }
 
-        $ctypes = array();
+        $ctypes = [];
         foreach ($GLOBALS['TCA']['tt_content']['columns']['CType']['config']['items'] as $itemKey => $itemValue) {
             if ($itemValue[1] != '--div--') {
                 $ctypes[$itemValue[1]] = $itemValue;
@@ -100,7 +97,8 @@ class Plugins extends \Sng\AdditionalReports\Reports\AbstractReport implements \
         }
 
         $itemsCount = \Sng\AdditionalReports\Utility::exec_SELECTgetRows(
-            'COUNT( tt_content.uid ) as "nb"', 'tt_content,pages',
+            'COUNT( tt_content.uid ) as "nb"',
+            'tt_content,pages',
             'tt_content.pid=pages.uid AND pages.pid>=0 AND tt_content.hidden=0 ' .
             'AND tt_content.deleted=0 AND pages.hidden=0 AND pages.deleted=0'
         );
@@ -114,11 +112,11 @@ class Plugins extends \Sng\AdditionalReports\Reports\AbstractReport implements \
             'nb DESC'
         );
 
-        $allItems = array();
+        $allItems = [];
         $languageFactory = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Localization\LocalizationFactory::class);
 
         foreach ($items as $itemKey => $itemValue) {
-            $itemTemp = array();
+            $itemTemp = [];
             if ($itemValue['CType'] == 'list') {
                 preg_match('/EXT:(.*?)\//', $plugins[$itemValue['list_type']][0], $ext);
                 preg_match('/^LLL:(EXT:.*?):(.*)/', $plugins[$itemValue['list_type']][0], $llfile);
@@ -154,7 +152,7 @@ class Plugins extends \Sng\AdditionalReports\Reports\AbstractReport implements \
     /**
      * Generate the used plugins report
      *
-     * @param boolean $displayHidden
+     * @param bool $displayHidden
      * @return string HTML code
      */
     public static function getAllUsedPlugins($displayHidden = false)
@@ -168,7 +166,7 @@ class Plugins extends \Sng\AdditionalReports\Reports\AbstractReport implements \
     /**
      * Generate the used ctypes    report
      *
-     * @param boolean $displayHidden
+     * @param bool $displayHidden
      * @return string HTML code
      */
     public static function getAllUsedCtypes($displayHidden = false)
@@ -178,5 +176,4 @@ class Plugins extends \Sng\AdditionalReports\Reports\AbstractReport implements \
         $addWhere = (($getFiltersCat !== null) && ($getFiltersCat != 'all')) ? ' AND tt_content.CType=\'' . $getFiltersCat . '\'' : '';
         return \Sng\AdditionalReports\Utility::getAllCtypes($addhidden . $addWhere, '', true);
     }
-
 }

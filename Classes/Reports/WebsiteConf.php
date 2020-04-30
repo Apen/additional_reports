@@ -9,8 +9,6 @@ namespace Sng\AdditionalReports\Reports;
  * LICENSE.txt file that was distributed with this source code.
  */
 
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-
 class WebsiteConf extends \Sng\AdditionalReports\Reports\AbstractReport implements \TYPO3\CMS\Reports\ReportInterface
 {
 
@@ -37,15 +35,17 @@ class WebsiteConf extends \Sng\AdditionalReports\Reports\AbstractReport implemen
             'uid, title',
             'pages',
             'is_siteroot = 1 AND deleted = 0 AND hidden = 0 AND pid != -1',
-            '', '', '',
+            '',
+            '',
+            '',
             'uid'
         );
 
-        $websiteconf = array();
+        $websiteconf = [];
 
         if (!empty($items)) {
             foreach ($items as $itemKey => $itemValue) {
-                $websiteconfItem = array();
+                $websiteconfItem = [];
 
                 $domainRecords = \Sng\AdditionalReports\Utility::exec_SELECTgetRows(
                     'uid, pid, domainName',
@@ -101,5 +101,4 @@ class WebsiteConf extends \Sng\AdditionalReports\Reports\AbstractReport implemen
         $view->assign('items', $websiteconf);
         return $view->render();
     }
-
 }

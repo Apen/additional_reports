@@ -9,8 +9,6 @@ namespace Sng\AdditionalReports\Reports;
  * LICENSE.txt file that was distributed with this source code.
  */
 
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-
 class LogErrors extends \Sng\AdditionalReports\Reports\AbstractReport implements \TYPO3\CMS\Reports\ReportInterface
 {
 
@@ -34,7 +32,7 @@ class LogErrors extends \Sng\AdditionalReports\Reports\AbstractReport implements
     {
 
         // query
-        $query = array();
+        $query = [];
         $query['SELECT'] = 'COUNT(*) AS "nb",details,MAX(tstamp) as "tstamp"';
         $query['FROM'] = 'sys_log';
         $query['WHERE'] = 'error>0';
@@ -48,10 +46,11 @@ class LogErrors extends \Sng\AdditionalReports\Reports\AbstractReport implements
         }
 
         $content = \Sng\AdditionalReports\Utility::writeInformation(
-            \Sng\AdditionalReports\Utility::getLl('flushalllog'), 'DELETE FROM sys_log WHERE error>0;'
+            \Sng\AdditionalReports\Utility::getLl('flushalllog'),
+            'DELETE FROM sys_log WHERE error>0;'
         );
 
-        $logErrors = array();
+        $logErrors = [];
 
         $view = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Fluid\\View\\StandaloneView');
         $view->setTemplatePathAndFilename(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('additional_reports') . 'Resources/Private/Templates/logerrors-fluid.html');
@@ -62,5 +61,4 @@ class LogErrors extends \Sng\AdditionalReports\Reports\AbstractReport implements
 
         return $content . $view->render();
     }
-
 }

@@ -9,8 +9,6 @@ namespace Sng\AdditionalReports\Reports;
  * LICENSE.txt file that was distributed with this source code.
  */
 
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-
 /**
  * This class provides a base for all the reports
  */
@@ -40,7 +38,6 @@ class AbstractReport
      * Set a Css
      *
      * @param $path
-     * @return void
      */
     public function setCss($path)
     {
@@ -55,7 +52,6 @@ class AbstractReport
      * Set a Js
      *
      * @param $path
-     * @return void
      */
     public function setJs($path)
     {
@@ -65,7 +61,4 @@ class AbstractReport
         $pageRenderer = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Page\PageRenderer::class);
         $pageRenderer->addJsFile($path);
     }
-
 }
-
-?>
