@@ -9,6 +9,9 @@ namespace Sng\AdditionalReports\Reports;
  * LICENSE.txt file that was distributed with this source code.
  */
 
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Page\PageRenderer;
+
 /**
  * This class provides a base for all the reports
  */
@@ -18,7 +21,7 @@ class AbstractReport
     /**
      * Back-reference to the calling reports module
      *
-     * @var    object $reportObject
+     * @var       object $reportObject
      */
     protected $reportObject;
 
@@ -44,7 +47,7 @@ class AbstractReport
         if (isset($this->reportObject->doc)) {
             $this->reportObject->doc->getPageRenderer()->addCssFile($path);
         }
-        $pageRenderer = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Page\PageRenderer::class);
+        $pageRenderer = GeneralUtility::makeInstance(PageRenderer::class);
         $pageRenderer->addCssFile($path);
     }
 
@@ -58,7 +61,7 @@ class AbstractReport
         if (isset($this->reportObject->doc)) {
             $this->reportObject->doc->getPageRenderer()->addJsFile($path);
         }
-        $pageRenderer = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Page\PageRenderer::class);
+        $pageRenderer = GeneralUtility::makeInstance(PageRenderer::class);
         $pageRenderer->addJsFile($path);
     }
 }

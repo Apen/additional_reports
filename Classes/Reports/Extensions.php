@@ -9,22 +9,27 @@ namespace Sng\AdditionalReports\Reports;
  * LICENSE.txt file that was distributed with this source code.
  */
 
+use TYPO3\CMS\Core\TypoScript\Parser\TypoScriptParser;
+use TYPO3\CMS\Fluid\View\StandaloneView;
+use TYPO3\CMS\Reports\ReportInterface;
+use Sng\AdditionalReports\Utility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Backend\Routing\UriBuilder;
 
-class Extensions extends \Sng\AdditionalReports\Reports\AbstractReport implements \TYPO3\CMS\Reports\ReportInterface
+class Extensions extends AbstractReport implements ReportInterface
 {
 
     /**
      * This method renders the report
      *
-     * @return    string    The status report as HTML
+     * @return       string    The status report as HTML
      */
     public function getReport()
     {
         $this->setCss('EXT:additional_reports/Resources/Public/Shadowbox/shadowbox.css');
         $this->setJs('EXT:additional_reports/Resources/Public/Shadowbox/shadowbox.js');
-        $content = $this->display();
-        return $content;
+        return $this->display();
     }
 
     /**
@@ -37,14 +42,14 @@ class Extensions extends \Sng\AdditionalReports\Reports\AbstractReport implement
         $extensionsToUpdate = 0;
         $extensionsModified = 0;
 
-        $allExtension = \Sng\AdditionalReports\Utility::getInstExtList(PATH_typo3conf . 'ext/');
+        $allExtension = Utility::getInstExtList(PATH_typo3conf . 'ext/');
 
         $listExtensionsTer = [];
         $listExtensionsDev = [];
         $listExtensionsUnloaded = [];
 
         if (!empty($allExtension['ter'])) {
-            foreach ($allExtension['ter'] as $extKey => $itemValue) {
+            foreach ($allExtension['ter'] as $itemValue) {
                 $currentExtension = $this->getExtensionInformations($itemValue);
                 if (version_compare($itemValue['EM_CONF']['version'], $itemValue['lastversion']['version'], '<')) {
                     $extensionsToUpdate++;
@@ -57,31 +62,31 @@ class Extensions extends \Sng\AdditionalReports\Reports\AbstractReport implement
         }
 
         if (!empty($allExtension['dev'])) {
-            foreach ($allExtension['dev'] as $extKey => $itemValue) {
+            foreach ($allExtension['dev'] as $itemValue) {
                 $listExtensionsDev[] = $this->getExtensionInformations($itemValue);
             }
         }
 
         if (!empty($allExtension['unloaded'])) {
-            foreach ($allExtension['unloaded'] as $extKey => $itemValue) {
+            foreach ($allExtension['unloaded'] as $itemValue) {
                 $listExtensionsUnloaded[] = $this->getExtensionInformations($itemValue);
             }
         }
 
         $addContent = '';
-        $addContent .= (count($listExtensionsTer) + count($listExtensionsDev)) . ' ' . \Sng\AdditionalReports\Utility::getLl('extensions_extensions');
+        $addContent .= (count($listExtensionsTer) + count($listExtensionsDev)) . ' ' . Utility::getLl('extensions_extensions');
         $addContent .= '<br/>';
-        $addContent .= count($listExtensionsTer) . ' ' . \Sng\AdditionalReports\Utility::getLl('extensions_ter');
+        $addContent .= count($listExtensionsTer) . ' ' . Utility::getLl('extensions_ter');
         $addContent .= '  /  ';
-        $addContent .= count($listExtensionsDev) . ' ' . \Sng\AdditionalReports\Utility::getLl('extensions_dev');
+        $addContent .= count($listExtensionsDev) . ' ' . Utility::getLl('extensions_dev');
         $addContent .= '<br/>';
-        $addContent .= $extensionsToUpdate . ' ' . \Sng\AdditionalReports\Utility::getLl('extensions_toupdate');
+        $addContent .= $extensionsToUpdate . ' ' . Utility::getLl('extensions_toupdate');
         $addContent .= '  /  ';
-        $addContent .= $extensionsModified . ' ' . \Sng\AdditionalReports\Utility::getLl('extensions_extensionsmodified');
-        $addContentItem = \Sng\AdditionalReports\Utility::writeInformation(\Sng\AdditionalReports\Utility::getLl('pluginsmode5') . '<br/>' . \Sng\AdditionalReports\Utility::getLl('extensions_updateter') . '', $addContent);
+        $addContent .= $extensionsModified . ' ' . Utility::getLl('extensions_extensionsmodified');
+        $addContentItem = Utility::writeInformation(Utility::getLl('pluginsmode5') . '<br/>' . Utility::getLl('extensions_updateter') . '', $addContent);
 
-        $view = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Fluid\\View\\StandaloneView');
-        $view->setTemplatePathAndFilename(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('additional_reports') . 'Resources/Private/Templates/extensions-fluid.html');
+        $view = GeneralUtility::makeInstance(StandaloneView::class);
+        $view->setTemplatePathAndFilename(ExtensionManagementUtility::extPath('additional_reports') . 'Resources/Private/Templates/extensions-fluid.html');
         $view->assign('listExtensionsTer', $listExtensionsTer);
         $view->assign('listExtensionsDev', $listExtensionsDev);
         $view->assign('listExtensionsUnloaded', $listExtensionsUnloaded);
@@ -101,12 +106,12 @@ class Extensions extends \Sng\AdditionalReports\Reports\AbstractReport implement
         $listExtensionsTerItem['icon'] = $itemValue['icon'];
         $listExtensionsTerItem['extension'] = $extKey;
         $listExtensionsTerItem['version'] = $itemValue['EM_CONF']['version'];
-        $listExtensionsTerItem['versioncheck'] = \Sng\AdditionalReports\Utility::versionCompare($itemValue['EM_CONF']['constraints']['depends']['typo3']);
+        $listExtensionsTerItem['versioncheck'] = Utility::versionCompare($itemValue['EM_CONF']['constraints']['depends']['typo3']);
 
         // version compare
-        $compareUrl = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_URL');
+        $compareUrl = GeneralUtility::getIndpEnv('TYPO3_SITE_URL');
 
-        $uriBuilder = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Backend\Routing\UriBuilder::class);
+        $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
         $routeIdentifier = 'additional_reports_compareFiles';
         $uri = (string)$uriBuilder->buildUriFromRoute($routeIdentifier, []);
 
@@ -118,18 +123,18 @@ class Extensions extends \Sng\AdditionalReports\Reports\AbstractReport implement
         $compareUrl .= $uri;
         $compareUrl .= '&extKey=' . $extKey . '&mode=compareExtension&extVersion=' . $itemValue['EM_CONF']['version'];
         $compareLabem = $extKey . ' : ' . $itemValue['EM_CONF']['version'] . ' <--> TER ' . $itemValue['EM_CONF']['version'];
-        $js = 'Shadowbox.open({content:\'' . $compareUrl . '\',player:\'iframe\',title:\'' . $compareLabem . '\',height:600,width:800});';
-        $listExtensionsTerItem['versioncompare'] = '<input type="button" onclick="' . $js . '" value="' . \Sng\AdditionalReports\Utility::getLl('comparesame') . '" title="' . $compareLabem . '"/>';
+        $js = "Shadowbox.open({content:'" . $compareUrl . "',player:'iframe',title:'" . $compareLabem . "',height:600,width:800});";
+        $listExtensionsTerItem['versioncompare'] = '<input type="button" onclick="' . $js . '" value="' . Utility::getLl('comparesame') . '" title="' . $compareLabem . '"/>';
 
         // need extension update ?
         if (version_compare($itemValue['EM_CONF']['version'], $itemValue['lastversion']['version'], '<')) {
             $listExtensionsTerItem['versionlast'] = '<span style="color:green;font-weight:bold;">' . $itemValue['lastversion']['version'] . '&nbsp;(' . $itemValue['lastversion']['updatedate'] . ')</span>';
-            $compareUrl = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_URL');
+            $compareUrl = GeneralUtility::getIndpEnv('TYPO3_SITE_URL');
             $compareUrl .= $uri;
             $compareUrl .= '&extKey=' . $extKey . '&mode=compareExtension&extVersion=' . $itemValue['lastversion']['version'];
             $compareLabem = $extKey . ' : ' . $itemValue['EM_CONF']['version'] . ' <--> TER ' . $itemValue['lastversion']['version'];
-            $js = 'Shadowbox.open({content:\'' . $compareUrl . '\',player:\'iframe\',title:\'' . $compareLabem . '\',height:600,width:800});';
-            $listExtensionsTerItem['versioncompare'] .= ' <input type="button" onclick="' . $js . '" value="' . \Sng\AdditionalReports\Utility::getLl('comparelast') . '" title="' . $compareLabem . '"/>';
+            $js = "Shadowbox.open({content:'" . $compareUrl . "',player:'iframe',title:'" . $compareLabem . "',height:600,width:800});";
+            $listExtensionsTerItem['versioncompare'] .= ' <input type="button" onclick="' . $js . '" value="' . Utility::getLl('comparelast') . '" title="' . $compareLabem . '"/>';
         } else {
             $listExtensionsTerItem['versionlast'] = $itemValue['lastversion']['version'] . '&nbsp;(' . $itemValue['lastversion']['updatedate'] . ')';
         }
@@ -141,18 +146,17 @@ class Extensions extends \Sng\AdditionalReports\Reports\AbstractReport implement
         $dumpTf2 = '';
         if (!empty($itemValue['fdfile'])) {
             $id = 'sql' . $extKey;
-            $dumpTf1 = \Sng\AdditionalReports\Utility::getLl('extensions_tablesmodified');
-            $dumpTf2 = \Sng\AdditionalReports\Utility::writePopUp($id, $extKey, nl2br(htmlspecialchars($itemValue['fdfile'])));
+            $dumpTf1 = Utility::getLl('extensions_tablesmodified');
+            $dumpTf2 = Utility::writePopUp($id, $extKey, nl2br(htmlspecialchars($itemValue['fdfile'])));
         }
         $listExtensionsTerItem['tables'] = $dumpTf1;
         $listExtensionsTerItem['tableslink'] = $dumpTf2;
 
         // need extconf update
-        $absPath = \Sng\AdditionalReports\Utility::getExtPath($extKey, $itemValue['type']);
+        $absPath = Utility::getExtPath($extKey, $itemValue['type']);
         if (is_file($absPath . 'ext_conf_template.txt')) {
-            $configTemplate = \TYPO3\CMS\Core\Utility\GeneralUtility::getUrl($absPath . 'ext_conf_template.txt');
-            /** @var $tsparserObj \TYPO3\CMS\Core\TypoScript\Parser\TypoScriptParser */
-            $tsparserObj = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\TypoScript\\Parser\\TypoScriptParser');
+            $configTemplate = GeneralUtility::getUrl($absPath . 'ext_conf_template.txt');
+            $tsparserObj = GeneralUtility::makeInstance(TypoScriptParser::class);
             $tsparserObj->parse($configTemplate);
             $arr = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][$extKey]);
             $arr = is_array($arr) ? $arr : [];
@@ -162,18 +166,18 @@ class Extensions extends \Sng\AdditionalReports\Reports\AbstractReport implement
             }
             if (count($diffConf) > 0) {
                 $id = 'extconf' . $extKey;
-                $datas = '<span style="color:white;">Diff : </span>' . \Sng\AdditionalReports\Utility::viewArray($diffConf);
-                $datas .= '<span style="color:white;">$GLOBALS[\'TYPO3_CONF_VARS\'][\'EXT\'][\'extConf\'][\'' . $extKey . '\'] : </span>';
-                $datas .= \Sng\AdditionalReports\Utility::viewArray($arr);
+                $datas = '<span style="color:white;">Diff : </span>' . Utility::viewArray($diffConf);
+                $datas .= '<span style="color:white;">$GLOBALS[\'TYPO3_CONF_VARS\'][\'EXT\'][\'extConf\'][\'' . $extKey . "'] : </span>";
+                $datas .= Utility::viewArray($arr);
                 $datas .= '<span style="color:white;">ext_conf_template.txt : </span>';
-                $datas .= \Sng\AdditionalReports\Utility::viewArray($tsparserObj->setup);
-                $dumpExtConf = \Sng\AdditionalReports\Utility::writePopUp($id, $extKey, $datas);
-                $listExtensionsTerItem['confintegrity'] = \Sng\AdditionalReports\Utility::getLl('yes') . '&nbsp;&nbsp;' . $dumpExtConf;
+                $datas .= Utility::viewArray($tsparserObj->setup);
+                $dumpExtConf = Utility::writePopUp($id, $extKey, $datas);
+                $listExtensionsTerItem['confintegrity'] = Utility::getLl('yes') . '&nbsp;&nbsp;' . $dumpExtConf;
             } else {
-                $listExtensionsTerItem['confintegrity'] = \Sng\AdditionalReports\Utility::getLl('no');
+                $listExtensionsTerItem['confintegrity'] = Utility::getLl('no');
             }
         } else {
-            $listExtensionsTerItem['confintegrity'] = \Sng\AdditionalReports\Utility::getLl('no');
+            $listExtensionsTerItem['confintegrity'] = Utility::getLl('no');
         }
 
         // modified files
@@ -181,7 +185,7 @@ class Extensions extends \Sng\AdditionalReports\Reports\AbstractReport implement
             $id = 'files' . $extKey;
             $contentUl = '<div style="display:none;" id="' . $id . '"><ul>';
             foreach ($itemValue['affectedfiles'] as $affectedFile) {
-                $compareUrl = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_URL');
+                $compareUrl = GeneralUtility::getIndpEnv('TYPO3_SITE_URL');
                 $compareUrl .= $uri;
                 $compareUrl .= '&extKey=' . $extKey . '&extFile=' . $affectedFile . '&extVersion=' . $itemValue['EM_CONF']['version'];
                 $contentUl .= '<li><a rel="shadowbox;height=600;width=800;" href = "' . $compareUrl . '" target = "_blank"';
@@ -190,7 +194,7 @@ class Extensions extends \Sng\AdditionalReports\Reports\AbstractReport implement
             }
             $contentUl .= '</ul>';
             $contentUl .= '</div>';
-            $listExtensionsTerItem['files'] = count($itemValue['affectedfiles']) . ' ' . \Sng\AdditionalReports\Utility::getLl('extensions_filesmodified') . $contentUl;
+            $listExtensionsTerItem['files'] = count($itemValue['affectedfiles']) . ' ' . Utility::getLl('extensions_filesmodified') . $contentUl;
             $listExtensionsTerItem['fileslink'] = '<input type="button" onclick="$(\'' . $id . '\').toggle();" value="+"/>';
         } else {
             $listExtensionsTerItem['files'] = '&nbsp;';
@@ -199,6 +203,4 @@ class Extensions extends \Sng\AdditionalReports\Reports\AbstractReport implement
 
         return $listExtensionsTerItem;
     }
-
 }
-

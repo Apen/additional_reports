@@ -9,7 +9,12 @@ namespace Sng\AdditionalReports\Reports;
  * LICENSE.txt file that was distributed with this source code.
  */
 
-class CommandControllers extends \Sng\AdditionalReports\Reports\AbstractReport implements \TYPO3\CMS\Reports\ReportInterface
+use TYPO3\CMS\Fluid\View\StandaloneView;
+use TYPO3\CMS\Reports\ReportInterface;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+
+class CommandControllers extends AbstractReport implements ReportInterface
 {
 
     /**
@@ -19,8 +24,7 @@ class CommandControllers extends \Sng\AdditionalReports\Reports\AbstractReport i
      */
     public function getReport()
     {
-        $content = $this->display();
-        return $content;
+        return $this->display();
     }
 
     /**
@@ -31,8 +35,8 @@ class CommandControllers extends \Sng\AdditionalReports\Reports\AbstractReport i
     public function display()
     {
         $items = $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['extbase']['commandControllers'];
-        $view = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Fluid\\View\\StandaloneView');
-        $view->setTemplatePathAndFilename(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('additional_reports') . 'Resources/Private/Templates/commandcontrollers-fluid.html');
+        $view = GeneralUtility::makeInstance(StandaloneView::class);
+        $view->setTemplatePathAndFilename(ExtensionManagementUtility::extPath('additional_reports') . 'Resources/Private/Templates/commandcontrollers-fluid.html');
         $view->assign('items', $items);
         return $view->render();
     }
