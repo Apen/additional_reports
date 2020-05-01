@@ -10,13 +10,16 @@ namespace Sng\AdditionalReports;
  */
 
 use TYPO3\CMS\Backend\Routing\UriBuilder;
-use TYPO3\CMS\Backend\Utility\BackendUtility;
+use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Exception\SiteNotFoundException;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
+use TYPO3\CMS\Core\Localization\LanguageService;
+use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Frontend\Page\PageRepository;
+use TYPO3\CMS\Core\Utility\RootlineUtility;
 
 /**
  * Utility class
@@ -59,7 +62,8 @@ class Utility
             $url = $uriBuilder->buildUriFromRoute('system_reports', $parameters);
             return (string)$url;
         }
-        $baseUrl = BackendUtility::getModuleUrl(GeneralUtility::_GET('M')) . '&';
+        $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
+        $baseUrl = $uriBuilder->buildUriFromRoute(GeneralUtility::_GET('M')) . '&';
         $vars = GeneralUtility::_GET('tx_reports_system_reportstxreportsm1');
         $parameters[] = 'tx_reports_system_reportstxreportsm1%5Bextension%5D=additional_reports';
         $parameters[] = 'tx_reports_system_reportstxreportsm1%5Breport%5D=' . $vars['report'];
@@ -76,16 +80,16 @@ class Utility
     public static function getSubModules()
     {
         return [
-            'displayAjax'         => $GLOBALS['LANG']->getLL('ajax_title'),
-            'displayEid'          => $GLOBALS['LANG']->getLL('eid_title'),
-            'displayCliKeys'      => $GLOBALS['LANG']->getLL('clikeys_title'),
-            'displayPlugins'      => $GLOBALS['LANG']->getLL('plugins_title'),
-            'displayXclass'       => $GLOBALS['LANG']->getLL('xclass_title'),
-            'displayHooks'        => $GLOBALS['LANG']->getLL('hooks_title'),
-            'displayStatus'       => $GLOBALS['LANG']->getLL('status_title'),
-            'displayExtensions'   => $GLOBALS['LANG']->getLL('extensions_title'),
-            'displayLogErrors'    => $GLOBALS['LANG']->getLL('logerrors_title'),
-            'displayWebsitesConf' => $GLOBALS['LANG']->getLL('websitesconf_title')
+            'displayAjax'         => \Sng\AdditionalReports\Utility::getLanguageService()->getLL('ajax_title'),
+            'displayEid'          => \Sng\AdditionalReports\Utility::getLanguageService()->getLL('eid_title'),
+            'displayCliKeys'      => \Sng\AdditionalReports\Utility::getLanguageService()->getLL('clikeys_title'),
+            'displayPlugins'      => \Sng\AdditionalReports\Utility::getLanguageService()->getLL('plugins_title'),
+            'displayXclass'       => \Sng\AdditionalReports\Utility::getLanguageService()->getLL('xclass_title'),
+            'displayHooks'        => \Sng\AdditionalReports\Utility::getLanguageService()->getLL('hooks_title'),
+            'displayStatus'       => \Sng\AdditionalReports\Utility::getLanguageService()->getLL('status_title'),
+            'displayExtensions'   => \Sng\AdditionalReports\Utility::getLanguageService()->getLL('extensions_title'),
+            'displayLogErrors'    => \Sng\AdditionalReports\Utility::getLanguageService()->getLL('logerrors_title'),
+            'displayWebsitesConf' => \Sng\AdditionalReports\Utility::getLanguageService()->getLL('websitesconf_title')
         ];
     }
 
@@ -147,7 +151,7 @@ class Utility
         $id = (int)$id;
         $theList = $begin === 0 ? $id : '';
         if ($id && $depth > 0) {
-            $res = self::exec_SELECTquery('uid', 'pages', 'pid=' . $id . ' ' . BackendUtility::deleteClause('pages') . ' AND ' . $permsClause);
+            $res = self::exec_SELECTquery('uid', 'pages', 'pid=' . $id . ' AND ' . $permsClause);
             while ($row = $res->fetch()) {
                 if ($begin <= 0) {
                     $theList .= ',' . $row['uid'];
@@ -394,9 +398,9 @@ class Utility
             return PATH_typo3 . 'ext/';
         }
         if ($type === 'L') {
-            return PATH_typo3conf . 'ext/';
+            return \Sng\AdditionalReports\Utility::getPathTypo3Conf() . 'ext/';
         }
-        return PATH_typo3conf . 'ext/';
+        return \Sng\AdditionalReports\Utility::getPathTypo3Conf() . 'ext/';
     }
 
     /**
@@ -408,7 +412,7 @@ class Utility
     public static function getExtIcon($extKey)
     {
         $extType = self::getExtensionType($extKey);
-        $path = $extType['siteRelPath'] . ExtensionManagementUtility::getExtensionIcon(PATH_site . $extType['siteRelPath']);
+        $path = $extType['siteRelPath'] . ExtensionManagementUtility::getExtensionIcon(\Sng\AdditionalReports\Utility::getPathSite() . '/' . $extType['siteRelPath']);
         return GeneralUtility::getIndpEnv('TYPO3_SITE_URL') . $path;
     }
 
@@ -421,7 +425,7 @@ class Utility
     public static function getContentTypeIcon($path)
     {
         $icon = null;
-        if (is_file(PATH_site . 'typo3/sysext/t3skin/icons/gfx/' . $path)) {
+        if (is_file(\Sng\AdditionalReports\Utility::getPathSite() . '/typo3/sysext/t3skin/icons/gfx/' . $path)) {
             $icon = GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/' . $path;
         } elseif (preg_match('#^\.\.#', $path, $temp)) {
             $icon = GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR') . $path;
@@ -559,7 +563,7 @@ class Utility
      */
     public static function getExtensionType($extKey)
     {
-        if (@is_dir(PATH_typo3conf . 'ext/' . $extKey . '/')) {
+        if (@is_dir(\Sng\AdditionalReports\Utility::getPathTypo3Conf() . 'ext/' . $extKey . '/')) {
             return [
                 'type'         => 'L',
                 'siteRelPath'  => 'typo3conf/ext/' . $extKey . '/',
@@ -591,8 +595,8 @@ class Utility
      */
     public static function getRootLine($pageUid)
     {
-        $sysPage = GeneralUtility::makeInstance(PageRepository::class);
-        return $sysPage->getRootLine($pageUid);
+        $rootline = GeneralUtility::makeInstance(RootlineUtility::class, $pageUid);
+        return $rootline->get();
     }
 
     /**
@@ -603,14 +607,16 @@ class Utility
      */
     public static function getDomain($pageUid)
     {
-        $domain = BackendUtility::firstDomainRecord(self::getRootLine($pageUid));
-        if (empty($domain)) {
-            $domain = GeneralUtility::getIndpEnv('TYPO3_HOST_ONLY');
+        $siteFinder = GeneralUtility::makeInstance(SiteFinder::class);
+        try {
+            $siteConf = $siteFinder->getSiteByPageId($pageUid);
+            if (!empty($siteConf)) {
+                return $siteConf->getBase()->getHost();
+            }
+        } catch (SiteNotFoundException $siteNotFoundException) {
+            return '';
         }
-        if (empty($domain)) {
-            $domain = 'localhost';
-        }
-        return $domain;
+        return '';
     }
 
     /**
@@ -649,19 +655,19 @@ class Utility
         if (isset($depV)) {
             $versionRange = self::splitVersionRange($depV);
             if ($versionRange[0] != '0.0.0' && version_compare($t3version, $versionRange[0], '<')) {
-                $msg = sprintf($GLOBALS['LANG']->getLL('checkDependencies_typo3_too_low'), $t3version, $versionRange[0]);
+                $msg = sprintf(\Sng\AdditionalReports\Utility::getLanguageService()->getLL('checkDependencies_typo3_too_low'), $t3version, $versionRange[0]);
             } elseif ($versionRange[1] != '0.0.0' && version_compare($t3version, $versionRange[1], '>')) {
-                $msg = sprintf($GLOBALS['LANG']->getLL('checkDependencies_typo3_too_high'), $t3version, $versionRange[1]);
+                $msg = sprintf(\Sng\AdditionalReports\Utility::getLanguageService()->getLL('checkDependencies_typo3_too_high'), $t3version, $versionRange[1]);
             } elseif ($versionRange[1] == '0.0.0') {
                 $status = 2;
-                $msg = $GLOBALS['LANG']->getLL('nottested') . ' (' . $depV . ')';
+                $msg = \Sng\AdditionalReports\Utility::getLanguageService()->getLL('nottested') . ' (' . $depV . ')';
             } else {
                 $status = 1;
                 $msg = 'OK';
             }
         } else {
             $status = 3;
-            $msg = $GLOBALS['LANG']->getLL('unknown');
+            $msg = \Sng\AdditionalReports\Utility::getLanguageService()->getLL('unknown');
         }
 
         switch ($status) {
@@ -672,10 +678,10 @@ class Utility
                 $msg = '<span style="color:green;font-weight:bold;" title="' . $msg . '">OK</span>';
                 break;
             case 2:
-                $msg = '<span style="color:orange;font-weight:bold;" title="' . $msg . '">' . $GLOBALS['LANG']->getLL('nottested') . '</span>';
+                $msg = '<span style="color:orange;font-weight:bold;" title="' . $msg . '">' . \Sng\AdditionalReports\Utility::getLanguageService()->getLL('nottested') . '</span>';
                 break;
             case 3:
-                $msg = '<span style="color:orange;font-weight:bold;" title="' . $msg . '">' . $GLOBALS['LANG']->getLL('unknown') . '</span>';
+                $msg = '<span style="color:orange;font-weight:bold;" title="' . $msg . '">' . \Sng\AdditionalReports\Utility::getLanguageService()->getLL('unknown') . '</span>';
                 break;
             default:
                 $msg = '<span style="color:red;font-weight:bold;" title="' . $msg . '">KO</span>';
@@ -732,7 +738,8 @@ class Utility
      */
     public static function goToModuleList($uid, $urlOnly = false)
     {
-        $url = BackendUtility::getModuleUrl('web_list') . '&id=' . $uid;
+        $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
+        $url = $uriBuilder->buildUriFromRoute('web_list') . '&id=' . $uid;
         if ($urlOnly) {
             return $url;
         }
@@ -748,7 +755,8 @@ class Utility
      */
     public static function goToModulePage($uid, $urlOnly = false)
     {
-        $url = BackendUtility::getModuleUrl('web_layout') . '&id=' . $uid;
+        $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
+        $url = $uriBuilder->buildUriFromRoute('web_layout') . '&id=' . $uid;
         if ($urlOnly) {
             return $url;
         }
@@ -937,9 +945,9 @@ class Utility
         $filterCat = '';
 
         if ($getFiltersCat == 'all') {
-            $filterCat .= '<option value="all" selected="selected">' . $GLOBALS['LANG']->getLL('all') . '</option>';
+            $filterCat .= '<option value="all" selected="selected">' . \Sng\AdditionalReports\Utility::getLanguageService()->getLL('all') . '</option>';
         } else {
-            $filterCat .= '<option value="all">' . $GLOBALS['LANG']->getLL('all') . '</option>';
+            $filterCat .= '<option value="all">' . \Sng\AdditionalReports\Utility::getLanguageService()->getLL('all') . '</option>';
         }
 
         foreach ($pluginsList as $pluginsElement) {
@@ -992,9 +1000,9 @@ class Utility
         $filterCat = '';
 
         if ($getFiltersCat == 'all') {
-            $filterCat .= '<option value="all" selected="selected">' . $GLOBALS['LANG']->getLL('all') . '</option>';
+            $filterCat .= '<option value="all" selected="selected">' . \Sng\AdditionalReports\Utility::getLanguageService()->getLL('all') . '</option>';
         } else {
-            $filterCat .= '<option value="all">' . $GLOBALS['LANG']->getLL('all') . '</option>';
+            $filterCat .= '<option value="all">' . \Sng\AdditionalReports\Utility::getLanguageService()->getLL('all') . '</option>';
         }
 
         foreach ($pluginsList as $pluginsElement) {
@@ -1338,7 +1346,7 @@ class Utility
      */
     public static function getLl($key)
     {
-        return $GLOBALS['LANG']->sL('LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:' . $key);
+        return \Sng\AdditionalReports\Utility::getLanguageService()->sL('LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:' . $key);
     }
 
     /**
@@ -1438,5 +1446,39 @@ class Utility
     public static function getQueryBuilder()
     {
         return self::getDatabaseConnection()->createQueryBuilder();
+    }
+
+    /**
+     * @return LanguageService
+     */
+    public static function getLanguageService()
+    {
+        // fe
+        if (!empty($GLOBALS['TSFE'])) {
+            return $GLOBALS['TSFE'];
+        }
+        // be
+        if (!empty($GLOBALS['LANG'])) {
+            return $GLOBALS['LANG'];
+        }
+        $LANG = GeneralUtility::makeInstance(LanguageService::class);
+        $LANG->init($GLOBALS['BE_USER']->uc['lang']);
+        return $LANG;
+    }
+
+    /**
+     * @return string
+     */
+    public static function getPathSite()
+    {
+        return Environment::getPublicPath();
+    }
+
+    /**
+     * @return string
+     */
+    public static function getPathTypo3Conf()
+    {
+        return Environment::getPublicPath() . '/typo3conf/';
     }
 }

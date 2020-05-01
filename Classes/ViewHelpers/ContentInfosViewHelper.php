@@ -12,7 +12,7 @@ namespace Sng\AdditionalReports\ViewHelpers;
 use Sng\AdditionalReports\Utility;
 use TYPO3\CMS\Core\Localization\LocalizationFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
+use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
 
 /**
  * ViewHelper to get all infos on a plugin or content
@@ -52,10 +52,10 @@ class ContentInfosViewHelper extends AbstractConditionViewHelper
                 if (trim($itemValue[1]) == $item['list_type']) {
                     preg_match('#EXT:(.*?)\/#', $itemValue[0], $ext);
                     preg_match('#^LLL:(EXT:.*?):(.*)#', $itemValue[0], $llfile);
-                    $localLang = $languageFactory->getParsedData($llfile[1], $GLOBALS['LANG']->lang);
+                    $localLang = $languageFactory->getParsedData($llfile[1], Utility::getLanguageService()->lang);
                     $item['iconext'] = Utility::getExtIcon($ext[1]);
                     $item['extension'] = $ext[1];
-                    $item['plugin'] = $GLOBALS['LANG']->getLLL($llfile[2], $localLang) . ' (' . $item['list_type'] . ')';
+                    $item['plugin'] = Utility::getLanguageService()->getLLL($llfile[2], $localLang) . ' (' . $item['list_type'] . ')';
                 } else {
                     $item['plugin'] = $item['list_type'];
                 }
@@ -68,9 +68,9 @@ class ContentInfosViewHelper extends AbstractConditionViewHelper
                 if ($itemValue[1] != '--div--') {
                     if (trim($itemValue[1]) == $item['CType']) {
                         preg_match('#^LLL:(EXT:.*?):(.*)#', $itemValue[0], $llfile);
-                        $localLang = $languageFactory->getParsedData($llfile[1], $GLOBALS['LANG']->lang);
+                        $localLang = $languageFactory->getParsedData($llfile[1], Utility::getLanguageService()->lang);
                         $item['iconext'] = Utility::getContentTypeIcon($itemValue[2]);
-                        $item['ctype'] = $GLOBALS['LANG']->getLLL($llfile[2], $localLang) . ' (' . $item['CType'] . ')';
+                        $item['ctype'] = Utility::getLanguageService()->getLLL($llfile[2], $localLang) . ' (' . $item['CType'] . ')';
                     } else {
                         $item['ctype'] = $item['CType'];
                     }

@@ -28,7 +28,7 @@ class Status extends AbstractReport implements ReportInterface
      */
     public function getReport()
     {
-        $content = '<p class="help">' . $GLOBALS['LANG']->getLL('status_description') . '</p>';
+        $content = '<p class="help">' . Utility::getLanguageService()->getLL('status_description') . '</p>';
 
         if (!isset($this->reportObject->doc)) {
             $this->reportObject->doc = GeneralUtility::makeInstance(DocumentTemplate::class);
@@ -64,7 +64,7 @@ class Status extends AbstractReport implements ReportInterface
         // TYPO3
         $content = Utility::writeInformation(Utility::getLl('status_sitename'), $GLOBALS['TYPO3_CONF_VARS']['SYS']['sitename']);
         $content .= Utility::writeInformation($headerVersions, $htmlVersions);
-        $content .= Utility::writeInformation(Utility::getLl('status_path'), PATH_site);
+        $content .= Utility::writeInformation(Utility::getLl('status_path'), Utility::getPathSite());
         $content .= Utility::writeInformation(
             'dbname<br/>user<br/>host',
             $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['dbname'] . '<br/>'
@@ -85,17 +85,17 @@ class Status extends AbstractReport implements ReportInterface
         $content .= Utility::writeInformation('displayErrors', $GLOBALS['TYPO3_CONF_VARS']['SYS']['displayErrors']);
         $content .= Utility::writeInformation('maxFileSize', $GLOBALS['TYPO3_CONF_VARS']['BE']['maxFileSize']);
 
-        $extensions = explode(',', $GLOBALS['TYPO3_CONF_VARS']['EXT']['extList']);
+        $extensions = [];
 
-        if (is_file(PATH_site . 'typo3conf/PackageStates.php')) {
-            $extensions = [];
-            $packages = include(PATH_site . 'typo3conf/PackageStates.php');
+        if (is_file(Utility::getPathSite() . '/typo3conf/PackageStates.php')) {
+            $packages = include(Utility::getPathSite() . '/typo3conf/PackageStates.php');
             foreach ($packages['packages'] as $extensionKey => $package) {
                 $extensions[] = $extensionKey;
             }
         }
 
         sort($extensions);
+
         foreach ($extensions as $aKey => $extension) {
             $extensions[$aKey] = $extension . ' (' . Utility::getExtensionVersion($extension) . ')';
         }

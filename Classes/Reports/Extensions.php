@@ -42,7 +42,7 @@ class Extensions extends AbstractReport implements ReportInterface
         $extensionsToUpdate = 0;
         $extensionsModified = 0;
 
-        $allExtension = Utility::getInstExtList(PATH_typo3conf . 'ext/');
+        $allExtension = Utility::getInstExtList(Utility::getPathTypo3Conf() . 'ext/');
 
         $listExtensionsTer = [];
         $listExtensionsDev = [];

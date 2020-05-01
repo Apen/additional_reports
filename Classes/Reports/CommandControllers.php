@@ -9,6 +9,7 @@ namespace Sng\AdditionalReports\Reports;
  * LICENSE.txt file that was distributed with this source code.
  */
 
+use TYPO3\CMS\Core\Console\CommandRegistry;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
@@ -34,6 +35,9 @@ class CommandControllers extends AbstractReport implements ReportInterface
      */
     public function display()
     {
+        // TODO parse CommandRegistry
+//        $commands = GeneralUtility::makeInstance(CommandRegistry::class);
+//        \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($commands);
         $items = $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['extbase']['commandControllers'];
         $view = GeneralUtility::makeInstance(StandaloneView::class);
         $view->setTemplatePathAndFilename(ExtensionManagementUtility::extPath('additional_reports') . 'Resources/Private/Templates/commandcontrollers-fluid.html');

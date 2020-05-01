@@ -21,7 +21,7 @@
         </f:then>
         <f:else>
             <li style="display:inline;">
-                <f:widget.link arguments="{currentPage: 0}" addQueryStringMethod="GET,POST">
+                <f:widget.link arguments="{currentPage: 0}">
                     <ar:spriteManagerIcon iconName="actions-view-paging-first"/>
                 </f:widget.link>
             </li>
@@ -40,7 +40,7 @@
         </f:then>
         <f:else>
             <li style="display:inline;">
-                <f:widget.link arguments="{currentPage: pagination.previousPage}" addQueryStringMethod="GET,POST">
+                <f:widget.link arguments="{currentPage: pagination.previousPage}">
                     <ar:spriteManagerIcon iconName="actions-view-paging-previous"/>
                 </f:widget.link>
             </li>
@@ -59,7 +59,7 @@
         </f:then>
         <f:else>
             <li style="display:inline;">
-                <f:widget.link arguments="{currentPage: pagination.nextPage}" addQueryStringMethod="GET,POST">
+                <f:widget.link arguments="{currentPage: pagination.nextPage}">
                     <ar:spriteManagerIcon iconName="actions-view-paging-next"/>
                 </f:widget.link>
             </li>
@@ -78,7 +78,7 @@
         </f:then>
         <f:else>
             <li style="display:inline;">
-                <f:widget.link arguments="{currentPage: pagination.numberOfPages}" addQueryStringMethod="GET,POST">
+                <f:widget.link arguments="{currentPage: pagination.numberOfPages}">
                     <ar:spriteManagerIcon iconName="actions-view-paging-last"/>
                 </f:widget.link>
             </li>
@@ -106,9 +106,9 @@
                 </f:else>
             </f:if>
             <li style="display:inline;">
-                <span class="pageIndicator">{f:translate(key:'LLL:EXT:lang/Resources/Private/Language/locallang_mod_web_list.xlf:rangeIndicator',arguments:{0:'{pagination.firstPageItem}',1:'{pagination.lastPageItem}'})}
+                <span class="pageIndicator">{f:translate(key:'LLL:EXT:core/Resources/Private/Language/locallang_mod_web_list.xlf:rangeIndicator',arguments:{0:'{pagination.firstPageItem}',1:'{pagination.lastPageItem}'})}
                    /
-                {f:translate(key:'LLL:EXT:lang/Resources/Private/Language/locallang_mod_web_list.xlf:pageIndicator',arguments:{0:'{pagination.current}',1:'{pagination.numberOfPages}'})}</span>
+                {f:translate(key:'LLL:EXT:core/Resources/Private/Language/locallang_mod_web_list.xlf:pageIndicator',arguments:{0:'{pagination.current}',1:'{pagination.numberOfPages}'})}</span>
             </li>
             <f:if condition="{pagination.nextPage}">
                 <f:then>

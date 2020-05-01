@@ -9,6 +9,7 @@ namespace Sng\AdditionalReports\Reports;
  * LICENSE.txt file that was distributed with this source code.
  */
 
+use Sng\AdditionalReports\Utility;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -34,7 +35,7 @@ class AbstractReport
     {
         $this->reportObject = $reportObject;
         $this->setCss('EXT:additional_reports/Resources/Public/Css/tx_additionalreports.css');
-        $GLOBALS['LANG']->includeLLFile('EXT:additional_reports/Resources/Private/Language/locallang.xlf');
+        Utility::getLanguageService()->includeLLFile('EXT:additional_reports/Resources/Private/Language/locallang.xlf');
     }
 
     /**

@@ -25,7 +25,7 @@ class Xclass extends AbstractReport implements ReportInterface
      */
     public function getReport()
     {
-        $content = '<p class="help">' . $GLOBALS['LANG']->getLL('xclass_description') . '</p>';
+        $content = '<p class="help">' . Utility::getLanguageService()->getLL('xclass_description') . '</p>';
         return $content . $this->display();
     }
 

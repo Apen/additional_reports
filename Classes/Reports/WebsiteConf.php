@@ -53,22 +53,11 @@ class WebsiteConf extends AbstractReport implements ReportInterface
             foreach ($items as $itemValue) {
                 $websiteconfItem = [];
 
-                $domainRecords = Utility::exec_SELECTgetRows(
-                    'uid, pid, domainName',
-                    'sys_domain',
-                    'pid IN(' . $itemValue['uid'] . ') AND hidden=0',
-                    '',
-                    'sorting'
-                );
-
                 $websiteconfItem['pid'] = $itemValue['uid'];
                 $websiteconfItem['pagetitle'] = Utility::getIconPage() . $itemValue['title'];
                 $websiteconfItem['domains'] = '';
                 $websiteconfItem['template'] = '';
-
-                foreach ($domainRecords as $domain) {
-                    $websiteconfItem['domains'] .= Utility::getIconDomain() . $domain['domainName'] . '<br/>';
-                }
+                $websiteconfItem['domains'] = Utility::getIconDomain() . Utility::getDomain($itemValue['uid']) . '<br/>';
 
                 $templates = Utility::exec_SELECTgetRows(
                     'uid,title,root',
@@ -86,7 +75,6 @@ class WebsiteConf extends AbstractReport implements ReportInterface
                 // baseurl
                 $tmpl = GeneralUtility::makeInstance(ExtendedTemplateService::class);
                 $tmpl->tt_track = 0;
-                $tmpl->init();
                 $tmpl->runThroughTemplates(Utility::getRootLine($itemValue['uid']), 0);
                 $tmpl->generateConfig();
                 $websiteconfItem['baseurl'] = $tmpl->setup['config.']['baseURL'];

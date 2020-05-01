@@ -126,17 +126,17 @@ class Plugins extends AbstractReport implements ReportInterface
             if ($itemValue['CType'] == 'list') {
                 preg_match('#EXT:(.*?)\/#', $plugins[$itemValue['list_type']][0], $ext);
                 preg_match('#^LLL:(EXT:.*?):(.*)#', $plugins[$itemValue['list_type']][0], $llfile);
-                $localLang = $languageFactory->getParsedData($llfile[1], $GLOBALS['LANG']->lang);
+                $localLang = $languageFactory->getParsedData($llfile[1], Utility::getLanguageService()->lang);
                 if ($plugins[$itemValue['list_type']][2]) {
                     $itemTemp['iconext'] = GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR') . $plugins[$itemValue['list_type']][2];
                 } else {
                     $itemTemp['iconext'] = '';
                 }
-                $itemTemp['content'] = $GLOBALS['LANG']->getLLL($llfile[2], $localLang) . ' (' . $itemValue['list_type'] . ')';
+                $itemTemp['content'] = Utility::getLanguageService()->getLLL($llfile[2], $localLang) . ' (' . $itemValue['list_type'] . ')';
             } else {
                 preg_match('#^LLL:(EXT:.*?):(.*)#', $ctypes[$itemValue['CType']][0], $llfile);
-                $localLang = $languageFactory->getParsedData($llfile[1], $GLOBALS['LANG']->lang);
-                if (is_file(PATH_site . '/typo3/sysext/t3skin/icons/gfx/' . $ctypes[$itemValue['CType']][2])) {
+                $localLang = $languageFactory->getParsedData($llfile[1], Utility::getLanguageService()->lang);
+                if (is_file(Utility::getPathSite() . '/typo3/sysext/t3skin/icons/gfx/' . $ctypes[$itemValue['CType']][2])) {
                     $itemTemp['iconext'] = GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/' . $ctypes[$itemValue['CType']][2];
                 } elseif (preg_match('#^\.\.#', $ctypes[$itemValue['CType']][2], $temp)) {
                     $itemTemp['iconext'] = GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR') . $ctypes[$itemValue['CType']][2];
@@ -145,7 +145,7 @@ class Plugins extends AbstractReport implements ReportInterface
                 } else {
                     $itemTemp['iconext'] = '';
                 }
-                $itemTemp['content'] = $GLOBALS['LANG']->getLLL($llfile[2], $localLang) . ' (' . $itemValue['CType'] . ')';
+                $itemTemp['content'] = Utility::getLanguageService()->getLLL($llfile[2], $localLang) . ' (' . $itemValue['CType'] . ')';
             }
             $itemTemp['references'] = $itemValue['nb'];
             $itemTemp['pourc'] = round((($itemValue['nb'] * 100) / $itemsCount[0]['nb']), 2);
