@@ -9,7 +9,7 @@ namespace Sng\AdditionalReports\ViewHelpers;
  * LICENSE.txt file that was distributed with this source code.
  */
 
-use TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
  * Outputs an argument/value without any escaping. Is normally used to output

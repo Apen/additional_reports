@@ -30,7 +30,7 @@ class CallAjax
         $extFile = GeneralUtility::_GP('extFile');
         $extVersion = GeneralUtility::_GP('extVersion');
         $file1 = realpath(ExtensionManagementUtility::extPath($extKey, $extFile));
-        $realPathExt = realpath(PATH_site . 'typo3conf/ext/' . $extKey);
+        $realPathExt = realpath(Utility::getPathSite() . '/typo3conf/ext/' . $extKey);
 
         if ($mode === null) {
             $mode = 'compareFile';

@@ -25,7 +25,7 @@ class Hooks extends AbstractReport implements ReportInterface
      */
     public function getReport()
     {
-        $content = '<p class="help">' . $GLOBALS['LANG']->getLL('hooks_description') . '</p>';
+        $content = '<p class="help">' . Utility::getLanguageService()->getLL('hooks_description') . '</p>';
         return $content . $this->display();
     }
 
