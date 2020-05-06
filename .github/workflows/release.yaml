@@ -1,0 +1,18 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: the-coding-owl/action-typo3-extension-repository-upload@0.0.1
+        env:
+          SECRET_USERNAME: ${{ secrets.USERNAME }}
+          SECRET_PASSWORD: ${{ secrets.PASSWORD }}
+          EXTENSION_KEY: 'additional_reports'
+          UPLOAD_MESSAGE: 'Automatic release built from GitHub, see the https://github.com/Apen/additional_reports/blob/master/CHANGELOG.md for details.'
