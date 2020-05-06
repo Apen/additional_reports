@@ -1,5 +1,21 @@
 <?php
 
+/**
+ * This file represents the configuration for Code Sniffing PSR-2-related
+ * automatic checks of coding guidelines
+ * Install @fabpot's great php-cs-fixer tool via
+ *
+ *  $ composer global require friendsofphp/php-cs-fixer
+ *
+ * And then simply run
+ *
+ *  $ ./bin/php-cs-fixer fix . --config ./Build/.php_cs
+ *
+ * For more information read:
+ *     https://www.php-fig.org/psr/psr-2/
+ *     https://cs.sensiolabs.org
+ */
+
 return PhpCsFixer\Config::create()
     ->setRiskyAllowed(true)
     ->setUsingCache(false)
