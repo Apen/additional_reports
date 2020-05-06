@@ -1,5 +1,10 @@
-additional_reports : Useful information in reports module
-=======================================================
+# additional_reports
+
+[![Latest Stable Version](https://img.shields.io/packagist/v/apen/additional_reports?label=version)](https://packagist.org/packages/apen/additional_reports)
+[![Total Downloads](https://img.shields.io/packagist/dt/apen/additional_reports)](https://packagist.org/packages/apen/additional_reports)
+[![TYPO3](https://img.shields.io/badge/TYPO3-9.5-orange.svg?style=flat-square)](https://typo3.org/)
+[![TYPO3](https://img.shields.io/badge/TYPO3-10.4-orange.svg?style=flat-square)](https://typo3.org/)
+
 >  Display useful informations in the reports module.
 
 ## What does it do?
@@ -23,9 +28,9 @@ Do not hesitate to contact me if you have any good ideas.
 
 Download and install as TYPO3 extension.
 
->TER url : http://typo3.org/extensions/repository/view/additional_reports
-
->Releases : https://github.com/Apen/additional_reports/releases
+* Composer : composer require apen/additional_reports
+* TER url : http://typo3.org/extensions/repository/view/additional_reports
+* Releases : https://github.com/Apen/additional_reports/releases
 
 Go to the reports module.
 
