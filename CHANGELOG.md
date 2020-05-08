@@ -1,6 +1,8 @@
-Latest release : 3.3.2 (2020-05-01 14:57:41 +0200)
+Latest release : 3.3.4 (2020-05-07 13:54:34 +0200)
 
 
+* 3.3.4 (2020-05-07 13:54:34 +0200) [Full list of changes](https://github.com/Apen/additional_reports/compare/3.3.3...3.3.4)
+* 3.3.3 (2020-05-06 21:48:39 +0200) [Full list of changes](https://github.com/Apen/additional_reports/compare/3.3.2...3.3.3)
 * 3.3.2 (2020-05-01 14:57:41 +0200) [Full list of changes](https://github.com/Apen/additional_reports/compare/3.3.1...3.3.2)
 * 3.3.1 (2020-05-01 14:56:14 +0200) [Full list of changes](https://github.com/Apen/additional_reports/compare/3.3.0...3.3.1)
 * 3.3.0 (2020-05-01 14:38:46 +0200) [Full list of changes](https://github.com/Apen/additional_reports/compare/3.2.2...3.3.0)
