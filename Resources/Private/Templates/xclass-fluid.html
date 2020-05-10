@@ -1,43 +1,29 @@
 <f:if condition="{xclass.objects}">
     <f:then>
-        <table cellspacing="1" cellpadding="2" border="0" class="table table-striped table-hover">
-            <thead>
-            <tr>
-                <th colspan="2">XCLASS with $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects']</th>
-            </tr>
-            <tr>
-                <th>
-                    <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:name"/>
-                </th>
-                <th>
-                    <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:path"/>
-                </th>
-            </tr>
-            </thead>
-            <tbody>
-            <f:for each="{xclass.objects}" as="path" key="name">
+        <div class="table-fit">
+            <table class="table table-striped table-hover table-condensed">
+                <thead>
                 <tr>
-                    <td>{path.className}</td>
-                    <td>{name}</td>
+                    <th colspan="2">XCLASS with $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects']</th>
                 </tr>
-            </f:for>
-            </tbody>
-        </table>
+                <tr>
+                    <th>
+                        <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:name"/>
+                    </th>
+                    <th>
+                        <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:path"/>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <f:for each="{xclass.objects}" as="path" key="name">
+                    <tr>
+                        <td>{path.className}</td>
+                        <td>{name}</td>
+                    </tr>
+                </f:for>
+                </tbody>
+            </table>
+        </div>
     </f:then>
 </f:if>
-
-<f:section name="info">
-    <br/>
-
-    <table class="table table-striped table-hover">
-        <tbody>
-        <tr>
-            <td class="notice col-xs-6">{label}</td>
-            <td class="notice col-xs-6">{value}</td>
-        </tr>
-        </tbody>
-    </table>
-
-    <br/>
-</f:section>
-
