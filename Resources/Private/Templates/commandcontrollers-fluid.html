@@ -1,17 +1,44 @@
-<table cellspacing="1" cellpadding="2" border="0" class="table table-striped table-hover">
-    <thead>
-    <tr>
-        <th>
-            <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:commandcontrollers_description"/>
-        </th>
-    </tr>
-    <tr>
-        <th>Class</th>
-    </tr>
-    </thead>
-    <f:for each="{items}" as="item">
+<div class="table-fit">
+    <table class="table table-striped table-hover table-condensed">
+        <thead>
         <tr>
-            <td>{item}</td>
+            <th>
+                <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:commandcontrollers_description"/>
+            </th>
         </tr>
-    </f:for>
-</table>
+        <tr>
+            <th>Class</th>
+        </tr>
+        </thead>
+        <tbody>
+        <f:for each="{itemsOld}" as="class">
+            <tr>
+                <td>{class}</td>
+            </tr>
+        </f:for>
+        </tbody>
+    </table>
+</div>
+<div class="table-fit">
+    <table class="table table-striped table-hover table-condensed">
+        <thead>
+        <tr>
+            <th colspan="2">
+                <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:commandcontrollersnew_description"/>
+            </th>
+        </tr>
+        <tr>
+            <th>Command</th>
+            <th>Class</th>
+        </tr>
+        </thead>
+        <tbody>
+        <f:for each="{itemsNew}" as="class" key="command">
+            <tr>
+                <td>{command}</td>
+                <td>{class}</td>
+            </tr>
+        </f:for>
+        </tbody>
+    </table>
+</div>

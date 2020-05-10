@@ -24,10 +24,13 @@
 			<source>A plugin/ctype can be also called in typoscript, typoscript file, php file...</source>
 		</trans-unit>
 		<trans-unit id="commandcontrollers_description">
-			<source>List of all the CommandControllers. Execute "typo3/cli_dispatch.phpsh extbase help" to list them.</source>
+			<source>List of all the CommandControllers declare in $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['extbase']['commandControllers'] (old way)</source>
+		</trans-unit>
+		<trans-unit id="commandcontrollersnew_description">
+			<source>List of all the Symfony Commands declare in Configuration/Commands.php of the extension</source>
 		</trans-unit>
 		<trans-unit id="commandcontrollers_title">
-			<source>Additional reports - CommandControllers</source>
+			<source>Additional reports - Commands</source>
 		</trans-unit>
 		<trans-unit id="comparelast">
 			<source>Compare with last version</source>
