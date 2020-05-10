@@ -14,6 +14,7 @@ use TYPO3\CMS\Backend\Template\DocumentTemplate;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Fluid\View\AbstractTemplateView;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 use TYPO3\CMS\Reports\ReportInterface;
 
@@ -58,7 +59,7 @@ class Status extends AbstractReport implements ReportInterface
     /**
      * @param \TYPO3\CMS\Fluid\View\AbstractTemplateView $view
      */
-    public function displayTypo3(\TYPO3\CMS\Fluid\View\AbstractTemplateView $view)
+    public function displayTypo3(AbstractTemplateView $view)
     {
         // infos about typo3 versions
         $datas = [];
@@ -135,7 +136,7 @@ class Status extends AbstractReport implements ReportInterface
     /**
      * @param \TYPO3\CMS\Fluid\View\AbstractTemplateView $view
      */
-    public function displayEnv(\TYPO3\CMS\Fluid\View\AbstractTemplateView $view)
+    public function displayEnv(AbstractTemplateView $view)
     {
         $datas = [];
         $vars = GeneralUtility::getIndpEnv('_ARRAY');
@@ -152,7 +153,7 @@ class Status extends AbstractReport implements ReportInterface
     /**
      * @param \TYPO3\CMS\Fluid\View\AbstractTemplateView $view
      */
-    public function displayPhp(\TYPO3\CMS\Fluid\View\AbstractTemplateView $view)
+    public function displayPhp(AbstractTemplateView $view)
     {
         $datas = [];
 
@@ -180,7 +181,7 @@ class Status extends AbstractReport implements ReportInterface
     /**
      * @param \TYPO3\CMS\Fluid\View\AbstractTemplateView $view
      */
-    public function displayMySql(\TYPO3\CMS\Fluid\View\AbstractTemplateView $view)
+    public function displayMySql(AbstractTemplateView $view)
     {
         $datas = [];
 
@@ -240,7 +241,7 @@ class Status extends AbstractReport implements ReportInterface
     /**
      * @param \TYPO3\CMS\Fluid\View\AbstractTemplateView $view
      */
-    public function displayCronTab(\TYPO3\CMS\Fluid\View\AbstractTemplateView $view)
+    public function displayCronTab(AbstractTemplateView $view)
     {
         $datas = [];
         exec('crontab -l', $crontab);

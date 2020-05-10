@@ -42,7 +42,8 @@ class Utility
             ['Status', 'status'],
             ['LogErrors', 'logerrors'],
             ['WebsiteConf', 'websitesconf'],
-            ['Extensions', 'extensions']
+            ['Extensions', 'extensions'],
+            ['Middlewares', 'middlewares'],
         ];
     }
 

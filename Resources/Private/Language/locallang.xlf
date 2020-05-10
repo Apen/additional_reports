@@ -32,6 +32,12 @@
 			<trans-unit id="commandcontrollers_title">
 				<source>Additional reports - Commands</source>
 			</trans-unit>
+			<trans-unit id="middlewares_title">
+				<source>Additional reports - Middlewares (PSR-15)</source>
+			</trans-unit>
+			<trans-unit id="middlewares_description">
+				<source>List of all the PSR-15 Middlewares</source>
+			</trans-unit>
 			<trans-unit id="comparelast">
 				<source>Compare with last version</source>
 			</trans-unit>
