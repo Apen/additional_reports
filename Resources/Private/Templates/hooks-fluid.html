@@ -1,69 +1,73 @@
 {namespace ar=Sng\AdditionalReports\ViewHelpers}
 
 <f:if condition="{hooks.core}">
-    <table cellspacing="1" cellpadding="2" border="0" class="table table-striped table-hover">
-        <thead>
-        <tr>
-            <th colspan="3">
-                <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:hooks_core"/>
-            </th>
-        </tr>
-        <tr>
-            <th>
-                <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:hooks_corefile"/>
-            </th>
-            <th>
-                <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:hooks_name"/>
-            </th>
-            <th>
-                <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:hooks_file"/>
-            </th>
-        </tr>
-        </thead>
-        <tbody>
-        <f:for each="{hooks.core}" as="hook">
+    <div class="table-fit">
+        <table class="table table-striped table-hover table-condensed">
+            <thead>
             <tr>
-                <td>{hook.corefile}</td>
-                <td>{hook.name}</td>
-                <td>
-                    <f:format.raw>{hook.file}</f:format.raw>
-                </td>
+                <th colspan="3">
+                    <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:hooks_core"/>
+                </th>
             </tr>
-        </f:for>
-        </tbody>
-    </table>
+            <tr>
+                <th>
+                    <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:hooks_corefile"/>
+                </th>
+                <th>
+                    <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:hooks_name"/>
+                </th>
+                <th>
+                    <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:hooks_file"/>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <f:for each="{hooks.core}" as="hook">
+                <tr>
+                    <td>{hook.corefile}</td>
+                    <td>{hook.name}</td>
+                    <td>
+                        <f:format.raw>{hook.file}</f:format.raw>
+                    </td>
+                </tr>
+            </f:for>
+            </tbody>
+        </table>
+    </div>
 </f:if>
 
 <f:if condition="{hooks.extensions}">
-    <table cellspacing="1" cellpadding="2" border="0" class="table table-striped table-hover">
-        <thead>
-        <tr>
-            <th colspan="3">
-                <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:hooks_extension"/>
-            </th>
-        </tr>
-        <tr>
-            <th>
-                <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:extension"/>
-            </th>
-            <th>
-                <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:hooks_name"/>
-            </th>
-            <th>
-                <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:hooks_file"/>
-            </th>
-        </tr>
-        </thead>
-        <tbody>
-        <f:for each="{hooks.extensions}" as="hook">
+    <div class="table-fit">
+        <table class="table table-striped table-hover table-condensed">
+            <thead>
             <tr>
-                <td>{hook.corefile}</td>
-                <td>{hook.name}</td>
-                <td>
-                    <f:format.raw>{hook.file}</f:format.raw>
-                </td>
+                <th colspan="3">
+                    <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:hooks_extension"/>
+                </th>
             </tr>
-        </f:for>
-        </tbody>
-    </table>
+            <tr>
+                <th>
+                    <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:extension"/>
+                </th>
+                <th>
+                    <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:hooks_name"/>
+                </th>
+                <th>
+                    <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:hooks_file"/>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <f:for each="{hooks.extensions}" as="hook">
+                <tr>
+                    <td>{hook.corefile}</td>
+                    <td>{hook.name}</td>
+                    <td>
+                        <f:format.raw>{hook.file}</f:format.raw>
+                    </td>
+                </tr>
+            </f:for>
+            </tbody>
+        </table>
+    </div>
 </f:if>

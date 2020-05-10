@@ -1,32 +1,33 @@
-<table cellspacing="1" cellpadding="2" border="0" class="table table-striped table-hover">
-    <thead>
-    <tr>
-        <th colspan="4">
-            <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:eid_description"/>
-        </th>
-    </tr>
-    <tr>
-        <th class="cell">&nbsp;</th>
-        <th class="cell">
-            <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:extension"/>
-        </th>
-        <th class="cell">
-            <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:name"/>
-        </th>
-        <th class="cell">
-            <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:path"/>
-        </th>
-    </tr>
-    </thead>
-    <tbody>
-    <f:for each="{eids}" as="eid">
+<div class="table-fit">
+    <table class="table table-striped table-hover table-condensed">
+        <thead>
         <tr>
-            <td class="col-icon"><img src="{eid.icon}"/></td>
-            <td>{eid.extension}</td>
-            <td>{eid.name}</td>
-            <td>{eid.path}</td>
+            <th colspan="4">
+                <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:eid_description"/>
+            </th>
         </tr>
-    </f:for>
-    </tbody>
-</table>
-
+        <tr>
+            <th>&nbsp;</th>
+            <th>
+                <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:extension"/>
+            </th>
+            <th>
+                <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:name"/>
+            </th>
+            <th>
+                <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:path"/>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <f:for each="{eids}" as="eid">
+            <tr>
+                <td class="col-icon"><img src="{eid.icon}"/></td>
+                <td>{eid.extension}</td>
+                <td>{eid.name}</td>
+                <td>{eid.path}</td>
+            </tr>
+        </f:for>
+        </tbody>
+    </table>
+</div>

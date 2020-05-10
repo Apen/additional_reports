@@ -90,6 +90,7 @@ class Extensions extends AbstractReport implements ReportInterface
         $view->assign('listExtensionsTer', $listExtensionsTer);
         $view->assign('listExtensionsDev', $listExtensionsDev);
         $view->assign('listExtensionsUnloaded', $listExtensionsUnloaded);
+        $view->assign('composer', TYPO3_COMPOSER_MODE);
         return $addContentItem . $view->render();
     }
 

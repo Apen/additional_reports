@@ -19,38 +19,40 @@
 <h2 id="reportsMySQL" class="section-header expanded">MySQL :</h2>
 <div>
     <f:format.raw>{mysql}</f:format.raw>
-    <table cellspacing="1" cellpadding="2" border="0" class="table table-striped table-hover" width="100%">
-        <thead>
-        <tr>
-            <th colspan="5">{typo3db} -
-                <f:count subject="{tables}"/>
-                tables
-            </th>
-        </tr>
-        <tr>
-            <th>Name</th>
-            <th>Engine</th>
-            <th>Collation</th>
-            <th>Rows</th>
-            <th>Size (in MB)</th>
-        </tr>
-        </thead>
-        <tbody>
-        <f:for each="{tables}" as="table">
+    <div class="table-fit">
+        <table class="table table-striped table-hover table-condensed">
+            <thead>
             <tr>
-                <td>{table.name}</td>
-                <td>{table.engine}</td>
-                <td>{table.collation}</td>
-                <td>{table.rows}</td>
-                <td>{table.size}</td>
+                <th colspan="5">{typo3db} -
+                    <f:count subject="{tables}"/>
+                    tables
+                </th>
             </tr>
-        </f:for>
-        <tr>
-            <td colspan="4">Total</td>
-            <td>{tablessize} MB</td>
-        </tr>
-        </tbody>
-    </table>
+            <tr>
+                <th>Name</th>
+                <th>Engine</th>
+                <th>Collation</th>
+                <th>Rows</th>
+                <th>Size (in MB)</th>
+            </tr>
+            </thead>
+            <tbody>
+            <f:for each="{tables}" as="table">
+                <tr>
+                    <td>{table.name}</td>
+                    <td>{table.engine}</td>
+                    <td>{table.collation}</td>
+                    <td>{table.rows}</td>
+                    <td>{table.size}</td>
+                </tr>
+            </f:for>
+            <tr>
+                <td colspan="4">Total</td>
+                <td>{tablessize} MB</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 <h2 id="reportsCrontab" class="section-header expanded">Crontab :</h2>
 <div>
