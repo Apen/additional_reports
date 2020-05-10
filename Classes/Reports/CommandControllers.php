@@ -38,17 +38,15 @@ class CommandControllers extends AbstractReport implements ReportInterface
         $items = $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['extbase']['commandControllers'];
         $view = GeneralUtility::makeInstance(StandaloneView::class);
         $view->setTemplatePathAndFilename(ExtensionManagementUtility::extPath('additional_reports') . 'Resources/Private/Templates/commandcontrollers-fluid.html');
-        $view->assign('items', $items);
-        $content = $view->render();
+        $view->assign('itemsOld', $items);
 
         $commands = GeneralUtility::makeInstance(CommandRegistry::class);
         $items = [];
         foreach ($commands->getIterator() as $cmd => $el) {
-            $items[] = $cmd . ' --> ' . get_class($el);
+            $items[$cmd] = get_class($el);
         }
-        $view->assign('items', $items);
-        $content .= $view->render();
+        $view->assign('itemsNew', $items);
 
-        return $content;
+        return $view->render();
     }
 }
