@@ -12,7 +12,6 @@ namespace Sng\AdditionalReports\Reports;
 use Sng\AdditionalReports\Utility;
 use TYPO3\CMS\Backend\Template\DocumentTemplate;
 use TYPO3\CMS\Core\Database\ConnectionPool;
-use TYPO3\CMS\Core\Utility\CommandUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
@@ -45,130 +44,150 @@ class Status extends AbstractReport implements ReportInterface
     {
         $view = GeneralUtility::makeInstance(StandaloneView::class);
         $view->setTemplatePathAndFilename(ExtensionManagementUtility::extPath('additional_reports') . 'Resources/Private/Templates/status-fluid.html');
+        $view->getRequest()->setControllerExtensionName('additional_reports');
 
+        $this->displayTypo3($view);
+        $this->displayEnv($view);
+        $this->displayPhp($view);
+        $this->displayMySql($view);
+        $this->displayCronTab($view);
+
+        return $view->render();
+    }
+
+    /**
+     * @param \TYPO3\CMS\Fluid\View\AbstractTemplateView $view
+     */
+    public function displayTypo3(\TYPO3\CMS\Fluid\View\AbstractTemplateView $view)
+    {
         // infos about typo3 versions
+        $datas = [];
         $jsonVersions = Utility::getJsonVersionInfos();
         $currentVersionInfos = Utility::getCurrentVersionInfos($jsonVersions, TYPO3_version);
         $currentBranch = Utility::getCurrentBranchInfos($jsonVersions, TYPO3_version);
         $latestStable = Utility::getLatestStableInfos($jsonVersions);
         $latestLts = Utility::getLatestLtsInfos($jsonVersions);
-        $headerVersions = Utility::getLl('status_version') . '<br/>';
-        $headerVersions .= Utility::getLl('latestbranch') . '<br/>';
-        $headerVersions .= Utility::getLl('lateststable') . '<br/>';
-        $headerVersions .= Utility::getLl('latestlts');
-        $htmlVersions = TYPO3_version . ' [' . $currentVersionInfos['date'] . ']';
-        $htmlVersions .= '<br/>' . $currentBranch['version'] . ' [' . $currentBranch['date'] . ']';
-        $htmlVersions .= '<br/>' . $latestStable['version'] . ' [' . $latestStable['date'] . ']';
-        $htmlVersions .= '<br/>' . $latestLts['version'] . ' [' . $latestLts['date'] . ']';
-
-        // TYPO3
-        $content = Utility::writeInformation(Utility::getLl('status_sitename'), $GLOBALS['TYPO3_CONF_VARS']['SYS']['sitename']);
-        $content .= Utility::writeInformation($headerVersions, $htmlVersions);
-        $content .= Utility::writeInformation(Utility::getLl('status_path'), Utility::getPathSite());
-        $content .= Utility::writeInformation(
-            'dbname<br/>user<br/>host',
-            $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['dbname'] . '<br/>'
-            . $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['user'] . '<br/>'
-            . $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['host']
-        );
-        if ($GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path'] != '') {
-            $cmd = CommandUtility::imageMagickCommand('convert', '-version');
-            exec($cmd, $ret);
-            $content .= Utility::writeInformation(
-                Utility::getLl('status_im'),
-                $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path'] . ' (' . $ret[0] . ')'
-            );
-        }
-        $content .= Utility::writeInformation('forceCharset', $GLOBALS['TYPO3_CONF_VARS']['BE']['forceCharset']);
-        $content .= Utility::writeInformation('DB/Connections/Default/initCommands', $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['initCommands']);
-        $content .= Utility::writeInformation('no_pconnect', $GLOBALS['TYPO3_CONF_VARS']['SYS']['no_pconnect']);
-        $content .= Utility::writeInformation('displayErrors', $GLOBALS['TYPO3_CONF_VARS']['SYS']['displayErrors']);
-        $content .= Utility::writeInformation('maxFileSize', $GLOBALS['TYPO3_CONF_VARS']['BE']['maxFileSize']);
 
         $extensions = [];
-
         if (is_file(Utility::getPathSite() . '/typo3conf/PackageStates.php')) {
             $packages = include(Utility::getPathSite() . '/typo3conf/PackageStates.php');
             foreach ($packages['packages'] as $extensionKey => $package) {
                 $extensions[] = $extensionKey;
             }
         }
-
         sort($extensions);
-
         foreach ($extensions as $aKey => $extension) {
             $extensions[$aKey] = $extension . ' (' . Utility::getExtensionVersion($extension) . ')';
         }
-        $content .= Utility::writeInformationList(
-            Utility::getLl('status_loadedextensions'),
-            $extensions
-        );
 
-        $view->assign('typo3', $content);
+        $datas['sitename'] = $GLOBALS['TYPO3_CONF_VARS']['SYS']['sitename'];
+        $datas['version'] = TYPO3_version . ' [' . $currentVersionInfos['date'] . ']';
+        $datas['current_branch'] = $currentBranch['version'] . ' [' . $currentBranch['date'] . ']';
+        $datas['latest_stable'] = $latestStable['version'] . ' [' . $latestStable['date'] . ']';
+        $datas['latest_lts'] = $latestLts['version'] . ' [' . $latestLts['date'] . ']';
+        $datas['path'] = Utility::getPathSite();
+        $datas['db_name'] = $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['dbname'];
+        $datas['db_user'] = $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['user'];
+        $datas['db_host'] = $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['host'];
+        $datas['db_init'] = $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['initCommands'];
+        $datas['db_pcon'] = $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['persistentConnection'];
 
-        // Debug
-        $content = '';
+        // debug
+        $datas['displayErrors'] = [
+            'BE/debug : ' . $GLOBALS['TYPO3_CONF_VARS']['BE']['debug'],
+            'FE/debug : ' . $GLOBALS['TYPO3_CONF_VARS']['FE']['debug'],
+            'devIPmask : ' . $GLOBALS['TYPO3_CONF_VARS']['SYS']['devIPmask'],
+            'displayErrors : ' . $GLOBALS['TYPO3_CONF_VARS']['SYS']['displayErrors'],
+            'systemLogLevel : ' . $GLOBALS['TYPO3_CONF_VARS']['SYS']['systemLogLevel'],
+        ];
+
+        // gfx
+        $datas['gfx'] = [
+            'processor_enabled : ' . $GLOBALS['TYPO3_CONF_VARS']['GFX']['processor_enabled'],
+            'processor_path : ' . $GLOBALS['TYPO3_CONF_VARS']['GFX']['processor_path'],
+            'processor_path_lzw : ' . $GLOBALS['TYPO3_CONF_VARS']['GFX']['processor_path_lzw'],
+            'processor : ' . $GLOBALS['TYPO3_CONF_VARS']['GFX']['processor'],
+            'processor_effects : ' . $GLOBALS['TYPO3_CONF_VARS']['GFX']['processor_effects'],
+            'processor_allowTemporaryMasksAsPng : ' . $GLOBALS['TYPO3_CONF_VARS']['GFX']['processor_allowTemporaryMasksAsPng'],
+            'processor_colorspace : ' . $GLOBALS['TYPO3_CONF_VARS']['GFX']['processor_colorspace'],
+        ];
+
+        // mail
+        $datas['mail'] = [
+            'transport : ' . $GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport'],
+            'transport_sendmail_command : ' . $GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_sendmail_command'],
+            'transport_smtp_server : ' . $GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_server'],
+            'transport_smtp_encrypt : ' . $GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_encrypt'],
+            'transport_smtp_username : ' . $GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_username'],
+            'transport_smtp_password : ' . $GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_password'],
+        ];
+
+        $datas['password'] = [
+            'BE/passwordHashing/className : ' . $GLOBALS['TYPO3_CONF_VARS']['BE']['passwordHashing']['className'],
+            'FE/passwordHashing/className : ' . $GLOBALS['TYPO3_CONF_VARS']['FE']['passwordHashing']['className'],
+        ];
+
+        $datas['extensions'] = $extensions;
+
+        $view->assign('datas_typo3', $datas);
+    }
+
+    /**
+     * @param \TYPO3\CMS\Fluid\View\AbstractTemplateView $view
+     */
+    public function displayEnv(\TYPO3\CMS\Fluid\View\AbstractTemplateView $view)
+    {
+        $datas = [];
         $vars = GeneralUtility::getIndpEnv('_ARRAY');
         foreach ($vars as $varKey => $varValue) {
-            $content .= Utility::writeInformation($varKey, $varValue);
+            $datas[$varKey] = $varValue;
         }
         $gE_keys = explode(',', 'HTTP_ACCEPT,HTTP_ACCEPT_ENCODING,HTTP_CONNECTION,HTTP_COOKIE,REMOTE_PORT,SERVER_ADDR,SERVER_ADMIN,SERVER_NAME,SERVER_PORT,SERVER_SIGNATURE,SERVER_SOFTWARE,GATEWAY_INTERFACE,SERVER_PROTOCOL,REQUEST_METHOD,PATH_TRANSLATED');
         foreach ($gE_keys as $k) {
-            $content .= Utility::writeInformation($k, getenv($k));
+            $datas[$k] = getenv($k);
         }
-        $view->assign('getIndpEnv', $content);
+        $view->assign('datas_env', $datas);
+    }
 
-        // PHP
-        $content = Utility::writeInformation(Utility::getLl('status_version'), phpversion());
-        $content .= Utility::writeInformation('memory_limit', ini_get('memory_limit'));
-        $content .= Utility::writeInformation('max_execution_time', ini_get('max_execution_time'));
-        $content .= Utility::writeInformation('post_max_size', ini_get('post_max_size'));
-        $content .= Utility::writeInformation('upload_max_filesize', ini_get('upload_max_filesize'));
-        $content .= Utility::writeInformation('display_errors', ini_get('display_errors'));
-        $content .= Utility::writeInformation('error_reporting', ini_get('error_reporting'));
+    /**
+     * @param \TYPO3\CMS\Fluid\View\AbstractTemplateView $view
+     */
+    public function displayPhp(\TYPO3\CMS\Fluid\View\AbstractTemplateView $view)
+    {
+        $datas = [];
+
+        $datas['status_version'] = phpversion();
+        $datas['memory_limit'] = ini_get('memory_limit');
+        $datas['max_execution_time'] = ini_get('max_execution_time');
+        $datas['post_max_size'] = ini_get('post_max_size');
+        $datas['upload_max_filesize'] = ini_get('upload_max_filesize');
+        $datas['display_errors'] = ini_get('display_errors');
+        $datas['error_reporting'] = ini_get('error_reporting');
+
         if (function_exists('posix_getpwuid') && function_exists('posix_getgrgid')) {
             $apacheUser = posix_getpwuid(posix_getuid());
             $apacheGroup = posix_getgrgid(posix_getgid());
-            $content .= Utility::writeInformation(
-                'Apache user',
-                $apacheUser['name'] . ' (' . $apacheUser['uid'] . ')'
-            );
-            $content .= Utility::writeInformation(
-                'Apache group',
-                $apacheGroup['name'] . ' (' . $apacheGroup['gid'] . ')'
-            );
+            $datas['apache_user'] = $apacheUser['name'] . ' (' . $apacheUser['gid'] . ')';
+            $datas['apache_group'] = $apacheGroup['name'] . ' (' . $apacheGroup['gid'] . ')';
         }
         $extensions = array_map('strtolower', get_loaded_extensions());
         natcasesort($extensions);
-        $content .= Utility::writeInformationList(
-            Utility::getLl('status_loadedextensions'),
-            $extensions
-        );
+        $datas['extensions'] = $extensions;
 
-        $view->assign('php', $content);
+        $view->assign('datas_php', $datas);
+    }
 
-        // Apache
-        if (function_exists('apache_get_version') && function_exists('apache_get_modules')) {
-            $extensions = apache_get_modules();
-            natcasesort($extensions);
-            $content = Utility::writeInformation(
-                Utility::getLl('status_version'),
-                apache_get_version()
-            );
-            $content .= Utility::writeInformationList(
-                Utility::getLl('status_loadedextensions'),
-                $extensions
-            );
-            $view->assign('apache', $content);
-        } else {
-            $view->assign('apache', Utility::getLl('noresults'));
-        }
+    /**
+     * @param \TYPO3\CMS\Fluid\View\AbstractTemplateView $view
+     */
+    public function displayMySql(\TYPO3\CMS\Fluid\View\AbstractTemplateView $view)
+    {
+        $datas = [];
 
         $connection = Utility::getDatabaseConnection();
         $connectionParams = $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections'][ConnectionPool::DEFAULT_CONNECTION_NAME];
 
-        // MySQL
-        $content = Utility::writeInformation('Version', $connection->getServerVersion());
+        $datas['version'] = $connection->getServerVersion();
 
         $items = Utility::getQueryBuilder()
             ->select('default_character_set_name', 'default_collation_name')
@@ -177,13 +196,10 @@ class Status extends AbstractReport implements ReportInterface
             ->execute()
             ->fetchAll();
 
-        $content .= Utility::writeInformation(
-            'default_character_set_name',
-            $items[0]['default_character_set_name']
-        );
-        $content .= Utility::writeInformation('default_collation_name', $items[0]['default_collation_name']);
-        $content .= Utility::writeInformation('query_cache', Utility::getMySqlCacheInformations());
-        $content .= Utility::writeInformation('character_set', Utility::getMySqlCharacterSet());
+        $datas['default_character_set_name'] = $items[0]['default_character_set_name'];
+        $datas['default_collation_name'] = $items[0]['default_collation_name'];
+        $datas['query_cache'] = Utility::getMySqlCacheInformations();
+        $datas['character_set'] = Utility::getMySqlCharacterSet();
 
         // TYPO3 database
         $items = Utility::getQueryBuilder()
@@ -205,21 +221,28 @@ class Status extends AbstractReport implements ReportInterface
 
         foreach ($items as $itemValue) {
             $tables[] = [
-                'name'      => $itemValue['table_name'],
-                'engine'    => $itemValue['engine'],
+                'name' => $itemValue['table_name'],
+                'engine' => $itemValue['engine'],
                 'collation' => $itemValue['table_collation'],
-                'rows'      => $itemValue['table_rows'],
-                'size'      => round($itemValue['size'], 2),
+                'rows' => $itemValue['table_rows'],
+                'size' => round($itemValue['size'], 2),
             ];
             $size += round($itemValue['size'], 2);
         }
 
-        $view->assign('mysql', $content);
-        $view->assign('tables', $tables);
-        $view->assign('tablessize', round($size, 2));
-        $view->assign('typo3db', $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['dbname']);
+        $datas['tables'] = $tables;
+        $datas['tablessize'] = round($size, 2);
+        $datas['typo3db'] = $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['dbname'];
 
-        // Crontab
+        $view->assign('datas_mysql', $datas);
+    }
+
+    /**
+     * @param \TYPO3\CMS\Fluid\View\AbstractTemplateView $view
+     */
+    public function displayCronTab(\TYPO3\CMS\Fluid\View\AbstractTemplateView $view)
+    {
+        $datas = [];
         exec('crontab -l', $crontab);
         $crontabString = Utility::getLl('status_nocrontab');
         if (count($crontab) > 0) {
@@ -230,9 +253,7 @@ class Status extends AbstractReport implements ReportInterface
                 }
             }
         }
-        $content = Utility::writeInformation('Crontab', $crontabString);
-        $view->assign('crontab', $content);
-
-        return $view->render();
+        $datas['crontab'] = $crontabString;
+        $view->assign('datas_crontab', $datas);
     }
 }
