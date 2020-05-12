@@ -37,5 +37,12 @@
     "psr-4": {
       "Sng\\AdditionalReports\\Tests\\": "Tests"
     }
+  },
+  "extra": {
+    "typo3/cms": {
+      "extension-key": "additional_reports",
+      "cms-package-dir": "{$vendor-dir}/typo3/cms",
+      "web-dir": ".Build/Web"
+    }
   }
 }

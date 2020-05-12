@@ -36,4 +36,4 @@ jobs:
           find . -name \*.php  ! -path "./.Build/*" -exec php -l {} \;
       - name: Run unit tests
         run: |
-          .Build/bin/phpunit -c Build\UnitTests.xml
+          .Build/bin/phpunit -c Build/UnitTests.xml
