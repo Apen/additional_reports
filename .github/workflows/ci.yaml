@@ -2,14 +2,11 @@ name: CI
 
 on:
   push:
-    paths:
-      - '**.php'
-      - '.github/workflows/ci.yml'
-  pull_request:
-    paths:
-      - '**.php'
-      - '.github/workflows/ci.yml'
-
+    branches:
+      - master
+    pull_request:
+      branches:
+        - master
 jobs:
   build:
     name: Build PHP/TYPO3
