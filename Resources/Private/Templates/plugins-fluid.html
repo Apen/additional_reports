@@ -85,7 +85,6 @@
 </f:if>
 
 <!-- ctype -->
-
 <ar:inList item="{display}" list="3,7">
     <f:format.raw>{filtersCat}</f:format.raw>
     <ar:widget.paginateQuery query="{items}" as="paginatedItems" configuration="{itemsPerPage: extconf.itemsPerPage, insertAbove: 1, insertBelow: 1, pagesAfter: 1, pagesBefore: 1, forceFirstPrevNextlast: 1}">
@@ -157,7 +156,9 @@
                             <td>{item.usedtv}</td>
                         </f:if>
                         <td>
-                            <f:format.raw>{item.preview}</f:format.raw>
+                            <a href="{item.preview}" target="_blank" class="btn btn-default">
+                                <core:icon identifier="actions-version-workspace-preview"/>
+                            </a>
                         </td>
                     </tr>
                 </f:for>
@@ -243,7 +244,9 @@
                             <td>{item.usedtv}</td>
                         </f:if>
                         <td>
-                            <f:format.raw>{item.preview}</f:format.raw>
+                            <a href="{item.preview}" target="_blank" class="btn btn-default">
+                                <core:icon identifier="actions-version-workspace-preview"/>
+                            </a>
                         </td>
                     </tr>
                 </f:for>

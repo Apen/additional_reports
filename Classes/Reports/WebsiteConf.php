@@ -80,7 +80,7 @@ class WebsiteConf extends AbstractReport implements ReportInterface
                 $websiteconfItem['baseurl'] = $tmpl->setup['config.']['baseURL'];
 
                 // count pages
-                $list = Utility::getTreeList($itemValue['uid'], 99, 0, '1=1');
+                $list = Utility::getTreeList($itemValue['uid'], 99);
                 $listArray = explode(',', $list);
                 $websiteconfItem['pages'] = (count($listArray) - 1);
                 $websiteconfItem['pageshidden'] = (Utility::getCountPagesUids($list, 'hidden=1'));

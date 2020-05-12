@@ -359,6 +359,9 @@
 			<trans-unit id="database">
 				<source>Default database</source>
 			</trans-unit>
+			<trans-unit id="plus">
+				<source>+</source>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>

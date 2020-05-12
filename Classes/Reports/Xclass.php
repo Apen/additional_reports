@@ -41,7 +41,6 @@ class Xclass extends AbstractReport implements ReportInterface
         $view = GeneralUtility::makeInstance(StandaloneView::class);
         $view->setTemplatePathAndFilename(ExtensionManagementUtility::extPath('additional_reports') . 'Resources/Private/Templates/xclass-fluid.html');
         $view->assign('xclass', $xclassList);
-        $view->assign('typo3version', Utility::intFromVer(TYPO3_version));
         return $view->render();
     }
 }

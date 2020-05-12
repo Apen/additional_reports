@@ -55,22 +55,12 @@ class Utility
     public static function getBaseUrl()
     {
         $parameters = [];
-        if (version_compare(TYPO3_version, '9.0.0') >= 0) {
-            $parameters['extension'] = 'additional_reports';
-            $parameters['action'] = 'detail';
-            $parameters['report'] = GeneralUtility::_GET('report');
-            $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
-            $url = $uriBuilder->buildUriFromRoute('system_reports', $parameters);
-            return (string)$url;
-        }
+        $parameters['extension'] = 'additional_reports';
+        $parameters['action'] = 'detail';
+        $parameters['report'] = GeneralUtility::_GET('report');
         $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
-        $baseUrl = $uriBuilder->buildUriFromRoute(GeneralUtility::_GET('M')) . '&';
-        $vars = GeneralUtility::_GET('tx_reports_system_reportstxreportsm1');
-        $parameters[] = 'tx_reports_system_reportstxreportsm1%5Bextension%5D=additional_reports';
-        $parameters[] = 'tx_reports_system_reportstxreportsm1%5Breport%5D=' . $vars['report'];
-        $parameters[] = 'tx_reports_system_reportstxreportsm1%5Baction%5D=detail';
-        $parameters[] = 'tx_reports_system_reportstxreportsm1%5Bcontroller%5D=Report';
-        return $baseUrl . implode('&', $parameters);
+        $url = $uriBuilder->buildUriFromRoute('system_reports', $parameters);
+        return (string)$url;
     }
 
     /**
@@ -81,59 +71,17 @@ class Utility
     public static function getSubModules()
     {
         return [
-            'displayAjax'         => \Sng\AdditionalReports\Utility::getLanguageService()->getLL('ajax_title'),
-            'displayEid'          => \Sng\AdditionalReports\Utility::getLanguageService()->getLL('eid_title'),
-            'displayCliKeys'      => \Sng\AdditionalReports\Utility::getLanguageService()->getLL('clikeys_title'),
-            'displayPlugins'      => \Sng\AdditionalReports\Utility::getLanguageService()->getLL('plugins_title'),
-            'displayXclass'       => \Sng\AdditionalReports\Utility::getLanguageService()->getLL('xclass_title'),
-            'displayHooks'        => \Sng\AdditionalReports\Utility::getLanguageService()->getLL('hooks_title'),
-            'displayStatus'       => \Sng\AdditionalReports\Utility::getLanguageService()->getLL('status_title'),
-            'displayExtensions'   => \Sng\AdditionalReports\Utility::getLanguageService()->getLL('extensions_title'),
-            'displayLogErrors'    => \Sng\AdditionalReports\Utility::getLanguageService()->getLL('logerrors_title'),
+            'displayAjax' => \Sng\AdditionalReports\Utility::getLanguageService()->getLL('ajax_title'),
+            'displayEid' => \Sng\AdditionalReports\Utility::getLanguageService()->getLL('eid_title'),
+            'displayCliKeys' => \Sng\AdditionalReports\Utility::getLanguageService()->getLL('clikeys_title'),
+            'displayPlugins' => \Sng\AdditionalReports\Utility::getLanguageService()->getLL('plugins_title'),
+            'displayXclass' => \Sng\AdditionalReports\Utility::getLanguageService()->getLL('xclass_title'),
+            'displayHooks' => \Sng\AdditionalReports\Utility::getLanguageService()->getLL('hooks_title'),
+            'displayStatus' => \Sng\AdditionalReports\Utility::getLanguageService()->getLL('status_title'),
+            'displayExtensions' => \Sng\AdditionalReports\Utility::getLanguageService()->getLL('extensions_title'),
+            'displayLogErrors' => \Sng\AdditionalReports\Utility::getLanguageService()->getLL('logerrors_title'),
             'displayWebsitesConf' => \Sng\AdditionalReports\Utility::getLanguageService()->getLL('websitesconf_title')
         ];
-    }
-
-    /**
-     * Return informations about a ctype or plugin
-     *
-     * @param array $itemValue
-     * @return array
-     */
-    public static function getContentInfos($itemValue)
-    {
-        $markersExt = [];
-
-        $domain = \Sng\AdditionalReports\Utility::getDomain($itemValue['pid']);
-        $markersExt['domain'] = \Sng\AdditionalReports\Utility::getIconDomain() . $domain;
-
-        $iconPage = ($itemValue['hiddenpages'] == 0) ? \Sng\AdditionalReports\Utility::getIconPage() : \Sng\AdditionalReports\Utility::getIconPage(true);
-        $iconContent = ($itemValue['hiddentt_content'] == 0) ? \Sng\AdditionalReports\Utility::getIconContent() : \Sng\AdditionalReports\Utility::getIconContent(true);
-
-        $markersExt['pid'] = $iconPage . ' ' . $itemValue['pid'];
-        $markersExt['uid'] = $iconContent . ' ' . $itemValue['uid'];
-        $markersExt['pagetitle'] = $itemValue['title'];
-
-        $markersExt['usedtv'] = '';
-        $markersExt['usedtvclass'] = '';
-
-        $linkAtt = ['href' => '#', 'title' => \Sng\AdditionalReports\Utility::getLl('switch'), 'onclick' => \Sng\AdditionalReports\Utility::goToModuleList($itemValue['pid']), 'class' => 'btn btn-default'];
-        $markersExt['db'] = \Sng\AdditionalReports\Utility::generateLink($linkAtt, \Sng\AdditionalReports\Utility::getIconWebList());
-
-        $linkAtt = ['href' => \Sng\AdditionalReports\Utility::goToModuleList($itemValue['pid'], true), 'target' => '_blank', 'title' => \Sng\AdditionalReports\Utility::getLl('newwindow'), 'class' => 'btn btn-default'];
-        $markersExt['db'] .= \Sng\AdditionalReports\Utility::generateLink($linkAtt, \Sng\AdditionalReports\Utility::getIconWebList());
-
-        $linkAtt = ['href' => '#', 'title' => \Sng\AdditionalReports\Utility::getLl('switch'), 'onclick' => \Sng\AdditionalReports\Utility::goToModulePage($itemValue['pid']), 'class' => 'btn btn-default'];
-        $markersExt['page'] = \Sng\AdditionalReports\Utility::generateLink($linkAtt, \Sng\AdditionalReports\Utility::getIconWebPage());
-
-        $linkAtt = ['href' => \Sng\AdditionalReports\Utility::goToModulePage($itemValue['pid'], true), 'target' => '_blank', 'title' => \Sng\AdditionalReports\Utility::getLl('newwindow'), 'class' => 'btn btn-default'];
-        $markersExt['page'] .= \Sng\AdditionalReports\Utility::generateLink($linkAtt, \Sng\AdditionalReports\Utility::getIconWebPage());
-
-        $markersExt['preview'] = '<a target="_blank" class="btn btn-default" href="http://' . $domain . '/index.php?id=' . $itemValue['pid'] . '">';
-        $markersExt['preview'] .= \Sng\AdditionalReports\Utility::getIconZoom();
-        $markersExt['preview'] .= '</a>';
-
-        return $markersExt;
     }
 
     /**
@@ -182,42 +130,6 @@ class Utility
     }
 
     /**
-     * Returns an integer from a three part version number, eg '4.12.3' -> 4012003
-     *
-     * @param string $verNumberStr number on format x.x.x
-     * @return int
-     */
-    public static function intFromVer($verNumberStr)
-    {
-        $verParts = explode('.', $verNumberStr);
-        return (int)((int)$verParts[0] . str_pad((int)$verParts[1], 3, '0', STR_PAD_LEFT) . str_pad((int)$verParts[2], 3, '0', STR_PAD_LEFT));
-    }
-
-    /**
-     * Splits a version range into an array.
-     *
-     * @param string $ver A string with a version range.
-     * @return array
-     */
-    public static function splitVersionRange($ver)
-    {
-        $versionRange = [];
-        if (strstr($ver, '-')) {
-            $versionRange = explode('-', $ver, 2);
-        } else {
-            $versionRange[0] = $ver;
-            $versionRange[1] = '';
-        }
-        if ($versionRange[0] === '') {
-            $versionRange[0] = '0.0.0';
-        }
-        if ($versionRange[1] === '') {
-            $versionRange[1] = '0.0.0';
-        }
-        return $versionRange;
-    }
-
-    /**
      * Gathers all extensions in $path
      *
      * @param string $path Absolute path to local, global or system extensions
@@ -239,13 +151,12 @@ class Utility
                             $currentExt['EM_CONF'] = $emConf;
                             $currentExt['files'] = GeneralUtility::getFilesInDir($path . $extKey, '', 0, '', null);
                             $currentExt['lastversion'] = \Sng\AdditionalReports\Utility::checkExtensionUpdate($currentExt);
-                            $currentExt['affectedfiles'] = \Sng\AdditionalReports\Utility::getExtAffectedFiles($currentExt);
                             $currentExt['icon'] = \Sng\AdditionalReports\Utility::getExtIcon($extKey);
 
                             // db infos
                             $fileContent = '';
                             if (is_array($currentExt['files']) && in_array('ext_tables.sql', $currentExt['files'])) {
-                                $fileContent = GeneralUtility::getUrl(self::getExtPath($currentExt['extkey'], $currentExt['type']) . 'ext_tables.sql');
+                                $fileContent = GeneralUtility::getUrl(self::getExtPath($currentExt['extkey']) . 'ext_tables.sql');
                             }
                             $currentExt['fdfile'] = $fileContent;
 
@@ -288,120 +199,15 @@ class Utility
      */
     public static function checkExtensionUpdate($extInfo)
     {
+        if (self::isComposerMode()) {
+            return null;
+        }
         $lastVersion = \Sng\AdditionalReports\Utility::exec_SELECTgetRows('*', 'tx_extensionmanager_domain_model_extension', 'extension_key="' . $extInfo['extkey'] . '" AND current_version=1');
         if ($lastVersion !== []) {
             $lastVersion[0]['updatedate'] = date('d/m/Y', $lastVersion[0]['last_updated']);
             return $lastVersion[0];
         }
         return null;
-    }
-
-    /**
-     * Compares two arrays with MD5-hash values for analysis of which files has changed.
-     *
-     * @param array $current Current values
-     * @param array $past    Past values
-     * @return array
-     */
-    public static function findMD5ArrayDiff($current, $past)
-    {
-        if (!is_array($current)) {
-            $current = [];
-        }
-        if (!is_array($past)) {
-            $past = [];
-        }
-        $filesInCommon = array_intersect($current, $past);
-        $diff1 = array_keys(array_diff($past, $filesInCommon));
-        $diff2 = array_keys(array_diff($current, $filesInCommon));
-        return array_unique(array_merge($diff1, $diff2));
-    }
-
-    /**
-     * Get all all files and md5 to check modified files
-     *
-     * @param array $extInfo
-     * @return array
-     */
-    public static function getFilesMDArray($extInfo)
-    {
-        $filesMD5Array = [];
-        $fileArr = [];
-        $extPath = self::typePath($extInfo['type']) . $extInfo['extkey'] . '/';
-        $fileArr = GeneralUtility::getAllFilesAndFoldersInPath($fileArr, $extPath, '', 0, 99, $GLOBALS['TYPO3_CONF_VARS']['EXT']['excludeForPackaging']);
-        foreach ($fileArr as $file) {
-            $relFileName = substr($file, strlen($extPath));
-            if ($relFileName !== 'ext_emconf.php') {
-                $content = GeneralUtility::getUrl($file);
-                $filesMD5Array[$relFileName] = substr(md5($content), 0, 4);
-            }
-        }
-        return $filesMD5Array;
-    }
-
-    /**
-     * Get all all files and md5 to check modified files of the last version
-     *
-     * @param string $extension
-     * @param string $version
-     * @return array
-     */
-    public static function getFilesMDArrayFromT3x($extension, $version)
-    {
-        $firstLetter = strtolower(substr($extension, 0, 1));
-        $secondLetter = strtolower(substr($extension, 1, 1));
-        $from = 'http://typo3.org/fileadmin/ter/' . $firstLetter . '/' . $secondLetter . '/' . $extension . '_' . $version . '.t3x';
-        $content = GeneralUtility::getURL($from);
-        $t3xfiles = self::extractExtensionDataFromT3x($content);
-        $filesMD5Array = [];
-        foreach ($t3xfiles['FILES'] as $file => $infos) {
-            $filesMD5Array[$file] = substr($infos['content_md5'], 0, 4);
-        }
-        return $filesMD5Array;
-    }
-
-    /**
-     * Get all modified files
-     *
-     * @param array $extInfo
-     * @return array
-     */
-    public static function getExtAffectedFiles($extInfo)
-    {
-        $currentMd5Array = self::getFilesMDArray($extInfo);
-        return self::findMD5ArrayDiff($currentMd5Array, unserialize($extInfo['EM_CONF']['_md5_values_when_last_written']));
-    }
-
-    /**
-     * Get all modified files
-     *
-     * @param array $extInfo
-     * @return array
-     */
-    public static function getExtAffectedFilesLastVersion($extInfo)
-    {
-        $currentMd5Array = self::getFilesMDArrayFromT3x($extInfo['extkey'], $extInfo['lastversion']['version']);
-        return self::findMD5ArrayDiff($currentMd5Array, unserialize($extInfo['EM_CONF']['_md5_values_when_last_written']));
-    }
-
-    /**
-     * Get the extension path for a given type
-     *
-     * @param string $type
-     * @return string
-     */
-    public static function typePath($type)
-    {
-        if ($type === 'S') {
-            return PATH_typo3 . 'sysext/';
-        }
-        if ($type === 'G') {
-            return PATH_typo3 . 'ext/';
-        }
-        if ($type === 'L') {
-            return \Sng\AdditionalReports\Utility::getPathTypo3Conf() . 'ext/';
-        }
-        return \Sng\AdditionalReports\Utility::getPathTypo3Conf() . 'ext/';
     }
 
     /**
@@ -412,9 +218,12 @@ class Utility
      */
     public static function getExtIcon($extKey)
     {
-        $extType = self::getExtensionType($extKey);
-        $path = $extType['siteRelPath'] . ExtensionManagementUtility::getExtensionIcon(\Sng\AdditionalReports\Utility::getPathSite() . '/' . $extType['siteRelPath']);
-        return GeneralUtility::getIndpEnv('TYPO3_SITE_URL') . $path;
+        if (!empty($extKey)) {
+            $extType = self::getExtensionType($extKey);
+            $path = $extType['siteRelPath'] . ExtensionManagementUtility::getExtensionIcon(\Sng\AdditionalReports\Utility::getPathSite() . '/' . $extType['siteRelPath']);
+            return GeneralUtility::getIndpEnv('TYPO3_SITE_URL') . $path;
+        }
+        return '';
     }
 
     /**
@@ -426,27 +235,14 @@ class Utility
     public static function getContentTypeIcon($path)
     {
         $icon = null;
-        if (is_file(\Sng\AdditionalReports\Utility::getPathSite() . '/typo3/sysext/t3skin/icons/gfx/' . $path)) {
-            $icon = GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/' . $path;
+        if (is_file(\Sng\AdditionalReports\Utility::getPathSite() . '/typo3/sysext/core/Resources/Public/Icons/T3Icons/content/' . $path . '.svg')) {
+            $icon = GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/core/Resources/Public/Icons/T3Icons/content/' . $path . '.svg';
         } elseif (preg_match('#^\.\.#', $path, $temp)) {
             $icon = GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR') . $path;
         } elseif (preg_match('#^EXT:(.*)$#', $path, $temp)) {
             $icon = GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR') . '../typo3conf/ext/' . $temp[1];
         }
         return $icon;
-    }
-
-    /**
-     * Get the icon path of zoom icon
-     *
-     * @return string
-     */
-    public static function getIconZoom()
-    {
-        return GeneralUtility::makeInstance(IconFactory::class)->getIcon(
-            'actions-version-workspace-preview',
-            Icon::SIZE_SMALL
-        )->render();
     }
 
     /**
@@ -564,28 +360,28 @@ class Utility
      */
     public static function getExtensionType($extKey)
     {
-        if (@is_dir(\Sng\AdditionalReports\Utility::getPathTypo3Conf() . 'ext/' . $extKey . '/')) {
+        if (is_dir(\Sng\AdditionalReports\Utility::getPathTypo3Conf() . 'ext/' . $extKey . '/')) {
             return [
-                'type'         => 'L',
-                'siteRelPath'  => 'typo3conf/ext/' . $extKey . '/',
+                'type' => 'L',
+                'siteRelPath' => 'typo3conf/ext/' . $extKey . '/',
                 'typo3RelPath' => '../typo3conf/ext/' . $extKey . '/'
             ];
         }
-        if (@is_dir(PATH_typo3 . 'ext/' . $extKey . '/')) {
+        if (is_dir(Environment::getPublicPath() . '/typo3/ext/' . $extKey . '/')) {
             return [
-                'type'         => 'G',
-                'siteRelPath'  => TYPO3_mainDir . 'ext/' . $extKey . '/',
+                'type' => 'G',
+                'siteRelPath' => TYPO3_mainDir . 'ext/' . $extKey . '/',
                 'typo3RelPath' => 'ext/' . $extKey . '/'
             ];
         }
-        if (@is_dir(PATH_typo3 . 'sysext/' . $extKey . '/')) {
+        if (is_dir(Environment::getPublicPath() . '/typo3/sysext/' . $extKey . '/')) {
             return [
-                'type'         => 'S',
-                'siteRelPath'  => TYPO3_mainDir . 'sysext/' . $extKey . '/',
+                'type' => 'S',
+                'siteRelPath' => TYPO3_mainDir . 'sysext/' . $extKey . '/',
                 'typo3RelPath' => 'sysext/' . $extKey . '/'
             ];
         }
-        return null;
+        return [];
     }
 
     /**
@@ -624,72 +420,11 @@ class Utility
      * Get the absolute path of an extension
      *
      * @param string $extKey
-     * @param string $type
-     * @param bool   $returnWithoutExtKey
      * @return string
      */
-    public static function getExtPath($extKey, $type = 'L', $returnWithoutExtKey = false)
+    public static function getExtPath($extKey)
     {
-        $typePath = self::typePath($type);
-        if ($typePath !== '') {
-            return $typePath . ($returnWithoutExtKey ? '' : $extKey . '/');
-        }
-        return '';
-    }
-
-    /**
-     * Compare 2 versions of an extension
-     *
-     * @param string $depV
-     * @return string
-     */
-    public static function versionCompare($depV)
-    {
-        $t3version = TYPO3_version;
-        if (stripos($t3version, '-dev') || stripos($t3version, '-alpha') || stripos($t3version, '-beta') || stripos($t3version, '-RC')) {
-            // find the last occurence of "-" and replace that part with a ".0"
-            $t3version = substr($t3version, 0, strrpos($t3version, '-')) . '.0';
-        }
-
-        $status = 0;
-
-        if (isset($depV)) {
-            $versionRange = self::splitVersionRange($depV);
-            if ($versionRange[0] != '0.0.0' && version_compare($t3version, $versionRange[0], '<')) {
-                $msg = sprintf(\Sng\AdditionalReports\Utility::getLanguageService()->getLL('checkDependencies_typo3_too_low'), $t3version, $versionRange[0]);
-            } elseif ($versionRange[1] != '0.0.0' && version_compare($t3version, $versionRange[1], '>')) {
-                $msg = sprintf(\Sng\AdditionalReports\Utility::getLanguageService()->getLL('checkDependencies_typo3_too_high'), $t3version, $versionRange[1]);
-            } elseif ($versionRange[1] == '0.0.0') {
-                $status = 2;
-                $msg = \Sng\AdditionalReports\Utility::getLanguageService()->getLL('nottested') . ' (' . $depV . ')';
-            } else {
-                $status = 1;
-                $msg = 'OK';
-            }
-        } else {
-            $status = 3;
-            $msg = \Sng\AdditionalReports\Utility::getLanguageService()->getLL('unknown');
-        }
-
-        switch ($status) {
-            case 0:
-                $msg = '<span style="color:red;font-weight:bold;" title="' . $msg . '">KO</span>';
-                break;
-            case 1:
-                $msg = '<span style="color:green;font-weight:bold;" title="' . $msg . '">OK</span>';
-                break;
-            case 2:
-                $msg = '<span style="color:orange;font-weight:bold;" title="' . $msg . '">' . \Sng\AdditionalReports\Utility::getLanguageService()->getLL('nottested') . '</span>';
-                break;
-            case 3:
-                $msg = '<span style="color:orange;font-weight:bold;" title="' . $msg . '">' . \Sng\AdditionalReports\Utility::getLanguageService()->getLL('unknown') . '</span>';
-                break;
-            default:
-                $msg = '<span style="color:red;font-weight:bold;" title="' . $msg . '">KO</span>';
-                break;
-        }
-
-        return $msg;
+        return self::getPathTypo3Conf() . 'ext/' . $extKey . '/';
     }
 
     /**
@@ -762,22 +497,6 @@ class Utility
             return $url;
         }
         return "top.nextLoadModuleUrl='" . $url . "';top.goToModule('web_layout');";
-    }
-
-    /**
-     * Return a link to the module page (with TV)
-     *
-     * @param int  $uid
-     * @param bool $urlOnly
-     * @return string
-     */
-    public static function goToModulePageTv($uid, $urlOnly = false)
-    {
-        $url = GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR') . '../typo3conf/ext/templavoila/mod1/index.php?id=' . $uid;
-        if ($urlOnly) {
-            return $url;
-        }
-        return "top.nextLoadModuleUrl='" . $url . "';top.goToModule('web_txtemplavoilaM1');";
     }
 
     /**
@@ -880,39 +599,6 @@ class Utility
 		    </tbody>
 		</table>
 		';
-    }
-
-    /**
-     * Generate a formated list
-     *
-     * @param string $label
-     * @param array  $array
-     * @return string
-     */
-    public static function writeInformationList($label, $array)
-    {
-        $content = '';
-        foreach ($array as $value) {
-            $content .= '' . $value . '<br/>';
-        }
-        $content .= '';
-        return self::writeInformation($label, $content);
-    }
-
-    /**
-     * Open a popup with div content
-     *
-     * @param string $divId
-     * @param string $title
-     * @param string $hideContent
-     * @return string
-     */
-    public static function writePopUp($divId, $title, $hideContent)
-    {
-        $js = 'Shadowbox.open({content:\'<div>\'+$(this).next().html()';
-        $js .= "+'</div>',player:'html',title:'" . $title . "',height:600,width:800});";
-        $content = '<input type="button" onclick="' . $js . '" value="+"/>';
-        return $content . ('<pre style="display:none;" id="' . $divId . '"><div  style="color:white;padding:10px;">' . $hideContent . '</div></pre>');
     }
 
     /**
@@ -1035,11 +721,11 @@ class Utility
     public static function getAllPlugins($where, $limit = '', $returnQuery = false)
     {
         $query = [
-            'SELECT'  => 'DISTINCT tt_content.list_type,tt_content.pid,tt_content.uid,pages.title,pages.hidden as "hiddenpages",tt_content.hidden as "hiddentt_content"',
-            'FROM'    => 'tt_content,pages',
-            'WHERE'   => 'tt_content.pid=pages.uid AND pages.pid>=0 AND tt_content.deleted=0 AND pages.deleted=0 ' . $where . "AND tt_content.CType='list'",
+            'SELECT' => 'DISTINCT tt_content.list_type,tt_content.pid,tt_content.uid,pages.title,pages.hidden as "hiddenpages",tt_content.hidden as "hiddentt_content"',
+            'FROM' => 'tt_content,pages',
+            'WHERE' => 'tt_content.pid=pages.uid AND pages.pid>=0 AND tt_content.deleted=0 AND pages.deleted=0 ' . $where . "AND tt_content.CType='list'",
             'ORDERBY' => 'tt_content.list_type,tt_content.pid',
-            'LIMIT'   => $limit
+            'LIMIT' => $limit
         ];
         if ($returnQuery === true) {
             return $query;
@@ -1064,11 +750,11 @@ class Utility
     public static function getAllCtypes($where, $limit = '', $returnQuery = false)
     {
         $query = [
-            'SELECT'  => 'DISTINCT tt_content.CType,tt_content.pid,tt_content.uid,pages.title,pages.hidden as "hiddenpages",tt_content.hidden as "hiddentt_content"',
-            'FROM'    => 'tt_content,pages',
-            'WHERE'   => 'tt_content.pid=pages.uid AND pages.pid>=0 AND tt_content.deleted=0 AND pages.deleted=0 ' . $where . "AND tt_content.CType<>'list'",
+            'SELECT' => 'DISTINCT tt_content.CType,tt_content.pid,tt_content.uid,pages.title,pages.hidden as "hiddenpages",tt_content.hidden as "hiddentt_content"',
+            'FROM' => 'tt_content,pages',
+            'WHERE' => 'tt_content.pid=pages.uid AND pages.pid>=0 AND tt_content.deleted=0 AND pages.deleted=0 ' . $where . "AND tt_content.CType<>'list'",
             'ORDERBY' => 'tt_content.CType,tt_content.pid',
-            'LIMIT'   => $limit
+            'LIMIT' => $limit
         ];
         if ($returnQuery === true) {
             return $query;
@@ -1162,28 +848,30 @@ class Utility
     /**
      * Return the display mode
      *
-     * @return string
+     * @return int
      */
     public static function getPluginsDisplayMode()
     {
-        $displayMode = null;
+        $displayMode = 0;
 
-        // Check the display mode
-        $display = GeneralUtility::_GP('display');
-        if ($display !== null) {
-            $GLOBALS['BE_USER']->setAndSaveSessionData('additional_reports_menu', $display);
-            $displayMode = $display;
-        }
+        if (!empty($GLOBALS['BE_USER'])) {
+            // Check the display mode
+            $display = GeneralUtility::_GP('display');
+            if ($display !== null) {
+                $GLOBALS['BE_USER']->setAndSaveSessionData('additional_reports_menu', $display);
+                $displayMode = $display;
+            }
 
-        // Check the session
-        $sessionDisplay = $GLOBALS['BE_USER']->getSessionData('additional_reports_menu');
-        if ($sessionDisplay !== null) {
-            $displayMode = $sessionDisplay;
-        }
+            // Check the session
+            $sessionDisplay = $GLOBALS['BE_USER']->getSessionData('additional_reports_menu');
+            if ($sessionDisplay !== null) {
+                $displayMode = $sessionDisplay;
+            }
 
-        // force default reports to history value
-        if ($displayMode == 1) {
-            $displayMode = 5;
+            // force default reports to history value
+            if ($displayMode == 1) {
+                $displayMode = 5;
+            }
         }
 
         return $displayMode;
@@ -1234,27 +922,6 @@ class Utility
             throw new \Exception('Error: Content could not be unserialized to an array. Strange (since MD5 hashes match!)');
         }
         throw new \Exception('Error: MD5 mismatch. Maybe the extension file was downloaded and saved as a text file by the browser and thereby corrupted!? (Always select "All" filetype when saving extensions)');
-    }
-
-    /**
-     * Init a fake TSFE
-     *
-     * @param $id
-     */
-    public static function initTSFE($id)
-    {
-        if (!is_object($GLOBALS['TT'])) {
-            $GLOBALS['TT'] = GeneralUtility::makeInstance('t3lib_TimeTrackNull');
-        }
-
-        $GLOBALS['TSFE'] = GeneralUtility::makeInstance('tslib_fe', $GLOBALS['TYPO3_CONF_VARS'], $id, '');
-        $GLOBALS['TSFE']->connectToDB();
-        $GLOBALS['TSFE']->initFEuser();
-        //$GLOBALS['TSFE']->checkAlternativeIdMethods();
-        $GLOBALS['TSFE']->determineId();
-        $GLOBALS['TSFE']->getCompressedTCarray();
-        $GLOBALS['TSFE']->initTemplate();
-        $GLOBALS['TSFE']->getConfigArray();
     }
 
     /**
@@ -1481,5 +1148,13 @@ class Utility
     public static function getPathTypo3Conf()
     {
         return Environment::getPublicPath() . '/typo3conf/';
+    }
+
+    public static function isComposerMode()
+    {
+        if (defined('TYPO3_COMPOSER_MODE') && TYPO3_COMPOSER_MODE) {
+            return true;
+        }
+        return false;
     }
 }
