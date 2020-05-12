@@ -1,13 +1,5 @@
 {namespace ar=Sng\AdditionalReports\ViewHelpers}
 
-<script type="text/javascript">
-    Shadowbox.init({
-        displayNav: true,
-        displayCounter: false,
-        overlayOpacity: 0.8
-    });
-</script>
-
 <f:if condition="{composer}">
     <div class="typo3-messages">
         <div class="alert alert-info">
@@ -27,11 +19,11 @@
 </f:if>
 
 <f:if condition="{listExtensionsTer}">
-    <div class="table-fit">
+    <div>
         <table class="table table-striped table-hover table-condensed">
             <thead>
             <tr>
-                <th colspan="8">
+                <th colspan="7">
                     <f:count subject="{listExtensionsTer}"/>
                     <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:extensions_ter"/>
                 </th>
@@ -47,7 +39,7 @@
                 <th>
                     <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:status_lastversion"/>
                 </th>
-                <th colspan="2">
+                <th>
                     <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:extensions_tables"/>
                 </th>
                 <th>
@@ -59,6 +51,7 @@
             </tr>
             </thead>
             <tbody>
+
             <f:for each="{listExtensionsTer}" as="extension">
                 <tr>
                     <td class="col-icon"><img class="ext-icon" src="{extension.icon}"/></td>
@@ -67,15 +60,16 @@
                     <td>
                         <f:format.raw>{extension.versionlast}</f:format.raw>
                     </td>
-                    <td>{extension.tables}</td>
                     <td>
-                        <f:format.raw>{extension.tableslink}</f:format.raw>
+                        <f:render section="modal" arguments="{id:'tables{extension.extension}',title:'{f:translate(key:\'extensions_tablesmodified\')}',content:extension.tablesmodal}"/>
                     </td>
                     <td>
                         <f:format.raw>{extension.confintegrity}</f:format.raw>
+                        <f:render section="modal" arguments="{id:'integrity{extension.extension}',title:'{f:translate(key:\'plus\')}',content:extension.confintegrityContent}"/>
                     </td>
                     <td>
-                        <f:format.raw>{extension.versioncompare}</f:format.raw>
+                        <f:render section="modalIframe" arguments="{id:'compare{extension.extension}',title:'{f:translate(key:\'comparesame\')}',url:extension.compareUrl}"/>
+                        <f:render section="modalIframe" arguments="{id:'compareLast{extension.extension}',title:'{f:translate(key:\'comparelast\')}',url:extension.compareUrlLast}"/>
                     </td>
                 </tr>
             </f:for>
@@ -85,11 +79,11 @@
 </f:if>
 
 <f:if condition="{listExtensionsDev}">
-    <div class="table-fit">
+    <div>
         <table class="table table-striped table-hover table-condensed">
             <thead>
             <tr>
-                <th colspan="5">
+                <th colspan="4">
                     <f:count subject="{listExtensionsDev}"/>
                     <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:extensions_dev"/>
                 </th>
@@ -102,7 +96,7 @@
                 <th>
                     <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:status_version"/>
                 </th>
-                <th colspan="2">
+                <th>
                     <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:extensions_tables"/>
                 </th>
             </tr>
@@ -114,10 +108,7 @@
                     <td>{extension.extension}</td>
                     <td>{extension.version}</td>
                     <td>
-                        <f:format.raw>{extension.tables}</f:format.raw>
-                    </td>
-                    <td>
-                        <f:format.raw>{extension.tableslink}</f:format.raw>
+                        <f:render section="modal" arguments="{id:'tables{extension.extension}',title:'{f:translate(key:\'extensions_tablesmodified\')}',content:extension.tablesmodal}"/>
                     </td>
                 </tr>
             </f:for>
@@ -127,11 +118,11 @@
 </f:if>
 
 <f:if condition="{listExtensionsUnloaded}">
-    <div class="table-fit">
+    <div>
         <table class="table table-striped table-hover table-condensed">
             <thead>
             <tr>
-                <th colspan="5">
+                <th colspan="4">
                     <f:count subject="{listExtensionsUnloaded}"/>
                     <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:extensions_unloaded"/>
                 </th>
@@ -144,7 +135,7 @@
                 <th>
                     <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:status_version"/>
                 </th>
-                <th colspan="2">
+                <th>
                     <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:extensions_tables"/>
                 </th>
             </tr>
@@ -156,10 +147,7 @@
                     <td>{extension.extension}</td>
                     <td>{extension.version}</td>
                     <td>
-                        <f:format.raw>{extension.tables}</f:format.raw>
-                    </td>
-                    <td>
-                        <f:format.raw>{extension.tableslink}</f:format.raw>
+                        <f:render section="modal" arguments="{id:'tables{extension.extension}',title:'{f:translate(key:\'extensions_tablesmodified\')}',content:extension.tablesmodal}"/>
                     </td>
                 </tr>
             </f:for>
@@ -167,3 +155,54 @@
         </table>
     </div>
 </f:if>
+
+<f:section name="modal">
+    <f:if condition="{content}">
+        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#{id}">
+            {title}
+        </button>
+        <div class="modal fade" id="{id}" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    </div>
+                    <div class="modal-body">
+                        <f:format.raw>{content}</f:format.raw>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </f:if>
+</f:section>
+
+<f:section name="modalIframe">
+    <f:if condition="{url}">
+        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#{id}">
+            {title}
+        </button>
+        <div class="modal fade" id="{id}" tabindex="-1" role="dialog" data-src="{url}">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    </div>
+                    <div class="modal-body" style="width: 800px;height:550px;overflow:hidden;">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            require(["jquery"], function ($) {
+                $(document).ready(function () {
+                    $('.modal').on('shown.bs.modal', function () {
+                        if ($(this).find('.modal-body').html().trim() === '') {
+                            $(this).find('.modal-body').html('<iframe src="' + $(this).attr('data-src') + '" frameborder="0" style="width:98%;height:98%;"></iframe>');
+                        }
+                    });
+                });
+            });
+        </script>
+    </f:if>
+</f:section>
