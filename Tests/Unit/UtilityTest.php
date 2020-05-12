@@ -3,6 +3,7 @@
 namespace Sng\AdditionalReports\Tests\Unit;
 
 use Sng\AdditionalReports\Utility;
+use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\TestingFramework\Core\BaseTestCase;
 use TYPO3\CMS\Core\Core\Bootstrap;
 
@@ -21,14 +22,14 @@ class UtilityTest extends BaseTestCase
 
     public function testGetInstExtList()
     {
-        $extLits = Utility::getInstExtList(Utility::getPathTypo3Conf() . 'ext/');
+        $extLits = Utility::getInstExtList(Environment::getBackendPath() . '/sysext/');
         $this->assertNotEmpty($extLits);
-        $this->assertEquals('additional_reports', $extLits['dev']['additional_reports']['extkey']);
+        $this->assertEquals('core', $extLits['dev']['core']['extkey']);
     }
 
     public function testIncludeEMCONF()
     {
-        $emConf = Utility::includeEMCONF(Utility::getPathTypo3Conf() . 'ext/additional_reports/ext_emconf.php', 'additional_reports');
+        $emConf = Utility::includeEMCONF(__DIR__ . '../../../ext_emconf.php', 'additional_reports');
         $this->assertNotEmpty($emConf);
         $this->assertEquals('CERDAN Yohann', $emConf['author']);
     }
@@ -40,18 +41,17 @@ class UtilityTest extends BaseTestCase
 
     public function testGetExtIcon()
     {
-        $this->assertNotEmpty(Utility::getExtIcon('additional_reports'));
+        $this->assertNotEmpty(Utility::getExtIcon('core'));
     }
 
     public function testGetExtensionType()
     {
-        $this->assertNotEmpty(Utility::getExtensionType('additional_reports'));
         $this->assertNotEmpty(Utility::getExtensionType('core'));
     }
 
     public function testGetExtPath()
     {
-        $this->assertNotEmpty(Utility::getExtPath('additional_reports'));
+        $this->assertNotEmpty(Utility::getExtPath('core'));
     }
 
     public function testViewArray()
@@ -66,7 +66,7 @@ class UtilityTest extends BaseTestCase
 
     public function testGetExtensionVersion()
     {
-        $this->assertNotEmpty(Utility::getExtensionVersion('additional_reports'));
+        $this->assertEquals(TYPO3_version, Utility::getExtensionVersion('core'));
     }
 
     public function testWriteInformation()
@@ -111,14 +111,14 @@ class UtilityTest extends BaseTestCase
 
     public function testIsHook()
     {
-        $hook['t3lib/class.t3lib_tcemain.php']['clearCachePostProc']['news_clearcache'] = 'GeorgRinger\\News\\Hooks\\DataHandler->clearCachePostProc';
-        $this->assertTrue(Utility::isHook($hook['t3lib/class.t3lib_tcemain.php']['clearCachePostProc']['news_clearcache']));
+        $hook = 'TYPO3\\CMS\\Frontend\\Hooks\\FrontendHooks->displayPreviewInfoMessage';
+        $this->assertTrue(Utility::isHook($hook));
     }
 
     public function testGetHook()
     {
-        $hook['t3lib/class.t3lib_tcemain.php']['clearCachePostProc']['news_clearcache'] = 'GeorgRinger\\News\\Hooks\\DataHandler->clearCachePostProc';
-        $this->assertNotEmpty(Utility::getHook($hook['t3lib/class.t3lib_tcemain.php']['clearCachePostProc']['news_clearcache']));
+        $hook = 'TYPO3\\CMS\\Frontend\\Hooks\\FrontendHooks->displayPreviewInfoMessage';
+        $this->assertNotEmpty(Utility::getHook($hook));
     }
 
     public function testGetPathSite()
