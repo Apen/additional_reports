@@ -8,7 +8,7 @@ use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 class UtilityTest extends FunctionalTestCase
 {
-/*
+
     protected $coreExtensionsToLoad = [
         'reports',
     ];
@@ -40,30 +40,28 @@ class UtilityTest extends FunctionalTestCase
                 ]
             ]
         ]
-    ];*/
-
-
+    ];
 
     public function setUp(): void
     {
         parent::setUp();
-//        $this->backendUser = $this->setUpBackendUserFromFixture(1);
-//        Bootstrap::initializeLanguageObject();
-//        $this->importDataSet(__DIR__ . '/Fixtures/pages.xml');
-//        $this->importDataSet(__DIR__ . '/Fixtures/tt_content.xml');
+        $this->backendUser = $this->setUpBackendUserFromFixture(1);
+        Bootstrap::initializeLanguageObject();
+        $this->importDataSet(__DIR__ . '/Fixtures/pages.xml');
+        $this->importDataSet(__DIR__ . '/Fixtures/tt_content.xml');
     }
 
+    /*
     public function testUseless()
     {
         $this->assertNotEmpty('test');
     }
+    */
 
-    /*
     public function testBaseUrl()
     {
         $this->assertNotEmpty(Utility::getBaseUrl());
     }
-
 
     public function testGetTreeList()
     {
@@ -190,7 +188,7 @@ class UtilityTest extends FunctionalTestCase
     {
         $this->assertNotEmpty(Utility::exec_SELECTgetRows(' * ', 'pages', ''));
     }
-*/
+
     public function pagesListProvider()
     {
         return '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54';
