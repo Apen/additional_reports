@@ -29,7 +29,7 @@ jobs:
       - name: Install composer dependencies
         run: |
           composer --version
-          composer require typo3/cms-core=${{ matrix.typo3-versions }}
+          composer require typo3/cms-core=${{ matrix.typo3-versions }} typo3/cms-reports=${{ matrix.typo3-versions }}
           git checkout composer.json
       - name: Run PHP linter
         run: |
