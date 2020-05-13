@@ -37,3 +37,7 @@ jobs:
       - name: Run unit tests
         run: |
           .Build/bin/phpunit -c Build/UnitTests.xml
+      - name: Run functional tests
+        run: |
+          sudo /etc/init.d/mysql start
+          typo3DatabaseUsername="root" typo3DatabasePassword="root" typo3DatabaseName="typo3" .Build/bin/phpunit -c Build/FunctionalTests.xml
