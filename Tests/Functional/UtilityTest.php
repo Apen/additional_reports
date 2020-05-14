@@ -2,6 +2,8 @@
 
 namespace Sng\AdditionalReports\Tests\Functional;
 
+use TYPO3\CMS\Core\Cache\Frontend\VariableFrontend;
+use TYPO3\CMS\Core\Cache\Backend\SimpleFileBackend;
 use Sng\AdditionalReports\Utility;
 use TYPO3\CMS\Core\Configuration\SiteConfiguration;
 use TYPO3\CMS\Core\Core\Bootstrap;
@@ -10,7 +12,6 @@ use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 class UtilityTest extends FunctionalTestCase
 {
-
     protected $coreExtensionsToLoad = [
         'reports',
     ];
@@ -24,16 +25,16 @@ class UtilityTest extends FunctionalTestCase
             'caching' => [
                 'cacheConfigurations' => [
                     'assets' => [
-                        'frontend' => \TYPO3\CMS\Core\Cache\Frontend\VariableFrontend::class,
-                        'backend' => \TYPO3\CMS\Core\Cache\Backend\SimpleFileBackend::class,
+                        'frontend' => VariableFrontend::class,
+                        'backend' => SimpleFileBackend::class,
                         'options' => [
                             'defaultLifetime' => 0,
                         ],
                         'groups' => ['system']
                     ],
                     'l10n' => [
-                        'frontend' => \TYPO3\CMS\Core\Cache\Frontend\VariableFrontend::class,
-                        'backend' => \TYPO3\CMS\Core\Cache\Backend\SimpleFileBackend::class,
+                        'frontend' => VariableFrontend::class,
+                        'backend' => SimpleFileBackend::class,
                         'options' => [
                             'defaultLifetime' => 0,
                         ],
@@ -44,10 +45,10 @@ class UtilityTest extends FunctionalTestCase
         ]
     ];
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
-        $this->backendUser = $this->setUpBackendUserFromFixture(1);
+        $this->setUpBackendUserFromFixture(1);
         Bootstrap::initializeLanguageObject();
         $this->importDataSet(__DIR__ . '/Fixtures/pages.xml');
         $this->importDataSet(__DIR__ . '/Fixtures/tt_content.xml');
@@ -55,60 +56,60 @@ class UtilityTest extends FunctionalTestCase
 
     public function testBaseUrl()
     {
-        $this->assertNotEmpty(Utility::getBaseUrl());
+        self::assertNotEmpty(Utility::getBaseUrl());
     }
 
     public function testGetTreeList()
     {
-        $this->assertEquals($this->pagesListProvider(), Utility::getTreeList(1, 99));
+        self::assertEquals($this->pagesListProvider(), Utility::getTreeList(1, 99));
     }
 
     public function testGetCountPagesUids()
     {
-        if ($this->isNotSqlite()) {
-            $this->assertEquals(0, Utility::getCountPagesUids($this->pagesListProvider(), 'hidden=1'));
-            $this->assertEquals(1, Utility::getCountPagesUids($this->pagesListProvider(), 'no_search=1'));
+        if (self::isNotSqlite()) {
+            self::assertEquals(0, Utility::getCountPagesUids($this->pagesListProvider(), 'hidden=1'));
+            self::assertEquals(1, Utility::getCountPagesUids($this->pagesListProvider(), 'no_search=1'));
         }
     }
 
     public function testGetIconRefresh()
     {
-        $this->assertNotEmpty(Utility::getIconRefresh());
+        self::assertNotEmpty(Utility::getIconRefresh());
     }
 
     public function testGetIconDomain()
     {
-        $this->assertNotEmpty(Utility::getIconDomain());
+        self::assertNotEmpty(Utility::getIconDomain());
     }
 
     public function testGetIconWebPage()
     {
-        $this->assertNotEmpty(Utility::getIconWebPage());
+        self::assertNotEmpty(Utility::getIconWebPage());
     }
 
     public function testGetIconTemplate()
     {
-        $this->assertNotEmpty(Utility::getIconTemplate());
+        self::assertNotEmpty(Utility::getIconTemplate());
     }
 
     public function testGetIconWebList()
     {
-        $this->assertNotEmpty(Utility::getIconWebList());
+        self::assertNotEmpty(Utility::getIconWebList());
     }
 
     public function testGetIconPage()
     {
-        $this->assertNotEmpty(Utility::getIconPage());
+        self::assertNotEmpty(Utility::getIconPage());
     }
 
     public function testGetIconContent()
     {
-        $this->assertNotEmpty(Utility::getIconContent());
+        self::assertNotEmpty(Utility::getIconContent());
     }
 
     public function testGetRootLine()
     {
-        $this->assertNotEmpty(Utility::getRootLine(1));
+        self::assertNotEmpty(Utility::getRootLine(1));
     }
 
     public function testGetDomain()
@@ -120,81 +121,81 @@ class UtilityTest extends FunctionalTestCase
                 'base' => 'https://acme.com/',
             ]
         );
-        $this->assertEquals('acme.com', Utility::getDomain(1));
+        self::assertEquals('acme.com', Utility::getDomain(1));
     }
 
     public function testGoToModuleList()
     {
-        $this->assertNotEmpty(Utility::goToModuleList(1));
+        self::assertNotEmpty(Utility::goToModuleList(1));
     }
 
     public function testGoToModulePage()
     {
-        $this->assertNotEmpty(Utility::goToModulePage(1));
+        self::assertNotEmpty(Utility::goToModulePage(1));
     }
 
     public function testGetMySqlCacheInformations()
     {
-        if ($this->isNotSqlite()) {
-            $this->assertNotEmpty(Utility::getMySqlCacheInformations());
+        if (self::isNotSqlite()) {
+            self::assertNotEmpty(Utility::getMySqlCacheInformations());
         }
     }
 
     public function testGetMySqlCharacterSet()
     {
-        if ($this->isNotSqlite()) {
-            $this->assertNotEmpty(Utility::getMySqlCharacterSet());
+        if (self::isNotSqlite()) {
+            self::assertNotEmpty(Utility::getMySqlCharacterSet());
         }
     }
 
     public function testGetAllDifferentPlugins()
     {
-        $this->assertNotEmpty(Utility::getAllDifferentPlugins(''));
+        self::assertNotEmpty(Utility::getAllDifferentPlugins(''));
     }
 
     public function testGetAllDifferentPluginsSelect()
     {
-        $this->assertNotEmpty(Utility::getAllDifferentPluginsSelect(true));
+        self::assertNotEmpty(Utility::getAllDifferentPluginsSelect(true));
     }
 
     public function testGetAllDifferentCtypes()
     {
-        $this->assertNotEmpty(Utility::getAllDifferentCtypes(''));
+        self::assertNotEmpty(Utility::getAllDifferentCtypes(''));
     }
 
     public function testGetAllDifferentCtypesSelect()
     {
-        $this->assertNotEmpty(Utility::getAllDifferentCtypesSelect(true));
+        self::assertNotEmpty(Utility::getAllDifferentCtypesSelect(true));
     }
 
     public function testGetAllPlugins()
     {
-        $this->assertNotEmpty(Utility::getAllPlugins(''));
+        self::assertNotEmpty(Utility::getAllPlugins(''));
     }
 
     public function testGetAllCtypes()
     {
-        $this->assertNotEmpty(Utility::getAllCtypes(''));
+        self::assertNotEmpty(Utility::getAllCtypes(''));
     }
 
     public function testGetLl()
     {
-        $this->assertNotEmpty(Utility::getLl('domain'));
+        self::assertNotEmpty(Utility::getLl('domain'));
     }
 
     public function testGetLanguageService()
     {
-        $this->assertNotEmpty(Utility::getLanguageService());
+        self::assertNotEmpty(Utility::getLanguageService());
     }
 
     public function testExec_SELECT_queryArray()
     {
-        $this->assertNotEmpty(Utility::exec_SELECT_queryArray(['SELECT' => '*', 'FROM' => 'pages', 'WHERE' => '']));
+        self::assertNotEmpty(Utility::exec_SELECT_queryArray(['SELECT' => '*', 'FROM' => 'pages', 'WHERE' => '']));
     }
 
     public function testExec_SELECTgetRows()
     {
-        $this->assertNotEmpty(Utility::exec_SELECTgetRows(' * ', 'pages', ''));
+        self::assertNotEmpty(Utility::exec_SELECTgetRows(' * ', 'pages', ''));
     }
 
     public function pagesListProvider()
@@ -202,7 +203,7 @@ class UtilityTest extends FunctionalTestCase
         return '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54';
     }
 
-    public function isNotSqlite()
+    public static function isNotSqlite()
     {
         return $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['driver'] !== 'pdo_sqlite';
     }
@@ -235,16 +236,7 @@ class UtilityTest extends FunctionalTestCase
             GeneralUtility::rmdir($this->instancePath . '/typo3conf/sites/' . $identifier, true);
             $siteConfiguration->write($identifier, $configuration);
         } catch (\Exception $exception) {
-            $this->markTestSkipped($exception->getMessage());
+            self::markTestSkipped($exception->getMessage());
         }
     }
-
-    /**
-     * TearDown
-     */
-    protected function tearDown()
-    {
-        parent::tearDown();
-    }
-
 }

@@ -244,17 +244,19 @@ class Status extends AbstractReport implements ReportInterface
     public function displayCronTab(AbstractTemplateView $view)
     {
         $datas = [];
-        exec('crontab -l', $crontab);
-        $crontabString = Utility::getLl('status_nocrontab');
-        if (count($crontab) > 0) {
-            $crontabString = '';
-            foreach ($crontab as $cron) {
-                if (trim($cron) !== '') {
-                    $crontabString .= $cron . '<br />';
+        if (is_executable('crontab')) {
+            exec('crontab -l', $crontab);
+            $crontabString = Utility::getLl('status_nocrontab');
+            if (count($crontab) > 0) {
+                $crontabString = '';
+                foreach ($crontab as $cron) {
+                    if (trim($cron) !== '') {
+                        $crontabString .= $cron . '<br />';
+                    }
                 }
             }
+            $datas['crontab'] = $crontabString;
         }
-        $datas['crontab'] = $crontabString;
         $view->assign('datas_crontab', $datas);
     }
 }
