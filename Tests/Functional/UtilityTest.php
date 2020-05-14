@@ -3,7 +3,9 @@
 namespace Sng\AdditionalReports\Tests\Functional;
 
 use Sng\AdditionalReports\Utility;
+use TYPO3\CMS\Core\Configuration\SiteConfiguration;
 use TYPO3\CMS\Core\Core\Bootstrap;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 class UtilityTest extends FunctionalTestCase
@@ -51,13 +53,6 @@ class UtilityTest extends FunctionalTestCase
         $this->importDataSet(__DIR__ . '/Fixtures/tt_content.xml');
     }
 
-    /*
-    public function testUseless()
-    {
-        $this->assertNotEmpty('test');
-    }
-    */
-
     public function testBaseUrl()
     {
         $this->assertNotEmpty(Utility::getBaseUrl());
@@ -70,8 +65,10 @@ class UtilityTest extends FunctionalTestCase
 
     public function testGetCountPagesUids()
     {
-        $this->assertEquals(0, Utility::getCountPagesUids($this->pagesListProvider(), 'hidden=1'));
-        $this->assertEquals(1, Utility::getCountPagesUids($this->pagesListProvider(), 'no_search=1'));
+        if ($this->isNotSqlite()) {
+            $this->assertEquals(0, Utility::getCountPagesUids($this->pagesListProvider(), 'hidden=1'));
+            $this->assertEquals(1, Utility::getCountPagesUids($this->pagesListProvider(), 'no_search=1'));
+        }
     }
 
     public function testGetIconRefresh()
@@ -116,7 +113,14 @@ class UtilityTest extends FunctionalTestCase
 
     public function testGetDomain()
     {
-        $this->markTestSkipped();
+        $this->writeSiteConfiguration(
+            'acme-com',
+            [
+                'rootPageId' => 1,
+                'base' => 'https://acme.com/',
+            ]
+        );
+        $this->assertEquals('acme.com', Utility::getDomain(1));
     }
 
     public function testGoToModuleList()
@@ -131,12 +135,16 @@ class UtilityTest extends FunctionalTestCase
 
     public function testGetMySqlCacheInformations()
     {
-        $this->assertNotEmpty(Utility::getMySqlCacheInformations());
+        if ($this->isNotSqlite()) {
+            $this->assertNotEmpty(Utility::getMySqlCacheInformations());
+        }
     }
 
     public function testGetMySqlCharacterSet()
     {
-        $this->assertNotEmpty(Utility::getMySqlCharacterSet());
+        if ($this->isNotSqlite()) {
+            $this->assertNotEmpty(Utility::getMySqlCharacterSet());
+        }
     }
 
     public function testGetAllDifferentPlugins()
@@ -192,6 +200,43 @@ class UtilityTest extends FunctionalTestCase
     public function pagesListProvider()
     {
         return '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54';
+    }
+
+    public function isNotSqlite()
+    {
+        return $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['driver'] !== 'pdo_sqlite';
+    }
+
+    /**
+     * @param string $identifier
+     * @param array  $site
+     * @param array  $languages
+     * @param array  $errorHandling
+     */
+    protected function writeSiteConfiguration(
+        string $identifier,
+        array $site = [],
+        array $languages = [],
+        array $errorHandling = []
+    ) {
+        $configuration = $site;
+        if (!empty($languages)) {
+            $configuration['languages'] = $languages;
+        }
+        if (!empty($errorHandling)) {
+            $configuration['errorHandling'] = $errorHandling;
+        }
+        $siteConfiguration = new SiteConfiguration(
+            $this->instancePath . '/typo3conf/sites/'
+        );
+
+        try {
+            // ensure no previous site configuration influences the test
+            GeneralUtility::rmdir($this->instancePath . '/typo3conf/sites/' . $identifier, true);
+            $siteConfiguration->write($identifier, $configuration);
+        } catch (\Exception $exception) {
+            $this->markTestSkipped($exception->getMessage());
+        }
     }
 
     /**
