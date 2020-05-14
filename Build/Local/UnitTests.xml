@@ -16,12 +16,12 @@
 >
 	<testsuites>
 		<testsuite name="tests">
-			<directory>../Tests/Unit/</directory>
+			<directory>../../Tests/Unit/</directory>
 		</testsuite>
 	</testsuites>
 	<filter>
 		<whitelist>
-			<directory>../Classes/</directory>
+			<directory>../../Classes/</directory>
 		</whitelist>
 	</filter>
 
