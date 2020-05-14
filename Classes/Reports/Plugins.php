@@ -42,11 +42,11 @@ class Plugins extends AbstractReport implements ReportInterface
         $view->assign('extconf', unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['additional_reports']));
         $view->assign('url', Utility::getBaseUrl());
         $view->assign('caution', Utility::writeInformation(Utility::getLl('careful'), Utility::getLl('carefuldesc')));
-        $view->assign('checkedpluginsmode3', (Utility::getPluginsDisplayMode() == 3) ? ' checked="checked"' : '');
-        $view->assign('checkedpluginsmode4', (Utility::getPluginsDisplayMode() == 4) ? ' checked="checked"' : '');
-        $view->assign('checkedpluginsmode5', (Utility::getPluginsDisplayMode() == 5) ? ' checked="checked"' : '');
-        $view->assign('checkedpluginsmode6', (Utility::getPluginsDisplayMode() == 6) ? ' checked="checked"' : '');
-        $view->assign('checkedpluginsmode7', (Utility::getPluginsDisplayMode() == 7) ? ' checked="checked"' : '');
+        $view->assign('checkedpluginsmode3', (Utility::getPluginsDisplayMode() === 3) ? ' checked="checked"' : '');
+        $view->assign('checkedpluginsmode4', (Utility::getPluginsDisplayMode() === 4) ? ' checked="checked"' : '');
+        $view->assign('checkedpluginsmode5', (Utility::getPluginsDisplayMode() === 5) ? ' checked="checked"' : '');
+        $view->assign('checkedpluginsmode6', (Utility::getPluginsDisplayMode() === 6) ? ' checked="checked"' : '');
+        $view->assign('checkedpluginsmode7', (Utility::getPluginsDisplayMode() === 7) ? ' checked="checked"' : '');
 
         switch (Utility::getPluginsDisplayMode()) {
             case 3:

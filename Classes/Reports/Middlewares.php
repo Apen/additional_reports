@@ -9,7 +9,6 @@ namespace Sng\AdditionalReports\Reports;
  * LICENSE.txt file that was distributed with this source code.
  */
 
-use Sng\AdditionalReports\Utility;
 use TYPO3\CMS\Core\Package\PackageManager;
 use TYPO3\CMS\Core\Service\DependencyOrderingService;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
@@ -82,5 +81,4 @@ class Middlewares extends AbstractReport implements ReportInterface
         }
         return $middlewares;
     }
-
 }

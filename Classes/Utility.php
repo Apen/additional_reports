@@ -1151,10 +1151,7 @@ class Utility
     }
 
     public static function isComposerMode()
-    {
-        if (defined('TYPO3_COMPOSER_MODE') && TYPO3_COMPOSER_MODE) {
-            return true;
-        }
-        return false;
-    }
+				{
+					return defined('TYPO3_COMPOSER_MODE') && TYPO3_COMPOSER_MODE;
+				}
 }
