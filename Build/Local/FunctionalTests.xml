@@ -17,13 +17,13 @@
 
 	<testsuites>
 		<testsuite name="tests">
-			<directory>../Tests/Functional/</directory>
+			<directory>../../Tests/Functional/</directory>
 		</testsuite>
 	</testsuites>
 
 	<filter>
 		<whitelist>
-			<directory>../Classes/</directory>
+			<directory>../../Classes/</directory>
 		</whitelist>
 	</filter>
 
