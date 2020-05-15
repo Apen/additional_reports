@@ -6,48 +6,45 @@
 [![TYPO3](https://img.shields.io/badge/TYPO3-10.4-orange.svg?style=flat-square)](https://typo3.org/)
 ![CI](https://github.com/Apen/additional_reports/workflows/CI/badge.svg)
 
->  Display useful informations in the reports module.
+**Display some useful informations in the reports module.**
 
-## What does it do?
+## ❓ What does it do?
 
-Useful informations in the reports module:
+Display some useful informations in the reports module, like : 
 
-* list of xclass
-* list of ajax functions
-* list of hooks
-* list of Command
 * list of eID
-* list of log errors (group by type)
-* list of used content type and plugins
-* list of extensions with tool to compare local and TER extension (diff)
-* general status of the system: TYPO3, PHP, Apache, MySQL, Crontab, encoding, php vars...
+* list of CommandController and Symfony Commands
+* list of all the contents and plugins on the instance (used or not) with filters
+* list of xclass declared
+* list of hooks declared
+* lot of informations about the website : TYPO3, System Environment Variables, PHP, MySQL, Apache, Crontab, encoding...
+* list of log errors group by number of occurrences (sorting by last time seen or number)
+* list of all websites declared with informations : domain, sys_template, number of pages...
+* list of extensions with informations : number of tables, last version date, visual comparaison between current and TER extension to see what could be hard coded
+* list of all the Middlewares (PSR-15) for frontend and backend
 
-It can really help you during migration or new existing project (to have a global reports of the system).
+All this tools can really help you during migration or new existing project (to have a global reports of the system).
 Do not hesitate to contact me if you have any good ideas.
 
-## Installation
+## ⏳ Installation
 
 Download and install as TYPO3 extension.
 
-* Composer : composer require apen/additional_reports
-* TER url : http://typo3.org/extensions/repository/view/additional_reports
-* Releases : https://github.com/Apen/additional_reports/releases
+* Composer : ```composer require apen/additional_reports```
+* TER url : https://extensions.typo3.org/extension/additional_reports/
+* Releases on Github : https://github.com/Apen/additional_reports/releases
 
-Go to the reports module.
+Maybe a "clear cache" is needed, then go to the reports module.
 
-## Features
+## 💻 Features
 
 ### eID
 
 ![](https://raw.githubusercontent.com/Apen/additional_reports/master/Resources/Public/Images/eid.png)
 
-### Loaded extensions
+### Commands
 
-![](https://raw.githubusercontent.com/Apen/additional_reports/master/Resources/Public/Images/extensions.png)
-
-Text diff with TER and last version version
-
-![](https://raw.githubusercontent.com/Apen/additional_reports/master/Resources/Public/Images/extensions-diff.png)
+![](https://raw.githubusercontent.com/Apen/additional_reports/master/Resources/Public/Images/commands.png)
 
 ### Plugins and CTypes
 
@@ -57,10 +54,6 @@ Text diff with TER and last version version
 
 ![](https://raw.githubusercontent.com/Apen/additional_reports/master/Resources/Public/Images/summary.png)
 
-### Global status
-
-![](https://raw.githubusercontent.com/Apen/additional_reports/master/Resources/Public/Images/status-typo3.png)
-
 ### XCLASS
 
 ![](https://raw.githubusercontent.com/Apen/additional_reports/master/Resources/Public/Images/xclass.png)
@@ -69,6 +62,11 @@ Text diff with TER and last version version
 
 ![](https://raw.githubusercontent.com/Apen/additional_reports/master/Resources/Public/Images/hooks.png)
 
+### Global status
+
+![](https://raw.githubusercontent.com/Apen/additional_reports/master/Resources/Public/Images/status1.png)
+![](https://raw.githubusercontent.com/Apen/additional_reports/master/Resources/Public/Images/status2.png)
+
 ### Grouped logs
 
 ![](https://raw.githubusercontent.com/Apen/additional_reports/master/Resources/Public/Images/logs.png)
@@ -76,6 +74,19 @@ Text diff with TER and last version version
 ### List of websites and domains
 
 ![](https://raw.githubusercontent.com/Apen/additional_reports/master/Resources/Public/Images/websites.png)
+
+### Extensions
+
+![](https://raw.githubusercontent.com/Apen/additional_reports/master/Resources/Public/Images/extensions.png)
+
+Text diff with TER and last version version
+
+![](https://raw.githubusercontent.com/Apen/additional_reports/master/Resources/Public/Images/extensions-diff.png)
+
+### Middlewares
+
+![](https://raw.githubusercontent.com/Apen/additional_reports/master/Resources/Public/Images/middlewares.png)
+
 
 
 
