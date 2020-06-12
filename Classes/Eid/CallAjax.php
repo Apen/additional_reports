@@ -12,6 +12,7 @@ namespace Sng\AdditionalReports\Eid;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Sng\AdditionalReports\Utility;
+use TYPO3\CMS\Core\Http\NullResponse;
 use TYPO3\CMS\Core\Utility\DiffUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -20,10 +21,9 @@ class CallAjax
 {
     /**
      * @param \Psr\Http\Message\ServerRequestInterface $request
-     * @param \Psr\Http\Message\ResponseInterface      $response
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function main(ServerRequestInterface $request, ResponseInterface $response)
+    public function main(ServerRequestInterface $request)
     {
         $mode = GeneralUtility::_GP('mode');
         $extKey = GeneralUtility::_GP('extKey');
@@ -62,7 +62,7 @@ class CallAjax
 
         $content .= '</div>';
         echo $content;
-        return $response;
+        return new NullResponse();
     }
 
     /**
@@ -88,6 +88,8 @@ class CallAjax
         $out .= '<table border="0" cellspacing="0" cellpadding="0" style="width:780px;padding:8px;">';
         $out .= '<tr><td style="background-color: #FDD;"><strong>Local file</strong></td></tr>';
         $out .= '<tr><td style="background-color: #DFD;"><strong>TER file</strong></td></tr>';
+        $sourcesDiff = str_replace('<del>', '<del style="background-color:#FDD;">', $sourcesDiff);
+        $sourcesDiff = str_replace('<ins>', '<ins style="background-color:#DFD;">', $sourcesDiff);
         $out .= $sourcesDiff;
         $out .= '</table>';
         $out .= '</pre>';
