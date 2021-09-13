@@ -14,8 +14,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-versions: ['7.2']
-        typo3-versions: ['^9']
+        php-versions: [ '7.2' ]
+        typo3-versions: [ '^9' ]
     steps:
       - name: Check out repository
         uses: actions/checkout@v2
@@ -41,8 +41,8 @@ jobs:
         run: sudo /etc/init.d/mysql start
       - name: Run functional tests
         run: |
-           export typo3DatabaseName="typo3";
-           export typo3DatabaseHost="127.0.0.1";
-           export typo3DatabaseUsername="root";
-           export typo3DatabasePassword="root";
+          export typo3DatabaseName="typo3";
+          export typo3DatabaseHost="127.0.0.1";
+          export typo3DatabaseUsername="root";
+          export typo3DatabasePassword="root";
           .Build/bin/phpunit -c Build/FunctionalTests.xml
