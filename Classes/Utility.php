@@ -138,7 +138,7 @@ class Utility
     public static function getInstExtList($path)
     {
         $list = [];
-        $list['ter'] = $list['dev'] =  $list['unloaded'] = [];
+        $list['ter'] = $list['dev'] = $list['unloaded'] = [];
         if (@is_dir($path)) {
             $extList = GeneralUtility::get_dirs($path);
             if (is_array($extList)) {
@@ -1152,7 +1152,7 @@ class Utility
     }
 
     public static function isComposerMode()
-				{
-					return defined('TYPO3_COMPOSER_MODE') && TYPO3_COMPOSER_MODE;
-				}
+    {
+        return defined('TYPO3_COMPOSER_MODE') && TYPO3_COMPOSER_MODE;
+    }
 }
