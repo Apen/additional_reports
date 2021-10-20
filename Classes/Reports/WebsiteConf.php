@@ -9,6 +9,7 @@ namespace Sng\AdditionalReports\Reports;
  * LICENSE.txt file that was distributed with this source code.
  */
 
+use Psr\Http\Message\ServerRequestInterface;
 use Sng\AdditionalReports\Utility;
 use TYPO3\CMS\Core\TypoScript\ExtendedTemplateService;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
@@ -16,7 +17,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 use TYPO3\CMS\Reports\ReportInterface;
 
-class WebsiteConf extends AbstractReport implements ReportInterface
+class WebsiteConf extends AbstractReport
 {
 
     /**
@@ -26,8 +27,7 @@ class WebsiteConf extends AbstractReport implements ReportInterface
      */
     public function getReport()
     {
-        $content = '';
-        return $content . $this->display();
+        return $this->display();
     }
 
     /**
@@ -54,10 +54,10 @@ class WebsiteConf extends AbstractReport implements ReportInterface
                 $websiteconfItem = [];
 
                 $websiteconfItem['pid'] = $itemValue['uid'];
-                $websiteconfItem['pagetitle'] = Utility::getIconPage() . $itemValue['title'];
+                $websiteconfItem['pagetitle'] = $itemValue['title'];
                 $websiteconfItem['domains'] = '';
                 $websiteconfItem['template'] = '';
-                $websiteconfItem['domains'] = Utility::getIconDomain() . Utility::getDomain($itemValue['uid']) . '<br/>';
+                $websiteconfItem['domains'] = Utility::getDomain($itemValue['uid']) . '<br/>';
 
                 $templates = Utility::exec_SELECTgetRows(
                     'uid,title,root',
@@ -68,7 +68,7 @@ class WebsiteConf extends AbstractReport implements ReportInterface
                 );
 
                 foreach ($templates as $templateObj) {
-                    $websiteconfItem['template'] .= Utility::getIconTemplate() . ' ' . $templateObj['title'] . ' ';
+                    $websiteconfItem['template'] .= $templateObj['title'] . ' ';
                     $websiteconfItem['template'] .= '[uid=' . $templateObj['uid'] . ',root=' . $templateObj['root'] . ']<br/>';
                 }
 

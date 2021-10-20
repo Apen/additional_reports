@@ -12,11 +12,13 @@ namespace Sng\AdditionalReports\Reports;
 use Sng\AdditionalReports\Utility;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Reports\ReportInterface;
+use TYPO3\CMS\Reports\RequestAwareReportInterface;
 
 /**
  * This class provides a base for all the reports
  */
-class AbstractReport
+abstract class AbstractReport implements ReportInterface
 {
 
     /**
@@ -35,6 +37,7 @@ class AbstractReport
     {
         $this->reportObject = $reportObject;
         $this->setCss('EXT:additional_reports/Resources/Public/Css/tx_additionalreports.css');
+        $this->setJs('EXT:additional_reports/Resources/Public/JavaScript/Reports.js');
         Utility::getLanguageService()->includeLLFile('EXT:additional_reports/Resources/Private/Language/locallang.xlf');
     }
 

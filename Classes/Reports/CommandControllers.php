@@ -42,7 +42,7 @@ class CommandControllers extends AbstractReport implements ReportInterface
 
         $commands = GeneralUtility::makeInstance(CommandRegistry::class);
         $items = [];
-        foreach ($commands->getIterator() as $cmd => $el) {
+        foreach ($commands->getSchedulableCommands() as $cmd => $el) {
             $items[$cmd] = get_class($el);
         }
         $view->assign('itemsNew', $items);
