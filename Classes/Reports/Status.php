@@ -11,6 +11,7 @@ namespace Sng\AdditionalReports\Reports;
 
 use Sng\AdditionalReports\Utility;
 use TYPO3\CMS\Backend\Template\DocumentTemplate;
+use TYPO3\CMS\Backend\Template\ModuleTemplate;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -30,9 +31,9 @@ class Status extends AbstractReport implements ReportInterface
     {
         $content = '<p class="help">' . Utility::getLanguageService()->getLL('status_description') . '</p>';
 
-        if (!isset($this->reportObject->doc)) {
-            $this->reportObject->doc = GeneralUtility::makeInstance(DocumentTemplate::class);
-        }
+//        if (!isset($this->reportObject->doc)) {
+//            $this->reportObject->doc = GeneralUtility::makeInstance(ModuleTemplate::class);
+//        }
         return $content . $this->display();
     }
 

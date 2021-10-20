@@ -9,6 +9,7 @@ namespace Sng\AdditionalReports;
  * LICENSE.txt file that was distributed with this source code.
  */
 
+use Sng\AdditionalReports\Pagination\SimplePagination;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -16,10 +17,13 @@ use TYPO3\CMS\Core\Exception\SiteNotFoundException;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Localization\LanguageService;
+use TYPO3\CMS\Core\Pagination\ArrayPaginator;
 use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\RootlineUtility;
+use TYPO3\CMS\Extbase\Pagination\QueryResultPaginator;
+use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 
 /**
  * Utility class
@@ -184,6 +188,7 @@ class Utility
      * @param string $path    Absolute path to EMCONF file.
      * @param string $_EXTKEY Extension key.
      * @return array
+     * @noRector
      */
     public static function includeEMCONF($path, $_EXTKEY)
     {
@@ -649,12 +654,7 @@ class Utility
 
         $listUrlOrig = \Sng\AdditionalReports\Utility::getBaseUrl() . '&display=' . \Sng\AdditionalReports\Utility::getPluginsDisplayMode();
 
-        $content = '<select name="filtersCat" id="filtersCat">' . $filterCat . '</select>';
-        $content .= '<a class="btn btn-default" href="#"  onClick="jumpToUrl(\'' . $listUrlOrig;
-        $content .= '&filtersCat=\'+document.getElementById(\'filtersCat\').value);">';
-        $content .= self::getIconRefresh() . '</a>';
-
-        return $content;
+        return '<select name="filtersCat" id="filtersCat" data-url="' . $listUrlOrig . '">' . $filterCat . '</select>';
     }
 
     /**
@@ -704,12 +704,7 @@ class Utility
 
         $listUrlOrig = \Sng\AdditionalReports\Utility::getBaseUrl() . '&display=' . \Sng\AdditionalReports\Utility::getPluginsDisplayMode();
 
-        $content = '<select name="filtersCat" id="filtersCat">' . $filterCat . '</select>';
-        $content .= '<a class="btn btn-default" href="#"  onClick="jumpToUrl(\'' . $listUrlOrig;
-        $content .= '&filtersCat=\'+document.getElementById(\'filtersCat\').value);">';
-        $content .= self::getIconRefresh() . '</a>';
-
-        return $content;
+        return '<select name="filtersCat" id="filtersCat" data-url="' . $listUrlOrig . '">' . $filterCat . '</select>';
     }
 
     /**
@@ -875,7 +870,7 @@ class Utility
             }
         }
 
-        return $displayMode;
+        return (int)$displayMode;
     }
 
     /**
@@ -1030,6 +1025,17 @@ class Utility
     }
 
     /**
+     * Executes a select based on input query parts array
+     *
+     * @param array $queryParts Query parts array
+     * @return array
+     */
+    public static function exec_SELECT_queryArrayRows($queryParts)
+    {
+        return self::exec_SELECTgetRows($queryParts['SELECT'], $queryParts['FROM'], $queryParts['WHERE'], $queryParts['GROUPBY'], $queryParts['ORDERBY'], $queryParts['LIMIT']);
+    }
+
+    /**
      * Creates and executes a SELECT SQL-statement AND traverse result set and returns array with records in.
      *
      * @param string $select_fields List of fields to select from the table. This is what comes right after "SELECT ...". Required value.
@@ -1154,5 +1160,17 @@ class Utility
     public static function isComposerMode()
     {
         return defined('TYPO3_COMPOSER_MODE') && TYPO3_COMPOSER_MODE;
+    }
+
+    public static function buildPagination(array $items, int $currentPage, &$view): void
+    {
+        if (count($items) > 0) {
+            $itemsPerPage = 10;
+            $paginator = new ArrayPaginator($items, $currentPage, $itemsPerPage);
+            $pagination = new SimplePagination($paginator);
+            $pagination->generate();
+            $view->assign('paginator', $paginator);
+            $view->assign('pagination', $pagination);
+        }
     }
 }

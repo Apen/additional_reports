@@ -1,0 +1,53 @@
+<nav>
+    <ul class="pagination pagination-lg">
+        <f:if condition="{pagination.previousPageNumber} && {pagination.previousPageNumber} >= {pagination.firstPageNumber}">
+            <f:then>
+                <li class="page-item">
+                    <a class="page-link" href="{f:be.uri(route:'system_reports',parameters:{currentPage: 1,action:'detail',extension:'additional_reports',report:reportname})}">
+                        &lt;&lt;
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="{f:be.uri(route:'system_reports',parameters:{currentPage: pagination.previousPageNumber,action:'detail',extension:'additional_reports',report:reportname})}">
+                        &lt;
+                    </a>
+                </li>
+            </f:then>
+
+        </f:if>
+        <f:if condition="{pagination.hasLessPages}">
+            <li class="page-item"><a class="page-link" href="#">…</a></li>
+        </f:if>
+        <f:for each="{pagination.pages}" as="page">
+            <f:if condition="{page.isCurrent}">
+                <f:then>
+                    <li class="page-item active"><a class="page-link" href="#">{page.number}</a></li>
+                </f:then>
+                <f:else>
+                    <li class="page-item">
+                        <a class="page-link" href="{f:be.uri(route:'system_reports',parameters:{currentPage: page.number,action:'detail',extension:'additional_reports',report:reportname})}" title="{page.number}">
+                            {page.number}
+                        </a>
+                    </li>
+                </f:else>
+            </f:if>
+        </f:for>
+        <f:if condition="{pagination.hasMorePages}">
+            <li class="page-item"><a class="page-link" href="#">…</a></li>
+        </f:if>
+        <f:if condition="{pagination.nextPageNumber} && {pagination.nextPageNumber} <= {pagination.lastPageNumber}">
+            <f:then>
+                <li class="page-item">
+                    <a class="page-link" href="{f:be.uri(route:'system_reports',parameters:{currentPage: pagination.nextPageNumber,action:'detail',extension:'additional_reports',report:reportname})}">
+                        &gt;
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="{f:be.uri(route:'system_reports',parameters:{currentPage: pagination.lastPageNumber,action:'detail',extension:'additional_reports',report:reportname})}">
+                        &gt;&gt;
+                    </a>
+                </li>
+            </f:then>
+        </f:if>
+    </ul>
+</nav>

@@ -12,7 +12,7 @@ namespace Sng\AdditionalReports\ViewHelpers;
 use Sng\AdditionalReports\Utility;
 use TYPO3\CMS\Core\Localization\LocalizationFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
+use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
  * ViewHelper to get all infos on a plugin or content
@@ -20,8 +20,15 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
  * Example
  * <ar:contentInfos item="{item}" as="item" ctype="TRUE"/>
  */
-class ContentInfosViewHelper extends AbstractConditionViewHelper
+class ContentInfosViewHelper extends AbstractViewHelper
 {
+    /**
+     * Disable escaping of tag based ViewHelpers so that the rendered tag is not htmlspecialchar'd
+     *
+     * @var boolean
+     */
+    protected $escapeOutput = false;
+
     public function initializeArguments()
     {
         $this->registerArgument('item', 'array', 'Current item array', false, null);
@@ -44,18 +51,14 @@ class ContentInfosViewHelper extends AbstractConditionViewHelper
         $plugin = $this->arguments['plugin'];
         $ctype = $this->arguments['ctype'];
 
-        $languageFactory = GeneralUtility::makeInstance(LocalizationFactory::class);
-
         // plugin
         if ($plugin === true) {
             foreach ($GLOBALS['TCA']['tt_content']['columns']['list_type']['config']['items'] as $itemValue) {
                 if (trim($itemValue[1]) == $item['list_type']) {
                     preg_match('#EXT:(.*?)\/#', $itemValue[0], $ext);
-                    preg_match('#^LLL:(EXT:.*?):(.*)#', $itemValue[0], $llfile);
-                    $localLang = $languageFactory->getParsedData($llfile[1], Utility::getLanguageService()->lang);
                     $item['iconext'] = Utility::getExtIcon($ext[1]);
                     $item['extension'] = $ext[1];
-                    $item['plugin'] = Utility::getLanguageService()->getLLL($llfile[2], $localLang) . ' (' . $item['list_type'] . ')';
+                    $item['plugin'] = Utility::getLanguageService()->sL($itemValue[0]) . ' (' . $item['list_type'] . ')';
                 } else {
                     $item['plugin'] = $item['list_type'];
                 }
@@ -67,10 +70,8 @@ class ContentInfosViewHelper extends AbstractConditionViewHelper
             foreach ($GLOBALS['TCA']['tt_content']['columns']['CType']['config']['items'] as $itemValue) {
                 if ($itemValue[1] != '--div--') {
                     if (trim($itemValue[1]) == $item['CType']) {
-                        preg_match('#^LLL:(EXT:.*?):(.*)#', $itemValue[0], $llfile);
-                        $localLang = $languageFactory->getParsedData($llfile[1], Utility::getLanguageService()->lang);
                         $item['iconext'] = Utility::getContentTypeIcon($itemValue[2]);
-                        $item['ctype'] = Utility::getLanguageService()->getLLL($llfile[2], $localLang) . ' (' . $item['CType'] . ')';
+                        $item['ctype'] = Utility::getLanguageService()->sL($itemValue[0]) . ' (' . $item['CType'] . ')';
                     } else {
                         $item['ctype'] = $item['CType'];
                     }
