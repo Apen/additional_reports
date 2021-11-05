@@ -38,6 +38,12 @@
 			<trans-unit id="middlewares_description">
 				<source>List of all the PSR-15 Middlewares</source>
 			</trans-unit>
+			<trans-unit id="eventdispatcher_title">
+				<source>Additional reports - EventDispatcher (PSR-14)</source>
+			</trans-unit>
+			<trans-unit id="eventdispatcher_description">
+				<source>List of all the PSR-14 Events</source>
+			</trans-unit>
 			<trans-unit id="comparelast">
 				<source>Compare with last version</source>
 			</trans-unit>
@@ -361,6 +367,12 @@
 			</trans-unit>
 			<trans-unit id="plus">
 				<source>+</source>
+			</trans-unit>
+			<trans-unit id="class_name">
+				<source>Class name</source>
+			</trans-unit>
+			<trans-unit id="events">
+				<source>Events</source>
 			</trans-unit>
 		</body>
 	</file>

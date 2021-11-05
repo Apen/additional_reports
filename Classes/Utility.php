@@ -47,6 +47,7 @@ class Utility
             ['LogErrors', 'logerrors'],
             ['WebsiteConf', 'websitesconf'],
             ['Extensions', 'extensions'],
+            ['EventDispatcher', 'eventdispatcher'],
             ['Middlewares', 'middlewares'],
         ];
     }
@@ -442,12 +443,12 @@ class Utility
     public static function viewArray($arrayIn)
     {
         if (is_array($arrayIn)) {
-            $result = '<table class="debug" border="1" cellpadding="0" cellspacing="0" bgcolor="white" width="100%" style="background-color:white;">';
+            $result = '<table class="table table-striped table-condensed">';
             if (count($arrayIn) === 0) {
                 $result .= '<tr><td><strong>EMPTY!</strong></td></tr>';
             } else {
                 foreach ($arrayIn as $key => $val) {
-                    $result .= '<tr><td>' . htmlspecialchars((string)$key) . '</td><td class="debugvar">';
+                    $result .= '<tr><td>' . htmlspecialchars((string)$key) . '</td><td>';
                     if (is_array($val)) {
                         $result .= self::viewArray($val);
                     } elseif (is_object($val)) {
@@ -465,8 +466,8 @@ class Utility
             }
             $result .= '</table>';
         } else {
-            $result = '<table class="debug" border="0" cellpadding="0" cellspacing="0" bgcolor="white">';
-            $result .= '<tr><td class="debugvar">' . nl2br(htmlspecialchars((string)$arrayIn)) . '</td></tr></table>';
+            $result = '<table class="table table-striped table-condensed">';
+            $result .= '<tr><td>' . nl2br(htmlspecialchars((string)$arrayIn)) . '</td></tr></table>';
         }
         return $result;
     }
