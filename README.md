@@ -83,10 +83,13 @@ Text diff with TER and last version version
 
 ![](https://raw.githubusercontent.com/Apen/additional_reports/master/Resources/Public/Images/extensions-diff.png)
 
-### Middlewares
+### EventDispatcher (PSR-14)
+
+![](https://raw.githubusercontent.com/Apen/additional_reports/master/Resources/Public/Images/eventdispatcher.png)
+
+### Middlewares (PSR-15)
 
 ![](https://raw.githubusercontent.com/Apen/additional_reports/master/Resources/Public/Images/middlewares.png)
-
 
 
 
