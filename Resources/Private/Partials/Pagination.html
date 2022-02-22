@@ -3,12 +3,12 @@
         <f:if condition="{pagination.previousPageNumber} && {pagination.previousPageNumber} >= {pagination.firstPageNumber}">
             <f:then>
                 <li class="page-item">
-                    <a class="page-link" href="{f:be.uri(route:'system_reports',parameters:{currentPage: 1,action:'detail',extension:'additional_reports',report:reportname})}">
+                    <a class="page-link" href="{f:be.uri(route:'system_reports',parameters:{currentPage: 1,action:'detail',extension:'additional_reports',report:reportname,filtersCat:filtersCatParam})}">
                         &lt;&lt;
                     </a>
                 </li>
                 <li class="page-item">
-                    <a class="page-link" href="{f:be.uri(route:'system_reports',parameters:{currentPage: pagination.previousPageNumber,action:'detail',extension:'additional_reports',report:reportname})}">
+                    <a class="page-link" href="{f:be.uri(route:'system_reports',parameters:{currentPage: pagination.previousPageNumber,action:'detail',extension:'additional_reports',report:reportname,filtersCat:filtersCatParam})}">
                         &lt;
                     </a>
                 </li>
@@ -25,7 +25,7 @@
                 </f:then>
                 <f:else>
                     <li class="page-item">
-                        <a class="page-link" href="{f:be.uri(route:'system_reports',parameters:{currentPage: page.number,action:'detail',extension:'additional_reports',report:reportname})}" title="{page.number}">
+                        <a class="page-link" href="{f:be.uri(route:'system_reports',parameters:{currentPage: page.number,action:'detail',extension:'additional_reports',report:reportname,filtersCat:filtersCatParam})}" title="{page.number}">
                             {page.number}
                         </a>
                     </li>
@@ -38,12 +38,12 @@
         <f:if condition="{pagination.nextPageNumber} && {pagination.nextPageNumber} <= {pagination.lastPageNumber}">
             <f:then>
                 <li class="page-item">
-                    <a class="page-link" href="{f:be.uri(route:'system_reports',parameters:{currentPage: pagination.nextPageNumber,action:'detail',extension:'additional_reports',report:reportname})}">
+                    <a class="page-link" href="{f:be.uri(route:'system_reports',parameters:{currentPage: pagination.nextPageNumber,action:'detail',extension:'additional_reports',report:reportname,filtersCat:filtersCatParam})}">
                         &gt;
                     </a>
                 </li>
                 <li class="page-item">
-                    <a class="page-link" href="{f:be.uri(route:'system_reports',parameters:{currentPage: pagination.lastPageNumber,action:'detail',extension:'additional_reports',report:reportname})}">
+                    <a class="page-link" href="{f:be.uri(route:'system_reports',parameters:{currentPage: pagination.lastPageNumber,action:'detail',extension:'additional_reports',report:reportname,filtersCat:filtersCatParam})}">
                         &gt;&gt;
                     </a>
                 </li>
