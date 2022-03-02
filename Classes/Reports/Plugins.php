@@ -49,6 +49,7 @@ class Plugins extends AbstractReport
         $view->assign('checkedpluginsmode5', (Utility::getPluginsDisplayMode() === 5) ? ' checked="checked"' : '');
         $view->assign('checkedpluginsmode6', (Utility::getPluginsDisplayMode() === 6) ? ' checked="checked"' : '');
         $view->assign('checkedpluginsmode7', (Utility::getPluginsDisplayMode() === 7) ? ' checked="checked"' : '');
+        $view->assign('filtersCatParam', GeneralUtility::_GP('filtersCat'));
 
         $currentPage = !empty($_GET['currentPage']) ? (int)$_GET['currentPage'] : 1;
 
