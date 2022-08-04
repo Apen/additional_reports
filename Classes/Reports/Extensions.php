@@ -17,9 +17,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 use TYPO3\CMS\Reports\ReportInterface;
 
-class Extensions extends AbstractReport implements ReportInterface
+class Extensions extends AbstractReport
 {
-
     /**
      * This method renders the report
      *
@@ -38,7 +37,6 @@ class Extensions extends AbstractReport implements ReportInterface
     public function display()
     {
         $extensionsToUpdate = 0;
-        $extensionsModified = 0;
 
         $allExtension = Utility::getInstExtList(Utility::getPathTypo3Conf() . 'ext/');
 
@@ -140,23 +138,23 @@ class Extensions extends AbstractReport implements ReportInterface
 
         if (is_file($absPath . 'ext_conf_template.txt')) {
             $configTemplate = GeneralUtility::getUrl($absPath . 'ext_conf_template.txt');
-            $tsparserObj = GeneralUtility::makeInstance(TypoScriptParser::class);
-            $tsparserObj->parse($configTemplate);
+            $typoScriptParser = GeneralUtility::makeInstance(TypoScriptParser::class);
+            $typoScriptParser->parse($configTemplate);
+
             $arr = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][$extKey]);
             $arr = is_array($arr) ? $arr : [];
-            $diffConf = array_diff_key($tsparserObj->setup, $arr);
+            $diffConf = array_diff_key($typoScriptParser->setup, $arr);
             if (isset($diffConf['updateMessage'])) {
                 unset($diffConf['updateMessage']);
             }
             if (count($diffConf) > 0) {
-                $id = 'extconf' . $extKey;
-                $datas = '<span>Diff : </span>' . Utility::viewArray($diffConf);
-                $datas .= '<span>$GLOBALS[\'TYPO3_CONF_VARS\'][\'EXT\'][\'extConf\'][\'' . $extKey . "'] : </span>";
-                $datas .= Utility::viewArray($arr);
-                $datas .= '<span>ext_conf_template.txt : </span>';
-                $datas .= Utility::viewArray($tsparserObj->setup);
+                $data = '<span>Diff : </span>' . Utility::viewArray($diffConf);
+                $data .= '<span>$GLOBALS[\'TYPO3_CONF_VARS\'][\'EXT\'][\'extConf\'][\'' . $extKey . "'] : </span>";
+                $data .= Utility::viewArray($arr);
+                $data .= '<span>ext_conf_template.txt : </span>';
+                $data .= Utility::viewArray($typoScriptParser->setup);
                 $listExtensionsTerItem['confintegrity'] = Utility::getLl('yes');
-                $listExtensionsTerItem['confintegrityContent'] = $datas;
+                $listExtensionsTerItem['confintegrityContent'] = $data;
             }
         }
 

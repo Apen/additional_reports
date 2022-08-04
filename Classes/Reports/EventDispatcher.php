@@ -25,7 +25,6 @@ use TYPO3\CMS\Reports\ReportInterface;
 
 class EventDispatcher extends AbstractReport
 {
-
     /**
      * This method renders the report
      *
@@ -84,8 +83,6 @@ class EventDispatcher extends AbstractReport
                 }
             }
         }
-
         return $events;
     }
-
 }

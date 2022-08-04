@@ -39,10 +39,6 @@ class ContentInfosViewHelper extends AbstractViewHelper
 
     /**
      * Renders else-child or else-argument if variable $item is in $list
-     *
-     * @param string $list
-     * @param string $item
-     * @return string
      */
     public function render()
     {
@@ -93,7 +89,7 @@ class ContentInfosViewHelper extends AbstractViewHelper
      * @param array $itemValue
      * @return array
      */
-    public function getContentInfos($itemValue)
+    public function getContentInfos(array $itemValue): array
     {
         $markersExt = [];
 

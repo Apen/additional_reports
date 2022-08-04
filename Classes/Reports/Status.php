@@ -10,18 +10,15 @@ namespace Sng\AdditionalReports\Reports;
  */
 
 use Sng\AdditionalReports\Utility;
-use TYPO3\CMS\Backend\Template\DocumentTemplate;
-use TYPO3\CMS\Backend\Template\ModuleTemplate;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\View\AbstractTemplateView;
 use TYPO3\CMS\Fluid\View\StandaloneView;
-use TYPO3\CMS\Reports\ReportInterface;
 
-class Status extends AbstractReport implements ReportInterface
+class Status extends AbstractReport
 {
-
     /**
      * This method renders the report
      *
@@ -31,9 +28,6 @@ class Status extends AbstractReport implements ReportInterface
     {
         $content = '<p class="help">' . Utility::getLanguageService()->getLL('status_description') . '</p>';
 
-//        if (!isset($this->reportObject->doc)) {
-//            $this->reportObject->doc = GeneralUtility::makeInstance(ModuleTemplate::class);
-//        }
         return $content . $this->display();
     }
 
@@ -65,8 +59,8 @@ class Status extends AbstractReport implements ReportInterface
         // infos about typo3 versions
         $datas = [];
         $jsonVersions = Utility::getJsonVersionInfos();
-        $currentVersionInfos = Utility::getCurrentVersionInfos($jsonVersions, \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Information\Typo3Version::class)->getVersion());
-        $currentBranch = Utility::getCurrentBranchInfos($jsonVersions, \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Information\Typo3Version::class)->getVersion());
+        $currentVersionInfos = Utility::getCurrentVersionInfos($jsonVersions, GeneralUtility::makeInstance(Typo3Version::class)->getVersion());
+        $currentBranch = Utility::getCurrentBranchInfos($jsonVersions, GeneralUtility::makeInstance(Typo3Version::class)->getVersion());
         $latestStable = Utility::getLatestStableInfos($jsonVersions);
         $latestLts = Utility::getLatestLtsInfos($jsonVersions);
 
@@ -83,7 +77,7 @@ class Status extends AbstractReport implements ReportInterface
         }
 
         $datas['sitename'] = $GLOBALS['TYPO3_CONF_VARS']['SYS']['sitename'];
-        $datas['version'] = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Information\Typo3Version::class)->getVersion() . ' [' . $currentVersionInfos['date'] . ']';
+        $datas['version'] = GeneralUtility::makeInstance(Typo3Version::class)->getVersion() . ' [' . $currentVersionInfos['date'] . ']';
         $datas['current_branch'] = $currentBranch['version'] . ' [' . $currentBranch['date'] . ']';
         $datas['latest_stable'] = $latestStable['version'] . ' [' . $latestStable['date'] . ']';
         $datas['latest_lts'] = $latestLts['version'] . ' [' . $latestLts['date'] . ']';
@@ -134,9 +128,6 @@ class Status extends AbstractReport implements ReportInterface
         $view->assign('datas_typo3', $datas);
     }
 
-    /**
-     * @param \TYPO3\CMS\Fluid\View\AbstractTemplateView $view
-     */
     public function displayEnv(AbstractTemplateView $view)
     {
         $datas = [];
@@ -151,45 +142,37 @@ class Status extends AbstractReport implements ReportInterface
         $view->assign('datas_env', $datas);
     }
 
-    /**
-     * @param \TYPO3\CMS\Fluid\View\AbstractTemplateView $view
-     */
-    public function displayPhp(AbstractTemplateView $view)
+    public function displayPhp(AbstractTemplateView $view): void
     {
-        $datas = [];
-
-        $datas['status_version'] = phpversion();
-        $datas['memory_limit'] = ini_get('memory_limit');
-        $datas['max_execution_time'] = ini_get('max_execution_time');
-        $datas['post_max_size'] = ini_get('post_max_size');
-        $datas['upload_max_filesize'] = ini_get('upload_max_filesize');
-        $datas['display_errors'] = ini_get('display_errors');
-        $datas['error_reporting'] = ini_get('error_reporting');
+        $data = [];
+        $data['status_version'] = phpversion();
+        $data['memory_limit'] = ini_get('memory_limit');
+        $data['max_execution_time'] = ini_get('max_execution_time');
+        $data['post_max_size'] = ini_get('post_max_size');
+        $data['upload_max_filesize'] = ini_get('upload_max_filesize');
+        $data['display_errors'] = ini_get('display_errors');
+        $data['error_reporting'] = ini_get('error_reporting');
 
         if (function_exists('posix_getpwuid') && function_exists('posix_getgrgid')) {
             $apacheUser = posix_getpwuid(posix_getuid());
             $apacheGroup = posix_getgrgid(posix_getgid());
-            $datas['apache_user'] = $apacheUser['name'] . ' (' . $apacheUser['gid'] . ')';
-            $datas['apache_group'] = $apacheGroup['name'] . ' (' . $apacheGroup['gid'] . ')';
+            $data['apache_user'] = $apacheUser['name'] . ' (' . $apacheUser['gid'] . ')';
+            $data['apache_group'] = $apacheGroup['name'] . ' (' . $apacheGroup['gid'] . ')';
         }
         $extensions = array_map('strtolower', get_loaded_extensions());
         natcasesort($extensions);
-        $datas['extensions'] = $extensions;
+        $data['extensions'] = $extensions;
 
-        $view->assign('datas_php', $datas);
+        $view->assign('datas_php', $data);
     }
 
-    /**
-     * @param \TYPO3\CMS\Fluid\View\AbstractTemplateView $view
-     */
     public function displayMySql(AbstractTemplateView $view)
     {
-        $datas = [];
-
         $connection = Utility::getDatabaseConnection();
         $connectionParams = $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections'][ConnectionPool::DEFAULT_CONNECTION_NAME];
 
-        $datas['version'] = $connection->getServerVersion();
+        $data = [];
+        $data['version'] = $connection->getServerVersion();
 
         $items = Utility::getQueryBuilder()
             ->select('default_character_set_name', 'default_collation_name')
@@ -198,10 +181,10 @@ class Status extends AbstractReport implements ReportInterface
             ->execute()
             ->fetchAll();
 
-        $datas['default_character_set_name'] = $items[0]['default_character_set_name'];
-        $datas['default_collation_name'] = $items[0]['default_collation_name'];
-        $datas['query_cache'] = Utility::getMySqlCacheInformations();
-        $datas['character_set'] = Utility::getMySqlCharacterSet();
+        $data['default_character_set_name'] = $items[0]['default_character_set_name'];
+        $data['default_collation_name'] = $items[0]['default_collation_name'];
+        $data['query_cache'] = Utility::getMySqlCacheInformations();
+        $data['character_set'] = Utility::getMySqlCharacterSet();
 
         // TYPO3 database
         $items = Utility::getQueryBuilder()
@@ -232,19 +215,16 @@ class Status extends AbstractReport implements ReportInterface
             $size += round($itemValue['size'], 2);
         }
 
-        $datas['tables'] = $tables;
-        $datas['tablessize'] = round($size, 2);
-        $datas['typo3db'] = $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['dbname'];
+        $data['tables'] = $tables;
+        $data['tablessize'] = round($size, 2);
+        $data['typo3db'] = $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['dbname'];
 
-        $view->assign('datas_mysql', $datas);
+        $view->assign('datas_mysql', $data);
     }
 
-    /**
-     * @param \TYPO3\CMS\Fluid\View\AbstractTemplateView $view
-     */
     public function displayCronTab(AbstractTemplateView $view)
     {
-        $datas = [];
+        $data = [];
         if (is_executable('crontab')) {
             exec('crontab -l', $crontab);
             $crontabString = Utility::getLl('status_nocrontab');
@@ -256,8 +236,8 @@ class Status extends AbstractReport implements ReportInterface
                     }
                 }
             }
-            $datas['crontab'] = $crontabString;
+            $data['crontab'] = $crontabString;
         }
-        $view->assign('datas_crontab', $datas);
+        $view->assign('datas_crontab', $data);
     }
 }
