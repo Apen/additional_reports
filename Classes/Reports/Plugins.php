@@ -18,7 +18,6 @@ use TYPO3\CMS\Reports\ReportInterface;
 
 class Plugins extends AbstractReport
 {
-
     /**
      * This method renders the report
      *
@@ -133,7 +132,6 @@ class Plugins extends AbstractReport
                 preg_match('#^LLL:(EXT:.*?):(.*)#', $plugins[$itemValue['list_type']][0], $llfile);
                 $itemTemp['iconext'] = '';
                 if (!empty($llfile[1])) {
-                    $localLang = $languageFactory->getParsedData($llfile[1], Utility::getLanguageService()->lang);
                     if ($plugins[$itemValue['list_type']][2]) {
                         $itemTemp['iconext'] = GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR') . $plugins[$itemValue['list_type']][2];
                     }
@@ -143,7 +141,6 @@ class Plugins extends AbstractReport
                 preg_match('#^LLL:(EXT:.*?):(.*)#', $ctypes[$itemValue['CType']][0], $llfile);
                 $itemTemp['iconext'] = '';
                 if (!empty($llfile[1])) {
-                    $localLang = $languageFactory->getParsedData($llfile[1], Utility::getLanguageService()->lang);
                     if (is_file(Utility::getPathSite() . '/typo3/sysext/t3skin/icons/gfx/' . $ctypes[$itemValue['CType']][2])) {
                         $itemTemp['iconext'] = GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/' . $ctypes[$itemValue['CType']][2];
                     } elseif (preg_match('#^\.\.#', $ctypes[$itemValue['CType']][2], $temp)) {
@@ -164,29 +161,23 @@ class Plugins extends AbstractReport
 
     /**
      * Generate the used plugins report
-     *
-     * @param bool $displayHidden
-     * @return array
      */
-    public static function getAllUsedPlugins($displayHidden = false)
+    public static function getAllUsedPlugins(bool $displayHidden = false): array
     {
         $getFiltersCat = GeneralUtility::_GP('filtersCat');
-        $addhidden = ($displayHidden) ? '' : ' AND tt_content.hidden=0 AND pages.hidden=0 ';
-        $addWhere = (($getFiltersCat !== null) && ($getFiltersCat != 'all')) ? " AND tt_content.list_type='" . $getFiltersCat . "'" : '';
-        return Utility::getAllPlugins($addhidden . $addWhere, '');
+        $addHidden = ($displayHidden) ? '' : ' AND tt_content.hidden=0 AND pages.hidden=0 ';
+        $addWhere = ($getFiltersCat !== null && $getFiltersCat != 'all') ? " AND tt_content.list_type='" . $getFiltersCat . "'" : '';
+        return Utility::getAllPlugins($addHidden . $addWhere, '');
     }
 
     /**
-     * Generate the used ctypes    report
-     *
-     * @param bool $displayHidden
-     * @return array
+     * Generate the used ctypes report
      */
-    public static function getAllUsedCtypes($displayHidden = false)
+    public static function getAllUsedCtypes(bool $displayHidden = false): array
     {
         $getFiltersCat = GeneralUtility::_GP('filtersCat');
-        $addhidden = ($displayHidden) ? '' : ' AND tt_content.hidden=0 AND pages.hidden=0 ';
-        $addWhere = (($getFiltersCat !== null) && ($getFiltersCat != 'all')) ? " AND tt_content.CType='" . $getFiltersCat . "'" : '';
-        return Utility::getAllCtypes($addhidden . $addWhere, '');
+        $addHidden = ($displayHidden) ? '' : ' AND tt_content.hidden=0 AND pages.hidden=0 ';
+        $addWhere = ($getFiltersCat !== null && $getFiltersCat != 'all') ? " AND tt_content.CType='" . $getFiltersCat . "'" : '';
+        return Utility::getAllCtypes($addHidden . $addWhere, '');
     }
 }

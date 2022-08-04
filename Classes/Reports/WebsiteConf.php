@@ -19,7 +19,6 @@ use TYPO3\CMS\Reports\ReportInterface;
 
 class WebsiteConf extends AbstractReport
 {
-
     /**
      * This method renders the report
      *

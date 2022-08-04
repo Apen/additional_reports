@@ -3,8 +3,9 @@
 namespace Sng\AdditionalReports\Tests\Functional\Reports;
 
 use Sng\AdditionalReports\Reports\Extensions;
+use Sng\AdditionalReports\Tests\Functional\FunctionalTestCase;
 
-class ExtensionsTest extends \Sng\AdditionalReports\Tests\Functional\FunctionalTestCase
+class ExtensionsTest extends FunctionalTestCase
 {
     protected function setUp(): void
     {
