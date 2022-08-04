@@ -2,23 +2,18 @@
 
 namespace Sng\AdditionalReports\Tests\Functional\Reports;
 
-use TYPO3\CMS\Reports\Controller\ReportController;
 use Sng\AdditionalReports\Reports\WebsiteConf;
-use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
-class WebsiteConfTest extends FunctionalTestCase
+class WebsiteConfTest extends \Sng\AdditionalReports\Tests\Functional\FunctionalTestCase
 {
-    protected $coreExtensionsToLoad = [
-        'reports',
-    ];
-
-    protected $testExtensionsToLoad = [
-        'typo3conf/ext/additional_reports',
-    ];
+    protected function setUp(): void
+    {
+        parent::setUp();
+    }
 
     public function testDisplay()
     {
-        $report = new WebsiteConf(new ReportController());
+        $report = new WebsiteConf(parent::getReportObject());
         self::assertNotEmpty($report->display());
     }
 }

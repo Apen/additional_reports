@@ -31,11 +31,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Sng\\AdditionalReports\\": "Classes"
-    }
-  },
-  "autoload-dev": {
-    "psr-4": {
+      "Sng\\AdditionalReports\\": "Classes",
       "Sng\\AdditionalReports\\Tests\\": "Tests"
     }
   },

@@ -13,11 +13,6 @@ class UtilityTest extends BaseTestCase
         self::assertNotEmpty(Utility::getReportsList());
     }
 
-    public function testSubModules()
-    {
-        self::assertNotEmpty(Utility::getSubModules());
-    }
-
     public function testGetInstExtList()
     {
         $extLits = Utility::getInstExtList(Environment::getBackendPath() . '/sysext/');
@@ -64,7 +59,7 @@ class UtilityTest extends BaseTestCase
 
     public function testGetExtensionVersion()
     {
-        self::assertEquals(TYPO3_version, Utility::getExtensionVersion('core'));
+        self::assertEquals(\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Information\Typo3Version::class)->getVersion(), Utility::getExtensionVersion('core'));
     }
 
     public function testWriteInformation()
@@ -79,12 +74,12 @@ class UtilityTest extends BaseTestCase
 
     public function testGetCurrentVersionInfos()
     {
-        self::assertNotEmpty(Utility::getCurrentVersionInfos(Utility::getJsonVersionInfos(), TYPO3_version));
+        self::assertNotEmpty(Utility::getCurrentVersionInfos(Utility::getJsonVersionInfos(), \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Information\Typo3Version::class)->getVersion()));
     }
 
     public function testGetCurrentBranchInfos()
     {
-        self::assertNotEmpty(Utility::getCurrentBranchInfos(Utility::getJsonVersionInfos(), TYPO3_version));
+        self::assertNotEmpty(Utility::getCurrentBranchInfos(Utility::getJsonVersionInfos(), \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Information\Typo3Version::class)->getVersion()));
     }
 
     public function testGetLatestStableInfos()
@@ -109,13 +104,13 @@ class UtilityTest extends BaseTestCase
 
     public function testIsHook()
     {
-        $hook = 'TYPO3\\CMS\\Frontend\\Hooks\\FrontendHooks->displayPreviewInfoMessage';
+        $hook = 'TYPO3\\CMS\\Backend\\Security\\EmailLoginNotification->emailAtLogin';
         self::assertTrue(Utility::isHook($hook));
     }
 
     public function testGetHook()
     {
-        $hook = 'TYPO3\\CMS\\Frontend\\Hooks\\FrontendHooks->displayPreviewInfoMessage';
+        $hook = 'TYPO3\\CMS\\Backend\\Security\\EmailLoginNotification->emailAtLogin';
         self::assertNotEmpty(Utility::getHook($hook));
     }
 
