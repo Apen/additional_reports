@@ -24,6 +24,7 @@
 	<filter>
 		<whitelist>
 			<directory>../Classes/</directory>
+			<directory>../Tests/</directory>
 		</whitelist>
 	</filter>
 
