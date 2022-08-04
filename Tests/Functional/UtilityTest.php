@@ -12,15 +12,15 @@ use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 class UtilityTest extends FunctionalTestCase
 {
-    protected $coreExtensionsToLoad = [
+    protected array $coreExtensionsToLoad = [
         'reports',
     ];
 
-    protected $testExtensionsToLoad = [
+    protected array $testExtensionsToLoad = [
         'typo3conf/ext/additional_reports',
     ];
 
-    protected $configurationToUseInTestInstance = [
+    protected array $configurationToUseInTestInstance = [
         'SYS' => [
             'caching' => [
                 'cacheConfigurations' => [
@@ -186,6 +186,11 @@ class UtilityTest extends FunctionalTestCase
     public function testGetLanguageService()
     {
         self::assertNotEmpty(Utility::getLanguageService());
+    }
+
+    public function testSubModules()
+    {
+        self::assertNotEmpty(Utility::getSubModules());
     }
 
     public function testExec_SELECT_queryArray()

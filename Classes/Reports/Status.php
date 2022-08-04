@@ -65,8 +65,8 @@ class Status extends AbstractReport implements ReportInterface
         // infos about typo3 versions
         $datas = [];
         $jsonVersions = Utility::getJsonVersionInfos();
-        $currentVersionInfos = Utility::getCurrentVersionInfos($jsonVersions, TYPO3_version);
-        $currentBranch = Utility::getCurrentBranchInfos($jsonVersions, TYPO3_version);
+        $currentVersionInfos = Utility::getCurrentVersionInfos($jsonVersions, \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Information\Typo3Version::class)->getVersion());
+        $currentBranch = Utility::getCurrentBranchInfos($jsonVersions, \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Information\Typo3Version::class)->getVersion());
         $latestStable = Utility::getLatestStableInfos($jsonVersions);
         $latestLts = Utility::getLatestLtsInfos($jsonVersions);
 
@@ -83,7 +83,7 @@ class Status extends AbstractReport implements ReportInterface
         }
 
         $datas['sitename'] = $GLOBALS['TYPO3_CONF_VARS']['SYS']['sitename'];
-        $datas['version'] = TYPO3_version . ' [' . $currentVersionInfos['date'] . ']';
+        $datas['version'] = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Information\Typo3Version::class)->getVersion() . ' [' . $currentVersionInfos['date'] . ']';
         $datas['current_branch'] = $currentBranch['version'] . ' [' . $currentBranch['date'] . ']';
         $datas['latest_stable'] = $latestStable['version'] . ' [' . $latestStable['date'] . ']';
         $datas['latest_lts'] = $latestLts['version'] . ' [' . $latestLts['date'] . ']';
