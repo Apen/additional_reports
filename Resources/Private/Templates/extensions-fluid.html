@@ -158,14 +158,14 @@
 
 <f:section name="modal">
     <f:if condition="{content}">
-        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#{id}">
+        <button type="button" class="btn btn-default" data-bs-toggle="modal" data-bs-target="#{id}">
             {title}
         </button>
         <div class="modal fade" id="{id}" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     </div>
                     <div class="modal-body">
                         <f:format.raw>{content}</f:format.raw>
@@ -178,14 +178,14 @@
 
 <f:section name="modalIframe">
     <f:if condition="{url}">
-        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#{id}">
+        <button type="button" class="btn btn-default" data-bs-toggle="modal" data-bs-target="#{id}">
             {title}
         </button>
         <div class="modal fade" id="{id}" tabindex="-1" role="dialog" data-src="{url}">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     </div>
                     <div class="modal-body" style="width: 800px;height:550px;overflow:hidden;">
 
