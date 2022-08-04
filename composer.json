@@ -22,7 +22,7 @@
     "typo3/cms-reports": "^10||^11"
   },
   "require-dev": {
-    "typo3/testing-framework": "^4",
+    "typo3/testing-framework": "7.x-dev",
     "rector/rector": "^0.7.2"
   },
   "config": {

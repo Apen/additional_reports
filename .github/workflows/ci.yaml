@@ -14,8 +14,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-versions: [ '7.2' ]
-        typo3-versions: [ '^9' ]
+        php-versions: [ '7.4' ]
+        typo3-versions: [ '^11' ]
     steps:
       - name: Check out repository
         uses: actions/checkout@v2
