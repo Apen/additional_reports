@@ -15,9 +15,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 use TYPO3\CMS\Reports\ReportInterface;
 
-class Eid extends AbstractReport implements ReportInterface
+class Eid extends AbstractReport
 {
-
     /**
      * This method renders the report
      *

@@ -19,11 +19,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class CallAjax
 {
-    /**
-     * @param \Psr\Http\Message\ServerRequestInterface $request
-     * @return \Psr\Http\Message\ResponseInterface
-     */
-    public function main(ServerRequestInterface $request)
+    public function main(ServerRequestInterface $request): ResponseInterface
     {
         $mode = GeneralUtility::_GP('mode');
         $extKey = GeneralUtility::_GP('extKey');

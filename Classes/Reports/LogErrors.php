@@ -15,9 +15,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 use TYPO3\CMS\Reports\ReportInterface;
 
-class LogErrors extends AbstractReport implements ReportInterface
+class LogErrors extends AbstractReport
 {
-
     /**
      * This method renders the report
      *
@@ -35,8 +34,6 @@ class LogErrors extends AbstractReport implements ReportInterface
      */
     public function display()
     {
-
-        // query
         $query = [];
         $query['SELECT'] = 'COUNT(*) AS "nb",details,MAX(tstamp) as "tstamp"';
         $query['FROM'] = 'sys_log';
@@ -52,10 +49,8 @@ class LogErrors extends AbstractReport implements ReportInterface
 
         $content = Utility::writeInformation(
             Utility::getLl('flushalllog'),
-            'DELETE FROM sys_log WHERE error>0;'
+            'DELETE FROM sys_log WHERE error > 0;'
         );
-
-        $logErrors = [];
 
         $view = GeneralUtility::makeInstance(StandaloneView::class);
         $view->setTemplatePathAndFilename(ExtensionManagementUtility::extPath('additional_reports') . 'Resources/Private/Templates/logerrors-fluid.html');

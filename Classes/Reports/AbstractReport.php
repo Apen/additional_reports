@@ -20,7 +20,6 @@ use TYPO3\CMS\Reports\RequestAwareReportInterface;
  */
 abstract class AbstractReport implements ReportInterface
 {
-
     /**
      * Back-reference to the calling reports module
      *
@@ -29,9 +28,7 @@ abstract class AbstractReport implements ReportInterface
     protected $reportObject;
 
     /**
-     * Constructor for class \Sng\AdditionalReports\Reports\AbstractReport
-     *
-     * @param object    Back-reference to the calling reports module
+     * @param object Back-reference to the calling reports module
      */
     public function __construct($reportObject)
     {
@@ -41,12 +38,7 @@ abstract class AbstractReport implements ReportInterface
         Utility::getLanguageService()->includeLLFile('EXT:additional_reports/Resources/Private/Language/locallang.xlf');
     }
 
-    /**
-     * Set a Css
-     *
-     * @param $path
-     */
-    public function setCss($path)
+    public function setCss(string $path): void
     {
         if (isset($this->reportObject->doc)) {
             $this->reportObject->doc->getPageRenderer()->addCssFile($path);
@@ -55,12 +47,7 @@ abstract class AbstractReport implements ReportInterface
         $pageRenderer->addCssFile($path);
     }
 
-    /**
-     * Set a Js
-     *
-     * @param $path
-     */
-    public function setJs($path)
+    public function setJs(string $path): void
     {
         if (isset($this->reportObject->doc)) {
             $this->reportObject->doc->getPageRenderer()->addJsFile($path);
