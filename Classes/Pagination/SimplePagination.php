@@ -129,33 +129,21 @@ class SimplePagination implements PaginationInterface
         $this->displayRangeEnd = (int)min($this->displayRangeEnd, $this->paginator->getNumberOfPages());
     }
 
-    /**
-     * @param int $maximumNumberOfLinks
-     */
     public function setMaximumNumberOfLinks(int $maximumNumberOfLinks): void
     {
         $this->maximumNumberOfLinks = $maximumNumberOfLinks;
     }
 
-    /**
-     * @return array
-     */
     public function getPages(): array
     {
         return $this->pages;
     }
 
-    /**
-     * @return bool
-     */
     public function getHasLessPages(): bool
     {
         return $this->displayRangeStart > 2;
     }
 
-    /**
-     * @return bool
-     */
     public function getHasMorePages(): bool
     {
         return $this->displayRangeEnd + 1 < $this->paginator->getNumberOfPages();

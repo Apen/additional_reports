@@ -15,9 +15,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 use TYPO3\CMS\Reports\ReportInterface;
 
-class CommandControllers extends AbstractReport implements ReportInterface
+class CommandControllers extends AbstractReport
 {
-
     /**
      * This method renders the report
      *
@@ -33,7 +32,7 @@ class CommandControllers extends AbstractReport implements ReportInterface
      *
      * @return string HTML code
      */
-    public function display()
+    public function display(): string
     {
         $items = $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['extbase']['commandControllers'];
         $view = GeneralUtility::makeInstance(StandaloneView::class);

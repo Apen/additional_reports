@@ -12,7 +12,9 @@ namespace Sng\AdditionalReports;
 use Sng\AdditionalReports\Pagination\SimplePagination;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
 use TYPO3\CMS\Core\Core\Environment;
+use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Exception\SiteNotFoundException;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
@@ -57,7 +59,7 @@ class Utility
      *
      * @return string url
      */
-    public static function getBaseUrl()
+    public static function getBaseUrl(): string
     {
         $parameters = [];
         $parameters['extension'] = 'additional_reports';
@@ -76,16 +78,16 @@ class Utility
     public static function getSubModules()
     {
         return [
-            'displayAjax' => \Sng\AdditionalReports\Utility::getLanguageService()->getLL('ajax_title'),
-            'displayEid' => \Sng\AdditionalReports\Utility::getLanguageService()->getLL('eid_title'),
-            'displayCliKeys' => \Sng\AdditionalReports\Utility::getLanguageService()->getLL('clikeys_title'),
-            'displayPlugins' => \Sng\AdditionalReports\Utility::getLanguageService()->getLL('plugins_title'),
-            'displayXclass' => \Sng\AdditionalReports\Utility::getLanguageService()->getLL('xclass_title'),
-            'displayHooks' => \Sng\AdditionalReports\Utility::getLanguageService()->getLL('hooks_title'),
-            'displayStatus' => \Sng\AdditionalReports\Utility::getLanguageService()->getLL('status_title'),
-            'displayExtensions' => \Sng\AdditionalReports\Utility::getLanguageService()->getLL('extensions_title'),
-            'displayLogErrors' => \Sng\AdditionalReports\Utility::getLanguageService()->getLL('logerrors_title'),
-            'displayWebsitesConf' => \Sng\AdditionalReports\Utility::getLanguageService()->getLL('websitesconf_title')
+            'displayAjax' => Utility::getLanguageService()->getLL('ajax_title'),
+            'displayEid' => Utility::getLanguageService()->getLL('eid_title'),
+            'displayCliKeys' => Utility::getLanguageService()->getLL('clikeys_title'),
+            'displayPlugins' => Utility::getLanguageService()->getLL('plugins_title'),
+            'displayXclass' => Utility::getLanguageService()->getLL('xclass_title'),
+            'displayHooks' => Utility::getLanguageService()->getLL('hooks_title'),
+            'displayStatus' => Utility::getLanguageService()->getLL('status_title'),
+            'displayExtensions' => Utility::getLanguageService()->getLL('extensions_title'),
+            'displayLogErrors' => Utility::getLanguageService()->getLL('logerrors_title'),
+            'displayWebsitesConf' => Utility::getLanguageService()->getLL('websitesconf_title')
         ];
     }
 
@@ -156,8 +158,8 @@ class Utility
                             $currentExt['installed'] = ExtensionManagementUtility::isLoaded($extKey);
                             $currentExt['EM_CONF'] = $emConf;
                             $currentExt['files'] = GeneralUtility::getFilesInDir($path . $extKey, '', 0, '', null);
-                            $currentExt['lastversion'] = \Sng\AdditionalReports\Utility::checkExtensionUpdate($currentExt);
-                            $currentExt['icon'] = \Sng\AdditionalReports\Utility::getExtIcon($extKey);
+                            $currentExt['lastversion'] = Utility::checkExtensionUpdate($currentExt);
+                            $currentExt['icon'] = Utility::getExtIcon($extKey);
 
                             // db infos
                             $fileContent = '';
@@ -209,7 +211,7 @@ class Utility
         if (self::isComposerMode()) {
             return null;
         }
-        $lastVersion = \Sng\AdditionalReports\Utility::exec_SELECTgetRows('*', 'tx_extensionmanager_domain_model_extension', 'extension_key="' . $extInfo['extkey'] . '" AND current_version=1');
+        $lastVersion = Utility::exec_SELECTgetRows('*', 'tx_extensionmanager_domain_model_extension', 'extension_key="' . $extInfo['extkey'] . '" AND current_version=1');
         if ($lastVersion !== []) {
             $lastVersion[0]['updatedate'] = date('d/m/Y', $lastVersion[0]['last_updated']);
             return $lastVersion[0];
@@ -227,7 +229,8 @@ class Utility
     {
         if (!empty($extKey)) {
             $extType = self::getExtensionType($extKey);
-            $path = $extType['siteRelPath'] . ExtensionManagementUtility::getExtensionIcon(\Sng\AdditionalReports\Utility::getPathSite() . '/' . $extType['siteRelPath']);
+            $path = $extType['siteRelPath'] . ExtensionManagementUtility::getExtensionIcon(
+                    Utility::getPathSite() . '/' . $extType['siteRelPath']);
             return GeneralUtility::getIndpEnv('TYPO3_SITE_URL') . $path;
         }
         return '';
@@ -242,7 +245,7 @@ class Utility
     public static function getContentTypeIcon($path)
     {
         $icon = null;
-        if (is_file(\Sng\AdditionalReports\Utility::getPathSite() . '/typo3/sysext/core/Resources/Public/Icons/T3Icons/content/' . $path . '.svg')) {
+        if (is_file(Utility::getPathSite() . '/typo3/sysext/core/Resources/Public/Icons/T3Icons/content/' . $path . '.svg')) {
             $icon = GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/core/Resources/Public/Icons/T3Icons/content/' . $path . '.svg';
         } elseif (preg_match('#^\.\.#', $path, $temp)) {
             $icon = GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR') . $path;
@@ -257,7 +260,7 @@ class Utility
      *
      * @return string
      */
-    public static function getIconRefresh()
+    public static function getIconRefresh(): string
     {
         return GeneralUtility::makeInstance(IconFactory::class)->getIcon(
             'actions-system-refresh',
@@ -270,7 +273,7 @@ class Utility
      *
      * @return string
      */
-    public static function getIconDomain()
+    public static function getIconDomain(): string
     {
         return GeneralUtility::makeInstance(IconFactory::class)->getIcon(
             'apps-pagetree-page-domain',
@@ -283,7 +286,7 @@ class Utility
      *
      * @return string
      */
-    public static function getIconWebPage()
+    public static function getIconWebPage(): string
     {
         return GeneralUtility::makeInstance(IconFactory::class)->getIcon(
             'actions-version-page-open',
@@ -296,7 +299,7 @@ class Utility
      *
      * @return string
      */
-    public static function getIconTemplate()
+    public static function getIconTemplate(): string
     {
         return GeneralUtility::makeInstance(IconFactory::class)->getIcon(
             'mimetypes-x-content-template',
@@ -309,7 +312,7 @@ class Utility
      *
      * @return string
      */
-    public static function getIconWebList()
+    public static function getIconWebList(): string
     {
         return GeneralUtility::makeInstance(IconFactory::class)->getIcon(
             'actions-system-list-open',
@@ -323,7 +326,7 @@ class Utility
      * @param bool $hidden
      * @return string
      */
-    public static function getIconPage($hidden = false)
+    public static function getIconPage(bool $hidden = false): string
     {
         if ($hidden) {
             return GeneralUtility::makeInstance(IconFactory::class)->getIcon(
@@ -344,7 +347,7 @@ class Utility
      * @param bool $hidden
      * @return string
      */
-    public static function getIconContent($hidden = false)
+    public static function getIconContent(bool $hidden = false): string
     {
         if ($hidden) {
             return GeneralUtility::makeInstance(IconFactory::class)->getIcon(
@@ -365,9 +368,9 @@ class Utility
      * @param string $extKey
      * @return array
      */
-    public static function getExtensionType($extKey)
+    public static function getExtensionType(string $extKey): array
     {
-        if (is_dir(\Sng\AdditionalReports\Utility::getPathTypo3Conf() . 'ext/' . $extKey . '/')) {
+        if (is_dir(Utility::getPathTypo3Conf() . 'ext/' . $extKey . '/')) {
             return [
                 'type' => 'L',
                 'siteRelPath' => 'typo3conf/ext/' . $extKey . '/',
@@ -393,11 +396,8 @@ class Utility
 
     /**
      * Get rootline by page uid
-     *
-     * @param int $pageUid
-     * @return mixed
      */
-    public static function getRootLine($pageUid)
+    public static function getRootLine(int $pageUid): array
     {
         $rootline = GeneralUtility::makeInstance(RootlineUtility::class, $pageUid);
         return $rootline->get();
@@ -405,11 +405,8 @@ class Utility
 
     /**
      * Get principal domain by page uid
-     *
-     * @param int $pageUid
-     * @return mixed
      */
-    public static function getDomain($pageUid)
+    public static function getDomain(int $pageUid): string
     {
         $siteFinder = GeneralUtility::makeInstance(SiteFinder::class);
         try {
@@ -429,7 +426,7 @@ class Utility
      * @param string $extKey
      * @return string
      */
-    public static function getExtPath($extKey)
+    public static function getExtPath(string $extKey): string
     {
         return self::getPathTypo3Conf() . 'ext/' . $extKey . '/';
     }
@@ -440,7 +437,7 @@ class Utility
      * @param array $arrayIn
      * @return string
      */
-    public static function viewArray($arrayIn)
+    public static function viewArray($arrayIn): string
     {
         if (is_array($arrayIn)) {
             $result = '<table class="table table-striped table-condensed">';
@@ -479,7 +476,7 @@ class Utility
      * @param bool $urlOnly
      * @return string
      */
-    public static function goToModuleList($uid, $urlOnly = false)
+    public static function goToModuleList($uid, $urlOnly = false): string
     {
         $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
         $url = $uriBuilder->buildUriFromRoute('web_list') . '&id=' . $uid;
@@ -496,7 +493,7 @@ class Utility
      * @param bool $urlOnly
      * @return string
      */
-    public static function goToModulePage($uid, $urlOnly = false)
+    public static function goToModulePage($uid, $urlOnly = false): string
     {
         $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
         $url = $uriBuilder->buildUriFromRoute('web_layout') . '&id=' . $uid;
@@ -513,7 +510,7 @@ class Utility
      * @param string $content
      * @return string
      */
-    public static function generateLink($att = [], $content = '')
+    public static function generateLink($att = [], $content = ''): string
     {
         $attList = '';
         foreach ($att as $attKey => $attValue) {
@@ -528,7 +525,7 @@ class Utility
      * @param string $key
      * @return string
      */
-    public static function getExtensionVersion($key)
+    public static function getExtensionVersion($key): ?string
     {
         $EM_CONF = [];
         if (!is_string($key) || empty($key)) {
@@ -550,17 +547,17 @@ class Utility
      *
      * @return string
      */
-    public static function getMySqlCacheInformations()
+    public static function getMySqlCacheInformations(): string
     {
         $queryCache = '';
 
-        $res = \Sng\AdditionalReports\Utility::sql_query('SHOW VARIABLES LIKE "%query_cache%";');
+        $res = Utility::sql_query('SHOW VARIABLES LIKE "%query_cache%";');
         while ($row = $res->fetch()) {
             $queryCache .= $row['Variable_name'] . ' : ' . $row['Value'] . '<br />';
         }
         $res->closeCursor();
 
-        $res = \Sng\AdditionalReports\Utility::sql_query('SHOW STATUS LIKE "%Qcache%";');
+        $res = Utility::sql_query('SHOW STATUS LIKE "%Qcache%";');
         while ($row = $res->fetch()) {
             $queryCache .= $row['Variable_name'] . ' : ' . $row['Value'] . '<br />';
         }
@@ -574,11 +571,11 @@ class Utility
      *
      * @return string
      */
-    public static function getMySqlCharacterSet()
+    public static function getMySqlCharacterSet(): string
     {
         $sqlEncoding = '';
 
-        $res = \Sng\AdditionalReports\Utility::sql_query('SHOW VARIABLES LIKE "%character%";');
+        $res = Utility::sql_query('SHOW VARIABLES LIKE "%character%";');
         while ($row = $res->fetch()) {
             $sqlEncoding .= $row['Variable_name'] . ' : ' . $row['Value'] . '<br />';
         }
@@ -594,7 +591,7 @@ class Utility
      * @param string $value
      * @return string
      */
-    public static function writeInformation($label, $value)
+    public static function writeInformation($label, $value): string
     {
         return '
         <table class="table table-striped table-hover">
@@ -614,9 +611,9 @@ class Utility
      * @param string $where
      * @return array
      */
-    public static function getAllDifferentPlugins($where)
+    public static function getAllDifferentPlugins($where): array
     {
-        return \Sng\AdditionalReports\Utility::exec_SELECTgetRows(
+        return Utility::exec_SELECTgetRows(
             'DISTINCT tt_content.list_type',
             'tt_content,pages',
             'tt_content.pid=pages.uid AND pages.pid>=0 AND tt_content.deleted=0 AND pages.deleted=0 ' . $where . 'AND tt_content.CType=\'list\' AND tt_content.list_type<>""',
@@ -631,7 +628,7 @@ class Utility
      * @param bool $displayHidden
      * @return string
      */
-    public static function getAllDifferentPluginsSelect($displayHidden)
+    public static function getAllDifferentPluginsSelect($displayHidden): string
     {
         $where = ($displayHidden) ? '' : ' AND tt_content.hidden=0 AND pages.hidden=0 ';
         $getFiltersCat = GeneralUtility::_GP('filtersCat');
@@ -639,9 +636,9 @@ class Utility
         $filterCat = '';
 
         if ($getFiltersCat == 'all') {
-            $filterCat .= '<option value="all" selected="selected">' . \Sng\AdditionalReports\Utility::getLanguageService()->getLL('all') . '</option>';
+            $filterCat .= '<option value="all" selected="selected">' . Utility::getLanguageService()->getLL('all') . '</option>';
         } else {
-            $filterCat .= '<option value="all">' . \Sng\AdditionalReports\Utility::getLanguageService()->getLL('all') . '</option>';
+            $filterCat .= '<option value="all">' . Utility::getLanguageService()->getLL('all') . '</option>';
         }
 
         foreach ($pluginsList as $pluginsElement) {
@@ -653,7 +650,7 @@ class Utility
             }
         }
 
-        $listUrlOrig = \Sng\AdditionalReports\Utility::getBaseUrl() . '&display=' . \Sng\AdditionalReports\Utility::getPluginsDisplayMode();
+        $listUrlOrig = Utility::getBaseUrl() . '&display=' . Utility::getPluginsDisplayMode();
 
         return '<select name="filtersCat" id="filtersCat" data-url="' . $listUrlOrig . '">' . $filterCat . '</select>';
     }
@@ -664,9 +661,9 @@ class Utility
      * @param string $where
      * @return array
      */
-    public static function getAllDifferentCtypes($where)
+    public static function getAllDifferentCtypes($where): array
     {
-        return \Sng\AdditionalReports\Utility::exec_SELECTgetRows(
+        return Utility::exec_SELECTgetRows(
             'DISTINCT tt_content.CType,tt_content.list_type',
             'tt_content,pages',
             'tt_content.pid=pages.uid AND pages.pid>=0 AND tt_content.deleted=0 AND pages.deleted=0 ' . $where . "AND tt_content.CType<>'list'",
@@ -681,7 +678,7 @@ class Utility
      * @param bool $displayHidden
      * @return string
      */
-    public static function getAllDifferentCtypesSelect($displayHidden)
+    public static function getAllDifferentCtypesSelect($displayHidden): string
     {
         $where = ($displayHidden) ? '' : ' AND tt_content.hidden=0 AND pages.hidden=0 ';
         $getFiltersCat = GeneralUtility::_GP('filtersCat');
@@ -689,9 +686,9 @@ class Utility
         $filterCat = '';
 
         if ($getFiltersCat == 'all') {
-            $filterCat .= '<option value="all" selected="selected">' . \Sng\AdditionalReports\Utility::getLanguageService()->getLL('all') . '</option>';
+            $filterCat .= '<option value="all" selected="selected">' . Utility::getLanguageService()->getLL('all') . '</option>';
         } else {
-            $filterCat .= '<option value="all">' . \Sng\AdditionalReports\Utility::getLanguageService()->getLL('all') . '</option>';
+            $filterCat .= '<option value="all">' . Utility::getLanguageService()->getLL('all') . '</option>';
         }
 
         foreach ($pluginsList as $pluginsElement) {
@@ -703,7 +700,7 @@ class Utility
             }
         }
 
-        $listUrlOrig = \Sng\AdditionalReports\Utility::getBaseUrl() . '&display=' . \Sng\AdditionalReports\Utility::getPluginsDisplayMode();
+        $listUrlOrig = Utility::getBaseUrl() . '&display=' . Utility::getPluginsDisplayMode();
 
         return '<select name="filtersCat" id="filtersCat" data-url="' . $listUrlOrig . '">' . $filterCat . '</select>';
     }
@@ -727,7 +724,7 @@ class Utility
         if ($returnQuery === true) {
             return $query;
         }
-        return \Sng\AdditionalReports\Utility::exec_SELECTgetRows(
+        return Utility::exec_SELECTgetRows(
             $query['SELECT'],
             $query['FROM'],
             $query['WHERE'],
@@ -744,7 +741,7 @@ class Utility
      * @param string $limit
      * @return array
      */
-    public static function getAllCtypes($where, $limit = '', $returnQuery = false)
+    public static function getAllCtypes($where, $limit = '', $returnQuery = false): array
     {
         $query = [
             'SELECT' => 'DISTINCT tt_content.CType,tt_content.pid,tt_content.uid,pages.title,pages.hidden as "hiddenpages",tt_content.hidden as "hiddentt_content"',
@@ -756,7 +753,7 @@ class Utility
         if ($returnQuery === true) {
             return $query;
         }
-        return \Sng\AdditionalReports\Utility::exec_SELECTgetRows(
+        return Utility::exec_SELECTgetRows(
             $query['SELECT'],
             $query['FROM'],
             $query['WHERE'],
@@ -773,7 +770,7 @@ class Utility
      */
     public static function getJsonVersionInfos()
     {
-        return json_decode(GeneralUtility::getUrl('http://get.typo3.org/json'), true);
+        return json_decode(GeneralUtility::getUrl('https://get.typo3.org/json'), true);
     }
 
     /**
@@ -886,7 +883,7 @@ class Utility
     {
         $firstLetter = strtolower(substr($extension, 0, 1));
         $secondLetter = strtolower(substr($extension, 1, 1));
-        $from = 'http://typo3.org/fileadmin/ter/' . $firstLetter . '/' . $secondLetter . '/' . $extension . '_' . $version . '.t3x';
+        $from = 'https://typo3.org/fileadmin/ter/' . $firstLetter . '/' . $secondLetter . '/' . $extension . '_' . $version . '.t3x';
         $content = GeneralUtility::getURL($from);
         $t3xfiles = self::extractExtensionDataFromT3x($content);
         if (empty($extFile)) {
@@ -927,7 +924,7 @@ class Utility
      * @param string $hook
      * @return bool
      */
-    public static function isHook($hook)
+    public static function isHook($hook): bool
     {
         $isHook = false;
         if (!empty($hook)) {
@@ -973,7 +970,6 @@ class Utility
      */
     public static function getHook($hookPotential)
     {
-        //If is array
         if (is_array($hookPotential)) {
             foreach ($hookPotential as $key => $value) {
                 //if array nested
@@ -1005,13 +1001,10 @@ class Utility
 
     /**
      * Get a label
-     *
-     * @param string $key
-     * @return string
      */
-    public static function getLl($key)
+    public static function getLl(string $key): string
     {
-        return \Sng\AdditionalReports\Utility::getLanguageService()->sL('LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:' . $key);
+        return Utility::getLanguageService()->sL('LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:' . $key);
     }
 
     /**
@@ -1108,26 +1101,17 @@ class Utility
         return $query;
     }
 
-    /**
-     * @return \TYPO3\CMS\Core\Database\Connection
-     */
-    public static function getDatabaseConnection()
+    public static function getDatabaseConnection(): Connection
     {
         return GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionByName(ConnectionPool::DEFAULT_CONNECTION_NAME);
     }
 
-    /**
-     * @return \TYPO3\CMS\Core\Database\Query\QueryBuilder
-     */
-    public static function getQueryBuilder()
+    public static function getQueryBuilder(): QueryBuilder
     {
         return self::getDatabaseConnection()->createQueryBuilder();
     }
 
-    /**
-     * @return LanguageService
-     */
-    public static function getLanguageService()
+    public static function getLanguageService(): LanguageService
     {
         // fe
         if (!empty($GLOBALS['TSFE'])) {
@@ -1142,23 +1126,17 @@ class Utility
         return $LANG;
     }
 
-    /**
-     * @return string
-     */
-    public static function getPathSite()
+    public static function getPathSite(): string
     {
         return Environment::getPublicPath();
     }
 
-    /**
-     * @return string
-     */
-    public static function getPathTypo3Conf()
+    public static function getPathTypo3Conf(): string
     {
         return Environment::getPublicPath() . '/typo3conf/';
     }
 
-    public static function isComposerMode()
+    public static function isComposerMode(): bool
     {
         return defined('TYPO3_COMPOSER_MODE') && TYPO3_COMPOSER_MODE;
     }

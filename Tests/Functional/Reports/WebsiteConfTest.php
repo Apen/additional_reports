@@ -3,8 +3,9 @@
 namespace Sng\AdditionalReports\Tests\Functional\Reports;
 
 use Sng\AdditionalReports\Reports\WebsiteConf;
+use Sng\AdditionalReports\Tests\Functional\FunctionalTestCase;
 
-class WebsiteConfTest extends \Sng\AdditionalReports\Tests\Functional\FunctionalTestCase
+class WebsiteConfTest extends FunctionalTestCase
 {
     protected function setUp(): void
     {

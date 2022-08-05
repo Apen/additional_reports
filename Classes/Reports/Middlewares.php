@@ -16,9 +16,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 use TYPO3\CMS\Reports\ReportInterface;
 
-class Middlewares extends AbstractReport implements ReportInterface
+class Middlewares extends AbstractReport
 {
-
     /**
      * This method renders the report
      *
@@ -43,7 +42,7 @@ class Middlewares extends AbstractReport implements ReportInterface
         return $view->render();
     }
 
-    public function getAllMiddlewares()
+    public function getAllMiddlewares(): array
     {
         $packageManager = GeneralUtility::makeInstance(PackageManager::class);
         $packages = $packageManager->getActivePackages();
@@ -60,11 +59,7 @@ class Middlewares extends AbstractReport implements ReportInterface
         return array_replace_recursive(...$allMiddlewares);
     }
 
-    /**
-     * @param array $allMiddlewares
-     * @return array
-     */
-    public function filterAllMiddlewares(array $allMiddlewares)
+    public function filterAllMiddlewares(array $allMiddlewares): array
     {
         $dependencyOrderingService = GeneralUtility::makeInstance(DependencyOrderingService::class);
         $middlewares = [];

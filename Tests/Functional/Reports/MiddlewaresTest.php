@@ -3,8 +3,9 @@
 namespace Sng\AdditionalReports\Tests\Functional\Reports;
 
 use Sng\AdditionalReports\Reports\Middlewares;
+use Sng\AdditionalReports\Tests\Functional\FunctionalTestCase;
 
-class MiddlewaresTest extends \Sng\AdditionalReports\Tests\Functional\FunctionalTestCase
+class MiddlewaresTest extends FunctionalTestCase
 {
     protected function setUp(): void
     {
