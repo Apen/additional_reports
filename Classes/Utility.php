@@ -87,7 +87,7 @@ class Utility
             'displayStatus' => Utility::getLanguageService()->getLL('status_title'),
             'displayExtensions' => Utility::getLanguageService()->getLL('extensions_title'),
             'displayLogErrors' => Utility::getLanguageService()->getLL('logerrors_title'),
-            'displayWebsitesConf' => Utility::getLanguageService()->getLL('websitesconf_title')
+            'displayWebsitesConf' => Utility::getLanguageService()->getLL('websitesconf_title'),
         ];
     }
 
@@ -374,21 +374,21 @@ class Utility
             return [
                 'type' => 'L',
                 'siteRelPath' => 'typo3conf/ext/' . $extKey . '/',
-                'typo3RelPath' => '../typo3conf/ext/' . $extKey . '/'
+                'typo3RelPath' => '../typo3conf/ext/' . $extKey . '/',
             ];
         }
         if (is_dir(Environment::getPublicPath() . '/typo3/ext/' . $extKey . '/')) {
             return [
                 'type' => 'G',
                 'siteRelPath' => TYPO3_mainDir . 'ext/' . $extKey . '/',
-                'typo3RelPath' => 'ext/' . $extKey . '/'
+                'typo3RelPath' => 'ext/' . $extKey . '/',
             ];
         }
         if (is_dir(Environment::getPublicPath() . '/typo3/sysext/' . $extKey . '/')) {
             return [
                 'type' => 'S',
                 'siteRelPath' => TYPO3_mainDir . 'sysext/' . $extKey . '/',
-                'typo3RelPath' => 'sysext/' . $extKey . '/'
+                'typo3RelPath' => 'sysext/' . $extKey . '/',
             ];
         }
         return [];
@@ -719,7 +719,7 @@ class Utility
             'FROM' => 'tt_content,pages',
             'WHERE' => 'tt_content.pid=pages.uid AND pages.pid>=0 AND tt_content.deleted=0 AND pages.deleted=0 ' . $where . "AND tt_content.CType='list'",
             'ORDERBY' => 'tt_content.list_type,tt_content.pid',
-            'LIMIT' => $limit
+            'LIMIT' => $limit,
         ];
         if ($returnQuery === true) {
             return $query;
@@ -748,7 +748,7 @@ class Utility
             'FROM' => 'tt_content,pages',
             'WHERE' => 'tt_content.pid=pages.uid AND pages.pid>=0 AND tt_content.deleted=0 AND pages.deleted=0 ' . $where . "AND tt_content.CType<>'list'",
             'ORDERBY' => 'tt_content.CType,tt_content.pid',
-            'LIMIT' => $limit
+            'LIMIT' => $limit,
         ];
         if ($returnQuery === true) {
             return $query;
@@ -883,7 +883,7 @@ class Utility
     {
         $firstLetter = strtolower(substr($extension, 0, 1));
         $secondLetter = strtolower(substr($extension, 1, 1));
-        $from = 'https://typo3.org/fileadmin/ter/' . $firstLetter . '/' . $secondLetter . '/' . $extension . '_' . $version . '.t3x';
+        $from = 'https://typo3.org/fileadmin/ter/' . $firstLetter . '/' . $secondLetter . '/' . $extension . '_' . trim($version) . '.t3x';
         $content = GeneralUtility::getURL($from);
         $t3xfiles = self::extractExtensionDataFromT3x($content);
         if (empty($extFile)) {
@@ -901,14 +901,14 @@ class Utility
     public static function extractExtensionDataFromT3x($content)
     {
         $parts = explode(':', $content, 3);
-        if ($parts[1] === 'gzcompress') {
+        if (($parts[1] ?? '') === 'gzcompress') {
             if (function_exists('gzuncompress')) {
                 $parts[2] = gzuncompress($parts[2]);
             } else {
                 throw new \Exception('Decoding Error: No decompressor available for compressed content. gzcompress()/gzuncompress() functions are not available!');
             }
         }
-        if (md5($parts[2]) == $parts[0]) {
+        if (md5($parts[2] ?? '') == $parts[0]) {
             $output = unserialize($parts[2]);
             if (is_array($output)) {
                 return $output;
@@ -933,7 +933,7 @@ class Utility
                 $isHook = self::isHook($hook[1]);
             }
             // classname begin with &
-            if ($hook[0] === '&') {
+            if (substr($hook, 0, 1) === '&') {
                 $hook = substr($hook, 1);
             }
             //Check class exists

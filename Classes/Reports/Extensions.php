@@ -117,18 +117,18 @@ class Extensions extends AbstractReport
         $listExtensionsTerItem['compareUrl'] = $compareUrl;
 
         // need extension update ?
-        if (version_compare($itemValue['EM_CONF']['version'], $itemValue['lastversion']['version'], '<')) {
+        if (version_compare($itemValue['EM_CONF']['version'], $itemValue['lastversion']['version'] ?? '', '<')) {
             $listExtensionsTerItem['versionlast'] = '<span style="color:green;font-weight:bold;">' . $itemValue['lastversion']['version'] . '&nbsp;(' . $itemValue['lastversion']['updatedate'] . ')</span>';
             $compareUrl = GeneralUtility::getIndpEnv('TYPO3_SITE_URL');
             $compareUrl .= $uri;
             $compareUrl .= '&extKey=' . $extKey . '&mode=compareExtension&extVersion=' . $itemValue['lastversion']['version'];
             $listExtensionsTerItem['compareUrlLast'] = $compareUrl;
         } else {
-            $listExtensionsTerItem['versionlast'] = $itemValue['lastversion']['version'] . '&nbsp;(' . $itemValue['lastversion']['updatedate'] . ')';
+            $listExtensionsTerItem['versionlast'] = ($itemValue['lastversion']['version'] ?? '') . '&nbsp;(' . ($itemValue['lastversion']['updatedate'] ?? '') . ')';
             $listExtensionsTerItem['compareUrlLast'] = '';
         }
 
-        $listExtensionsTerItem['downloads'] = $itemValue['lastversion']['alldownloadcounter'];
+        $listExtensionsTerItem['downloads'] = $itemValue['lastversion']['alldownloadcounter'] ?? '';
         $listExtensionsTerItem['tablesmodal'] = !empty($itemValue['fdfile']) ? '<pre class="pre-scrollable">' . (htmlspecialchars($itemValue['fdfile'])) . '</pre>' : '';
 
         // need extconf update
@@ -141,7 +141,7 @@ class Extensions extends AbstractReport
             $typoScriptParser = GeneralUtility::makeInstance(TypoScriptParser::class);
             $typoScriptParser->parse($configTemplate);
 
-            $arr = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][$extKey]);
+            $arr = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][$extKey] ?? '');
             $arr = is_array($arr) ? $arr : [];
             $diffConf = array_diff_key($typoScriptParser->setup, $arr);
             if (isset($diffConf['updateMessage'])) {

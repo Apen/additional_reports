@@ -40,7 +40,7 @@ class Plugins extends AbstractReport
         $view->setPartialRootPaths([ExtensionManagementUtility::extPath('additional_reports') . 'Resources/Private/Partials/']);
 
         $view->assign('reportname', $_GET['report']);
-        $view->assign('extconf', unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['additional_reports']));
+        $view->assign('extconf', unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['additional_reports'] ?? ''));
         $view->assign('url', Utility::getBaseUrl());
         $view->assign('caution', Utility::writeInformation(Utility::getLl('careful'), Utility::getLl('carefuldesc')));
         $view->assign('checkedpluginsmode3', (Utility::getPluginsDisplayMode() === 3) ? ' checked="checked"' : '');
@@ -136,7 +136,7 @@ class Plugins extends AbstractReport
                         $itemTemp['iconext'] = GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR') . $plugins[$itemValue['list_type']][2];
                     }
                 }
-                $itemTemp['content'] = Utility::getLanguageService()->getLL($ctypes[$itemValue['list_type']][0]) . ' (' . $itemValue['list_type'] . ')';
+                $itemTemp['content'] = Utility::getLanguageService()->getLL($ctypes[$itemValue['list_type']][0] ?? '') . ' (' . $itemValue['list_type'] . ')';
             } else {
                 preg_match('#^LLL:(EXT:.*?):(.*)#', $ctypes[$itemValue['CType']][0], $llfile);
                 $itemTemp['iconext'] = '';
