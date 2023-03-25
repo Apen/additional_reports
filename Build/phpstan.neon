@@ -1,0 +1,11 @@
+parameters:
+  level: 4
+  reportUnmatchedIgnoredErrors: false
+  paths:
+    - ../Classes/
+  excludePaths:
+    - ../Build/*
+    - ../.Build/*
+  ignoreErrors:
+    - "#Undefined variable: \\$_EXTKEY#"
+    - "#Constant .*? not found.#"

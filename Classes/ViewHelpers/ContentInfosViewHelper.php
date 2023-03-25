@@ -52,8 +52,8 @@ class ContentInfosViewHelper extends AbstractViewHelper
             foreach ($GLOBALS['TCA']['tt_content']['columns']['list_type']['config']['items'] as $itemValue) {
                 if (trim($itemValue[1]) == $item['list_type']) {
                     preg_match('#EXT:(.*?)\/#', $itemValue[0], $ext);
-                    $item['iconext'] = Utility::getExtIcon($ext[1]);
-                    $item['extension'] = $ext[1];
+                    $item['iconext'] = Utility::getExtIcon($ext[1] ?? '');
+                    $item['extension'] = $ext[1] ?? '';
                     $item['plugin'] = Utility::getLanguageService()->sL($itemValue[0]) . ' (' . $item['list_type'] . ')';
                 } else {
                     $item['plugin'] = $item['list_type'];

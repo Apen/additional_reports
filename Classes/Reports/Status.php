@@ -86,7 +86,7 @@ class Status extends AbstractReport
         $datas['db_user'] = $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['user'];
         $datas['db_host'] = $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['host'];
         $datas['db_init'] = $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['initCommands'];
-        $datas['db_pcon'] = $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['persistentConnection'];
+        $datas['db_pcon'] = $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['persistentConnection'] ?? '';
 
         // debug
         $datas['displayErrors'] = [

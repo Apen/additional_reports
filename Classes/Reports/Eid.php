@@ -40,12 +40,12 @@ class Eid extends AbstractReport
         if (count($items) > 0) {
             foreach ($items as $itemKey => $itemValue) {
                 preg_match('#EXT:(.*?)\/#', $itemValue, $ext);
-                if (ExtensionManagementUtility::isLoaded($ext[1])) {
+                if (ExtensionManagementUtility::isLoaded($ext[1] ?? '')) {
                     $eids[] = [
-                        'icon'      => Utility::getExtIcon($ext[1]),
+                        'icon' => Utility::getExtIcon($ext[1]),
                         'extension' => $ext[1],
-                        'name'      => $itemKey,
-                        'path'      => $itemValue
+                        'name' => $itemKey,
+                        'path' => $itemValue,
                     ];
                 }
             }

@@ -20,15 +20,22 @@
     "typo3/cms-reports": "^10||^11"
   },
   "require-dev": {
+    "friendsofphp/php-cs-fixer": "^3",
+    "saschaegerer/phpstan-typo3": "^1",
     "typo3/testing-framework": "7.x-dev",
-    "rector/rector": "^0.7.2"
+    "ssch/typo3-rector": "^1",
+    "nikic/php-parser": "^4.10",
+    "helmich/typo3-typoscript-lint": "^2",
+    "symplify/easy-coding-standard": "^11"
   },
   "config": {
     "vendor-dir": ".Build/vendor",
     "bin-dir": ".Build/bin",
     "allow-plugins": {
       "typo3/class-alias-loader": true,
-      "typo3/cms-composer-installers": true
+      "typo3/cms-composer-installers": true,
+      "dealerdirect/phpcodesniffer-composer-installer": true,
+      "composer/package-versions-deprecated": true
     }
   },
   "autoload": {
@@ -38,6 +45,13 @@
     }
   },
   "scripts": {
+    "php:ecs": ".Build/bin/ecs check . --config ./Build/ecs.php --fix --ansi",
+    "php:ecsdry": ".Build/bin/ecs check . --config ./Build/ecs.php --ansi",
+    "php:fix": ".Build/bin/php-cs-fixer --config=./Build/.php-cs-fixer.php fix",
+    "php:fixdry": ".Build/bin/php-cs-fixer -vvv --diff --dry-run --config=./Build/.php-cs-fixer.php fix",
+    "php:phpstan": ".Build/bin/phpstan analyse -c ./Build/phpstan.neon --ansi",
+    "php:rector": ".Build/bin/rector process . -c ./Build/rector.php --ansi",
+    "php:rectordry": ".Build/bin/rector process . -c ./Build/rector.php --dry-run --ansi",
     "post-autoload-dump": [
       "TYPO3\\TestingFramework\\Composer\\ExtensionTestEnvironment::prepare"
     ]
@@ -46,6 +60,7 @@
     "typo3/cms": {
       "extension-key": "additional_reports",
       "cms-package-dir": "{$vendor-dir}/typo3/cms",
+      "app-dir": ".Build",
       "web-dir": ".Build/public"
     }
   }
