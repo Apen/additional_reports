@@ -85,7 +85,7 @@ class Status extends AbstractReport
         $datas['db_name'] = $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['dbname'];
         $datas['db_user'] = $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['user'];
         $datas['db_host'] = $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['host'];
-        $datas['db_init'] = $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['initCommands'];
+        $datas['db_init'] = $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['initCommands'] ?? '';
         $datas['db_pcon'] = $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['persistentConnection'] ?? '';
 
         // debug
@@ -94,7 +94,7 @@ class Status extends AbstractReport
             'FE/debug : ' . $GLOBALS['TYPO3_CONF_VARS']['FE']['debug'],
             'devIPmask : ' . $GLOBALS['TYPO3_CONF_VARS']['SYS']['devIPmask'],
             'displayErrors : ' . $GLOBALS['TYPO3_CONF_VARS']['SYS']['displayErrors'],
-            'systemLogLevel : ' . $GLOBALS['TYPO3_CONF_VARS']['SYS']['systemLogLevel'],
+            'systemLogLevel : ' . ($GLOBALS['TYPO3_CONF_VARS']['SYS']['systemLogLevel'] ?? ''),
         ];
 
         // gfx

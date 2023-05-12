@@ -88,6 +88,7 @@ return static function (RectorConfig $rectorConfig): void {
             '*/Configuration/RequestMiddlewares.php',
             '*/Configuration/Commands.php',
             '*/Configuration/AjaxRoutes.php',
+            'Configuration/Routes.php',
             '*/Configuration/Extbase/Persistence/Classes.php',
         ],
     ]);
