@@ -76,7 +76,7 @@ class WebsiteConf extends AbstractReport
                 $tmpl->tt_track = 0;
                 $tmpl->runThroughTemplates(Utility::getRootLine($itemValue['uid']), 0);
                 $tmpl->generateConfig();
-                $websiteconfItem['baseurl'] = $tmpl->setup['config.']['baseURL'];
+                $websiteconfItem['baseurl'] = $tmpl->setup['config.']['baseURL'] ?? '';
 
                 // count pages
                 $list = Utility::getTreeList($itemValue['uid'], 99);
