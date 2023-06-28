@@ -95,10 +95,11 @@ class Extensions extends AbstractReport
     public function getExtensionInformations($itemValue)
     {
         $extKey = $itemValue['extkey'];
+        $extVersion = $itemValue['EM_CONF']['version'] ?? '';
         $listExtensionsTerItem = [];
         $listExtensionsTerItem['icon'] = $itemValue['icon'];
         $listExtensionsTerItem['extension'] = $extKey;
-        $listExtensionsTerItem['version'] = $itemValue['EM_CONF']['version'];
+        $listExtensionsTerItem['version'] = $extVersion;
 
         // version compare
         $compareUrl = GeneralUtility::getIndpEnv('TYPO3_SITE_URL');
@@ -113,11 +114,11 @@ class Extensions extends AbstractReport
         }
 
         $compareUrl .= $uri;
-        $compareUrl .= '&extKey=' . $extKey . '&mode=compareExtension&extVersion=' . $itemValue['EM_CONF']['version'];
+        $compareUrl .= '&extKey=' . $extKey . '&mode=compareExtension&extVersion=' . $extVersion;
         $listExtensionsTerItem['compareUrl'] = $compareUrl;
 
         // need extension update ?
-        if (version_compare($itemValue['EM_CONF']['version'], $itemValue['lastversion']['version'] ?? '', '<')) {
+        if (version_compare($extVersion, $itemValue['lastversion']['version'] ?? '', '<')) {
             $listExtensionsTerItem['versionlast'] = '<span style="color:green;font-weight:bold;">' . $itemValue['lastversion']['version'] . '&nbsp;(' . $itemValue['lastversion']['updatedate'] . ')</span>';
             $compareUrl = GeneralUtility::getIndpEnv('TYPO3_SITE_URL');
             $compareUrl .= $uri;
