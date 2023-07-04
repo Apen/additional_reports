@@ -539,7 +539,7 @@ class Utility
         $_EXTKEY = $key;
         include(ExtensionManagementUtility::extPath($key) . 'ext_emconf.php');
 
-        return $EM_CONF[$key]['version'];
+        return $EM_CONF[$key]['version'] ?? '?';
     }
 
     /**
