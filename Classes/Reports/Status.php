@@ -24,7 +24,7 @@ class Status extends AbstractReport
      *
      * @return string the status report as HTML
      */
-    public function getReport()
+    public function getReport(): string
     {
         $content = '<p class="help">' . Utility::getLanguageService()->getLL('status_description') . '</p>';
 
@@ -40,7 +40,6 @@ class Status extends AbstractReport
     {
         $view = GeneralUtility::makeInstance(StandaloneView::class);
         $view->setTemplatePathAndFilename(ExtensionManagementUtility::extPath('additional_reports') . 'Resources/Private/Templates/status-fluid.html');
-        $view->getRequest()->setControllerExtensionName('additional_reports');
 
         $this->displayTypo3($view);
         $this->displayEnv($view);
@@ -77,7 +76,7 @@ class Status extends AbstractReport
         }
 
         $datas['sitename'] = $GLOBALS['TYPO3_CONF_VARS']['SYS']['sitename'];
-        $datas['version'] = GeneralUtility::makeInstance(Typo3Version::class)->getVersion() . ' [' . $currentVersionInfos['date'] . ']';
+        $datas['version'] = GeneralUtility::makeInstance(Typo3Version::class)->getVersion() . ' [' . ($currentVersionInfos['date'] ?? '') . ']';
         $datas['current_branch'] = $currentBranch['version'] . ' [' . $currentBranch['date'] . ']';
         $datas['latest_stable'] = $latestStable['version'] . ' [' . $latestStable['date'] . ']';
         $datas['latest_lts'] = $latestLts['version'] . ' [' . $latestLts['date'] . ']';
@@ -101,7 +100,7 @@ class Status extends AbstractReport
         $datas['gfx'] = [
             'processor_enabled : ' . $GLOBALS['TYPO3_CONF_VARS']['GFX']['processor_enabled'],
             'processor_path : ' . $GLOBALS['TYPO3_CONF_VARS']['GFX']['processor_path'],
-            'processor_path_lzw : ' . $GLOBALS['TYPO3_CONF_VARS']['GFX']['processor_path_lzw'],
+            'processor_path_lzw : ' . ($GLOBALS['TYPO3_CONF_VARS']['GFX']['processor_path_lzw'] ?? ''),
             'processor : ' . $GLOBALS['TYPO3_CONF_VARS']['GFX']['processor'],
             'processor_effects : ' . $GLOBALS['TYPO3_CONF_VARS']['GFX']['processor_effects'],
             'processor_allowTemporaryMasksAsPng : ' . $GLOBALS['TYPO3_CONF_VARS']['GFX']['processor_allowTemporaryMasksAsPng'],
@@ -239,5 +238,25 @@ class Status extends AbstractReport
             $data['crontab'] = $crontabString;
         }
         $view->assign('datas_crontab', $data);
+    }
+
+    public function getIdentifier(): string
+    {
+        return 'additionalreports_status';
+    }
+
+    public function getTitle(): string
+    {
+        return 'LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:status_title';
+    }
+
+    public function getDescription(): string
+    {
+        return 'LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:status_description';
+    }
+
+    public function getIconIdentifier(): string
+    {
+        return 'additionalreports_status';
     }
 }

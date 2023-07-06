@@ -24,7 +24,7 @@ class Extensions extends AbstractReport
      *
      * @return string the status report as HTML
      */
-    public function getReport()
+    public function getReport(): string
     {
         return $this->display();
     }
@@ -78,7 +78,8 @@ class Extensions extends AbstractReport
 
         $view = GeneralUtility::makeInstance(StandaloneView::class);
         $view->setTemplatePathAndFilename(ExtensionManagementUtility::extPath('additional_reports') . 'Resources/Private/Templates/extensions-fluid.html');
-        $view->getRequest()->setControllerExtensionName('additional_reports');
+//        \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($view->getRequest(), '*');
+//        $view->getRequest()->setControllerExtensionName('additional_reports');
         $view->assign('listExtensionsTer', $listExtensionsTer);
         $view->assign('listExtensionsDev', $listExtensionsDev);
         $view->assign('listExtensionsUnloaded', $listExtensionsUnloaded);
@@ -95,10 +96,11 @@ class Extensions extends AbstractReport
     public function getExtensionInformations($itemValue)
     {
         $extKey = $itemValue['extkey'];
+        $extVersion = $itemValue['EM_CONF']['version'] ?? '';
         $listExtensionsTerItem = [];
         $listExtensionsTerItem['icon'] = $itemValue['icon'];
         $listExtensionsTerItem['extension'] = $extKey;
-        $listExtensionsTerItem['version'] = $itemValue['EM_CONF']['version'];
+        $listExtensionsTerItem['version'] = $extVersion;
 
         // version compare
         $compareUrl = GeneralUtility::getIndpEnv('TYPO3_SITE_URL');
@@ -113,11 +115,11 @@ class Extensions extends AbstractReport
         }
 
         $compareUrl .= $uri;
-        $compareUrl .= '&extKey=' . $extKey . '&mode=compareExtension&extVersion=' . $itemValue['EM_CONF']['version'];
+        $compareUrl .= '&extKey=' . $extKey . '&mode=compareExtension&extVersion=' . $extVersion;
         $listExtensionsTerItem['compareUrl'] = $compareUrl;
 
         // need extension update ?
-        if (version_compare($itemValue['EM_CONF']['version'], $itemValue['lastversion']['version'] ?? '', '<')) {
+        if (version_compare($extVersion, $itemValue['lastversion']['version'] ?? '', '<')) {
             $listExtensionsTerItem['versionlast'] = '<span style="color:green;font-weight:bold;">' . $itemValue['lastversion']['version'] . '&nbsp;(' . $itemValue['lastversion']['updatedate'] . ')</span>';
             $compareUrl = GeneralUtility::getIndpEnv('TYPO3_SITE_URL');
             $compareUrl .= $uri;
@@ -159,5 +161,25 @@ class Extensions extends AbstractReport
         }
 
         return $listExtensionsTerItem;
+    }
+
+    public function getIdentifier(): string
+    {
+        return 'additionalreports_extensions';
+    }
+
+    public function getTitle(): string
+    {
+        return 'LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:extensions_title';
+    }
+
+    public function getDescription(): string
+    {
+        return 'LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:extensions_description';
+    }
+
+    public function getIconIdentifier(): string
+    {
+        return 'additionalreports_extensions';
     }
 }

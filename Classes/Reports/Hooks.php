@@ -22,7 +22,7 @@ class Hooks extends AbstractReport
      *
      * @return string the status report as HTML
      */
-    public function getReport()
+    public function getReport(): string
     {
         $content = '<p class="help">' . Utility::getLanguageService()->getLL('hooks_description') . '</p>';
         return $content . $this->display();
@@ -76,5 +76,25 @@ class Hooks extends AbstractReport
         $view->setTemplatePathAndFilename(ExtensionManagementUtility::extPath('additional_reports') . 'Resources/Private/Templates/hooks-fluid.html');
         $view->assign('hooks', $hooks);
         return $view->render();
+    }
+
+    public function getIdentifier(): string
+    {
+        return 'additionalreports_hooks';
+    }
+
+    public function getTitle(): string
+    {
+        return 'LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:hooks_title';
+    }
+
+    public function getDescription(): string
+    {
+        return 'LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:hooks_description';
+    }
+
+    public function getIconIdentifier(): string
+    {
+        return 'additionalreports_hooks';
     }
 }

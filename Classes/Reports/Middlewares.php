@@ -23,13 +23,13 @@ class Middlewares extends AbstractReport
      *
      * @return string the status report as HTML
      */
-    public function getReport()
+    public function getReport(): string
     {
         return $this->display();
     }
 
     /**
-     * Generate the eid report
+     * Generate the middlewares report
      *
      * @return string HTML code
      */
@@ -75,5 +75,25 @@ class Middlewares extends AbstractReport
             $middlewares[$stack] = $sanitizedMiddlewares;
         }
         return $middlewares;
+    }
+
+    public function getIdentifier(): string
+    {
+        return 'additionalreports_middlewares';
+    }
+
+    public function getTitle(): string
+    {
+        return 'LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:middlewares_title';
+    }
+
+    public function getDescription(): string
+    {
+        return 'LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:middlewares_description';
+    }
+
+    public function getIconIdentifier(): string
+    {
+        return 'additionalreports_middlewares';
     }
 }

@@ -1,0 +1,47 @@
+services:
+  _defaults:
+    autoconfigure: true
+
+  Sng\AdditionalReports\Reports\CommandControllers:
+    tags:
+      - { name: additionalreports_commandcontrollers.report }
+
+  Sng\AdditionalReports\Reports\Eid:
+    tags:
+      - { name: additionalreports_eid.report }
+
+  Sng\AdditionalReports\Reports\EventDispatcher:
+    tags:
+      - { name: additionalreports_eventdispatcher.report }
+
+  Sng\AdditionalReports\Reports\Extensions:
+    tags:
+      - { name: additionalreports_extensions.report }
+
+  Sng\AdditionalReports\Reports\Hooks:
+    tags:
+      - { name: additionalreports_hooks.report }
+
+  Sng\AdditionalReports\Reports\LogErrors:
+    tags:
+      - { name: additionalreports_logerrors.report }
+
+  Sng\AdditionalReports\Reports\Middlewares:
+    tags:
+      - { name: additionalreports_middlewares.report }
+
+  Sng\AdditionalReports\Reports\Plugins:
+    tags:
+      - { name: additionalreports_plugins.report }
+
+  Sng\AdditionalReports\Reports\Status:
+    tags:
+      - { name: additionalreports_status.report }
+
+  Sng\AdditionalReports\Reports\WebsiteConf:
+    tags:
+      - { name: additionalreports_websitesconf.report }
+
+  Sng\AdditionalReports\Reports\Xclass:
+    tags:
+      - { name: additionalreports_xclass.report }

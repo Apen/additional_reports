@@ -22,7 +22,7 @@ class Eid extends AbstractReport
      *
      * @return string the status report as HTML
      */
-    public function getReport()
+    public function getReport(): string
     {
         return $this->display();
     }
@@ -55,5 +55,25 @@ class Eid extends AbstractReport
         $view->setTemplatePathAndFilename(ExtensionManagementUtility::extPath('additional_reports') . 'Resources/Private/Templates/eid-fluid.html');
         $view->assign('eids', $eids);
         return $view->render();
+    }
+
+    public function getIdentifier(): string
+    {
+        return 'additionalreports_eid';
+    }
+
+    public function getTitle(): string
+    {
+        return 'LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:eid_title';
+    }
+
+    public function getDescription(): string
+    {
+        return 'LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:eid_description';
+    }
+
+    public function getIconIdentifier(): string
+    {
+        return 'additionalreports_eid';
     }
 }

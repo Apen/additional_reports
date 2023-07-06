@@ -30,11 +30,10 @@ abstract class AbstractReport implements ReportInterface
     /**
      * @param object Back-reference to the calling reports module
      */
-    public function __construct($reportObject)
+    public function __construct($reportObject = null)
     {
         $this->reportObject = $reportObject;
         $this->setCss('EXT:additional_reports/Resources/Public/Css/tx_additionalreports.css');
-        $this->setJs('EXT:additional_reports/Resources/Public/JavaScript/Reports.js');
         Utility::getLanguageService()->includeLLFile('EXT:additional_reports/Resources/Private/Language/locallang.xlf');
     }
 

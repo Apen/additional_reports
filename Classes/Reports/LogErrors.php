@@ -22,7 +22,7 @@ class LogErrors extends AbstractReport
      *
      * @return string the status report as HTML
      */
-    public function getReport()
+    public function getReport(): string
     {
         return $this->display();
     }
@@ -63,5 +63,25 @@ class LogErrors extends AbstractReport
         Utility::buildPagination(Utility::exec_SELECT_queryArrayRows($query), !empty($_GET['currentPage']) ? (int)$_GET['currentPage'] : 1, $view);
 
         return $content . $view->render();
+    }
+
+    public function getIdentifier(): string
+    {
+        return 'additionalreports_logerrors';
+    }
+
+    public function getTitle(): string
+    {
+        return 'LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:logerrors_title';
+    }
+
+    public function getDescription(): string
+    {
+        return 'LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:logerrors_description';
+    }
+
+    public function getIconIdentifier(): string
+    {
+        return 'additionalreports_logerrors';
     }
 }

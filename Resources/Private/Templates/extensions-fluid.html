@@ -61,15 +61,15 @@
                         <f:format.raw>{extension.versionlast}</f:format.raw>
                     </td>
                     <td>
-                        <f:render section="modal" arguments="{id:'tables{extension.extension}',title:'{f:translate(key:\'extensions_tablesmodified\')}',content:extension.tablesmodal}"/>
+                        <f:render section="modal" arguments="{id:'tables{extension.extension}',title:'{f:translate(extensionName:\'additional_reports\',key:\'extensions_tablesmodified\')}',content:extension.tablesmodal}"/>
                     </td>
                     <td>
                         <f:format.raw>{extension.confintegrity}</f:format.raw>
-                        <f:render section="modal" arguments="{id:'integrity{extension.extension}',title:'{f:translate(key:\'plus\')}',content:extension.confintegrityContent}"/>
+                        <f:render section="modal" arguments="{id:'integrity{extension.extension}',title:'{f:translate(extensionName:\'additional_reports\',key:\'plus\')}',content:extension.confintegrityContent}"/>
                     </td>
                     <td>
-                        <f:render section="modalIframe" arguments="{id:'compare{extension.extension}',title:'{f:translate(key:\'comparesame\')}',url:extension.compareUrl}"/>
-                        <f:render section="modalIframe" arguments="{id:'compareLast{extension.extension}',title:'{f:translate(key:\'comparelast\')}',url:extension.compareUrlLast}"/>
+                        <f:render section="modalIframe" arguments="{id:'compare{extension.extension}',title:'{f:translate(extensionName:\'additional_reports\',key:\'comparesame\')}',url:extension.compareUrl}"/>
+                        <f:render section="modalIframe" arguments="{id:'compareLast{extension.extension}',title:'{f:translate(extensionName:\'additional_reports\',key:\'comparelast\')}',url:extension.compareUrlLast}"/>
                     </td>
                 </tr>
             </f:for>
@@ -108,7 +108,7 @@
                     <td>{extension.extension}</td>
                     <td>{extension.version}</td>
                     <td>
-                        <f:render section="modal" arguments="{id:'tables{extension.extension}',title:'{f:translate(key:\'extensions_tablesmodified\')}',content:extension.tablesmodal}"/>
+                        <f:render section="modal" arguments="{id:'tables{extension.extension}',title:'{f:translate(extensionName:\'additional_reports\',key:\'extensions_tablesmodified\')}',content:extension.tablesmodal}"/>
                     </td>
                 </tr>
             </f:for>
@@ -147,7 +147,7 @@
                     <td>{extension.extension}</td>
                     <td>{extension.version}</td>
                     <td>
-                        <f:render section="modal" arguments="{id:'tables{extension.extension}',title:'{f:translate(key:\'extensions_tablesmodified\')}',content:extension.tablesmodal}"/>
+                        <f:render section="modal" arguments="{id:'tables{extension.extension}',title:'{f:translate(extensionName:\'additional_reports\',key:\'extensions_tablesmodified\')}',content:extension.tablesmodal}"/>
                     </td>
                 </tr>
             </f:for>
