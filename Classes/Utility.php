@@ -116,7 +116,6 @@ class Utility
                     $theList .= self::getTreeList($row['uid'], $depth - 1, $begin - 1, $permsClause);
                 }
             }
-            $res->closeCursor();
         }
         return $theList;
     }
@@ -132,7 +131,6 @@ class Utility
     {
         $res = self::exec_SELECTquery('uid', 'pages', 'uid IN (' . $listOfUids . ') AND ' . $where);
         $count = $res->rowCount();
-        $res->closeCursor();
         return $count;
     }
 
@@ -539,7 +537,7 @@ class Utility
         $_EXTKEY = $key;
         include(ExtensionManagementUtility::extPath($key) . 'ext_emconf.php');
 
-        return $EM_CONF[$key]['version'];
+        return $EM_CONF[$key]['version'] ?? '?';
     }
 
     /**
@@ -555,13 +553,11 @@ class Utility
         while ($row = $res->fetch()) {
             $queryCache .= $row['Variable_name'] . ' : ' . $row['Value'] . '<br />';
         }
-        $res->closeCursor();
 
         $res = Utility::sql_query('SHOW STATUS LIKE "%Qcache%";');
         while ($row = $res->fetch()) {
             $queryCache .= $row['Variable_name'] . ' : ' . $row['Value'] . '<br />';
         }
-        $res->closeCursor();
 
         return $queryCache;
     }
@@ -579,7 +575,6 @@ class Utility
         while ($row = $res->fetch()) {
             $sqlEncoding .= $row['Variable_name'] . ' : ' . $row['Value'] . '<br />';
         }
-        $res->closeCursor();
 
         return $sqlEncoding;
     }
@@ -785,7 +780,7 @@ class Utility
     {
         $currentVersion = explode('.', $version);
         if ((int)($currentVersion[0]) >= 7) {
-            return $jsonVersions[$currentVersion[0]]['releases'][$version];
+            return $jsonVersions[$currentVersion[0]]['releases'][$version] ?? [];
         }
         return $jsonVersions[$currentVersion[0] . '.' . $currentVersion[1]]['releases'][$version];
     }

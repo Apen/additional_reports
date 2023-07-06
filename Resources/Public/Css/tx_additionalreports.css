@@ -1,3 +1,7 @@
+div.module div.container-small {
+    all: revert;
+}
+
 .message-information {
     background-color: #EAF7FF;
     border-color: #C5DBE6;

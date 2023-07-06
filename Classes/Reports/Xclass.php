@@ -22,7 +22,7 @@ class Xclass extends AbstractReport
      *
      * @return string the status report as HTML
      */
-    public function getReport()
+    public function getReport(): string
     {
         $content = '<p class="help">' . Utility::getLanguageService()->getLL('xclass_description') . '</p>';
         return $content . $this->display();
@@ -41,5 +41,25 @@ class Xclass extends AbstractReport
         $view->setTemplatePathAndFilename(ExtensionManagementUtility::extPath('additional_reports') . 'Resources/Private/Templates/xclass-fluid.html');
         $view->assign('xclass', $xclassList);
         return $view->render();
+    }
+
+    public function getIdentifier(): string
+    {
+        return 'additionalreports_xclass';
+    }
+
+    public function getTitle(): string
+    {
+        return 'LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:xclass_title';
+    }
+
+    public function getDescription(): string
+    {
+        return 'LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:xclass_description';
+    }
+
+    public function getIconIdentifier(): string
+    {
+        return 'additionalreports_xclass';
     }
 }

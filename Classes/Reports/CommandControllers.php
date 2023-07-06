@@ -22,7 +22,7 @@ class CommandControllers extends AbstractReport
      *
      * @return string The status report as HTML
      */
-    public function getReport()
+    public function getReport(): string
     {
         return $this->display();
     }
@@ -47,5 +47,25 @@ class CommandControllers extends AbstractReport
         $view->assign('itemsNew', $items);
 
         return $view->render();
+    }
+
+    public function getIdentifier(): string
+    {
+        return 'additionalreports_commandcontrollers';
+    }
+
+    public function getTitle(): string
+    {
+        return 'LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:commandcontrollers_title';
+    }
+
+    public function getDescription(): string
+    {
+        return 'LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:commandcontrollers_description';
+    }
+
+    public function getIconIdentifier(): string
+    {
+        return 'additionalreports_commandcontrollers';
     }
 }

@@ -24,7 +24,7 @@ class WebsiteConf extends AbstractReport
      *
      * @return string the status report as HTML
      */
-    public function getReport()
+    public function getReport(): string
     {
         return $this->display();
     }
@@ -72,7 +72,12 @@ class WebsiteConf extends AbstractReport
                 }
 
                 // baseurl
-                $tmpl = GeneralUtility::makeInstance(ExtendedTemplateService::class);
+                if (class_exists(ExtendedTemplateService::class)) {
+                    $tmpl = GeneralUtility::makeInstance(ExtendedTemplateService::class);
+                } else {
+                    $tmpl = GeneralUtility::makeInstance(\TYPO3\CMS\Core\TypoScript\TemplateService::class);
+                }
+                //$tmpl = GeneralUtility::makeInstance(ExtendedTemplateService::class);
                 $tmpl->tt_track = 0;
                 $tmpl->runThroughTemplates(Utility::getRootLine($itemValue['uid']), 0);
                 $tmpl->generateConfig();
@@ -93,5 +98,25 @@ class WebsiteConf extends AbstractReport
         $view->setTemplatePathAndFilename(ExtensionManagementUtility::extPath('additional_reports') . 'Resources/Private/Templates/websiteconf-fluid.html');
         $view->assign('items', $websiteconf);
         return $view->render();
+    }
+
+    public function getIdentifier(): string
+    {
+        return 'additionalreports_websitesconf';
+    }
+
+    public function getTitle(): string
+    {
+        return 'LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:websitesconf_title';
+    }
+
+    public function getDescription(): string
+    {
+        return 'LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:websitesconf_description';
+    }
+
+    public function getIconIdentifier(): string
+    {
+        return 'additionalreports_websitesconf';
     }
 }

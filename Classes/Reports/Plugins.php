@@ -23,7 +23,7 @@ class Plugins extends AbstractReport
      *
      * @return string The status report as HTML
      */
-    public function getReport()
+    public function getReport(): string
     {
         return $this->display();
     }
@@ -94,15 +94,15 @@ class Plugins extends AbstractReport
     {
         $plugins = [];
         foreach ($GLOBALS['TCA']['tt_content']['columns']['list_type']['config']['items'] as $itemValue) {
-            if (trim($itemValue[1]) !== '') {
+            if (trim($itemValue[1] ?? '') !== '') {
                 $plugins[$itemValue[1]] = $itemValue;
             }
         }
 
         $ctypes = [];
         foreach ($GLOBALS['TCA']['tt_content']['columns']['CType']['config']['items'] as $itemValue) {
-            if ($itemValue[1] != '--div--') {
-                $ctypes[$itemValue[1]] = $itemValue;
+            if (($itemValue[1] ?? '') != '--div--') {
+                $ctypes[$itemValue[1] ?? ''] = $itemValue;
             }
         }
 
@@ -178,5 +178,25 @@ class Plugins extends AbstractReport
         $addHidden = ($displayHidden) ? '' : ' AND tt_content.hidden=0 AND pages.hidden=0 ';
         $addWhere = ($getFiltersCat !== null && $getFiltersCat != 'all') ? " AND tt_content.CType='" . $getFiltersCat . "'" : '';
         return Utility::getAllCtypes($addHidden . $addWhere, '');
+    }
+
+    public function getIdentifier(): string
+    {
+        return 'additionalreports_plugins';
+    }
+
+    public function getTitle(): string
+    {
+        return 'LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:plugins_title';
+    }
+
+    public function getDescription(): string
+    {
+        return 'LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:plugins_description';
+    }
+
+    public function getIconIdentifier(): string
+    {
+        return 'additionalreports_plugins';
     }
 }
