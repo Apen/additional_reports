@@ -14,8 +14,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-versions: [ '8.1', ]
-        typo3-versions: [ '^11','^12' ]
+        php-versions: [ '8.1' ]
+        packages:
+          - typo3: '^11'
+            testingframework: '^7'
+          - typo3: '^12'
+            testingframework: 'dev-main'
     steps:
       - name: Check out repository
         uses: actions/checkout@v3
@@ -30,7 +34,7 @@ jobs:
       - name: Install composer dependencies
         run: |
           composer --version
-          composer require typo3/cms-core=${{ matrix.typo3-versions }} typo3/cms-reports=${{ matrix.typo3-versions }}
+          composer require typo3/cms-core=${{ matrix.packages.typo3 }} typo3/cms-reports=${{ matrix.packages.typo3 }} "typo3/testing-framework:${{ matrix.packages.testingframework }}"
           git checkout composer.json
       - name: Run PHP linter
         run: |
