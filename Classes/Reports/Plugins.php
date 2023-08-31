@@ -10,7 +10,6 @@ namespace Sng\AdditionalReports\Reports;
  */
 
 use Sng\AdditionalReports\Utility;
-use TYPO3\CMS\Core\Localization\LocalizationFactory;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
@@ -39,7 +38,7 @@ class Plugins extends AbstractReport
         $view->setTemplatePathAndFilename(ExtensionManagementUtility::extPath('additional_reports') . 'Resources/Private/Templates/plugins-fluid.html');
         $view->setPartialRootPaths([ExtensionManagementUtility::extPath('additional_reports') . 'Resources/Private/Partials/']);
 
-        $view->assign('reportname', $_GET['report']);
+        $view->assign('reportname', 'additionalreports_plugins');
         $view->assign('extconf', unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['additional_reports'] ?? ''));
         $view->assign('url', Utility::getBaseUrl());
         $view->assign('caution', Utility::writeInformation(Utility::getLl('careful'), Utility::getLl('carefuldesc')));
@@ -123,7 +122,6 @@ class Plugins extends AbstractReport
         );
 
         $allItems = [];
-        $languageFactory = GeneralUtility::makeInstance(LocalizationFactory::class);
 
         foreach ($items as $itemValue) {
             $itemTemp = [];
