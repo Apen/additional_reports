@@ -49,30 +49,12 @@ class ContentInfosViewHelper extends AbstractViewHelper
 
         // plugin
         if ($plugin === true) {
-            foreach ($GLOBALS['TCA']['tt_content']['columns']['list_type']['config']['items'] as $itemValue) {
-                if (trim($itemValue[1] ?? '') == $item['list_type']) {
-                    preg_match('#EXT:(.*?)\/#', $itemValue[0], $ext);
-                    $item['iconext'] = Utility::getExtIcon($ext[1] ?? '');
-                    $item['extension'] = $ext[1] ?? '';
-                    $item['plugin'] = Utility::getLanguageService()->sL($itemValue[0]) . ' (' . $item['list_type'] . ')';
-                } else {
-                    $item['plugin'] = $item['list_type'];
-                }
-            }
+            $item = array_merge($item, \Sng\AdditionalReports\Utility::getContentInfosFromTca('plugin', $item['list_type']));
         }
 
         // CType
         if ($ctype === true) {
-            foreach ($GLOBALS['TCA']['tt_content']['columns']['CType']['config']['items'] as $itemValue) {
-                if (($itemValue[1] ?? '') != '--div--') {
-                    if (trim($itemValue[1] ?? '') == $item['CType']) {
-                        $item['iconext'] = Utility::getContentTypeIcon($itemValue[2]);
-                        $item['ctype'] = Utility::getLanguageService()->sL($itemValue[0]) . ' (' . $item['CType'] . ')';
-                    } else {
-                        $item['ctype'] = $item['CType'];
-                    }
-                }
-            }
+            $item = array_merge($item, \Sng\AdditionalReports\Utility::getContentInfosFromTca('ctype', $item['CType']));
         }
 
         $item = array_merge($item, $this->getContentInfos($item));

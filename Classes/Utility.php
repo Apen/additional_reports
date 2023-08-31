@@ -23,9 +23,11 @@ use TYPO3\CMS\Core\Pagination\ArrayPaginator;
 use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\PathUtility;
 use TYPO3\CMS\Core\Utility\RootlineUtility;
 use TYPO3\CMS\Extbase\Pagination\QueryResultPaginator;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
+use TYPO3\CMS\Core\Information\Typo3Version;
 
 /**
  * Utility class
@@ -94,9 +96,9 @@ class Utility
     /**
      * Generates a list of Page-uid's from $id
      *
-     * @param int    $id
-     * @param int    $depth
-     * @param int    $begin
+     * @param int $id
+     * @param int $depth
+     * @param int $begin
      * @param string $permsClause
      * @return string
      */
@@ -186,7 +188,7 @@ class Utility
     /**
      * Returns the $EM_CONF array from an extensions ext_emconf.php file
      *
-     * @param string $path    Absolute path to EMCONF file.
+     * @param string $path Absolute path to EMCONF file.
      * @param string $_EXTKEY Extension key.
      * @return array
      * @noRector
@@ -228,10 +230,66 @@ class Utility
         if (!empty($extKey)) {
             $extType = self::getExtensionType($extKey);
             $path = $extType['siteRelPath'] . ExtensionManagementUtility::getExtensionIcon(
-                    Utility::getPathSite() . '/' . $extType['siteRelPath']);
+                    Utility::getPathSite() . '/' . $extType['siteRelPath']
+                );
             return GeneralUtility::getIndpEnv('TYPO3_SITE_URL') . $path;
         }
         return '';
+    }
+
+    public static function getContentInfosFromTca($type, $value)
+    {
+        $infos = [];
+
+        if (trim($value) === '') {
+            return $infos;
+        }
+
+        $infos[$type] = $value;
+
+        preg_match('#(^.*?)_#', $value, $matches);
+        $infos['extension'] = $matches[1] ?? '';
+
+        if ($type === 'plugin') {
+            foreach ($GLOBALS['TCA']['tt_content']['columns']['list_type']['config']['items'] as $itemValue) {
+                // v12
+                if (trim($itemValue['value'] ?? '') === $value) {
+                    $infos['iconext'] = PathUtility::getPublicResourceWebPath($itemValue['icon']);
+                    $infos[$type] = Utility::getLanguageService()->sL($itemValue['label']) . ' (' . $value . ')';
+                }
+                // v11
+                if (trim($itemValue[1] ?? '') === $value) {
+                    $infos['iconext'] = PathUtility::getPublicResourceWebPath($itemValue[2]);
+                    $infos[$type] = Utility::getLanguageService()->sL($itemValue[0]) . ' (' . $value . ')';
+                }
+            }
+        }
+
+        if ($type === 'ctype') {
+            foreach ($GLOBALS['TCA']['tt_content']['columns']['CType']['config']['items'] as $itemValue) {
+                if (($itemValue['value'] ?? $itemValue[1] ?? '') === '--div--') {
+                    continue;
+                }
+                if (trim($itemValue['value'] ?? $itemValue[1] ?? '') !== $value) {
+                    continue;
+                }
+                $iconPath = $itemValue['icon'] ?? $itemValue[2] ?? '';
+                if (str_contains($iconPath, 'EXT:')) {
+                    $infos['iconext'] = PathUtility::getPublicResourceWebPath($iconPath);
+                } else {
+                    $icon = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Imaging\IconRegistry::class)->getIconConfigurationByIdentifier(
+                        $iconPath
+                    );
+                    if (str_contains($icon['options']['source'], 'EXT:')) {
+                        $infos['iconext'] = PathUtility::getPublicResourceWebPath($icon['options']['source']);
+                    } else {
+                        $infos['iconext'] = PathUtility::getAbsoluteWebPath($icon['options']['source']);
+                    }
+                }
+            }
+        }
+
+        return $infos;
     }
 
     /**
@@ -470,7 +528,7 @@ class Utility
     /**
      * Return a link to the module list
      *
-     * @param int  $uid
+     * @param int $uid
      * @param bool $urlOnly
      * @return string
      */
@@ -487,7 +545,7 @@ class Utility
     /**
      * Return a link to the module page
      *
-     * @param int  $uid
+     * @param int $uid
      * @param bool $urlOnly
      * @return string
      */
@@ -504,7 +562,7 @@ class Utility
     /**
      * Return a <a...>...</a> code
      *
-     * @param array  $att
+     * @param array $att
      * @param string $content
      * @return string
      */
@@ -1028,11 +1086,11 @@ class Utility
      * Creates and executes a SELECT SQL-statement AND traverse result set and returns array with records in.
      *
      * @param string $select_fields List of fields to select from the table. This is what comes right after "SELECT ...". Required value.
-     * @param string $from_table    Table(s) from which to select. This is what comes right after "FROM ...". Required value.
-     * @param string $where_clause  Additional WHERE clauses put in the end of the query. NOTICE: You must escape values in this argument with $this->fullQuoteStr() yourself! DO NOT PUT IN GROUP BY, ORDER BY or LIMIT!
-     * @param string $groupBy       Optional GROUP BY field(s), if none, supply blank string.
-     * @param string $orderBy       Optional ORDER BY field(s), if none, supply blank string.
-     * @param string $limit         Optional LIMIT value ([begin,]max), if none, supply blank string.
+     * @param string $from_table Table(s) from which to select. This is what comes right after "FROM ...". Required value.
+     * @param string $where_clause Additional WHERE clauses put in the end of the query. NOTICE: You must escape values in this argument with $this->fullQuoteStr() yourself! DO NOT PUT IN GROUP BY, ORDER BY or LIMIT!
+     * @param string $groupBy Optional GROUP BY field(s), if none, supply blank string.
+     * @param string $orderBy Optional ORDER BY field(s), if none, supply blank string.
+     * @param string $limit Optional LIMIT value ([begin,]max), if none, supply blank string.
      * @param string $uidIndexField If set, the result array will carry this field names value as index. Requires that field to be selected of course!
      * @return array
      */
@@ -1046,11 +1104,11 @@ class Utility
      * Creates and executes a SELECT SQL-statement
      *
      * @param string $select_fields List of fields to select from the table. This is what comes right after "SELECT ...". Required value.
-     * @param string $from_table    Table(s) from which to select. This is what comes right after "FROM ...". Required value.
-     * @param string $where_clause  Additional WHERE clauses put in the end of the query. NOTICE: You must escape values in this argument with $this->fullQuoteStr() yourself! DO NOT PUT IN GROUP BY, ORDER BY or LIMIT!
-     * @param string $groupBy       Optional GROUP BY field(s), if none, supply blank string.
-     * @param string $orderBy       Optional ORDER BY field(s), if none, supply blank string.
-     * @param string $limit         Optional LIMIT value ([begin,]max), if none, supply blank string.
+     * @param string $from_table Table(s) from which to select. This is what comes right after "FROM ...". Required value.
+     * @param string $where_clause Additional WHERE clauses put in the end of the query. NOTICE: You must escape values in this argument with $this->fullQuoteStr() yourself! DO NOT PUT IN GROUP BY, ORDER BY or LIMIT!
+     * @param string $groupBy Optional GROUP BY field(s), if none, supply blank string.
+     * @param string $orderBy Optional ORDER BY field(s), if none, supply blank string.
+     * @param string $limit Optional LIMIT value ([begin,]max), if none, supply blank string.
      * @return \Doctrine\DBAL\Driver\Statement
      */
     public static function exec_SELECTquery($select_fields, $from_table, $where_clause, $groupBy = '', $orderBy = '', $limit = '')
@@ -1075,11 +1133,11 @@ class Utility
      * Creates a SELECT SQL-statement
      *
      * @param string $select_fields See exec_SELECTquery()
-     * @param string $from_table    See exec_SELECTquery()
-     * @param string $where_clause  See exec_SELECTquery()
-     * @param string $groupBy       See exec_SELECTquery()
-     * @param string $orderBy       See exec_SELECTquery()
-     * @param string $limit         See exec_SELECTquery()
+     * @param string $from_table See exec_SELECTquery()
+     * @param string $where_clause See exec_SELECTquery()
+     * @param string $groupBy See exec_SELECTquery()
+     * @param string $orderBy See exec_SELECTquery()
+     * @param string $limit See exec_SELECTquery()
      * @return string Full SQL query for SELECT
      */
     public static function SELECTquery($select_fields, $from_table, $where_clause, $groupBy = '', $orderBy = '', $limit = '')
@@ -1147,4 +1205,5 @@ class Utility
             $view->assign('pagination', $pagination);
         }
     }
+
 }
