@@ -131,11 +131,15 @@ class Plugins extends AbstractReport
                 preg_match('#^LLL:(EXT:.*?):(.*)#', $plugins[$itemValue['list_type']][0] ?? '', $llfile);
                 $itemTemp['iconext'] = '';
                 if (!empty($llfile[1])) {
-                    if ($plugins[$itemValue['list_type']][2]) {
+                    if (is_file(Utility::getPathSite() . '/typo3/sysext/t3skin/icons/gfx/' . $plugins[$itemValue['list_type']][2])) {
+                        $itemTemp['iconext'] = GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/t3skin/icons/gfx/' . $plugins[$itemValue['list_type']][2];
+                    } elseif (preg_match('#^\.\.#', $plugins[$itemValue['list_type']][2], $temp)) {
                         $itemTemp['iconext'] = GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR') . $plugins[$itemValue['list_type']][2];
+                    } elseif (preg_match('#^EXT:(.*)$#', $plugins[$itemValue['list_type']][2], $temp)) {
+                        $itemTemp['iconext'] = GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR') . '../typo3conf/ext/' . $temp[1];
                     }
                 }
-                $itemTemp['content'] = Utility::getLanguageService()->getLL($ctypes[$itemValue['list_type']][0] ?? '') . ' (' . $itemValue['list_type'] . ')';
+                $itemTemp['content'] = Utility::getLanguageService()->sL($plugins[$itemValue['list_type']][0] ?? '') . ' (' . $itemValue['list_type'] . ')';
             } else {
                 preg_match('#^LLL:(EXT:.*?):(.*)#', $ctypes[$itemValue['CType']][0] ?? '', $llfile);
                 $itemTemp['iconext'] = '';
