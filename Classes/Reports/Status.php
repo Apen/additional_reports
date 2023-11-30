@@ -180,8 +180,8 @@ class Status extends AbstractReport
             ->execute()
             ->fetchAll();
 
-        $data['default_character_set_name'] = $items[0]['default_character_set_name'];
-        $data['default_collation_name'] = $items[0]['default_collation_name'];
+        $data['default_character_set_name'] = $items[0]['default_character_set_name'] ?? '';
+        $data['default_collation_name'] = $items[0]['default_collation_name'] ?? '';
         $data['query_cache'] = Utility::getMySqlCacheInformations();
         $data['character_set'] = Utility::getMySqlCharacterSet();
 
