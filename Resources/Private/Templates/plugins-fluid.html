@@ -253,7 +253,7 @@
     <f:render partial="Pagination" arguments="{_all}"/>
 </ar:inList>
 
-<f:asset.script type="text/javascript" identifier="additionalreports">
+<f:asset.script type="text/javascript" identifier="additionalreports" nonce="{f:security.nonce()}">
     function jumpToUrl (URL) {
     window.location.href = URL;
     }
