@@ -158,9 +158,12 @@ class Status extends AbstractReport
             $data['apache_user'] = $apacheUser['name'] . ' (' . $apacheUser['gid'] . ')';
             $data['apache_group'] = $apacheGroup['name'] . ' (' . $apacheGroup['gid'] . ')';
         }
-        $extensions = array_map('strtolower', get_loaded_extensions());
-        natcasesort($extensions);
-        $data['extensions'] = $extensions;
+
+        if (function_exists('get_loaded_extensions')) {
+            $extensions = array_map('strtolower', get_loaded_extensions());
+            natcasesort($extensions);
+            $data['extensions'] = $extensions;
+        }
 
         $view->assign('datas_php', $data);
     }
