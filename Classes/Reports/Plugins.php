@@ -127,10 +127,10 @@ class Plugins extends AbstractReport
             $itemTemp = [];
             if ($itemValue['CType'] == 'list') {
                 $itemTemp = array_merge($itemTemp, \Sng\AdditionalReports\Utility::getContentInfosFromTca('plugin', $itemValue['list_type']));
-                $itemTemp['content'] = $itemTemp['plugin'];
+                $itemTemp['content'] = $itemTemp['plugin'] ?? '';
             } else {
                 $itemTemp = array_merge($itemTemp, \Sng\AdditionalReports\Utility::getContentInfosFromTca('ctype', $itemValue['CType']));
-                $itemTemp['content'] = $itemTemp['ctype'];
+                $itemTemp['content'] = $itemTemp['ctype'] ?? '';
             }
             $itemTemp['references'] = $itemValue['nb'];
             $itemTemp['pourc'] = round((($itemValue['nb'] * 100) / $itemsCount[0]['nb']), 2);

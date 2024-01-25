@@ -254,7 +254,10 @@ class Utility
             foreach ($GLOBALS['TCA']['tt_content']['columns']['list_type']['config']['items'] as $itemValue) {
                 // v12
                 if (trim($itemValue['value'] ?? '') === $value) {
-                    $infos['iconext'] = PathUtility::getPublicResourceWebPath($itemValue['icon']);
+                    $infos['iconext'] = '';
+                    if (PathUtility::isExtensionPath($itemValue['icon'])) {
+                        $infos['iconext'] = PathUtility::getPublicResourceWebPath($itemValue['icon']);
+                    }
                     $infos[$type] = Utility::getLanguageService()->sL($itemValue['label']) . ' (' . $value . ')';
                 }
                 // v11
@@ -1205,5 +1208,5 @@ class Utility
             $view->assign('pagination', $pagination);
         }
     }
-
+    
 }
