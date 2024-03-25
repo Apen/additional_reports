@@ -11,6 +11,7 @@ namespace Sng\AdditionalReports;
 
 use Sng\AdditionalReports\Pagination\SimplePagination;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
+use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -1200,7 +1201,14 @@ class Utility
     public static function buildPagination(array $items, int $currentPage, &$view): void
     {
         if (count($items) > 0) {
-            $itemsPerPage = 10;
+            try {
+                $itemsPerPage = (int)GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('additional_reports', 'itemsPerPage');
+                if ($itemsPerPage < 1) {
+                    $itemsPerPage = 10;
+                }
+            } catch (\Exception $e) {
+                $itemsPerPage = 10;
+            }
             $paginator = new ArrayPaginator($items, $currentPage, $itemsPerPage);
             $pagination = new SimplePagination($paginator);
             $pagination->generate();
