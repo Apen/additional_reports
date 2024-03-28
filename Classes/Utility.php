@@ -597,6 +597,11 @@ class Utility
 
         // need for the next include
         $_EXTKEY = $key;
+
+        if (!is_file(ExtensionManagementUtility::extPath($key) . 'ext_emconf.php')) {
+            return null;
+        }
+
         include(ExtensionManagementUtility::extPath($key) . 'ext_emconf.php');
 
         return $EM_CONF[$key]['version'] ?? '?';
