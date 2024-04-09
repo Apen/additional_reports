@@ -34,6 +34,7 @@ abstract class AbstractReport implements ReportInterface
     {
         $this->reportObject = $reportObject;
         $this->setCss('EXT:additional_reports/Resources/Public/Css/tx_additionalreports.css');
+        $this->setJs('EXT:additional_reports/Resources/Public/JavaScript/plugins.js');
         Utility::getLanguageService()->includeLLFile('EXT:additional_reports/Resources/Private/Language/locallang.xlf');
     }
 
