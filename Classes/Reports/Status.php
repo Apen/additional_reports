@@ -12,6 +12,7 @@ namespace Sng\AdditionalReports\Reports;
 use Sng\AdditionalReports\Utility;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Information\Typo3Version;
+use TYPO3\CMS\Core\Package\PackageManager;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\View\AbstractTemplateView;
@@ -26,7 +27,7 @@ class Status extends AbstractReport
      */
     public function getReport(): string
     {
-        $content = '<p class="help">' . Utility::getLanguageService()->getLL('status_description') . '</p>';
+        $content = '<p class="help">' . Utility::getLL('status_description') . '</p>';
 
         return $content . $this->display();
     }
@@ -70,6 +71,16 @@ class Status extends AbstractReport
                 $extensions[] = $extensionKey;
             }
         }
+
+        if (Utility::isComposerMode()) {
+            $packageManager = GeneralUtility::makeInstance(PackageManager::class);
+            /** @var \TYPO3\CMS\Core\Package\PackageInterface $package */
+            $activePackages = $packageManager->getActivePackages();
+            foreach ($activePackages as $package) {
+                $extensions[] = $package->getPackageKey();
+            }
+        }
+
         sort($extensions);
         foreach ($extensions as $aKey => $extension) {
             $extensions[$aKey] = $extension . ' (' . Utility::getExtensionVersion($extension) . ')';
@@ -180,8 +191,8 @@ class Status extends AbstractReport
             ->select('default_character_set_name', 'default_collation_name')
             ->from('information_schema.schemata')
             ->where("schema_name = '" . $connectionParams['dbname'] . "'")
-            ->execute()
-            ->fetchAll();
+            ->executeQuery()
+            ->fetchAllAssociative();
 
         $data['default_character_set_name'] = $items[0]['default_character_set_name'] ?? '';
         $data['default_collation_name'] = $items[0]['default_collation_name'] ?? '';
@@ -196,12 +207,12 @@ class Status extends AbstractReport
                 'table_collation as table_collation',
                 'table_rows as table_rows'
             )
-            ->add('select', '((data_length+index_length)/1024/1024) as "size"', true)
+            ->addSelectLiteral('((data_length+index_length)/1024/1024) as "size"')
             ->from('information_schema.tables')
             ->where("table_schema = '" . $connectionParams['dbname'] . "'")
             ->orderBy('table_name')
-            ->execute()
-            ->fetchAll();
+            ->executeQuery()
+            ->fetchAllAssociative();
 
         $tables = [];
         $size = 0;

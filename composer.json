@@ -15,9 +15,9 @@
   ],
   "license": "GPL-2.0+",
   "require": {
-    "php": ">=7.4",
-    "typo3/cms-core": "^11||^12",
-    "typo3/cms-reports": "^11||^12"
+    "php": ">= 8.1 <=8.4.99",
+    "typo3/cms-core": "^12||^13",
+    "typo3/cms-reports": "^12||^13"
   },
   "require-dev": {
     "friendsofphp/php-cs-fixer": "^3",

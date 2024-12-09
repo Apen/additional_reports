@@ -1,1 +1,4 @@
 .idea/
+composer.lock
+Build/.phpunit.result.cache
+Build/coverage/

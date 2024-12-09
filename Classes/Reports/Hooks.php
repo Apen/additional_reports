@@ -24,7 +24,7 @@ class Hooks extends AbstractReport
      */
     public function getReport(): string
     {
-        $content = '<p class="help">' . Utility::getLanguageService()->getLL('hooks_description') . '</p>';
+        $content = '<p class="help">' . Utility::getLL('hooks_description') . '</p>';
         return $content . $this->display();
     }
 

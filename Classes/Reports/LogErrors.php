@@ -42,7 +42,7 @@ class LogErrors extends AbstractReport
         $query['ORDERBY'] = 'nb DESC,tstamp DESC';
         $query['LIMIT'] = '';
 
-        $orderby = GeneralUtility::_GP('orderby');
+        $orderby = Utility::_GP('orderby');
         if ($orderby !== null) {
             $query['ORDERBY'] = $orderby;
         }

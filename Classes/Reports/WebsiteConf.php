@@ -71,18 +71,6 @@ class WebsiteConf extends AbstractReport
                     $websiteconfItem['template'] .= '[uid=' . $templateObj['uid'] . ',root=' . $templateObj['root'] . ']<br/>';
                 }
 
-                // baseurl
-                if (class_exists(ExtendedTemplateService::class)) {
-                    $tmpl = GeneralUtility::makeInstance(ExtendedTemplateService::class);
-                } else {
-                    $tmpl = GeneralUtility::makeInstance(\TYPO3\CMS\Core\TypoScript\TemplateService::class);
-                }
-                //$tmpl = GeneralUtility::makeInstance(ExtendedTemplateService::class);
-                $tmpl->tt_track = 0;
-                $tmpl->runThroughTemplates(Utility::getRootLine($itemValue['uid']), 0);
-                $tmpl->generateConfig();
-                $websiteconfItem['baseurl'] = $tmpl->setup['config.']['baseURL'] ?? '';
-
                 // count pages
                 $list = Utility::getTreeList($itemValue['uid'], 99);
                 $listArray = explode(',', $list);

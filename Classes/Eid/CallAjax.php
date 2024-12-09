@@ -21,10 +21,10 @@ class CallAjax
 {
     public function main(ServerRequestInterface $request): ResponseInterface
     {
-        $mode = GeneralUtility::_GP('mode');
-        $extKey = GeneralUtility::_GP('extKey');
-        $extFile = GeneralUtility::_GP('extFile');
-        $extVersion = GeneralUtility::_GP('extVersion');
+        $mode = Utility::_GP('mode');
+        $extKey = Utility::_GP('extKey');
+        $extFile = Utility::_GP('extFile');
+        $extVersion = Utility::_GP('extVersion');
         $file1 = realpath(ExtensionManagementUtility::extPath($extKey, $extFile));
         $realPathExt = realpath(Utility::getPathSite() . '/typo3conf/ext/' . $extKey);
 

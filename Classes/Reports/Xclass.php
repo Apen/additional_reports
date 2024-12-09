@@ -24,7 +24,7 @@ class Xclass extends AbstractReport
      */
     public function getReport(): string
     {
-        $content = '<p class="help">' . Utility::getLanguageService()->getLL('xclass_description') . '</p>';
+        $content = '<p class="help">' . Utility::getLL('xclass_description') . '</p>';
         return $content . $this->display();
     }
 

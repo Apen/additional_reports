@@ -47,7 +47,7 @@ class Plugins extends AbstractReport
         $view->assign('checkedpluginsmode5', (Utility::getPluginsDisplayMode() === 5) ? ' checked="checked"' : '');
         $view->assign('checkedpluginsmode6', (Utility::getPluginsDisplayMode() === 6) ? ' checked="checked"' : '');
         $view->assign('checkedpluginsmode7', (Utility::getPluginsDisplayMode() === 7) ? ' checked="checked"' : '');
-        $view->assign('filtersCatParam', GeneralUtility::_GP('filtersCat'));
+        $view->assign('filtersCatParam', Utility::_GP('filtersCat'));
 
         $currentPage = !empty($_GET['currentPage']) ? (int)$_GET['currentPage'] : 1;
 
@@ -126,10 +126,10 @@ class Plugins extends AbstractReport
         foreach ($items as $itemValue) {
             $itemTemp = [];
             if ($itemValue['CType'] == 'list') {
-                $itemTemp = array_merge($itemTemp, \Sng\AdditionalReports\Utility::getContentInfosFromTca('plugin', $itemValue['list_type']));
+                $itemTemp = array_merge($itemTemp, Utility::getContentInfosFromTca('plugin', $itemValue['list_type']));
                 $itemTemp['content'] = $itemTemp['plugin'] ?? '';
             } else {
-                $itemTemp = array_merge($itemTemp, \Sng\AdditionalReports\Utility::getContentInfosFromTca('ctype', $itemValue['CType']));
+                $itemTemp = array_merge($itemTemp, Utility::getContentInfosFromTca('ctype', $itemValue['CType']));
                 $itemTemp['content'] = $itemTemp['ctype'] ?? '';
             }
             $itemTemp['references'] = $itemValue['nb'];
@@ -145,7 +145,7 @@ class Plugins extends AbstractReport
      */
     public static function getAllUsedPlugins(bool $displayHidden = false): array
     {
-        $getFiltersCat = GeneralUtility::_GP('filtersCat');
+        $getFiltersCat = Utility::_GP('filtersCat');
         $addHidden = ($displayHidden) ? '' : ' AND tt_content.hidden=0 AND pages.hidden=0 ';
         $addWhere = ($getFiltersCat !== null && $getFiltersCat != 'all') ? " AND tt_content.list_type='" . $getFiltersCat . "'" : '';
         return Utility::getAllPlugins($addHidden . $addWhere, '');
@@ -156,7 +156,7 @@ class Plugins extends AbstractReport
      */
     public static function getAllUsedCtypes(bool $displayHidden = false): array
     {
-        $getFiltersCat = GeneralUtility::_GP('filtersCat');
+        $getFiltersCat = Utility::_GP('filtersCat');
         $addHidden = ($displayHidden) ? '' : ' AND tt_content.hidden=0 AND pages.hidden=0 ';
         $addWhere = ($getFiltersCat !== null && $getFiltersCat != 'all') ? " AND tt_content.CType='" . $getFiltersCat . "'" : '';
         return Utility::getAllCtypes($addHidden . $addWhere, '');

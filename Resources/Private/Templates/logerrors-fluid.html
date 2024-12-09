@@ -11,14 +11,14 @@
         <tr>
             <th width="100">
                 <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:counter"/>
-                <a href="{baseUrl}&orderby=nb%20DESC,tstamp%20DESC"><img src="{requestDir}../typo3conf/ext/additional_reports/Resources/Public/Icons/reddown.gif"/></a>
-                <a href="{baseUrl}&orderby=nb%20ASC,tstamp%20DESC"><img src="{requestDir}../typo3conf/ext/additional_reports/Resources/Public/Icons/redup.gif"/></a>
+                <a href="{baseUrl}&orderby=nb%20DESC,tstamp%20DESC"><img src="{f:uri.resource(path:'Icons/reddown.gif',extensionName:'additional_reports')}"/></a>
+                <a href="{baseUrl}&orderby=nb%20ASC,tstamp%20DESC"><img src="{f:uri.resource(path:'Icons/redup.gif',extensionName:'additional_reports')}"/></a>
                 <f:format.raw>{ordercounter}</f:format.raw>
             </th>
             <th width="100">
                 <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:tstamp"/>
-                <a href="{baseUrl}&orderby=tstamp%20DESC,nb%20DESC"><img src="{requestDir}../typo3conf/ext/additional_reports/Resources/Public/Icons/reddown.gif"/></a>
-                <a href="{baseUrl}&orderby=tstamp%20ASC,nb%20DESC"><img src="{requestDir}../typo3conf/ext/additional_reports/Resources/Public/Icons/redup.gif"/></a>
+                <a href="{baseUrl}&orderby=tstamp%20DESC,nb%20DESC"><img src="{f:uri.resource(path:'Icons/reddown.gif',extensionName:'additional_reports')}"/></a>
+                <a href="{baseUrl}&orderby=tstamp%20ASC,nb%20DESC"><img src="{f:uri.resource(path:'Icons/redup.gif',extensionName:'additional_reports')}"/></a>
                 <f:format.raw>{ordertstamp}</f:format.raw>
             </th>
             <th>
@@ -35,7 +35,7 @@
                 </td>
                 <td>
                     {item.details}<br/>
-                    <img src="{requestDir}../typo3conf/ext/additional_reports/Resources/Public/Icons/garbage.gif"/>DELETE FROM sys_log WHERE error>0 AND details = "{item.details}"
+                    <img src="{f:uri.resource(path:'Icons/garbage.gif',extensionName:'additional_reports')}"/>DELETE FROM sys_log WHERE error>0 AND details = "{item.details}"
                 </td>
             </tr>
         </f:for>

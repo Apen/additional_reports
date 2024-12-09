@@ -78,8 +78,6 @@ class Extensions extends AbstractReport
 
         $view = GeneralUtility::makeInstance(StandaloneView::class);
         $view->setTemplatePathAndFilename(ExtensionManagementUtility::extPath('additional_reports') . 'Resources/Private/Templates/extensions-fluid.html');
-//        \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($view->getRequest(), '*');
-//        $view->getRequest()->setControllerExtensionName('additional_reports');
         $view->assign('listExtensionsTer', $listExtensionsTer);
         $view->assign('listExtensionsDev', $listExtensionsDev);
         $view->assign('listExtensionsUnloaded', $listExtensionsUnloaded);
@@ -98,7 +96,6 @@ class Extensions extends AbstractReport
         $extKey = $itemValue['extkey'];
         $extVersion = $itemValue['EM_CONF']['version'] ?? '';
         $listExtensionsTerItem = [];
-        $listExtensionsTerItem['icon'] = $itemValue['icon'];
         $listExtensionsTerItem['extension'] = $extKey;
         $listExtensionsTerItem['version'] = $extVersion;
 

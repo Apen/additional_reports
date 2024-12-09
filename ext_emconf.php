@@ -13,7 +13,7 @@ $EM_CONF['additional_reports'] = [
     'author_company' => '',
     'constraints' => [
         'depends' => [
-            'typo3' => '11.5.0-12.4.99',
+            'typo3' => '12.4.0-13.4.99',
         ],
         'conflicts' => [],
         'suggests' => [],
