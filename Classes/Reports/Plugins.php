@@ -92,14 +92,14 @@ class Plugins extends AbstractReport
     public static function getSummary()
     {
         $plugins = [];
-        foreach ($GLOBALS['TCA']['tt_content']['columns']['list_type']['config']['items'] as $itemValue) {
+        foreach (($GLOBALS['TCA']['tt_content']['columns']['list_type']['config']['items'] ?? []) as $itemValue) {
             if (trim($itemValue[1] ?? '') !== '') {
                 $plugins[$itemValue[1]] = $itemValue;
             }
         }
 
         $ctypes = [];
-        foreach ($GLOBALS['TCA']['tt_content']['columns']['CType']['config']['items'] as $itemValue) {
+        foreach (($GLOBALS['TCA']['tt_content']['columns']['CType']['config']['items'] ?? []) as $itemValue) {
             if (($itemValue[1] ?? '') != '--div--') {
                 $ctypes[$itemValue[1] ?? ''] = $itemValue;
             }

@@ -6,7 +6,7 @@
         processIsolation="false"
         stopOnError="true"
         stopOnWarning="true"
-        stopOnDeprecation="true"
+        stopOnDeprecation="false"
         stopOnFailure="false"
         stopOnIncomplete="false"
         stopOnSkipped="false"

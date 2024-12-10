@@ -494,7 +494,7 @@ class Utility
         if (is_dir(Environment::getPublicPath() . '/typo3/sysext/' . $extKey . '/')) {
             return [
                 'type' => 'S',
-                'siteRelPath' => TYPO3_mainDir . 'sysext/' . $extKey . '/',
+                'siteRelPath' => (defined('TYPO3_mainDir') ? TYPO3_mainDir : '') . 'sysext/' . $extKey . '/',
                 'typo3RelPath' => 'sysext/' . $extKey . '/',
             ];
         }

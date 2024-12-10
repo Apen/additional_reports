@@ -11,11 +11,9 @@ namespace Sng\AdditionalReports\Reports;
 
 use Sng\AdditionalReports\Utility;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
-use TYPO3\CMS\Core\TypoScript\Parser\TypoScriptParser;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
-use TYPO3\CMS\Reports\ReportInterface;
 
 class Extensions extends AbstractReport
 {
@@ -133,29 +131,6 @@ class Extensions extends AbstractReport
         // need extconf update
         $listExtensionsTerItem['confintegrity'] = Utility::getLl('no');
         $listExtensionsTerItem['confintegrityContent'] = '';
-        $absPath = Utility::getExtPath($extKey);
-
-        if (is_file($absPath . 'ext_conf_template.txt')) {
-            $configTemplate = GeneralUtility::getUrl($absPath . 'ext_conf_template.txt');
-            $typoScriptParser = GeneralUtility::makeInstance(TypoScriptParser::class);
-            $typoScriptParser->parse($configTemplate);
-
-            $arr = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][$extKey] ?? '');
-            $arr = is_array($arr) ? $arr : [];
-            $diffConf = array_diff_key($typoScriptParser->setup, $arr);
-            if (isset($diffConf['updateMessage'])) {
-                unset($diffConf['updateMessage']);
-            }
-            if (count($diffConf) > 0) {
-                $data = '<span>Diff : </span>' . Utility::viewArray($diffConf);
-                $data .= '<span>$GLOBALS[\'TYPO3_CONF_VARS\'][\'EXT\'][\'extConf\'][\'' . $extKey . "'] : </span>";
-                $data .= Utility::viewArray($arr);
-                $data .= '<span>ext_conf_template.txt : </span>';
-                $data .= Utility::viewArray($typoScriptParser->setup);
-                $listExtensionsTerItem['confintegrity'] = Utility::getLl('yes');
-                $listExtensionsTerItem['confintegrityContent'] = $data;
-            }
-        }
 
         return $listExtensionsTerItem;
     }

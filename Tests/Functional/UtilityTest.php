@@ -2,17 +2,18 @@
 
 namespace Sng\AdditionalReports\Tests\Functional;
 
-use TYPO3\CMS\Core\Cache\Frontend\VariableFrontend;
-use TYPO3\CMS\Core\Cache\Backend\SimpleFileBackend;
 use Sng\AdditionalReports\Utility;
+use TYPO3\CMS\Core\Cache\Backend\SimpleFileBackend;
+use TYPO3\CMS\Core\Cache\Frontend\VariableFrontend;
+use TYPO3\CMS\Core\Configuration\Loader\YamlFileLoader;
 use TYPO3\CMS\Core\Configuration\SiteConfiguration;
-use TYPO3\CMS\Core\Core\Bootstrap;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\CMS\Core\Http\Uri;
 use TYPO3\CMS\Core\Information\Typo3Version;
+use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
@@ -56,7 +57,7 @@ class UtilityTest extends FunctionalTestCase
         parent::setUp();
         $this->importCSVDataSet(__DIR__ . '/Fixtures/be_users.csv');
         $this->setUpBackendUser(1);
-        Bootstrap::initializeLanguageObject();
+        $GLOBALS['LANG'] = GeneralUtility::makeInstance(LanguageServiceFactory::class)->createFromUserPreferences($GLOBALS['BE_USER']);
         $this->importCSVDataSet(__DIR__ . '/Fixtures/pages.csv');
         $this->importCSVDataSet(__DIR__ . '/Fixtures/tt_content.csv');
         $uri = new Uri('https://localhost/typo3/');
@@ -301,17 +302,34 @@ class UtilityTest extends FunctionalTestCase
         if (!empty($errorHandling)) {
             $configuration['errorHandling'] = $errorHandling;
         }
-        $siteConfiguration = new SiteConfiguration(
-            $this->instancePath . '/typo3conf/sites/',
-            $this->getContainer()->get(EventDispatcher::class)
-        );
 
-        try {
-            // ensure no previous site configuration influences the test
-            GeneralUtility::rmdir($this->instancePath . '/typo3conf/sites/' . $identifier, true);
-            $siteConfiguration->write($identifier, $configuration);
-        } catch (\Exception $exception) {
-            self::markTestSkipped($exception->getMessage());
+        if (GeneralUtility::makeInstance(Typo3Version::class)->getBranch() === '12.4') {
+            $siteConfiguration = new SiteConfiguration(
+                $this->instancePath . '/typo3conf/sites/',
+                $this->getContainer()->get(EventDispatcher::class)
+            );
+            try {
+                // ensure no previous site configuration influences the test
+                GeneralUtility::rmdir($this->instancePath . '/typo3conf/sites/' . $identifier, true);
+                $siteConfiguration->write($identifier, $configuration);
+            } catch (\Exception $exception) {
+                self::markTestSkipped($exception->getMessage());
+            }
+        } else {
+            try {
+                $siteConfiguration = GeneralUtility::makeInstance(SiteConfiguration::class);
+                GeneralUtility::rmdir($this->instancePath . '/typo3conf/sites/' . $identifier, true);
+                $siteWriter = GeneralUtility::makeInstance(
+                    \TYPO3\CMS\Core\Configuration\SiteWriter::class,
+                    $this->instancePath . '/typo3conf/sites/',
+                    $this->getContainer()->get(EventDispatcher::class),
+                    GeneralUtility::makeInstance(YamlFileLoader::class)
+                );
+                $siteWriter->write($identifier, $configuration);
+                $siteConfiguration->load($identifier);
+            } catch (\Exception $exception) {
+                self::markTestSkipped($exception->getMessage());
+            }
         }
     }
 }
