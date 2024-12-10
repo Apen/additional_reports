@@ -274,6 +274,9 @@ class Utility
     {
         if (!empty($extKey)) {
             $extType = self::getExtensionType($extKey);
+            if (!isset($extType['siteRelPath'])) {
+                return '';
+            }
             $path = $extType['siteRelPath'] . ExtensionManagementUtility::getExtensionIcon(
                     Utility::getPathSite() . '/' . $extType['siteRelPath']
                 );
@@ -328,7 +331,7 @@ class Utility
                     $icon = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Imaging\IconRegistry::class)->getIconConfigurationByIdentifier(
                         $iconPath
                     );
-                    if (isset($icon['options']) &&str_contains($icon['options']['source'], 'EXT:')) {
+                    if (isset($icon['options']) && str_contains($icon['options']['source'], 'EXT:')) {
                         $infos['iconext'] = PathUtility::getPublicResourceWebPath($icon['options']['source']);
                     } elseif (isset($icon['options']['source'])) {
                         $infos['iconext'] = PathUtility::getAbsoluteWebPath($icon['options']['source']);
@@ -638,11 +641,12 @@ class Utility
 
         if (self::isComposerMode()) {
             $packageManager = GeneralUtility::makeInstance(PackageManager::class);
+            /** @var \TYPO3\CMS\Core\Package\PackageInterface $package */
             $package = $packageManager->getPackage($key);
             if ($package === null) {
                 return null;
             }
-            return $package->getVersion();
+            return $package->getPackageMetaData()->getVersion();
         }
 
         if (!ExtensionManagementUtility::isLoaded($key)) {
@@ -1131,7 +1135,14 @@ class Utility
      */
     public static function exec_SELECT_queryArray($queryParts)
     {
-        return self::exec_SELECTquery($queryParts['SELECT'], $queryParts['FROM'], $queryParts['WHERE'], $queryParts['GROUPBY'], $queryParts['ORDERBY'], $queryParts['LIMIT']);
+        return self::exec_SELECTquery(
+            $queryParts['SELECT'],
+            $queryParts['FROM'],
+            $queryParts['WHERE'],
+            $queryParts['GROUPBY'] ?? '',
+            $queryParts['ORDERBY'] ?? '',
+            $queryParts['LIMIT'] ?? ''
+        );
     }
 
     /**
@@ -1237,7 +1248,9 @@ class Utility
         if (!empty($GLOBALS['TSFE'])) {
             return $GLOBALS['TSFE'];
         }
-        return GeneralUtility::makeInstance(LanguageServiceFactory::class)->create($GLOBALS['BE_USER']->uc['lang'] ?? 'default');
+        $languageService = GeneralUtility::makeInstance(LanguageServiceFactory::class)->create($GLOBALS['BE_USER']->uc['lang'] ?? 'default');
+        $GLOBALS['LANG'] = $languageService;
+        return $languageService;
     }
 
     public static function getPathSite(): string

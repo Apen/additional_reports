@@ -7,6 +7,12 @@ use TYPO3\CMS\Core\Cache\Backend\SimpleFileBackend;
 use Sng\AdditionalReports\Utility;
 use TYPO3\CMS\Core\Configuration\SiteConfiguration;
 use TYPO3\CMS\Core\Core\Bootstrap;
+use TYPO3\CMS\Core\Core\Environment;
+use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
+use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
+use TYPO3\CMS\Core\Http\ServerRequest;
+use TYPO3\CMS\Core\Http\Uri;
+use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
@@ -48,10 +54,72 @@ class UtilityTest extends FunctionalTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->setUpBackendUserFromFixture(1);
+        $this->importCSVDataSet(__DIR__ . '/Fixtures/be_users.csv');
+        $this->setUpBackendUser(1);
         Bootstrap::initializeLanguageObject();
-        $this->importDataSet(__DIR__ . '/Fixtures/pages.xml');
-        $this->importDataSet(__DIR__ . '/Fixtures/tt_content.xml');
+        $this->importCSVDataSet(__DIR__ . '/Fixtures/pages.csv');
+        $this->importCSVDataSet(__DIR__ . '/Fixtures/tt_content.csv');
+        $uri = new Uri('https://localhost/typo3/');
+        $request = new ServerRequest($uri);
+        $request = $request->withAttribute('applicationType', SystemEnvironmentBuilder::REQUESTTYPE_BE);
+        $GLOBALS['TYPO3_REQUEST'] = $request;
+    }
+
+    public function testGetInstExtList()
+    {
+        $extLits = Utility::getInstExtList(Environment::getPublicPath() . '/typo3/sysext/');
+        self::assertNotEmpty($extLits);
+        self::assertEquals('core', $extLits['dev']['core']['extkey']);
+    }
+
+    public function testGetExtensionType()
+    {
+        self::assertNotEmpty(Utility::getExtensionType('core'));
+    }
+
+    public function testGetExtPath()
+    {
+        self::assertNotEmpty(Utility::getExtPath('core'));
+    }
+
+    public function testGetExtensionVersion()
+    {
+        self::assertEquals(GeneralUtility::makeInstance(Typo3Version::class)->getVersion(), Utility::getExtensionVersion('core'));
+    }
+
+    public function testGetExtIcon()
+    {
+        self::assertNotEmpty(Utility::getExtIcon('core'));
+    }
+
+    public function testGetJsonVersionInfos()
+    {
+        self::assertNotEmpty(Utility::getJsonVersionInfos());
+    }
+
+    public function testGetCurrentVersionInfos()
+    {
+        self::assertNotEmpty(Utility::getCurrentVersionInfos(Utility::getJsonVersionInfos(), GeneralUtility::makeInstance(Typo3Version::class)->getVersion()));
+    }
+
+    public function testGetCurrentBranchInfos()
+    {
+        self::assertNotEmpty(Utility::getCurrentBranchInfos(Utility::getJsonVersionInfos(), GeneralUtility::makeInstance(Typo3Version::class)->getVersion()));
+    }
+
+    public function testGetLatestStableInfos()
+    {
+        self::assertNotEmpty(Utility::getLatestStableInfos(Utility::getJsonVersionInfos()));
+    }
+
+    public function testGetLatestLtsInfos()
+    {
+        self::assertNotEmpty(Utility::getLatestLtsInfos(Utility::getJsonVersionInfos()));
+    }
+
+    public function testDownloadT3x()
+    {
+        self::assertNotEmpty(Utility::downloadT3x('additional_reports', '3.3.2'));
     }
 
     public function testBaseUrl()
@@ -215,16 +283,17 @@ class UtilityTest extends FunctionalTestCase
 
     /**
      * @param string $identifier
-     * @param array  $site
-     * @param array  $languages
-     * @param array  $errorHandling
+     * @param array $site
+     * @param array $languages
+     * @param array $errorHandling
      */
     protected function writeSiteConfiguration(
         string $identifier,
-        array $site = [],
-        array $languages = [],
-        array $errorHandling = []
-    ) {
+        array  $site = [],
+        array  $languages = [],
+        array  $errorHandling = []
+    )
+    {
         $configuration = $site;
         if (!empty($languages)) {
             $configuration['languages'] = $languages;
@@ -233,7 +302,8 @@ class UtilityTest extends FunctionalTestCase
             $configuration['errorHandling'] = $errorHandling;
         }
         $siteConfiguration = new SiteConfiguration(
-            $this->instancePath . '/typo3conf/sites/'
+            $this->instancePath . '/typo3conf/sites/',
+            $this->getContainer()->get(EventDispatcher::class)
         );
 
         try {

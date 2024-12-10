@@ -16,13 +16,6 @@ class UtilityTest extends BaseTestCase
         self::assertNotEmpty(Utility::getReportsList());
     }
 
-    public function testGetInstExtList()
-    {
-        $extLits = Utility::getInstExtList(Environment::getBackendPath() . '/sysext/');
-        self::assertNotEmpty($extLits);
-        self::assertEquals('core', $extLits['dev']['core']['extkey']);
-    }
-
     public function testIncludeEMCONF()
     {
         $emConf = Utility::includeEMCONF(__DIR__ . '../../../ext_emconf.php', 'additional_reports');
@@ -35,21 +28,6 @@ class UtilityTest extends BaseTestCase
         self::assertEmpty(Utility::checkExtensionUpdate(['extkey' => 'additional_reports']));
     }
 
-    public function testGetExtIcon()
-    {
-        self::assertNotEmpty(Utility::getExtIcon('core'));
-    }
-
-    public function testGetExtensionType()
-    {
-        self::assertNotEmpty(Utility::getExtensionType('core'));
-    }
-
-    public function testGetExtPath()
-    {
-        self::assertNotEmpty(Utility::getExtPath('core'));
-    }
-
     public function testViewArray()
     {
         self::assertNotEmpty(Utility::viewArray(['foo' => 'bar']));
@@ -60,49 +38,14 @@ class UtilityTest extends BaseTestCase
         self::assertNotEmpty(Utility::generateLink());
     }
 
-    public function testGetExtensionVersion()
-    {
-        self::assertEquals(GeneralUtility::makeInstance(Typo3Version::class)->getVersion(), Utility::getExtensionVersion('core'));
-    }
-
     public function testWriteInformation()
     {
         self::assertNotEmpty(Utility::writeInformation('foo', 'bar'));
     }
 
-    public function testGetJsonVersionInfos()
-    {
-        self::assertNotEmpty(Utility::getJsonVersionInfos());
-    }
-
-    public function testGetCurrentVersionInfos()
-    {
-        self::assertNotEmpty(Utility::getCurrentVersionInfos(Utility::getJsonVersionInfos(), GeneralUtility::makeInstance(Typo3Version::class)->getVersion()));
-    }
-
-    public function testGetCurrentBranchInfos()
-    {
-        self::assertNotEmpty(Utility::getCurrentBranchInfos(Utility::getJsonVersionInfos(), GeneralUtility::makeInstance(Typo3Version::class)->getVersion()));
-    }
-
-    public function testGetLatestStableInfos()
-    {
-        self::assertNotEmpty(Utility::getLatestStableInfos(Utility::getJsonVersionInfos()));
-    }
-
-    public function testGetLatestLtsInfos()
-    {
-        self::assertNotEmpty(Utility::getLatestLtsInfos(Utility::getJsonVersionInfos()));
-    }
-
     public function testGetPluginsDisplayMode()
     {
         self::assertEmpty(Utility::getPluginsDisplayMode());
-    }
-
-    public function testDownloadT3x()
-    {
-        self::assertNotEmpty(Utility::downloadT3x('additional_reports', '3.3.2'));
     }
 
     public function testIsHook()

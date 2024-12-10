@@ -27,7 +27,7 @@
 				<source>List of all the CommandControllers declare in $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['extbase']['commandControllers'] (old way)</source>
 			</trans-unit>
 			<trans-unit id="commandcontrollersnew_description">
-				<source>List of all the Symfony Commands declare in Configuration/Commands.php of the extension</source>
+				<source>List of all the Symfony Commands</source>
 			</trans-unit>
 			<trans-unit id="commandcontrollers_title">
 				<source>Additional reports - Commands</source>
