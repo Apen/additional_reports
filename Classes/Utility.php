@@ -300,7 +300,7 @@ class Utility
                 // v12
                 if (trim($itemValue['value'] ?? '') === $value) {
                     $infos['iconext'] = '';
-                    if (PathUtility::isExtensionPath($itemValue['icon'])) {
+                    if (isset($itemValue['icon']) && PathUtility::isExtensionPath($itemValue['icon'])) {
                         $infos['iconext'] = PathUtility::getPublicResourceWebPath($itemValue['icon']);
                     }
                     $infos[$type] = Utility::getLanguageService()->sL($itemValue['label']) . ' (' . $value . ')';
@@ -328,9 +328,9 @@ class Utility
                     $icon = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Imaging\IconRegistry::class)->getIconConfigurationByIdentifier(
                         $iconPath
                     );
-                    if (str_contains($icon['options']['source'], 'EXT:')) {
+                    if (isset($icon['options']) &&str_contains($icon['options']['source'], 'EXT:')) {
                         $infos['iconext'] = PathUtility::getPublicResourceWebPath($icon['options']['source']);
-                    } else {
+                    } elseif (isset($icon['options']['source'])) {
                         $infos['iconext'] = PathUtility::getAbsoluteWebPath($icon['options']['source']);
                     }
                 }
@@ -544,7 +544,7 @@ class Utility
     public static function viewArray($arrayIn): string
     {
         if (is_array($arrayIn)) {
-            $result = '<table class="table table-striped table-condensed">';
+            $result = '<table class="table table-striped table-condensed"><tbody>';
             if (count($arrayIn) === 0) {
                 $result .= '<tr><td><strong>EMPTY!</strong></td></tr>';
             } else {
@@ -565,7 +565,7 @@ class Utility
                     $result .= '</td></tr>';
                 }
             }
-            $result .= '</table>';
+            $result .= '</tbody></table>';
         } else {
             $result = '<table class="table table-striped table-condensed">';
             $result .= '<tr><td>' . nl2br(htmlspecialchars((string)$arrayIn)) . '</td></tr></table>';
@@ -627,7 +627,7 @@ class Utility
      * Get the version of a given extension
      *
      * @param string $key
-     * @return string
+     * @return string|null
      */
     public static function getExtensionVersion($key): ?string
     {
@@ -635,6 +635,16 @@ class Utility
         if (!is_string($key) || empty($key)) {
             throw new \InvalidArgumentException('Extension key must be a non-empty string.');
         }
+
+        if (self::isComposerMode()) {
+            $packageManager = GeneralUtility::makeInstance(PackageManager::class);
+            $package = $packageManager->getPackage($key);
+            if ($package === null) {
+                return null;
+            }
+            return $package->getVersion();
+        }
+
         if (!ExtensionManagementUtility::isLoaded($key)) {
             return null;
         }
