@@ -4,7 +4,7 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/apen/additional_reports)](https://packagist.org/packages/apen/additional_reports)
 [![TYPO3](https://img.shields.io/badge/TYPO3-12.4-orange.svg?style=flat-square)](https://get.typo3.org/version/12)
 [![TYPO3](https://img.shields.io/badge/TYPO3-13.4-orange.svg?style=flat-square)](https://get.typo3.org/version/13)
-![CI](https://github.com/Apen/additional_reports/workflows/CI/badge.svg)
+![CI](https://github.com/Apen/additional_reports/actions/workflows/ci.yaml/badge.svg)
 
 **Display some useful information in the reports module.**
 
