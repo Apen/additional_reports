@@ -167,7 +167,7 @@ class Utility
                         $currentExt['extkey'] = $extKey;
                         $currentExt['installed'] = ExtensionManagementUtility::isLoaded($extKey);
                         $currentExt['EM_CONF'] = $emConf;
-                        $currentExt['files'] = GeneralUtility::getFilesInDir($packagePath, '', 0, '', '');
+                        $currentExt['files'] = GeneralUtility::getFilesInDir($packagePath);
                         $currentExt['lastversion'] = Utility::checkExtensionUpdate($currentExt);
 
                         // db infos
@@ -203,7 +203,7 @@ class Utility
                             $currentExt['extkey'] = $extKey;
                             $currentExt['installed'] = ExtensionManagementUtility::isLoaded($extKey);
                             $currentExt['EM_CONF'] = $emConf;
-                            $currentExt['files'] = GeneralUtility::getFilesInDir($path . $extKey, '', 0, '', null);
+                            $currentExt['files'] = GeneralUtility::getFilesInDir($path . $extKey);
                             $currentExt['lastversion'] = Utility::checkExtensionUpdate($currentExt);
 
                             // db infos
