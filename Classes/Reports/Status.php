@@ -114,7 +114,7 @@ class Status extends AbstractReport
             'processor_path_lzw : ' . ($GLOBALS['TYPO3_CONF_VARS']['GFX']['processor_path_lzw'] ?? ''),
             'processor : ' . $GLOBALS['TYPO3_CONF_VARS']['GFX']['processor'],
             'processor_effects : ' . $GLOBALS['TYPO3_CONF_VARS']['GFX']['processor_effects'],
-            'processor_allowTemporaryMasksAsPng : ' . $GLOBALS['TYPO3_CONF_VARS']['GFX']['processor_allowTemporaryMasksAsPng'],
+            'processor_allowTemporaryMasksAsPng : ' . ($GLOBALS['TYPO3_CONF_VARS']['GFX']['processor_allowTemporaryMasksAsPng'] ?? ''),
             'processor_colorspace : ' . $GLOBALS['TYPO3_CONF_VARS']['GFX']['processor_colorspace'],
         ];
 
