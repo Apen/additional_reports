@@ -19,6 +19,7 @@ use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Exception\SiteNotFoundException;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
+use TYPO3\CMS\Core\Imaging\IconRegistry;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
 use TYPO3\CMS\Core\Package\PackageManager;
@@ -317,6 +318,7 @@ class Utility
         }
 
         if ($type === 'ctype') {
+            $iconRegistry = GeneralUtility::makeInstance(IconRegistry::class);
             foreach ($GLOBALS['TCA']['tt_content']['columns']['CType']['config']['items'] as $itemValue) {
                 if (($itemValue['value'] ?? $itemValue[1] ?? '') === '--div--') {
                     continue;
@@ -327,10 +329,8 @@ class Utility
                 $iconPath = $itemValue['icon'] ?? $itemValue[2] ?? '';
                 if (str_contains($iconPath, 'EXT:')) {
                     $infos['iconext'] = PathUtility::getPublicResourceWebPath($iconPath);
-                } else {
-                    $icon = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Imaging\IconRegistry::class)->getIconConfigurationByIdentifier(
-                        $iconPath
-                    );
+                } elseif ($iconRegistry->isRegistered($iconPath)) {
+                    $icon = $iconRegistry->getIconConfigurationByIdentifier($iconPath);
                     if (isset($icon['options']) && str_contains($icon['options']['source'], 'EXT:')) {
                         $infos['iconext'] = PathUtility::getPublicResourceWebPath($icon['options']['source']);
                     } elseif (isset($icon['options']['source'])) {
