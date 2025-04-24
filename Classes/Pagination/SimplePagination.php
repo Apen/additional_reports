@@ -148,4 +148,13 @@ class SimplePagination implements PaginationInterface
     {
         return $this->displayRangeEnd + 1 < $this->paginator->getNumberOfPages();
     }
+
+    public function getAllPageNumbers(): array
+    {
+        $pageNumbers = [];
+        for ($i = 1; $i <= $this->paginator->getNumberOfPages(); $i++) {
+            $pageNumbers[] = $i;
+        }
+        return $pageNumbers;
+    }
 }
