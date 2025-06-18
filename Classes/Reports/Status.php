@@ -70,14 +70,14 @@ class Status extends AbstractReport
             foreach ($packages['packages'] as $extensionKey => $package) {
                 $extensions[] = $extensionKey;
             }
-        }
-
-        if (Utility::isComposerMode()) {
-            $packageManager = GeneralUtility::makeInstance(PackageManager::class);
-            /** @var \TYPO3\CMS\Core\Package\PackageInterface $package */
-            $activePackages = $packageManager->getActivePackages();
-            foreach ($activePackages as $package) {
-                $extensions[] = $package->getPackageKey();
+        } else {
+            if (Utility::isComposerMode()) {
+                $packageManager = GeneralUtility::makeInstance(PackageManager::class);
+                /** @var \TYPO3\CMS\Core\Package\PackageInterface $package */
+                $activePackages = $packageManager->getActivePackages();
+                foreach ($activePackages as $package) {
+                    $extensions[] = $package->getPackageKey();
+                }
             }
         }
 

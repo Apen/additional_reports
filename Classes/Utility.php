@@ -22,6 +22,7 @@ use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Imaging\IconRegistry;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
+use TYPO3\CMS\Core\Package\Exception\UnknownPackageException;
 use TYPO3\CMS\Core\Package\PackageManager;
 use TYPO3\CMS\Core\Pagination\ArrayPaginator;
 use TYPO3\CMS\Core\Site\SiteFinder;
@@ -642,7 +643,11 @@ class Utility
         if (self::isComposerMode()) {
             $packageManager = GeneralUtility::makeInstance(PackageManager::class);
             /** @var \TYPO3\CMS\Core\Package\PackageInterface $package */
+            try {
             $package = $packageManager->getPackage($key);
+            } catch (UnknownPackageException $e) {
+                return null;
+            }
             if ($package === null) {
                 return null;
             }
