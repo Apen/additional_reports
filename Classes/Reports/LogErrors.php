@@ -33,18 +33,23 @@ class LogErrors extends AbstractReport
      */
     public function display()
     {
-        $query = [];
-        $query['SELECT'] = 'COUNT(*) AS "nb",details,MAX(tstamp) as "tstamp"';
-        $query['FROM'] = 'sys_log';
-        $query['WHERE'] = 'error>0';
-        $query['GROUPBY'] = 'details';
-        $query['ORDERBY'] = 'nb DESC,tstamp DESC';
-        $query['LIMIT'] = '';
-
-        $orderby = Utility::_GP('orderby');
-        if ($orderby !== null) {
-            $query['ORDERBY'] = $orderby;
-        }
+        $queryBuilder = Utility::getQueryBuilder('sys_log');
+        $queryBuilder
+            ->select('details')
+            ->addSelectLiteral('COUNT(*) AS nb', 'MAX(tstamp) AS tstamp')
+            ->from('sys_log')
+            ->where($queryBuilder->expr()->gt('error', 0))
+            ->groupBy('details');
+        $orderBy = Utility::_GP('orderby');
+        $allowedOrderings = [
+            'nb ASC' => ['nb', 'ASC'],
+            'nb DESC' => ['nb', 'DESC'],
+            'tstamp ASC' => ['tstamp', 'ASC'],
+            'tstamp DESC' => ['tstamp', 'DESC'],
+        ];
+        $orderKey = is_string($orderBy) ? $orderBy : '';
+        [$orderField, $orderDirection] = $allowedOrderings[$orderKey] ?? ['nb', 'DESC'];
+        $queryBuilder->orderBy($orderField, $orderDirection)->addOrderBy('tstamp', 'DESC');
 
         $content = Utility::writeInformation(
             Utility::getLl('flushalllog'),
@@ -58,7 +63,7 @@ class LogErrors extends AbstractReport
         $view->assign('baseUrl', Utility::getBaseUrl());
         $view->assign('requestDir', GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR'));
 
-        Utility::buildPagination(Utility::exec_SELECT_queryArrayRows($query), (int) (Utility::_GP('currentPage') ?? 1), $view);
+        Utility::buildPagination($queryBuilder->executeQuery()->fetchAllAssociative(), (int) (Utility::_GP('currentPage') ?? 1), $view);
 
         return $content . $view->render('logerrors-fluid');
     }

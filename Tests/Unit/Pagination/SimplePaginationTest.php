@@ -65,6 +65,17 @@ final class SimplePaginationTest extends TestCase
         self::assertSame(0, $subject->getEndRecordNumber());
     }
 
+    public function testLimitsPageRangeWhenThereAreFewerPagesThanLinks(): void
+    {
+        $subject = $this->createSubject(6, 2, 5);
+
+        self::assertSame([1, 2], array_column($subject->getPages(), 'number'));
+        self::assertFalse($subject->getHasLessPages());
+        self::assertFalse($subject->getHasMorePages());
+        self::assertSame(1, $subject->getFirstPageNumber());
+        self::assertSame(2, $subject->getLastPageNumber());
+    }
+
     private function createSubject(int $numberOfItems, int $currentPage, int $itemsPerPage): SimplePagination
     {
         $subject = new SimplePagination(new ArrayPaginator(range(1, $numberOfItems), $currentPage, $itemsPerPage));

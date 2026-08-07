@@ -119,26 +119,6 @@ class UtilityTest extends FunctionalTestCase
         self::assertNotEmpty(Utility::getJsonVersionInfos());
     }
 
-    public function testGetCurrentVersionInfos()
-    {
-        self::assertNotEmpty(Utility::getCurrentVersionInfos(self::versionInformationFixture(), '14.3.5'));
-    }
-
-    public function testGetCurrentBranchInfos()
-    {
-        self::assertNotEmpty(Utility::getCurrentBranchInfos(self::versionInformationFixture(), '14.3.5'));
-    }
-
-    public function testGetLatestStableInfos()
-    {
-        self::assertNotEmpty(Utility::getLatestStableInfos(self::versionInformationFixture()));
-    }
-
-    public function testGetLatestLtsInfos()
-    {
-        self::assertNotEmpty(Utility::getLatestLtsInfos(self::versionInformationFixture()));
-    }
-
     public function testDownloadT3x()
     {
         if (getenv('RUN_NETWORK_TESTS') !== '1') {
@@ -160,8 +140,8 @@ class UtilityTest extends FunctionalTestCase
     public function testGetCountPagesUids()
     {
         if (self::isNotSqlite()) {
-            self::assertEquals(0, Utility::getCountPagesUids($this->pagesListProvider(), 'hidden=1'));
-            self::assertEquals(1, Utility::getCountPagesUids($this->pagesListProvider(), 'no_search=1'));
+            self::assertEquals(0, Utility::getCountPagesUids($this->pagesListProvider(), 'hidden'));
+            self::assertEquals(1, Utility::getCountPagesUids($this->pagesListProvider(), 'no_search'));
         } else {
             self::markTestSkipped('This query is MySQL-specific.');
         }
@@ -251,7 +231,7 @@ class UtilityTest extends FunctionalTestCase
 
     public function testGetAllDifferentPlugins()
     {
-        self::assertNotEmpty(Utility::getAllDifferentPlugins(''));
+        self::assertNotEmpty(Utility::getAllDifferentPlugins());
     }
 
     public function testGetAllDifferentPluginsSelect()
@@ -261,7 +241,7 @@ class UtilityTest extends FunctionalTestCase
 
     public function testGetAllDifferentCtypes()
     {
-        self::assertNotEmpty(Utility::getAllDifferentCtypes(''));
+        self::assertNotEmpty(Utility::getAllDifferentCtypes());
     }
 
     public function testGetAllDifferentCtypesSelect()
@@ -271,12 +251,32 @@ class UtilityTest extends FunctionalTestCase
 
     public function testGetAllPlugins()
     {
-        self::assertNotEmpty(Utility::getAllPlugins(''));
+        self::assertNotEmpty(Utility::getAllPlugins());
     }
 
     public function testGetAllCtypes()
     {
-        self::assertNotEmpty(Utility::getAllCtypes(''));
+        self::assertNotEmpty(Utility::getAllCtypes());
+    }
+
+    public function testGetAllCtypesFiltersWithAQueryParameter(): void
+    {
+        $items = Utility::getAllCtypes(false, 'text');
+
+        self::assertNotEmpty($items);
+        self::assertSame(['text'], array_values(array_unique(array_column($items, 'CType'))));
+    }
+
+    public function testGetAllCtypesDoesNotInterpretFilterAsSql(): void
+    {
+        self::assertSame([], Utility::getAllCtypes(false, "text' OR 1=1 --"));
+    }
+
+    public function testGetCountPagesUidsRejectsUnknownFields(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        Utility::getCountPagesUids($this->pagesListProvider(), 'uid');
     }
 
     public function testGetLl()
@@ -294,20 +294,6 @@ class UtilityTest extends FunctionalTestCase
         self::assertNotEmpty(Utility::getSubModules());
     }
 
-    public function testExecSELECTQueryArray()
-    {
-        self::assertNotEmpty(Utility::exec_SELECT_queryArray([
-            'SELECT' => '*',
-            'FROM' => 'pages',
-            'WHERE' => '',
-        ]));
-    }
-
-    public function testExecSELECTgetRows()
-    {
-        self::assertNotEmpty(Utility::exec_SELECTgetRows(' * ', 'pages', ''));
-    }
-
     public function pagesListProvider()
     {
         return '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54';
@@ -316,28 +302,6 @@ class UtilityTest extends FunctionalTestCase
     public static function isNotSqlite()
     {
         return $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['driver'] !== 'pdo_sqlite';
-    }
-
-    private static function versionInformationFixture(): array
-    {
-        return [
-            'latest_stable' => '14.3.5',
-            'latest_lts' => '13.4.20',
-            14 => [
-                'releases' => [
-                    '14.3.5' => [
-                        'version' => '14.3.5',
-                    ],
-                ],
-            ],
-            13 => [
-                'releases' => [
-                    '13.4.20' => [
-                        'version' => '13.4.20',
-                    ],
-                ],
-            ],
-        ];
     }
 
     protected function writeSiteConfiguration(

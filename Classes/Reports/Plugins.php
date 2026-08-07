@@ -103,25 +103,36 @@ class Plugins extends AbstractReport
             }
         }
 
-        $itemsCount = Utility::exec_SELECTgetRows(
-            'COUNT( tt_content.uid ) as "nb"',
-            'tt_content,pages',
-            'tt_content.pid=pages.uid AND pages.pid>=0 AND tt_content.hidden=0 ' .
-            'AND tt_content.deleted=0 AND pages.hidden=0 AND pages.deleted=0'
-        );
+        $queryBuilder = Utility::getQueryBuilder('tt_content');
+        $itemsCount = (int) $queryBuilder
+            ->count('tt_content.uid')
+            ->from('tt_content')
+            ->innerJoin('tt_content', 'pages', 'pages', 'tt_content.pid = pages.uid')
+            ->where($queryBuilder->expr()->gte('pages.pid', 0))
+            ->andWhere($queryBuilder->expr()->eq('tt_content.hidden', 0))
+            ->andWhere($queryBuilder->expr()->eq('pages.hidden', 0))
+            ->executeQuery()
+            ->fetchOne();
 
         $hasLegacyListType = Utility::hasLegacyListType();
         $groupFields = $hasLegacyListType
             ? 'tt_content.CType,tt_content.list_type'
             : 'tt_content.CType';
-        $items = Utility::exec_SELECTgetRows(
-            $groupFields . ',count(*) as "nb"',
-            'tt_content,pages',
-            'tt_content.pid=pages.uid AND pages.pid>=0 AND tt_content.hidden=0 ' .
-            'AND tt_content.deleted=0 AND pages.hidden=0 AND pages.deleted=0',
-            $groupFields,
-            'nb DESC'
-        );
+        $queryBuilder = Utility::getQueryBuilder('tt_content');
+        $queryBuilder
+            ->select('tt_content.CType')
+            ->addSelectLiteral('COUNT(*) AS nb')
+            ->from('tt_content')
+            ->innerJoin('tt_content', 'pages', 'pages', 'tt_content.pid = pages.uid')
+            ->where($queryBuilder->expr()->gte('pages.pid', 0))
+            ->andWhere($queryBuilder->expr()->eq('tt_content.hidden', 0))
+            ->andWhere($queryBuilder->expr()->eq('pages.hidden', 0))
+            ->groupBy('tt_content.CType')
+            ->orderBy('nb', 'DESC');
+        if ($hasLegacyListType) {
+            $queryBuilder->addSelect('tt_content.list_type')->addGroupBy('tt_content.list_type');
+        }
+        $items = $queryBuilder->executeQuery()->fetchAllAssociative();
 
         $allItems = [];
 
@@ -135,7 +146,7 @@ class Plugins extends AbstractReport
                 $itemTemp['content'] = $itemTemp['ctype'] ?? '';
             }
             $itemTemp['references'] = $itemValue['nb'];
-            $itemTemp['pourc'] = round((($itemValue['nb'] * 100) / $itemsCount[0]['nb']), 2);
+            $itemTemp['pourc'] = $itemsCount > 0 ? round((($itemValue['nb'] * 100) / $itemsCount), 2) : 0.0;
             $allItems[] = $itemTemp;
         }
 
@@ -148,10 +159,7 @@ class Plugins extends AbstractReport
     public static function getAllUsedPlugins(bool $displayHidden = false): array
     {
         $getFiltersCat = Utility::_GP('filtersCat');
-        $addHidden = ($displayHidden) ? '' : ' AND tt_content.hidden=0 AND pages.hidden=0 ';
-        $field = Utility::hasLegacyListType() ? 'list_type' : 'CType';
-        $addWhere = ($getFiltersCat !== null && $getFiltersCat != 'all') ? " AND tt_content.{$field}='" . $getFiltersCat . "'" : '';
-        return Utility::getAllPlugins($addHidden . $addWhere, '');
+        return Utility::getAllPlugins($displayHidden, is_string($getFiltersCat) ? $getFiltersCat : null);
     }
 
     /**
@@ -160,9 +168,7 @@ class Plugins extends AbstractReport
     public static function getAllUsedCtypes(bool $displayHidden = false): array
     {
         $getFiltersCat = Utility::_GP('filtersCat');
-        $addHidden = ($displayHidden) ? '' : ' AND tt_content.hidden=0 AND pages.hidden=0 ';
-        $addWhere = ($getFiltersCat !== null && $getFiltersCat != 'all') ? " AND tt_content.CType='" . $getFiltersCat . "'" : '';
-        return Utility::getAllCtypes($addHidden . $addWhere, '');
+        return Utility::getAllCtypes($displayHidden, is_string($getFiltersCat) ? $getFiltersCat : null);
     }
 
     public function getIdentifier(): string

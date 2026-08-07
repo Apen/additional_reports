@@ -32,15 +32,15 @@ class WebsiteConf extends AbstractReport
      */
     public function display()
     {
-        $items = Utility::exec_SELECTgetRows(
-            'uid, title',
-            'pages',
-            'is_siteroot = 1 AND deleted = 0 AND hidden = 0 AND pid != -1',
-            '',
-            '',
-            '',
-            'uid'
-        );
+        $queryBuilder = Utility::getQueryBuilder('pages');
+        $items = $queryBuilder
+            ->select('uid', 'title')
+            ->from('pages')
+            ->where($queryBuilder->expr()->eq('is_siteroot', 1))
+            ->andWhere($queryBuilder->expr()->eq('hidden', 0))
+            ->andWhere($queryBuilder->expr()->neq('pid', -1))
+            ->executeQuery()
+            ->fetchAllAssociative();
 
         $websiteconf = [];
 
@@ -54,13 +54,15 @@ class WebsiteConf extends AbstractReport
                 $websiteconfItem['template'] = '';
                 $websiteconfItem['domains'] = Utility::getDomain($itemValue['uid']) . '<br/>';
 
-                $templates = Utility::exec_SELECTgetRows(
-                    'uid,title,root',
-                    'sys_template',
-                    'pid IN(' . $itemValue['uid'] . ') AND deleted=0 AND hidden=0',
-                    '',
-                    'sorting'
-                );
+                $queryBuilder = Utility::getQueryBuilder('sys_template');
+                $templates = $queryBuilder
+                    ->select('uid', 'title', 'root')
+                    ->from('sys_template')
+                    ->where($queryBuilder->expr()->eq('pid', $queryBuilder->createNamedParameter((int) $itemValue['uid'])))
+                    ->andWhere($queryBuilder->expr()->eq('hidden', 0))
+                    ->orderBy('sorting')
+                    ->executeQuery()
+                    ->fetchAllAssociative();
 
                 foreach ($templates as $templateObj) {
                     $websiteconfItem['template'] .= $templateObj['title'] . ' ';
@@ -71,8 +73,8 @@ class WebsiteConf extends AbstractReport
                 $list = Utility::getTreeList($itemValue['uid'], 99);
                 $listArray = explode(',', $list);
                 $websiteconfItem['pages'] = (count($listArray) - 1);
-                $websiteconfItem['pageshidden'] = (Utility::getCountPagesUids($list, 'hidden=1'));
-                $websiteconfItem['pagesnosearch'] = (Utility::getCountPagesUids($list, 'no_search=1'));
+                $websiteconfItem['pageshidden'] = Utility::getCountPagesUids($list, 'hidden');
+                $websiteconfItem['pagesnosearch'] = Utility::getCountPagesUids($list, 'no_search');
 
                 $websiteconf[] = $websiteconfItem;
             }

@@ -128,7 +128,15 @@ class Utility
         $id = (int) $id;
         $theList = $begin === 0 ? $id : '';
         if ($id && $depth > 0) {
-            $res = self::exec_SELECTquery('uid', 'pages', 'pid=' . $id . ' AND ' . $permsClause);
+            $queryBuilder = self::getQueryBuilder('pages');
+            $queryBuilder
+                ->select('uid')
+                ->from('pages')
+                ->where($queryBuilder->expr()->eq('pid', $queryBuilder->createNamedParameter($id)));
+            if ($permsClause !== '1=1') {
+                $queryBuilder->andWhere($permsClause);
+            }
+            $res = $queryBuilder->executeQuery();
             while ($row = $res->fetchAssociative()) {
                 if ($begin <= 0) {
                     $theList .= ',' . $row['uid'];
@@ -145,14 +153,27 @@ class Utility
      * Count page uids in a list given (validating the condition)
      *
      * @param string $listOfUids
-     * @param string $where
+     * @param string $field
      * @return int
      */
-    public static function getCountPagesUids($listOfUids, $where = '1=1')
+    public static function getCountPagesUids(string $listOfUids, string $field = ''): int
     {
-        $res = self::exec_SELECTquery('uid', 'pages', 'uid IN (' . $listOfUids . ') AND ' . $where);
-        $count = $res->rowCount();
-        return $count;
+        $pageUids = array_values(array_filter(array_map('intval', explode(',', $listOfUids))));
+        if ($pageUids === []) {
+            return 0;
+        }
+        $queryBuilder = self::getQueryBuilder('pages');
+        $queryBuilder
+            ->count('uid')
+            ->from('pages')
+            ->where($queryBuilder->expr()->in('uid', $queryBuilder->createNamedParameter($pageUids, Connection::PARAM_INT_ARRAY)));
+        if ($field !== '') {
+            if (! in_array($field, ['hidden', 'no_search'], true)) {
+                throw new \InvalidArgumentException('Unsupported page field: ' . $field);
+            }
+            $queryBuilder->andWhere($queryBuilder->expr()->eq($field, 1));
+        }
+        return (int) $queryBuilder->executeQuery()->fetchOne();
     }
 
     /**
@@ -272,7 +293,14 @@ class Utility
         if (self::isComposerMode()) {
             return null;
         }
-        $lastVersion = self::exec_SELECTgetRows('*', 'tx_extensionmanager_domain_model_extension', 'extension_key="' . $extInfo['extkey'] . '" AND current_version=1');
+        $queryBuilder = self::getQueryBuilder('tx_extensionmanager_domain_model_extension');
+        $lastVersion = $queryBuilder
+            ->select('*')
+            ->from('tx_extensionmanager_domain_model_extension')
+            ->where($queryBuilder->expr()->eq('extension_key', $queryBuilder->createNamedParameter($extInfo['extkey'])))
+            ->andWhere($queryBuilder->expr()->eq('current_version', 1))
+            ->executeQuery()
+            ->fetchAllAssociative();
         if ($lastVersion !== []) {
             $lastVersion[0]['updatedate'] = date('d/m/Y', $lastVersion[0]['last_updated']);
             return $lastVersion[0];
@@ -667,12 +695,12 @@ class Utility
     {
         $queryCache = '';
 
-        $res = self::sql_query('SHOW VARIABLES LIKE "%query_cache%";');
+        $res = self::getDatabaseConnection()->executeQuery('SHOW VARIABLES LIKE "%query_cache%";');
         while ($row = $res->fetchAssociative()) {
             $queryCache .= $row['Variable_name'] . ' : ' . $row['Value'] . '<br />';
         }
 
-        $res = self::sql_query('SHOW STATUS LIKE "%Qcache%";');
+        $res = self::getDatabaseConnection()->executeQuery('SHOW STATUS LIKE "%Qcache%";');
         while ($row = $res->fetchAssociative()) {
             $queryCache .= $row['Variable_name'] . ' : ' . $row['Value'] . '<br />';
         }
@@ -687,7 +715,7 @@ class Utility
     {
         $sqlEncoding = '';
 
-        $res = self::sql_query('SHOW VARIABLES LIKE "%character%";');
+        $res = self::getDatabaseConnection()->executeQuery('SHOW VARIABLES LIKE "%character%";');
         while ($row = $res->fetchAssociative()) {
             $sqlEncoding .= $row['Variable_name'] . ' : ' . $row['Value'] . '<br />';
         }
@@ -715,21 +743,20 @@ class Utility
 		';
     }
 
-    /**
-     * @param string $where
-     */
-    public static function getAllDifferentPlugins($where): array
+    public static function getAllDifferentPlugins(bool $displayHidden = false): array
     {
         if (! self::hasLegacyListType()) {
-            return self::getAllDifferentCtypes($where);
+            return self::getAllDifferentCtypes($displayHidden);
         }
-        return self::exec_SELECTgetRows(
-            'DISTINCT tt_content.list_type',
-            'tt_content,pages',
-            'tt_content.pid=pages.uid AND pages.pid>=0 AND tt_content.deleted=0 AND pages.deleted=0 ' . $where . 'AND tt_content.CType=\'list\' AND tt_content.list_type<>""',
-            '',
-            'tt_content.list_type'
-        );
+        $queryBuilder = self::createContentQueryBuilder($displayHidden);
+        return $queryBuilder
+            ->select('tt_content.list_type')
+            ->distinct()
+            ->andWhere($queryBuilder->expr()->eq('tt_content.CType', $queryBuilder->createNamedParameter('list')))
+            ->andWhere($queryBuilder->expr()->neq('tt_content.list_type', $queryBuilder->createNamedParameter('')))
+            ->orderBy('tt_content.list_type')
+            ->executeQuery()
+            ->fetchAllAssociative();
     }
 
     /**
@@ -739,9 +766,8 @@ class Utility
      */
     public static function getAllDifferentPluginsSelect($displayHidden): string
     {
-        $where = ($displayHidden) ? '' : ' AND tt_content.hidden=0 AND pages.hidden=0 ';
         $getFiltersCat = self::_GP('filtersCat');
-        $pluginsList = self::getAllDifferentPlugins($where);
+        $pluginsList = self::getAllDifferentPlugins((bool) $displayHidden);
         $filterCat = '';
 
         if ($getFiltersCat == 'all') {
@@ -765,27 +791,22 @@ class Utility
         return '<select name="filtersCat" id="filtersCat" data-url="' . $listUrlOrig . '">' . $filterCat . '</select>';
     }
 
-    /**
-     * @param string $where
-     */
-    public static function getAllDifferentCtypes($where): array
+    public static function getAllDifferentCtypes(bool $displayHidden = false): array
     {
-        if (! self::hasLegacyListType()) {
-            return self::exec_SELECTgetRows(
-                'DISTINCT tt_content.CType',
-                'tt_content,pages',
-                'tt_content.pid=pages.uid AND pages.pid>=0 AND tt_content.deleted=0 AND pages.deleted=0 ' . $where . "AND tt_content.CType<>''",
-                '',
-                'tt_content.CType'
-            );
+        $queryBuilder = self::createContentQueryBuilder($displayHidden);
+        $queryBuilder
+            ->select('tt_content.CType')
+            ->distinct()
+            ->andWhere($queryBuilder->expr()->neq('tt_content.CType', $queryBuilder->createNamedParameter('')));
+        if (self::hasLegacyListType()) {
+            $queryBuilder
+                ->addSelect('tt_content.list_type')
+                ->andWhere($queryBuilder->expr()->neq('tt_content.CType', $queryBuilder->createNamedParameter('list')))
+                ->orderBy('tt_content.list_type');
+        } else {
+            $queryBuilder->orderBy('tt_content.CType');
         }
-        return self::exec_SELECTgetRows(
-            'DISTINCT tt_content.CType,tt_content.list_type',
-            'tt_content,pages',
-            'tt_content.pid=pages.uid AND pages.pid>=0 AND tt_content.deleted=0 AND pages.deleted=0 ' . $where . "AND tt_content.CType<>'list'",
-            '',
-            'tt_content.list_type'
-        );
+        return $queryBuilder->executeQuery()->fetchAllAssociative();
     }
 
     /**
@@ -795,9 +816,8 @@ class Utility
      */
     public static function getAllDifferentCtypesSelect($displayHidden): string
     {
-        $where = ($displayHidden) ? '' : ' AND tt_content.hidden=0 AND pages.hidden=0 ';
         $getFiltersCat = self::_GP('filtersCat');
-        $pluginsList = self::getAllDifferentCtypes($where);
+        $pluginsList = self::getAllDifferentCtypes((bool) $displayHidden);
         $filterCat = '';
 
         if ($getFiltersCat == 'all') {
@@ -823,64 +843,60 @@ class Utility
     /**
      * Get all the usage of a all the plugins
      *
-     * @param string $where
-     * @param string $limit
      * @return array
      */
-    public static function getAllPlugins($where, $limit = '', $returnQuery = false)
+    public static function getAllPlugins(bool $displayHidden = false, ?string $filter = null): array
     {
         if (! self::hasLegacyListType()) {
-            return self::getAllCtypes($where, $limit, $returnQuery);
+            return self::getAllCtypes($displayHidden, $filter);
         }
-        $query = [
-            'SELECT' => 'DISTINCT tt_content.list_type,tt_content.pid,tt_content.uid,pages.title,pages.hidden as "hiddenpages",tt_content.hidden as "hiddentt_content"',
-            'FROM' => 'tt_content,pages',
-            'WHERE' => 'tt_content.pid=pages.uid AND pages.pid>=0 AND tt_content.deleted=0 AND pages.deleted=0 ' . $where . "AND tt_content.CType='list'",
-            'ORDERBY' => 'tt_content.list_type,tt_content.pid',
-            'LIMIT' => $limit,
-        ];
-        if ($returnQuery === true) {
-            return $query;
+        $queryBuilder = self::createContentQueryBuilder($displayHidden);
+        $queryBuilder
+            ->select('tt_content.list_type', 'tt_content.pid', 'tt_content.uid', 'pages.title')
+            ->addSelectLiteral('pages.hidden AS hiddenpages', 'tt_content.hidden AS hiddentt_content')
+            ->distinct()
+            ->andWhere($queryBuilder->expr()->eq('tt_content.CType', $queryBuilder->createNamedParameter('list')))
+            ->orderBy('tt_content.list_type')
+            ->addOrderBy('tt_content.pid');
+        if ($filter !== null && $filter !== 'all') {
+            $queryBuilder->andWhere($queryBuilder->expr()->eq('tt_content.list_type', $queryBuilder->createNamedParameter($filter)));
         }
-        return self::exec_SELECTgetRows(
-            $query['SELECT'],
-            $query['FROM'],
-            $query['WHERE'],
-            '',
-            $query['ORDERBY'],
-            $query['LIMIT']
-        );
+        return $queryBuilder->executeQuery()->fetchAllAssociative();
     }
 
     /**
      * Get all the usage of a all the ctypes
      *
-     * @param string $where
-     * @param string $limit
      */
-    public static function getAllCtypes($where, $limit = '', $returnQuery = false): array
+    public static function getAllCtypes(bool $displayHidden = false, ?string $filter = null): array
     {
-        $ctypeCondition = self::hasLegacyListType()
-            ? "AND tt_content.CType<>'list'"
-            : "AND tt_content.CType<>''";
-        $query = [
-            'SELECT' => 'DISTINCT tt_content.CType,tt_content.pid,tt_content.uid,pages.title,pages.hidden as "hiddenpages",tt_content.hidden as "hiddentt_content"',
-            'FROM' => 'tt_content,pages',
-            'WHERE' => 'tt_content.pid=pages.uid AND pages.pid>=0 AND tt_content.deleted=0 AND pages.deleted=0 ' . $where . ' ' . $ctypeCondition,
-            'ORDERBY' => 'tt_content.CType,tt_content.pid',
-            'LIMIT' => $limit,
-        ];
-        if ($returnQuery === true) {
-            return $query;
+        $queryBuilder = self::createContentQueryBuilder($displayHidden);
+        $queryBuilder
+            ->select('tt_content.CType', 'tt_content.pid', 'tt_content.uid', 'pages.title')
+            ->addSelectLiteral('pages.hidden AS hiddenpages', 'tt_content.hidden AS hiddentt_content')
+            ->distinct()
+            ->andWhere($queryBuilder->expr()->neq('tt_content.CType', $queryBuilder->createNamedParameter(self::hasLegacyListType() ? 'list' : '')))
+            ->orderBy('tt_content.CType')
+            ->addOrderBy('tt_content.pid');
+        if ($filter !== null && $filter !== 'all') {
+            $queryBuilder->andWhere($queryBuilder->expr()->eq('tt_content.CType', $queryBuilder->createNamedParameter($filter)));
         }
-        return self::exec_SELECTgetRows(
-            $query['SELECT'],
-            $query['FROM'],
-            $query['WHERE'],
-            '',
-            $query['ORDERBY'],
-            $query['LIMIT']
-        );
+        return $queryBuilder->executeQuery()->fetchAllAssociative();
+    }
+
+    private static function createContentQueryBuilder(bool $displayHidden): QueryBuilder
+    {
+        $queryBuilder = self::getQueryBuilder('tt_content');
+        $queryBuilder
+            ->from('tt_content')
+            ->innerJoin('tt_content', 'pages', 'pages', 'tt_content.pid = pages.uid')
+            ->where($queryBuilder->expr()->gte('pages.pid', 0));
+        if (! $displayHidden) {
+            $queryBuilder
+                ->andWhere($queryBuilder->expr()->eq('tt_content.hidden', 0))
+                ->andWhere($queryBuilder->expr()->eq('pages.hidden', 0));
+        }
+        return $queryBuilder;
     }
 
     public static function hasLegacyListType(): bool
@@ -1041,7 +1057,7 @@ class Utility
         if (! empty($hook)) {
             // if it's a key-path hook
             if (is_array($hook)) {
-                $isHook = self::isHook($hook[1]);
+                $hook = $hook[1] ?? '';
             }
             // classname begin with &
             if (substr($hook, 0, 1) === '&') {
@@ -1118,115 +1134,16 @@ class Utility
         return self::getLanguageService()->sL('LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:' . $key);
     }
 
-    /**
-     * Executes a select based on input query parts array
-     *
-     * @param array $queryParts Query parts array
-     * @return bool|\mysqli_result|object MySQLi result object / DBAL object
-     */
-    public static function exec_SELECT_queryArray($queryParts)
-    {
-        return self::exec_SELECTquery(
-            $queryParts['SELECT'],
-            $queryParts['FROM'],
-            $queryParts['WHERE'],
-            $queryParts['GROUPBY'] ?? '',
-            $queryParts['ORDERBY'] ?? '',
-            $queryParts['LIMIT'] ?? ''
-        );
-    }
-
-    /**
-     * Executes a select based on input query parts array
-     *
-     * @param array $queryParts Query parts array
-     * @return array
-     */
-    public static function exec_SELECT_queryArrayRows($queryParts)
-    {
-        return self::exec_SELECTgetRows($queryParts['SELECT'], $queryParts['FROM'], $queryParts['WHERE'], $queryParts['GROUPBY'], $queryParts['ORDERBY'], $queryParts['LIMIT']);
-    }
-
-    /**
-     * Creates and executes a SELECT SQL-statement AND traverse result set and returns array with records in.
-     *
-     * @param string $select_fields List of fields to select from the table. This is what comes right after "SELECT ...". Required value.
-     * @param string $from_table Table(s) from which to select. This is what comes right after "FROM ...". Required value.
-     * @param string $where_clause Additional WHERE clauses put in the end of the query. NOTICE: You must escape values in this argument with $this->fullQuoteStr() yourself! DO NOT PUT IN GROUP BY, ORDER BY or LIMIT!
-     * @param string $groupBy Optional GROUP BY field(s), if none, supply blank string.
-     * @param string $orderBy Optional ORDER BY field(s), if none, supply blank string.
-     * @param string $limit Optional LIMIT value ([begin,]max), if none, supply blank string.
-     * @param string $uidIndexField If set, the result array will carry this field names value as index. Requires that field to be selected of course!
-     * @return array
-     */
-    public static function exec_SELECTgetRows($select_fields, $from_table, $where_clause, $groupBy = '', $orderBy = '', $limit = '', $uidIndexField = '')
-    {
-        $res = self::exec_SELECTquery($select_fields, $from_table, $where_clause, $groupBy, $orderBy, $limit);
-        return $res->fetchAllAssociative();
-    }
-
-    /**
-     * Creates and executes a SELECT SQL-statement
-     *
-     * @param string $select_fields List of fields to select from the table. This is what comes right after "SELECT ...". Required value.
-     * @param string $from_table Table(s) from which to select. This is what comes right after "FROM ...". Required value.
-     * @param string $where_clause Additional WHERE clauses put in the end of the query. NOTICE: You must escape values in this argument with $this->fullQuoteStr() yourself! DO NOT PUT IN GROUP BY, ORDER BY or LIMIT!
-     * @param string $groupBy Optional GROUP BY field(s), if none, supply blank string.
-     * @param string $orderBy Optional ORDER BY field(s), if none, supply blank string.
-     * @param string $limit Optional LIMIT value ([begin,]max), if none, supply blank string.
-     * @return \Doctrine\DBAL\Driver\Statement
-     */
-    public static function exec_SELECTquery($select_fields, $from_table, $where_clause, $groupBy = '', $orderBy = '', $limit = '')
-    {
-        $query = self::SELECTquery($select_fields, $from_table, $where_clause, $groupBy, $orderBy, $limit);
-        return self::sql_query($query);
-    }
-
-    /**
-     * Executes query
-     *
-     * @param string $query Query to execute
-     * @return \Doctrine\DBAL\Driver\ResultStatement
-     */
-    public static function sql_query($query)
-    {
-        $queryBuilder = self::getQueryBuilder();
-        return $queryBuilder->getConnection()
-            ->executeQuery($query);
-    }
-
-    /**
-     * Creates a SELECT SQL-statement
-     *
-     * @param string $select_fields See exec_SELECTquery()
-     * @param string $from_table See exec_SELECTquery()
-     * @param string $where_clause See exec_SELECTquery()
-     * @param string $groupBy See exec_SELECTquery()
-     * @param string $orderBy See exec_SELECTquery()
-     * @param string $limit See exec_SELECTquery()
-     * @return string Full SQL query for SELECT
-     */
-    public static function SELECTquery($select_fields, $from_table, $where_clause, $groupBy = '', $orderBy = '', $limit = '')
-    {
-        // Table and fieldnames should be "SQL-injection-safe" when supplied to this function
-        // Build basic query
-        $query = 'SELECT ' . $select_fields . ' FROM ' . $from_table . ((string) $where_clause !== '' ? ' WHERE ' . $where_clause : '');
-        // Group by
-        $query .= (string) $groupBy !== '' ? ' GROUP BY ' . $groupBy : '';
-        // Order by
-        $query .= (string) $orderBy !== '' ? ' ORDER BY ' . $orderBy : '';
-        // Group by
-        $query .= (string) $limit !== '' ? ' LIMIT ' . $limit : '';
-        return $query;
-    }
-
     public static function getDatabaseConnection(): Connection
     {
         return GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionByName(ConnectionPool::DEFAULT_CONNECTION_NAME);
     }
 
-    public static function getQueryBuilder(): QueryBuilder
+    public static function getQueryBuilder(string $table = ''): QueryBuilder
     {
+        if ($table !== '') {
+            return GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($table);
+        }
         return self::getDatabaseConnection()->createQueryBuilder();
     }
 

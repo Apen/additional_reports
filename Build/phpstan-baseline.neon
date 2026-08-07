@@ -25,15 +25,15 @@ parameters:
 			path: ../Classes/Eid/CallAjax.php
 
 		-
-			message: '#^Out of 117 possible param types, only 44 \- 37\.6 %% actually have it\. Add more param types to get over 100 %%$#'
-			identifier: typeCoverage.paramTypeCoverage
-			count: 3
+			message: '#^Out of 179 possible return types, only 140 \- 78\.2 %% actually have it\. Add more return types to get over 100 %%$#'
+			identifier: typeCoverage.returnTypeCoverage
+			count: 2
 			path: ../Classes/Eid/CallAjax.php
 
 		-
-			message: '#^Out of 184 possible return types, only 137 \- 74\.4 %% actually have it\. Add more return types to get over 100 %%$#'
-			identifier: typeCoverage.returnTypeCoverage
-			count: 2
+			message: '#^Out of 95 possible param types, only 54 \- 56\.8 %% actually have it\. Add more param types to get over 100 %%$#'
+			identifier: typeCoverage.paramTypeCoverage
+			count: 3
 			path: ../Classes/Eid/CallAjax.php
 
 		-
@@ -97,7 +97,7 @@ parameters:
 			path: ../Classes/Reports/Eid.php
 
 		-
-			message: '#^Out of 184 possible return types, only 137 \- 74\.4 %% actually have it\. Add more return types to get over 100 %%$#'
+			message: '#^Out of 179 possible return types, only 140 \- 78\.2 %% actually have it\. Add more return types to get over 100 %%$#'
 			identifier: typeCoverage.returnTypeCoverage
 			count: 1
 			path: ../Classes/Reports/Eid.php
@@ -109,7 +109,7 @@ parameters:
 			path: ../Classes/Reports/EventDispatcher.php
 
 		-
-			message: '#^Out of 184 possible return types, only 137 \- 74\.4 %% actually have it\. Add more return types to get over 100 %%$#'
+			message: '#^Out of 179 possible return types, only 140 \- 78\.2 %% actually have it\. Add more return types to get over 100 %%$#'
 			identifier: typeCoverage.returnTypeCoverage
 			count: 2
 			path: ../Classes/Reports/EventDispatcher.php
@@ -127,15 +127,15 @@ parameters:
 			path: ../Classes/Reports/Extensions.php
 
 		-
-			message: '#^Out of 117 possible param types, only 44 \- 37\.6 %% actually have it\. Add more param types to get over 100 %%$#'
-			identifier: typeCoverage.paramTypeCoverage
-			count: 1
+			message: '#^Out of 179 possible return types, only 140 \- 78\.2 %% actually have it\. Add more return types to get over 100 %%$#'
+			identifier: typeCoverage.returnTypeCoverage
+			count: 2
 			path: ../Classes/Reports/Extensions.php
 
 		-
-			message: '#^Out of 184 possible return types, only 137 \- 74\.4 %% actually have it\. Add more return types to get over 100 %%$#'
-			identifier: typeCoverage.returnTypeCoverage
-			count: 2
+			message: '#^Out of 95 possible param types, only 54 \- 56\.8 %% actually have it\. Add more param types to get over 100 %%$#'
+			identifier: typeCoverage.paramTypeCoverage
+			count: 1
 			path: ../Classes/Reports/Extensions.php
 
 		-
@@ -145,13 +145,13 @@ parameters:
 			path: ../Classes/Reports/Hooks.php
 
 		-
-			message: '#^Out of 184 possible return types, only 137 \- 74\.4 %% actually have it\. Add more return types to get over 100 %%$#'
+			message: '#^Out of 179 possible return types, only 140 \- 78\.2 %% actually have it\. Add more return types to get over 100 %%$#'
 			identifier: typeCoverage.returnTypeCoverage
 			count: 1
 			path: ../Classes/Reports/Hooks.php
 
 		-
-			message: '#^Out of 184 possible return types, only 137 \- 74\.4 %% actually have it\. Add more return types to get over 100 %%$#'
+			message: '#^Out of 179 possible return types, only 140 \- 78\.2 %% actually have it\. Add more return types to get over 100 %%$#'
 			identifier: typeCoverage.returnTypeCoverage
 			count: 1
 			path: ../Classes/Reports/LogErrors.php
@@ -175,7 +175,7 @@ parameters:
 			path: ../Classes/Reports/Middlewares.php
 
 		-
-			message: '#^Out of 184 possible return types, only 137 \- 74\.4 %% actually have it\. Add more return types to get over 100 %%$#'
+			message: '#^Out of 179 possible return types, only 140 \- 78\.2 %% actually have it\. Add more return types to get over 100 %%$#'
 			identifier: typeCoverage.returnTypeCoverage
 			count: 1
 			path: ../Classes/Reports/Middlewares.php
@@ -199,7 +199,7 @@ parameters:
 			path: ../Classes/Reports/Plugins.php
 
 		-
-			message: '#^Out of 184 possible return types, only 137 \- 74\.4 %% actually have it\. Add more return types to get over 100 %%$#'
+			message: '#^Out of 179 possible return types, only 140 \- 78\.2 %% actually have it\. Add more return types to get over 100 %%$#'
 			identifier: typeCoverage.returnTypeCoverage
 			count: 2
 			path: ../Classes/Reports/Plugins.php
@@ -253,7 +253,7 @@ parameters:
 			path: ../Classes/Reports/Status.php
 
 		-
-			message: '#^Out of 184 possible return types, only 137 \- 74\.4 %% actually have it\. Add more return types to get over 100 %%$#'
+			message: '#^Out of 179 possible return types, only 140 \- 78\.2 %% actually have it\. Add more return types to get over 100 %%$#'
 			identifier: typeCoverage.returnTypeCoverage
 			count: 5
 			path: ../Classes/Reports/Status.php
@@ -265,34 +265,16 @@ parameters:
 			path: ../Classes/Reports/Status.php
 
 		-
-			message: '#^Out of 184 possible return types, only 137 \- 74\.4 %% actually have it\. Add more return types to get over 100 %%$#'
+			message: '#^Out of 179 possible return types, only 140 \- 78\.2 %% actually have it\. Add more return types to get over 100 %%$#'
 			identifier: typeCoverage.returnTypeCoverage
 			count: 1
 			path: ../Classes/Reports/WebsiteConf.php
 
 		-
-			message: '#^Out of 184 possible return types, only 137 \- 74\.4 %% actually have it\. Add more return types to get over 100 %%$#'
+			message: '#^Out of 179 possible return types, only 140 \- 78\.2 %% actually have it\. Add more return types to get over 100 %%$#'
 			identifier: typeCoverage.returnTypeCoverage
 			count: 1
 			path: ../Classes/Reports/Xclass.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\DBAL\\Driver\\Statement\:\:fetchAllAssociative\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../Classes/Utility.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\DBAL\\Driver\\Statement\:\:fetchAssociative\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../Classes/Utility.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\DBAL\\Driver\\Statement\:\:rowCount\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../Classes/Utility.php
 
 		-
 			message: '#^Call to function is_array\(\) with non\-empty\-list\<string\> will always evaluate to true\.$#'
@@ -301,13 +283,7 @@ parameters:
 			path: ../Classes/Utility.php
 
 		-
-			message: '#^Call to method fetchAssociative\(\) on an unknown class Doctrine\\DBAL\\Driver\\ResultStatement\.$#'
-			identifier: class.notFound
-			count: 3
-			path: ../Classes/Utility.php
-
-		-
-			message: '#^Class cognitive complexity is 248, keep it under 35$#'
+			message: '#^Class cognitive complexity is 252, keep it under 35$#'
 			identifier: complexity.classLike
 			count: 1
 			path: ../Classes/Utility.php
@@ -409,36 +385,6 @@ parameters:
 			path: ../Classes/Utility.php
 
 		-
-			message: '#^Method Sng\\AdditionalReports\\Utility\:\:exec_SELECT_queryArray\(\) has parameter \$queryParts with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: ../Classes/Utility.php
-
-		-
-			message: '#^Method Sng\\AdditionalReports\\Utility\:\:exec_SELECT_queryArrayRows\(\) has parameter \$queryParts with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: ../Classes/Utility.php
-
-		-
-			message: '#^Method Sng\\AdditionalReports\\Utility\:\:exec_SELECT_queryArrayRows\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: ../Classes/Utility.php
-
-		-
-			message: '#^Method Sng\\AdditionalReports\\Utility\:\:exec_SELECTgetRows\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: ../Classes/Utility.php
-
-		-
-			message: '#^Method Sng\\AdditionalReports\\Utility\:\:exec_SELECTquery\(\) should return Doctrine\\DBAL\\Driver\\Statement but returns Doctrine\\DBAL\\Driver\\ResultStatement\.$#'
-			identifier: return.type
-			count: 1
-			path: ../Classes/Utility.php
-
-		-
 			message: '#^Method Sng\\AdditionalReports\\Utility\:\:extractExtensionDataFromT3x\(\) has parameter \$content with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -457,12 +403,6 @@ parameters:
 			path: ../Classes/Utility.php
 
 		-
-			message: '#^Method Sng\\AdditionalReports\\Utility\:\:getAllCtypes\(\) has parameter \$returnQuery with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: ../Classes/Utility.php
-
-		-
 			message: '#^Method Sng\\AdditionalReports\\Utility\:\:getAllCtypes\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -477,12 +417,6 @@ parameters:
 		-
 			message: '#^Method Sng\\AdditionalReports\\Utility\:\:getAllDifferentPlugins\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: ../Classes/Utility.php
-
-		-
-			message: '#^Method Sng\\AdditionalReports\\Utility\:\:getAllPlugins\(\) has parameter \$returnQuery with no type specified\.$#'
-			identifier: missingType.parameter
 			count: 1
 			path: ../Classes/Utility.php
 
@@ -643,18 +577,6 @@ parameters:
 			path: ../Classes/Utility.php
 
 		-
-			message: '#^Method Sng\\AdditionalReports\\Utility\:\:sql_query\(\) has invalid return type Doctrine\\DBAL\\Driver\\ResultStatement\.$#'
-			identifier: class.notFound
-			count: 1
-			path: ../Classes/Utility.php
-
-		-
-			message: '#^Method Sng\\AdditionalReports\\Utility\:\:sql_query\(\) should return Doctrine\\DBAL\\Driver\\ResultStatement but returns Doctrine\\DBAL\\Result\.$#'
-			identifier: return.type
-			count: 1
-			path: ../Classes/Utility.php
-
-		-
 			message: '#^Method Sng\\AdditionalReports\\Utility\:\:viewArray\(\) has parameter \$arrayIn with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -673,15 +595,15 @@ parameters:
 			path: ../Classes/Utility.php
 
 		-
-			message: '#^Out of 117 possible param types, only 44 \- 37\.6 %% actually have it\. Add more param types to get over 100 %%$#'
-			identifier: typeCoverage.paramTypeCoverage
-			count: 69
+			message: '#^Out of 179 possible return types, only 140 \- 78\.2 %% actually have it\. Add more return types to get over 100 %%$#'
+			identifier: typeCoverage.returnTypeCoverage
+			count: 20
 			path: ../Classes/Utility.php
 
 		-
-			message: '#^Out of 184 possible return types, only 137 \- 74\.4 %% actually have it\. Add more return types to get over 100 %%$#'
-			identifier: typeCoverage.returnTypeCoverage
-			count: 28
+			message: '#^Out of 95 possible param types, only 54 \- 56\.8 %% actually have it\. Add more param types to get over 100 %%$#'
+			identifier: typeCoverage.paramTypeCoverage
+			count: 37
 			path: ../Classes/Utility.php
 
 		-
