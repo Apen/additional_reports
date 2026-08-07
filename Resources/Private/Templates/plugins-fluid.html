@@ -29,31 +29,31 @@
 <fieldset id="choice-display" class="additional-reports-view-selector">
     <div class="additional-reports-view-options">
         <div class="form-check">
-            <input class="form-check-input" data-url="{f:be.uri(route:paginationRoute,parameters:{display:4,action:'detail',extension:'additional_reports',report:reportname})}" type="radio" name="display" value="1" id="radio4" checked="{checkedpluginsmode4}"/>
+            <f:render partial="DisplayModeRadio" arguments="{mode:4,checked:checkedpluginsmode4,url:'{f:be.uri(route:paginationRoute,parameters:{display:4,action:\'detail\',extension:\'additional_reports\',report:reportname})}'}"/>
             <label class="form-check-label" for="radio4">
                 <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:pluginsmode4"/>
             </label>
         </div>
         <div class="form-check">
-            <input class="form-check-input" data-url="{f:be.uri(route:paginationRoute,parameters:{display:6,action:'detail',extension:'additional_reports',report:reportname})}" type="radio" name="display" value="1" id="radio6" checked="{checkedpluginsmode6}"/>
+            <f:render partial="DisplayModeRadio" arguments="{mode:6,checked:checkedpluginsmode6,url:'{f:be.uri(route:paginationRoute,parameters:{display:6,action:\'detail\',extension:\'additional_reports\',report:reportname})}'}"/>
             <label class="form-check-label" for="radio6">
                 <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:pluginsmode4hidden"/>
             </label>
         </div>
         <div class="form-check">
-            <input class="form-check-input" data-url="{f:be.uri(route:paginationRoute,parameters:{display:3,action:'detail',extension:'additional_reports',report:reportname})}" type="radio" name="display" value="1" id="radio3" checked="{checkedpluginsmode3}"/>
+            <f:render partial="DisplayModeRadio" arguments="{mode:3,checked:checkedpluginsmode3,url:'{f:be.uri(route:paginationRoute,parameters:{display:3,action:\'detail\',extension:\'additional_reports\',report:reportname})}'}"/>
             <label class="form-check-label" for="radio3">
                 <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:pluginsmode3"/>
             </label>
         </div>
         <div class="form-check">
-            <input class="form-check-input" data-url="{f:be.uri(route:paginationRoute,parameters:{display:7,action:'detail',extension:'additional_reports',report:reportname})}" type="radio" name="display" value="1" id="radio7" checked="{checkedpluginsmode7}"/>
+            <f:render partial="DisplayModeRadio" arguments="{mode:7,checked:checkedpluginsmode7,url:'{f:be.uri(route:paginationRoute,parameters:{display:7,action:\'detail\',extension:\'additional_reports\',report:reportname})}'}"/>
             <label class="form-check-label" for="radio7">
                 <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:pluginsmode3hidden"/>
             </label>
         </div>
         <div class="form-check">
-            <input class="form-check-input" data-url="{f:be.uri(route:paginationRoute,parameters:{display:5,action:'detail',extension:'additional_reports',report:reportname})}" type="radio" name="display" value="1" id="radio5" checked="{checkedpluginsmode5}"/>
+            <f:render partial="DisplayModeRadio" arguments="{mode:5,checked:checkedpluginsmode5,url:'{f:be.uri(route:paginationRoute,parameters:{display:5,action:\'detail\',extension:\'additional_reports\',report:reportname})}'}"/>
             <label class="form-check-label" for="radio5">
                 <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:pluginsmode5"/>
             </label>

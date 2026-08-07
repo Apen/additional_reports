@@ -94,7 +94,14 @@ class PluginsTest extends FunctionalTestCase
 
         $report = new Plugins(parent::getReportObject());
 
-        self::assertNotEmpty($report->display());
+        $output = $report->display();
+
+        self::assertNotEmpty($output);
+        self::assertSame(1, substr_count($output, 'checked="checked"'));
+        self::assertMatchesRegularExpression(
+            '/<input(?=[^>]*id="radio' . $displayMode . '")(?=[^>]*checked="checked")[^>]*>/',
+            $output,
+        );
     }
 
     public static function displayModeProvider(): iterable
