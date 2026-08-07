@@ -54,8 +54,7 @@ final readonly class DatabaseStatusRepository
         }
 
         $rows = $connection->createQueryBuilder()
-            ->select('table_name', 'engine', 'table_collation', 'table_rows')
-            ->addSelect('((data_length + index_length) / 1024 / 1024) AS table_size')
+            ->select('table_name', 'engine', 'table_collation', 'table_rows', 'data_length', 'index_length')
             ->from('information_schema.tables')
             ->where('table_schema = :databaseName')
             ->setParameter('databaseName', $databaseName)
@@ -63,19 +62,38 @@ final readonly class DatabaseStatusRepository
             ->executeQuery()
             ->fetchAllAssociative();
 
+        $tableSummary = $this->summarizeTables($rows);
+        $status['tables'] = $tableSummary['tables'];
+        $status['totalSize'] = $tableSummary['totalSize'];
+
+        return $status;
+    }
+
+    /**
+     * @param list<array<string, mixed>> $rows
+     * @return array{
+     *     tables: list<array{name: string, engine: string, collation: string, rows: int, size: float}>,
+     *     totalSize: float
+     * }
+     */
+    public function summarizeTables(array $rows): array
+    {
+        $tables = [];
+        $totalSize = 0.0;
         foreach ($rows as $row) {
-            $tableSize = round((float) ($row['table_size'] ?? 0), 2);
-            $status['tables'][] = [
+            $tableSize = round(((float) ($row['data_length'] ?? 0) + (float) ($row['index_length'] ?? 0)) / 1024 / 1024, 2);
+            $tables[] = [
                 'name' => (string) ($row['table_name'] ?? ''),
                 'engine' => (string) ($row['engine'] ?? ''),
                 'collation' => (string) ($row['table_collation'] ?? ''),
                 'rows' => (int) ($row['table_rows'] ?? 0),
                 'size' => $tableSize,
             ];
-            $status['totalSize'] += $tableSize;
+            $totalSize += $tableSize;
         }
-        $status['totalSize'] = round($status['totalSize'], 2);
-
-        return $status;
+        return [
+            'tables' => $tables,
+            'totalSize' => round($totalSize, 2),
+        ];
     }
 }
