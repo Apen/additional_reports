@@ -1,7 +1,19 @@
 {namespace ar=Sng\AdditionalReports\ViewHelpers}
 
 <f:cache.disable />
-<f:asset.script identifier="additional-reports-plugins" src="EXT:additional_reports/Resources/Public/JavaScript/plugins.js"/>
+<f:asset.script identifier="additional-reports-plugins">
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('#choice-display input[name="display"]').forEach((input) => {
+            input.addEventListener('click', () => {
+                window.location.href = input.dataset.url;
+            });
+        });
+
+        document.querySelector('#filtersCat')?.addEventListener('change', (event) => {
+            window.location.href = event.currentTarget.dataset.url + '&filtersCat=' + event.currentTarget.value;
+        });
+    });
+</f:asset.script>
 
 <f:format.raw>{caution}</f:format.raw>
 

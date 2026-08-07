@@ -24,7 +24,7 @@ class PluginsTest extends FunctionalTestCase
 
         self::assertNotEmpty($output);
         self::assertStringContainsString('/typo3/module/system/reports', $output);
-        self::assertTrue(GeneralUtility::makeInstance(AssetCollector::class)->hasJavaScript('additional-reports-plugins'));
+        self::assertTrue(GeneralUtility::makeInstance(AssetCollector::class)->hasInlineJavaScript('additional-reports-plugins'));
     }
 
     #[DataProvider('displayModeProvider')]

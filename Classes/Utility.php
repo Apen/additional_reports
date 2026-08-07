@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 namespace Sng\AdditionalReports;
+
 /*
  * This file is part of the "additional_reports" Extension for TYPO3 CMS.
  *
