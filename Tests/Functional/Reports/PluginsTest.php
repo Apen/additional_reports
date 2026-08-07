@@ -25,7 +25,9 @@ class PluginsTest extends FunctionalTestCase
         self::assertNotEmpty($output);
         self::assertStringContainsString('class="notice col-xs-6"', $output);
         self::assertStringContainsString('/typo3/module/system/reports', $output);
-        self::assertTrue(GeneralUtility::makeInstance(AssetCollector::class)->hasInlineJavaScript('additional-reports-plugins'));
+        $assetCollector = GeneralUtility::makeInstance(AssetCollector::class);
+        self::assertTrue($assetCollector->hasInlineJavaScript('additional-reports-plugins'));
+        self::assertTrue($assetCollector->getInlineJavaScripts()['additional-reports-plugins']['options']['csp']);
     }
 
     public function testContentRowsAreEnrichedBeforeRendering(): void
