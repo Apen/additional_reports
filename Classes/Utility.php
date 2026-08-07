@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 namespace Sng\AdditionalReports;
-
 /*
  * This file is part of the "additional_reports" Extension for TYPO3 CMS.
  *
@@ -11,6 +10,7 @@ namespace Sng\AdditionalReports;
  * LICENSE.txt file that was distributed with this source code.
  */
 
+use Sng\AdditionalReports\Service\PackagistVersionService;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Database\Connection;
@@ -167,6 +167,7 @@ class Utility
             $extension = [
                 'extkey' => $extensionKey,
                 'installed' => $packageManager->isPackageActive($extensionKey),
+                'composerName' => $package->getValueFromComposerManifest('name'),
                 'version' => $package->getPackageMetaData()->getVersion(),
                 'lastversion' => null,
                 'fdfile' => is_file($sqlFile) ? (string) GeneralUtility::getUrl($sqlFile) : '',
@@ -217,7 +218,10 @@ class Utility
     public static function checkExtensionUpdate($extInfo)
     {
         if (self::isComposerMode()) {
-            return null;
+            $packageName = $extInfo['composerName'] ?? null;
+            return is_string($packageName)
+                ? GeneralUtility::makeInstance(PackagistVersionService::class)->findLatestVersion($packageName)
+                : null;
         }
         $queryBuilder = self::getQueryBuilder('tx_extensionmanager_domain_model_extension');
         $lastVersion = $queryBuilder
