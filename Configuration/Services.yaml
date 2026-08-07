@@ -27,6 +27,8 @@ services:
 
   Sng\AdditionalReports\Service\PackagistVersionService: ~
 
+  Sng\AdditionalReports\Service\SiteDomainResolver: ~
+
   Sng\AdditionalReports\Service\PackageVersionProviderInterface:
     alias: Sng\AdditionalReports\Service\PackagistVersionService
 

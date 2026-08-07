@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Sng\AdditionalReports\Tests\Functional;
 
+use Sng\AdditionalReports\Service\SiteDomainResolver;
 use Sng\AdditionalReports\Service\TerArchiveService;
 use Sng\AdditionalReports\Service\Typo3VersionInformationService;
 use Sng\AdditionalReports\Utility;
@@ -148,7 +149,7 @@ class UtilityTest extends FunctionalTestCase
                 'base' => 'https://acme.com/',
             ]
         );
-        self::assertEquals('acme.com', Utility::getDomain(1));
+        self::assertEquals('acme.com', (new SiteDomainResolver())->resolve(1));
     }
 
     public function testGetAllDifferentPlugins()

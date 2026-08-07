@@ -13,8 +13,7 @@ namespace Sng\AdditionalReports\Reports;
 
 use Sng\AdditionalReports\Repository\PageStatisticsRepository;
 use Sng\AdditionalReports\Repository\WebsiteConfigurationRepository;
-use TYPO3\CMS\Core\Exception\SiteNotFoundException;
-use TYPO3\CMS\Core\Site\SiteFinder;
+use Sng\AdditionalReports\Service\SiteDomainResolver;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class WebsiteConf extends AbstractReport
@@ -23,18 +22,18 @@ class WebsiteConf extends AbstractReport
 
     private PageStatisticsRepository $pageStatisticsRepository;
 
-    private SiteFinder $siteFinder;
+    private SiteDomainResolver $siteDomainResolver;
 
     public function __construct(
         ?object $reportObject = null,
         ?WebsiteConfigurationRepository $websiteConfigurationRepository = null,
         ?PageStatisticsRepository $pageStatisticsRepository = null,
-        ?SiteFinder $siteFinder = null,
+        ?SiteDomainResolver $siteDomainResolver = null,
     ) {
         parent::__construct($reportObject);
         $this->websiteConfigurationRepository = $websiteConfigurationRepository ?? GeneralUtility::makeInstance(WebsiteConfigurationRepository::class);
         $this->pageStatisticsRepository = $pageStatisticsRepository ?? GeneralUtility::makeInstance(PageStatisticsRepository::class);
-        $this->siteFinder = $siteFinder ?? GeneralUtility::makeInstance(SiteFinder::class);
+        $this->siteDomainResolver = $siteDomainResolver ?? GeneralUtility::makeInstance(SiteDomainResolver::class);
     }
 
     /**
@@ -57,7 +56,7 @@ class WebsiteConf extends AbstractReport
         $websiteconf = [];
         foreach ($this->websiteConfigurationRepository->findVisibleRootPages() as $rootPage) {
             $pageIds = $this->pageStatisticsRepository->findPageIdsRecursive($rootPage['uid'], 99);
-            $domain = $this->findDomain($rootPage['uid']);
+            $domain = $this->siteDomainResolver->resolve($rootPage['uid']);
             $websiteconf[] = [
                 'pid' => $rootPage['uid'],
                 'pagetitle' => $rootPage['title'],
@@ -72,15 +71,6 @@ class WebsiteConf extends AbstractReport
         $view = $this->createView();
         $view->assign('items', $websiteconf);
         return $view->render('websiteconf-fluid');
-    }
-
-    private function findDomain(int $pageId): string
-    {
-        try {
-            return $this->siteFinder->getSiteByPageId($pageId)->getBase()->getHost();
-        } catch (SiteNotFoundException) {
-            return '';
-        }
     }
 
     public function getIdentifier(): string

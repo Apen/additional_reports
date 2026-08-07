@@ -16,10 +16,8 @@ use Sng\AdditionalReports\Repository\ExtensionRepository;
 use Sng\AdditionalReports\Repository\PageStatisticsRepository;
 use Sng\AdditionalReports\Service\ContentTypeResolver;
 use Sng\AdditionalReports\Service\ExtensionIconResolver;
-use TYPO3\CMS\Core\Exception\SiteNotFoundException;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
-use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -106,24 +104,6 @@ class Utility
     public static function getExtIcon($extKey)
     {
         return GeneralUtility::makeInstance(ExtensionIconResolver::class)->resolve(is_string($extKey) ? $extKey : '');
-    }
-
-    /**
-     * Get principal domain by page uid
-     */
-    public static function getDomain(int $pageUid): string
-    {
-        $siteFinder = GeneralUtility::makeInstance(SiteFinder::class);
-        try {
-            $siteConf = $siteFinder->getSiteByPageId($pageUid);
-            if (! empty($siteConf)) {
-                return $siteConf->getBase()
-                    ->getHost();
-            }
-        } catch (SiteNotFoundException $siteNotFoundException) {
-            return '';
-        }
-        return '';
     }
 
     /**

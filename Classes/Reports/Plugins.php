@@ -14,6 +14,7 @@ namespace Sng\AdditionalReports\Reports;
 use Sng\AdditionalReports\Repository\ContentUsageRepository;
 use Sng\AdditionalReports\Service\ContentTypeResolver;
 use Sng\AdditionalReports\Service\PaginationService;
+use Sng\AdditionalReports\Service\SiteDomainResolver;
 use Sng\AdditionalReports\Utility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -25,16 +26,20 @@ class Plugins extends AbstractReport
 
     private PaginationService $paginationService;
 
+    private SiteDomainResolver $siteDomainResolver;
+
     public function __construct(
         ?object $reportObject = null,
         ?ContentUsageRepository $contentUsageRepository = null,
         ?ContentTypeResolver $contentTypeResolver = null,
         ?PaginationService $paginationService = null,
+        ?SiteDomainResolver $siteDomainResolver = null,
     ) {
         parent::__construct($reportObject);
         $this->contentUsageRepository = $contentUsageRepository ?? GeneralUtility::makeInstance(ContentUsageRepository::class);
         $this->contentTypeResolver = $contentTypeResolver ?? GeneralUtility::makeInstance(ContentTypeResolver::class);
         $this->paginationService = $paginationService ?? GeneralUtility::makeInstance(PaginationService::class);
+        $this->siteDomainResolver = $siteDomainResolver ?? GeneralUtility::makeInstance(SiteDomainResolver::class);
     }
 
     /**
@@ -142,7 +147,7 @@ class Plugins extends AbstractReport
                 : (string) ($item['CType'] ?? '');
             $item = array_merge($item, $this->contentTypeResolver->resolve($type, $value));
             $pageId = (int) ($item['pid'] ?? 0);
-            $item['domain'] = Utility::getDomain($pageId);
+            $item['domain'] = $this->siteDomainResolver->resolve($pageId);
             $item['pagetitle'] = (string) ($item['title'] ?? '');
             $item['preview'] = '/index.php?id=' . $pageId;
         }
