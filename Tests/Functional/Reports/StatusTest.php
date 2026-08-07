@@ -6,6 +6,8 @@ namespace Sng\AdditionalReports\Tests\Functional\Reports;
 
 use Sng\AdditionalReports\Reports\Status;
 use Sng\AdditionalReports\Tests\Functional\FunctionalTestCase;
+use TYPO3\CMS\Core\Http\NormalizedParams;
+use TYPO3\CMS\Core\Http\ServerRequest;
 
 class StatusTest extends FunctionalTestCase
 {
@@ -16,9 +18,23 @@ class StatusTest extends FunctionalTestCase
 
     public function testDisplay()
     {
+        $originalRequest = $GLOBALS['TYPO3_REQUEST'];
+        $request = new ServerRequest(
+            $originalRequest->getUri(),
+            'GET',
+            null,
+            $originalRequest->getHeaders(),
+            [...$originalRequest->getServerParams(), 'HTTP_USER_AGENT' => '<script>alert(1)</script>'],
+        );
+        foreach ($originalRequest->getAttributes() as $name => $value) {
+            $request = $request->withAttribute($name, $value);
+        }
+        $GLOBALS['TYPO3_REQUEST'] = $request->withAttribute('normalizedParams', NormalizedParams::createFromRequest($request));
         $output = (new Status(parent::getReportObject()))->display();
 
         self::assertNotEmpty($output);
         self::assertStringContainsString('reportsMySQL', $output);
+        self::assertStringNotContainsString('<script>alert(1)</script>', $output);
+        self::assertStringContainsString('&lt;script&gt;alert(1)&lt;/script&gt;', $output);
     }
 }

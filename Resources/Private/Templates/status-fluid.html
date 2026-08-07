@@ -115,13 +115,13 @@
         </td>
         <td>
             <f:if condition="{value}">
-                <f:format.raw>{value}</f:format.raw>
+                {value}
             </f:if>
             <f:if condition="{valueArray}">
                 <ul>
                     <f:for each="{valueArray}" as="value">
                         <li>
-                            <f:format.raw>{value}</f:format.raw>
+                            {value}
                         </li>
                     </f:for>
                 </ul>
