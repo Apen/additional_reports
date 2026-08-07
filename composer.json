@@ -1,7 +1,7 @@
 {
   "name": "apen/additional_reports",
-  "description": "Useful information in the reports module : xclass, ajax, cliKeys, eID, general status of the system (encoding, DB, php vars...), hooks, compare local and TER extension (diff), used content type, used plugins, ExtDirect... It can really help you during migration or new existing project (to have a global reports of the system).",
-  "license": "GPL-2.0+",
+  "description": "Additional TYPO3 backend reports for system diagnostics, extensions, content usage and registered integrations.",
+  "license": "GPL-2.0-or-later",
   "type": "typo3-cms-extension",
   "keywords": [
     "TYPO3"

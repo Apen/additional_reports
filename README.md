@@ -1,110 +1,139 @@
-# additional_reports
+# Additional Reports for TYPO3
 
-[![Latest Stable Version](https://img.shields.io/packagist/v/apen/additional_reports?label=version)](https://packagist.org/packages/apen/additional_reports)
-[![Total Downloads](https://img.shields.io/packagist/dt/apen/additional_reports)](https://packagist.org/packages/apen/additional_reports)
-[![TYPO3](https://img.shields.io/badge/TYPO3-12.4-orange.svg?style=flat-square)](https://get.typo3.org/version/12)
-[![TYPO3](https://img.shields.io/badge/TYPO3-13.4-orange.svg?style=flat-square)](https://get.typo3.org/version/13)
-![CI](https://github.com/Apen/additional_reports/actions/workflows/ci.yaml/badge.svg)
+[![Latest stable version](https://img.shields.io/packagist/v/apen/additional_reports?label=stable)](https://packagist.org/packages/apen/additional_reports)
+[![Total downloads](https://img.shields.io/packagist/dt/apen/additional_reports)](https://packagist.org/packages/apen/additional_reports)
+[![TYPO3 13](https://img.shields.io/badge/TYPO3-13.4-f49700.svg)](https://get.typo3.org/version/13)
+[![TYPO3 14](https://img.shields.io/badge/TYPO3-14-f49700.svg)](https://get.typo3.org/version/14)
+[![CI](https://github.com/Apen/additional_reports/actions/workflows/ci.yaml/badge.svg)](https://github.com/Apen/additional_reports/actions/workflows/ci.yaml)
 
-**Display some useful information in the reports module.**
+Additional Reports extends TYPO3's Reports backend module with practical
+diagnostics for maintenance, audits and migrations.
 
-## ❓ What does it do?
+## Requirements
 
-Display some useful information in the reports module, like : 
+| Component | Supported versions |
+| --- | --- |
+| TYPO3 | 13.4 and 14.x |
+| PHP | 8.2, 8.3 and 8.4 |
+| Installation | Composer mode and classic mode |
 
-* list of eID
-* list of CommandController and Symfony Commands
-* list of all the contents and plugins on the instance (used or not) with filters
-* list of xclass declared
-* list of hooks declared
-* lot of information about the website : TYPO3, System Environment Variables, PHP, MySQL, Apache, Crontab, encoding...
-* list of log errors group by number of occurrences (sorting by last time seen or number)
-* list of all websites declared with information : domain, sys_template, number of pages...
-* list of extensions with information : number of tables, last version date, visual comparison between current and TER extension to see what could be hard coded
-* list of all the Middlewares (PSR-15) for frontend and backend
+## Reports
 
-All this tools can really help you during migration or new existing project (to have a global reports of the system).
-Do not hesitate to contact me if you have any good ideas.
+| Report | Purpose |
+| --- | --- |
+| Commands | Lists registered Symfony console commands and legacy command controllers. |
+| eID | Lists registered eID entry points. |
+| Event dispatcher | Lists PSR-14 events and their listeners. |
+| Extensions | Shows installed extensions, database tables and fields, available updates and file comparisons. |
+| Hooks | Lists registered legacy hooks and their implementations. |
+| Log errors | Groups backend log errors by occurrence and last seen date. |
+| Middlewares | Lists frontend and backend PSR-15 middleware stacks. |
+| Plugins and content types | Locates used and cached plugins/content types, with filters and backend links. |
+| System status | Summarizes TYPO3, environment, PHP, database and scheduler information. |
+| Website configuration | Summarizes sites, domains, templates and page statistics. |
+| XCLASS | Lists registered XCLASS overrides. |
 
-## ⏳ Installation
+The reports are intended as diagnostic aids. They complement TYPO3's native
+system reports and do not replace a security or compatibility audit.
 
-Download and install as TYPO3 extension.
+## Installation
 
-* Composer : `composer require apen/additional_reports`
-* TER url : https://extensions.typo3.org/extension/additional_reports/
-* Releases on Github : https://github.com/Apen/additional_reports/releases
+Install the extension with Composer:
 
-Maybe a "clear cache" is needed, then go to the reports module.
+```bash
+composer require apen/additional_reports
+```
 
-## 💻 Features
+It is also available from the
+[TYPO3 Extension Repository](https://extensions.typo3.org/extension/additional_reports/)
+and the [GitHub releases](https://github.com/Apen/additional_reports/releases).
 
-### eID
+After installation, clear the TYPO3 caches if necessary, then open
+**System > Reports** in the backend and select an Additional Reports entry.
 
-![](https://raw.githubusercontent.com/Apen/additional_reports/master/Resources/Public/Images/eid.png)
+## Screenshots
 
-### Commands
+<details>
+<summary>Commands and eID</summary>
 
-![](https://raw.githubusercontent.com/Apen/additional_reports/master/Resources/Public/Images/commands.png)
+![Registered commands](Resources/Public/Images/commands.png)
 
-### Plugins and CTypes
+![Registered eID entry points](Resources/Public/Images/eid.png)
 
-![](https://raw.githubusercontent.com/Apen/additional_reports/master/Resources/Public/Images/plugins.png)
+</details>
 
-![](https://raw.githubusercontent.com/Apen/additional_reports/master/Resources/Public/Images/ctypes.png)
+<details>
+<summary>Plugins and content types</summary>
 
-![](https://raw.githubusercontent.com/Apen/additional_reports/master/Resources/Public/Images/summary.png)
+![Plugin usage](Resources/Public/Images/plugins.png)
 
-### XCLASS
+![Content type usage](Resources/Public/Images/ctypes.png)
 
-![](https://raw.githubusercontent.com/Apen/additional_reports/master/Resources/Public/Images/xclass.png)
+![Plugin and content type summary](Resources/Public/Images/summary.png)
 
-### Hooks
+</details>
 
-![](https://raw.githubusercontent.com/Apen/additional_reports/master/Resources/Public/Images/hooks.png)
+<details>
+<summary>System diagnostics</summary>
 
-### Global status
+![System status](Resources/Public/Images/status1.png)
 
-![](https://raw.githubusercontent.com/Apen/additional_reports/master/Resources/Public/Images/status1.png)
-![](https://raw.githubusercontent.com/Apen/additional_reports/master/Resources/Public/Images/status2.png)
+![Detailed system status](Resources/Public/Images/status2.png)
 
-### Grouped logs
+![Grouped log errors](Resources/Public/Images/logs.png)
 
-![](https://raw.githubusercontent.com/Apen/additional_reports/master/Resources/Public/Images/logs.png)
+![Website configuration](Resources/Public/Images/websites.png)
 
-### List of websites and domains
+</details>
 
-![](https://raw.githubusercontent.com/Apen/additional_reports/master/Resources/Public/Images/websites.png)
+<details>
+<summary>Extensions and TYPO3 registrations</summary>
 
-### Extensions
+![Installed extensions](Resources/Public/Images/extensions.png)
 
-![](https://raw.githubusercontent.com/Apen/additional_reports/master/Resources/Public/Images/extensions.png)
+![Unified extension diff](Resources/Public/Images/extensions-diff.png)
 
-Text diff with TER and last version
+![Registered hooks](Resources/Public/Images/hooks.png)
 
-![](https://raw.githubusercontent.com/Apen/additional_reports/master/Resources/Public/Images/extensions-diff.png)
+![Registered XCLASS overrides](Resources/Public/Images/xclass.png)
 
-### EventDispatcher (PSR-14)
+</details>
 
-![](https://raw.githubusercontent.com/Apen/additional_reports/master/Resources/Public/Images/eventdispatcher.png)
+<details>
+<summary>PSR-14 and PSR-15</summary>
 
-### Middlewares (PSR-15)
+![PSR-14 event listeners](Resources/Public/Images/eventdispatcher.png)
 
-![](https://raw.githubusercontent.com/Apen/additional_reports/master/Resources/Public/Images/middlewares.png)
+![PSR-15 middlewares](Resources/Public/Images/middlewares.png)
+
+</details>
 
 ## Development and quality
 
-The local toolchain targets the shared TYPO3 v13/v14 API surface and requires PHP 8.4 for development tools.
+Install the development dependencies and run the complete local pipeline:
 
 ```bash
 composer install
 composer quality
+```
+
+Generate an HTML coverage report in `.Build/public/coverage/html` with:
+
+```bash
 composer coverage
 ```
 
-The HTML coverage report is generated in `.Build/public/coverage/html`. Rector and Fractor migration proposals are intentionally kept outside the blocking quality command so they can be reviewed before a refactor:
+Rector and Fractor suggestions are deliberately kept outside the blocking
+quality pipeline so that migrations can be reviewed before applying them:
 
 ```bash
 composer quality:migrations
 ```
 
-Network-dependent TYPO3 API and TER tests are disabled by default. Enable them explicitly with `RUN_NETWORK_TESTS=1`.
+Network-dependent TYPO3 API and TER tests are disabled by default. Enable
+them explicitly with `RUN_NETWORK_TESTS=1`.
+
+## License
+
+This extension is licensed under the
+[GNU General Public License v2.0 or later](LICENSE.txt).
