@@ -13,11 +13,12 @@ namespace Sng\AdditionalReports\Eid;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use SebastianBergmann\Diff\Differ;
+use SebastianBergmann\Diff\Output\UnifiedDiffOutputBuilder;
 use Sng\AdditionalReports\Utility;
 use TYPO3\CMS\Core\Http\HtmlResponse;
 use TYPO3\CMS\Core\Package\Exception\UnknownPackageException;
 use TYPO3\CMS\Core\Package\PackageManager;
-use TYPO3\CMS\Core\Utility\DiffUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class CallAjax
@@ -88,33 +89,26 @@ class CallAjax
             : null;
     }
 
-    /**
-     * @param string $file1
-     * @param string $file2
-     * @return string
-     */
-    public function t3Diff($file1, $file2)
+    public function t3Diff(string $file1, string $file2): string
     {
-        $diff = GeneralUtility::makeInstance(DiffUtility::class);
-        $sourcesDiff = $diff->diff($file1, $file2);
-        return $this->printT3Diff($sourcesDiff);
+        $differ = new Differ(new UnifiedDiffOutputBuilder('', true));
+        return $this->printT3Diff($differ->diff($file1, $file2));
     }
 
-    /**
-     * @param string $sourcesDiff
-     * @return string
-     */
-    public function printT3Diff($sourcesDiff)
+    public function printT3Diff(string $sourcesDiff): string
     {
-        $out = '<pre width="10">';
-        $out .= '<table border="0" cellspacing="0" cellpadding="0" style="width:780px;padding:8px;">';
-        $out .= '<tr><td style="background-color: #FDD;"><strong>Local file</strong></td></tr>';
-        $out .= '<tr><td style="background-color: #DFD;"><strong>TER file</strong></td></tr>';
-        $sourcesDiff = str_replace('<del>', '<del style="background-color:#FDD;">', $sourcesDiff);
-        $sourcesDiff = str_replace('<ins>', '<ins style="background-color:#DFD;">', $sourcesDiff);
-        $out .= $sourcesDiff;
-        $out .= '</table>';
-        $out .= '</pre>';
-        return $out;
+        $lines = preg_split('/(?<=\n)/', $sourcesDiff, -1, PREG_SPLIT_NO_EMPTY) ?: [];
+        $output = '<pre style="overflow:auto; padding:8px;">';
+        foreach ($lines as $line) {
+            $escapedLine = htmlspecialchars($line, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+            $style = match ($line[0] ?? '') {
+                '-' => 'background-color:#FDD;',
+                '+' => 'background-color:#DFD;',
+                '@' => 'color:#555; font-weight:bold;',
+                default => '',
+            };
+            $output .= '<span style="display:block;' . $style . '">' . $escapedLine . '</span>';
+        }
+        return $output . '</pre>';
     }
 }
