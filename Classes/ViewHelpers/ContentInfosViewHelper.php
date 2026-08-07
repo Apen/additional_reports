@@ -52,7 +52,7 @@ class ContentInfosViewHelper extends AbstractViewHelper
             if (Utility::hasLegacyListType()) {
                 $item = array_merge($item, Utility::getContentInfosFromTca('plugin', $item['list_type']));
             } else {
-                $item = array_merge($item, Utility::getContentInfosFromTca('ctype', $item['CType']));
+                $item = array_merge($item, Utility::getContentInfosFromTca('plugin', $item['CType']));
             }
         }
 

@@ -321,7 +321,8 @@ class Utility
         $infos['extension'] = $matches[1] ?? '';
 
         if ($type === 'plugin') {
-            foreach ($GLOBALS['TCA']['tt_content']['columns']['list_type']['config']['items'] as $itemValue) {
+            $pluginField = self::hasLegacyListType() ? 'list_type' : 'CType';
+            foreach (($GLOBALS['TCA']['tt_content']['columns'][$pluginField]['config']['items'] ?? []) as $itemValue) {
                 // v12
                 if (trim($itemValue['value'] ?? '') === $value) {
                     $infos['iconext'] = '';
@@ -570,7 +571,18 @@ class Utility
     public static function getAllDifferentPlugins(bool $displayHidden = false): array
     {
         if (! self::hasLegacyListType()) {
-            return self::getAllDifferentCtypes($displayHidden);
+            $pluginContentTypes = self::getPluginContentTypes();
+            if ($pluginContentTypes === []) {
+                return [];
+            }
+            $queryBuilder = self::createContentQueryBuilder($displayHidden);
+            return $queryBuilder
+                ->select('tt_content.CType')
+                ->distinct()
+                ->andWhere($queryBuilder->expr()->in('tt_content.CType', $queryBuilder->createNamedParameter($pluginContentTypes, \Doctrine\DBAL\ArrayParameterType::STRING)))
+                ->orderBy('tt_content.CType')
+                ->executeQuery()
+                ->fetchAllAssociative();
         }
         $queryBuilder = self::createContentQueryBuilder($displayHidden);
         return $queryBuilder
@@ -596,6 +608,10 @@ class Utility
                 ->andWhere($queryBuilder->expr()->neq('tt_content.CType', $queryBuilder->createNamedParameter('list')))
                 ->orderBy('tt_content.list_type');
         } else {
+            $pluginContentTypes = self::getPluginContentTypes();
+            if ($pluginContentTypes !== []) {
+                $queryBuilder->andWhere($queryBuilder->expr()->notIn('tt_content.CType', $queryBuilder->createNamedParameter($pluginContentTypes, \Doctrine\DBAL\ArrayParameterType::STRING)));
+            }
             $queryBuilder->orderBy('tt_content.CType');
         }
         return $queryBuilder->executeQuery()->fetchAllAssociative();
@@ -609,7 +625,22 @@ class Utility
     public static function getAllPlugins(bool $displayHidden = false, ?string $filter = null): array
     {
         if (! self::hasLegacyListType()) {
-            return self::getAllCtypes($displayHidden, $filter);
+            $pluginContentTypes = self::getPluginContentTypes();
+            if ($pluginContentTypes === [] || ($filter !== null && $filter !== 'all' && ! in_array($filter, $pluginContentTypes, true))) {
+                return [];
+            }
+            $queryBuilder = self::createContentQueryBuilder($displayHidden);
+            $queryBuilder
+                ->select('tt_content.CType', 'tt_content.pid', 'tt_content.uid', 'pages.title')
+                ->addSelectLiteral('pages.hidden AS hiddenpages', 'tt_content.hidden AS hiddentt_content')
+                ->distinct()
+                ->andWhere($queryBuilder->expr()->in('tt_content.CType', $queryBuilder->createNamedParameter($pluginContentTypes, \Doctrine\DBAL\ArrayParameterType::STRING)))
+                ->orderBy('tt_content.CType')
+                ->addOrderBy('tt_content.pid');
+            if ($filter !== null && $filter !== 'all') {
+                $queryBuilder->andWhere($queryBuilder->expr()->eq('tt_content.CType', $queryBuilder->createNamedParameter($filter)));
+            }
+            return $queryBuilder->executeQuery()->fetchAllAssociative();
         }
         $queryBuilder = self::createContentQueryBuilder($displayHidden);
         $queryBuilder
@@ -639,6 +670,12 @@ class Utility
             ->andWhere($queryBuilder->expr()->neq('tt_content.CType', $queryBuilder->createNamedParameter(self::hasLegacyListType() ? 'list' : '')))
             ->orderBy('tt_content.CType')
             ->addOrderBy('tt_content.pid');
+        if (! self::hasLegacyListType()) {
+            $pluginContentTypes = self::getPluginContentTypes();
+            if ($pluginContentTypes !== []) {
+                $queryBuilder->andWhere($queryBuilder->expr()->notIn('tt_content.CType', $queryBuilder->createNamedParameter($pluginContentTypes, \Doctrine\DBAL\ArrayParameterType::STRING)));
+            }
+        }
         if ($filter !== null && $filter !== 'all') {
             $queryBuilder->andWhere($queryBuilder->expr()->eq('tt_content.CType', $queryBuilder->createNamedParameter($filter)));
         }
@@ -664,6 +701,23 @@ class Utility
     {
         return GeneralUtility::makeInstance(Typo3Version::class)->getMajorVersion() < 14
             && isset($GLOBALS['TCA']['tt_content']['columns']['list_type']);
+    }
+
+    /**
+     * @return list<string>
+     */
+    public static function getPluginContentTypes(): array
+    {
+        $contentTypeGroups = ['default', 'lists', 'menu', 'forms', 'special'];
+        $pluginContentTypes = [];
+        foreach (($GLOBALS['TCA']['tt_content']['columns']['CType']['config']['items'] ?? []) as $item) {
+            $value = $item['value'] ?? $item[1] ?? null;
+            $group = $item['group'] ?? $item[3] ?? 'default';
+            if (is_string($value) && $value !== '' && ! in_array($group, $contentTypeGroups, true)) {
+                $pluginContentTypes[] = $value;
+            }
+        }
+        return array_values(array_unique($pluginContentTypes));
     }
 
     /**

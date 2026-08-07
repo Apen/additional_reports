@@ -186,7 +186,13 @@ class UtilityTest extends FunctionalTestCase
 
     public function testGetAllDifferentPlugins()
     {
-        self::assertNotEmpty(Utility::getAllDifferentPlugins());
+        $GLOBALS['TCA']['tt_content']['columns']['CType']['config']['items'][] = [
+            'label' => 'Indexed search',
+            'value' => 'indexedsearch_pi2',
+            'group' => 'plugins',
+        ];
+
+        self::assertSame(['indexedsearch_pi2'], array_column(Utility::getAllDifferentPlugins(), 'CType'));
     }
 
     public function testGetAllDifferentCtypes()
@@ -196,7 +202,13 @@ class UtilityTest extends FunctionalTestCase
 
     public function testGetAllPlugins()
     {
-        self::assertNotEmpty(Utility::getAllPlugins());
+        $GLOBALS['TCA']['tt_content']['columns']['CType']['config']['items'][] = [
+            'label' => 'Indexed search',
+            'value' => 'indexedsearch_pi2',
+            'group' => 'plugins',
+        ];
+
+        self::assertSame(['indexedsearch_pi2'], array_values(array_unique(array_column(Utility::getAllPlugins(), 'CType'))));
     }
 
     public function testGetAllCtypes()

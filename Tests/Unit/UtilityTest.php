@@ -10,6 +10,28 @@ use TYPO3\TestingFramework\Core\BaseTestCase;
 
 class UtilityTest extends BaseTestCase
 {
+    public function testPluginContentTypesAreReadFromTcaGroups(): void
+    {
+        $GLOBALS['TCA']['tt_content']['columns']['CType']['config']['items'] = [
+            ['label' => 'Text', 'value' => 'text', 'group' => 'default'],
+            ['label' => 'Menu', 'value' => 'menu', 'group' => 'menu'],
+            ['label' => 'Plugin', 'value' => 'vendor_plugin', 'group' => 'plugins'],
+            ['label' => 'Grouped plugin', 'value' => 'vendor_special', 'group' => 'vendor'],
+        ];
+
+        self::assertSame(['vendor_plugin', 'vendor_special'], Utility::getPluginContentTypes());
+    }
+
+    public function testPluginInformationUsesPluginNameAndExtensionPrefix(): void
+    {
+        $GLOBALS['TCA']['tt_content']['columns']['CType']['config']['items'] = [];
+
+        self::assertSame([
+            'plugin' => 'vendor_plugin',
+            'extension' => 'vendor',
+        ], Utility::getContentInfosFromTca('plugin', 'vendor_plugin'));
+    }
+
     public function testReportsList(): void
     {
         self::assertSame([
