@@ -54,4 +54,36 @@ class ExtensionsTest extends FunctionalTestCase
         self::assertSame([], $parser->parse('CREATE TABLE invalid syntax;'));
     }
 
+    public function testExtensionInformationExposesStructuredUpdateData(): void
+    {
+        $information = (new Extensions(parent::getReportObject()))->getExtensionInformations([
+            'extkey' => 'example',
+            'version' => '1.0.0',
+            'lastversion' => [
+                'version' => '2.0.0',
+                'updatedate' => '01/08/2026',
+            ],
+            'fdfile' => 'CREATE TABLE tx_example (uid int(11) NOT NULL);',
+        ]);
+
+        self::assertTrue($information['updateAvailable']);
+        self::assertSame('2.0.0', $information['latestVersion']);
+        self::assertSame('01/08/2026', $information['latestVersionDate']);
+        self::assertNotSame('', $information['compareUrlLast']);
+        self::assertSame('tx_example', $information['tables'][0]['name']);
+    }
+
+    public function testDevelopmentExtensionHasNoUpdateLink(): void
+    {
+        $information = (new Extensions(parent::getReportObject()))->getExtensionInformations([
+            'extkey' => 'example',
+            'version' => 'dev-main',
+            'lastversion' => null,
+        ]);
+
+        self::assertFalse($information['updateAvailable']);
+        self::assertSame('', $information['latestVersion']);
+        self::assertSame('', $information['compareUrlLast']);
+    }
+
 }

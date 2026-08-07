@@ -13,7 +13,6 @@ namespace Sng\AdditionalReports\Reports;
 
 use Sng\AdditionalReports\Repository\ExtensionRepository;
 use Sng\AdditionalReports\Service\ExtensionSchemaParser;
-use Sng\AdditionalReports\Utility;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -66,7 +65,7 @@ class Extensions extends AbstractReport
         if (! empty($allExtension['ter'])) {
             foreach ($allExtension['ter'] as $itemValue) {
                 $currentExtension = $this->getExtensionInformations($itemValue);
-                if (version_compare($itemValue['version'], $itemValue['lastversion']['version'], '<')) {
+                if ($currentExtension['updateAvailable']) {
                     $extensionsToUpdate++;
                 }
                 $listExtensionsTer[] = $currentExtension;
@@ -102,44 +101,51 @@ class Extensions extends AbstractReport
     /**
      * Get all necessary informations about an ext
      *
-     * @param array $itemValue
-     * @return array
+     * @param array<string, mixed> $itemValue
+     * @return array{
+     *     extension: string,
+     *     version: string,
+     *     latestVersion: string,
+     *     latestVersionDate: string,
+     *     updateAvailable: bool,
+     *     compareUrl: string,
+     *     compareUrlLast: string,
+     *     tables: list<array{name: string, columns: list<string>}>
+     * }
      */
-    public function getExtensionInformations($itemValue)
+    public function getExtensionInformations(array $itemValue): array
     {
-        $extKey = $itemValue['extkey'];
-        $extVersion = $itemValue['version'] ?? '';
-        $listExtensionsTerItem = [];
-        $listExtensionsTerItem['extension'] = $extKey;
-        $listExtensionsTerItem['version'] = $extVersion;
+        $extKey = (string) ($itemValue['extkey'] ?? '');
+        $extVersion = (string) ($itemValue['version'] ?? '');
+        $latestVersionData = is_array($itemValue['lastversion'] ?? null) ? $itemValue['lastversion'] : [];
+        $latestVersion = (string) ($latestVersionData['version'] ?? '');
+        $updateAvailable = $extVersion !== '' && $latestVersion !== '' && version_compare($extVersion, $latestVersion, '<');
 
-        $listExtensionsTerItem['compareUrl'] = (string) $this->uriBuilder->buildUriFromRoute('additional_reports_compareFiles', [
+        $compareUrl = (string) $this->uriBuilder->buildUriFromRoute('additional_reports_compareFiles', [
             'extKey' => $extKey,
             'mode' => 'compareExtension',
             'extVersion' => $extVersion,
         ]);
 
-        // need extension update ?
-        if (version_compare($extVersion, $itemValue['lastversion']['version'] ?? '', '<')) {
-            $listExtensionsTerItem['versionlast'] = '<span style="color:green;font-weight:bold;">' . $itemValue['lastversion']['version'] . '&nbsp;(' . $itemValue['lastversion']['updatedate'] . ')</span>';
-            $listExtensionsTerItem['compareUrlLast'] = (string) $this->uriBuilder->buildUriFromRoute('additional_reports_compareFiles', [
+        $compareUrlLast = '';
+        if ($updateAvailable) {
+            $compareUrlLast = (string) $this->uriBuilder->buildUriFromRoute('additional_reports_compareFiles', [
                 'extKey' => $extKey,
                 'mode' => 'compareExtension',
-                'extVersion' => $itemValue['lastversion']['version'],
+                'extVersion' => $latestVersion,
             ]);
-        } else {
-            $listExtensionsTerItem['versionlast'] = ($itemValue['lastversion']['version'] ?? '') . '&nbsp;(' . ($itemValue['lastversion']['updatedate'] ?? '') . ')';
-            $listExtensionsTerItem['compareUrlLast'] = '';
         }
 
-        $listExtensionsTerItem['downloads'] = $itemValue['lastversion']['alldownloadcounter'] ?? '';
-        $listExtensionsTerItem['tables'] = $this->extensionSchemaParser->parse((string) ($itemValue['fdfile'] ?? ''));
-
-        // need extconf update
-        $listExtensionsTerItem['confintegrity'] = Utility::getLl('no');
-        $listExtensionsTerItem['confintegrityContent'] = '';
-
-        return $listExtensionsTerItem;
+        return [
+            'extension' => $extKey,
+            'version' => $extVersion,
+            'latestVersion' => $latestVersion,
+            'latestVersionDate' => (string) ($latestVersionData['updatedate'] ?? ''),
+            'updateAvailable' => $updateAvailable,
+            'compareUrl' => $compareUrl,
+            'compareUrlLast' => $compareUrlLast,
+            'tables' => $this->extensionSchemaParser->parse((string) ($itemValue['fdfile'] ?? '')),
+        ];
     }
 
     public function getIdentifier(): string

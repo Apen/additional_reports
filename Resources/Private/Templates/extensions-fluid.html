@@ -1,5 +1,3 @@
-{namespace ar=Sng\AdditionalReports\ViewHelpers}
-
 <table class="table table-striped table-hover">
     <tbody>
     <tr>
@@ -81,14 +79,16 @@
                     <td>{extension.extension}</td>
                     <td>{extension.version}</td>
                     <td>
-                        <f:format.raw>{extension.versionlast}</f:format.raw>
+                        <f:if condition="{extension.updateAvailable}">
+                            <f:then><strong class="text-success">{extension.latestVersion} ({extension.latestVersionDate})</strong></f:then>
+                            <f:else>{extension.latestVersion} <f:if condition="{extension.latestVersionDate}">({extension.latestVersionDate})</f:if></f:else>
+                        </f:if>
                     </td>
                     <td>
                         <f:render section="tables" arguments="{title:'{f:translate(extensionName:\'additional_reports\',key:\'extensions_tablesmodified\')}',tables:extension.tables}"/>
                     </td>
                     <td>
-                        <f:format.raw>{extension.confintegrity}</f:format.raw>
-                        <f:render section="details" arguments="{title:'{f:translate(extensionName:\'additional_reports\',key:\'plus\')}',content:extension.confintegrityContent}"/>
+                        <f:translate extensionName="additional_reports" key="no"/>
                     </td>
                     <td>
                         <f:render section="externalLink" arguments="{title:'{f:translate(extensionName:\'additional_reports\',key:\'comparesame\')}',url:extension.compareUrl}"/>
@@ -184,15 +184,6 @@
         </table>
     </div>
 </f:if>
-
-<f:section name="details">
-    <f:if condition="{content}">
-        <details>
-            <summary class="btn btn-default">{title}</summary>
-            <f:format.raw>{content}</f:format.raw>
-        </details>
-    </f:if>
-</f:section>
 
 <f:section name="tables">
     <f:if condition="{tables}">
