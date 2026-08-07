@@ -386,35 +386,6 @@ class Utility
     }
 
     /**
-     * Get the type and the path of an extension
-     */
-    public static function getExtensionType(string $extKey): array
-    {
-        if (is_dir(self::getPathTypo3Conf() . 'ext/' . $extKey . '/')) {
-            return [
-                'type' => 'L',
-                'siteRelPath' => 'typo3conf/ext/' . $extKey . '/',
-                'typo3RelPath' => '../typo3conf/ext/' . $extKey . '/',
-            ];
-        }
-        if (is_dir(Environment::getPublicPath() . '/typo3/ext/' . $extKey . '/')) {
-            return [
-                'type' => 'G',
-                'siteRelPath' => TYPO3_mainDir . 'ext/' . $extKey . '/',
-                'typo3RelPath' => 'ext/' . $extKey . '/',
-            ];
-        }
-        if (is_dir(Environment::getPublicPath() . '/typo3/sysext/' . $extKey . '/')) {
-            return [
-                'type' => 'S',
-                'siteRelPath' => (defined('TYPO3_mainDir') ? TYPO3_mainDir : '') . 'sysext/' . $extKey . '/',
-                'typo3RelPath' => 'sysext/' . $extKey . '/',
-            ];
-        }
-        return [];
-    }
-
-    /**
      * Get rootline by page uid
      */
     public static function getRootLine(int $pageUid): array

@@ -91,11 +91,6 @@ class UtilityTest extends FunctionalTestCase
         self::assertEquals('additional_reports', $extLits['dev']['additional_reports']['extkey']);
     }
 
-    public function testGetExtensionType()
-    {
-        self::assertNotEmpty(Utility::getExtensionType('core'));
-    }
-
     public function testGetExtPath()
     {
         self::assertNotEmpty(Utility::getExtPath('core'));
