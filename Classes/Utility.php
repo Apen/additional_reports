@@ -16,9 +16,6 @@ use Sng\AdditionalReports\Repository\ExtensionRepository;
 use Sng\AdditionalReports\Repository\PageStatisticsRepository;
 use Sng\AdditionalReports\Service\ExtensionIconResolver;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
-use TYPO3\CMS\Core\Database\Connection;
-use TYPO3\CMS\Core\Database\ConnectionPool;
-use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Exception\SiteNotFoundException;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
@@ -463,19 +460,6 @@ class Utility
     public static function getLl(string $key): string
     {
         return self::getLanguageService()->sL('LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:' . $key);
-    }
-
-    public static function getDatabaseConnection(): Connection
-    {
-        return GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionByName(ConnectionPool::DEFAULT_CONNECTION_NAME);
-    }
-
-    public static function getQueryBuilder(string $table = ''): QueryBuilder
-    {
-        if ($table !== '') {
-            return GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($table);
-        }
-        return self::getDatabaseConnection()->createQueryBuilder();
     }
 
     public static function getLanguageService(): LanguageService

@@ -11,10 +11,20 @@ namespace Sng\AdditionalReports\Reports;
  * LICENSE.txt file that was distributed with this source code.
  */
 
+use Sng\AdditionalReports\Repository\LogErrorRepository;
 use Sng\AdditionalReports\Utility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class LogErrors extends AbstractReport
 {
+    private LogErrorRepository $logErrorRepository;
+
+    public function __construct(?object $reportObject = null, ?LogErrorRepository $logErrorRepository = null)
+    {
+        parent::__construct($reportObject);
+        $this->logErrorRepository = $logErrorRepository ?? GeneralUtility::makeInstance(LogErrorRepository::class);
+    }
+
     /**
      * This method renders the report
      *
@@ -32,28 +42,16 @@ class LogErrors extends AbstractReport
      */
     public function display()
     {
-        $queryBuilder = Utility::getQueryBuilder('sys_log');
-        $queryBuilder
-            ->select('details')
-            ->addSelectLiteral('COUNT(*) AS nb', 'MAX(tstamp) AS tstamp')
-            ->from('sys_log')
-            ->where($queryBuilder->expr()->gt('error', 0))
-            ->groupBy('details');
         $orderBy = $this->getRequestParameter('orderby');
-        $allowedOrderings = [
-            'nb ASC' => ['nb', 'ASC'],
-            'nb DESC' => ['nb', 'DESC'],
-            'tstamp ASC' => ['tstamp', 'ASC'],
-            'tstamp DESC' => ['tstamp', 'DESC'],
-        ];
-        $orderKey = is_string($orderBy) ? $orderBy : '';
-        [$orderField, $orderDirection] = $allowedOrderings[$orderKey] ?? ['nb', 'DESC'];
-        $queryBuilder->orderBy($orderField, $orderDirection)->addOrderBy('tstamp', 'DESC');
 
         $view = $this->createView();
         $view->assign('reportname', interface_exists(\TYPO3\CMS\Reports\ReportInterface::class) ? 'additionalreports_logerrors' : 'logerrors');
         $view->assign('paginationRoute', $this->getCurrentRouteIdentifier());
-        Utility::buildPagination($queryBuilder->executeQuery()->fetchAllAssociative(), (int) ($this->getRequestParameter('currentPage') ?? 1), $view);
+        Utility::buildPagination(
+            $this->logErrorRepository->findGrouped(is_string($orderBy) ? $orderBy : null),
+            (int) ($this->getRequestParameter('currentPage') ?? 1),
+            $view,
+        );
 
         return $view->render('logerrors-fluid');
     }

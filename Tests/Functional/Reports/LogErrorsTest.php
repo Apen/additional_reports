@@ -45,4 +45,24 @@ class LogErrorsTest extends FunctionalTestCase
         self::assertStringNotContainsString('<script>alert(1)</script>', $output);
         self::assertStringContainsString('14/11/2023', $output);
     }
+
+    public function testSupportedOrderingIsApplied(): void
+    {
+        $connection = GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable('sys_log');
+        $connection->insert('sys_log', ['error' => 1, 'details' => 'Single error', 'tstamp' => 100]);
+        $connection->insert('sys_log', ['error' => 1, 'details' => 'Repeated error', 'tstamp' => 200]);
+        $connection->insert('sys_log', ['error' => 1, 'details' => 'Repeated error', 'tstamp' => 300]);
+        $request = $GLOBALS['TYPO3_REQUEST'];
+        $GLOBALS['TYPO3_REQUEST'] = $request->withQueryParams([
+            ...$request->getQueryParams(),
+            'orderby' => 'nb ASC',
+        ]);
+
+        $output = (new LogErrors(parent::getReportObject()))->display();
+
+        self::assertLessThan(
+            strpos($output, 'Repeated error'),
+            strpos($output, 'Single error'),
+        );
+    }
 }

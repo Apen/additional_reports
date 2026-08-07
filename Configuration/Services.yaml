@@ -21,6 +21,8 @@ services:
 
   Sng\AdditionalReports\Repository\DatabaseStatusRepository: ~
 
+  Sng\AdditionalReports\Repository\LogErrorRepository: ~
+
   Sng\AdditionalReports\Repository\WebsiteConfigurationRepository: ~
 
   Sng\AdditionalReports\Reports\CommandControllers:
