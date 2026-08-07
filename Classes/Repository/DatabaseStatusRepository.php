@@ -49,8 +49,9 @@ final readonly class DatabaseStatusRepository
             ->executeQuery()
             ->fetchAssociative();
         if (is_array($schema)) {
-            $status['defaultCharacterSet'] = (string) ($schema['default_character_set_name'] ?? '');
-            $status['defaultCollation'] = (string) ($schema['default_collation_name'] ?? '');
+            $schemaSummary = $this->summarizeSchema($schema);
+            $status['defaultCharacterSet'] = $schemaSummary['defaultCharacterSet'];
+            $status['defaultCollation'] = $schemaSummary['defaultCollation'];
         }
 
         $rows = $connection->createQueryBuilder()
@@ -70,6 +71,19 @@ final readonly class DatabaseStatusRepository
     }
 
     /**
+     * @param array<string, mixed> $row
+     * @return array{defaultCharacterSet: string, defaultCollation: string}
+     */
+    public function summarizeSchema(array $row): array
+    {
+        $row = array_change_key_case($row, CASE_LOWER);
+        return [
+            'defaultCharacterSet' => (string) ($row['default_character_set_name'] ?? ''),
+            'defaultCollation' => (string) ($row['default_collation_name'] ?? ''),
+        ];
+    }
+
+    /**
      * @param list<array<string, mixed>> $rows
      * @return array{
      *     tables: list<array{name: string, engine: string, collation: string, rows: int, size: float}>,
@@ -81,6 +95,7 @@ final readonly class DatabaseStatusRepository
         $tables = [];
         $totalSize = 0.0;
         foreach ($rows as $row) {
+            $row = array_change_key_case($row, CASE_LOWER);
             $tableSize = round(((float) ($row['data_length'] ?? 0) + (float) ($row['index_length'] ?? 0)) / 1024 / 1024, 2);
             $tables[] = [
                 'name' => (string) ($row['table_name'] ?? ''),

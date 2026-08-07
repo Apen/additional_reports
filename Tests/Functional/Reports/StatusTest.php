@@ -35,6 +35,8 @@ class StatusTest extends FunctionalTestCase
         self::assertNotEmpty($output);
         self::assertStringContainsString('class="additional-reports-status-section"', $output);
         self::assertStringContainsString('<summary>MySQL</summary>', $output);
+        self::assertStringContainsString('additional-reports-status-subtable', $output);
+        self::assertStringNotContainsString('class="table-fit"', $output);
         self::assertStringNotContainsString('<script>alert(1)</script>', $output);
         self::assertStringContainsString('&lt;script&gt;alert(1)&lt;/script&gt;', $output);
     }

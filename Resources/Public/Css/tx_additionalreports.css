@@ -223,7 +223,15 @@ table.debug td.debugvar {
 
 .additional-reports-status-content {
     border-top: 1px solid var(--typo3-component-border-color, #d7d7d7);
-    padding: 1rem;
+    overflow-x: auto;
+}
+
+.additional-reports-status-content > .table {
+    margin-bottom: 0;
+}
+
+.additional-reports-status-subtable {
+    border-top: 1px solid var(--typo3-component-border-color, #d7d7d7);
 }
 
 .additional-reports-extensions-table {

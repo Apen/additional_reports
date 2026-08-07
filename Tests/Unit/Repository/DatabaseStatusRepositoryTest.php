@@ -9,6 +9,17 @@ use Sng\AdditionalReports\Repository\DatabaseStatusRepository;
 
 final class DatabaseStatusRepositoryTest extends TestCase
 {
+    public function testSchemaColumnNamesAreCaseInsensitive(): void
+    {
+        self::assertSame([
+            'defaultCharacterSet' => 'utf8mb4',
+            'defaultCollation' => 'utf8mb4_unicode_ci',
+        ], (new DatabaseStatusRepository())->summarizeSchema([
+            'DEFAULT_CHARACTER_SET_NAME' => 'utf8mb4',
+            'DEFAULT_COLLATION_NAME' => 'utf8mb4_unicode_ci',
+        ]));
+    }
+
     public function testTableSizesAreCalculatedFromDatabaseLengths(): void
     {
         $result = (new DatabaseStatusRepository())->summarizeTables([
@@ -21,12 +32,12 @@ final class DatabaseStatusRepositoryTest extends TestCase
                 'index_length' => '524288',
             ],
             [
-                'table_name' => 'tt_content',
-                'engine' => 'InnoDB',
-                'table_collation' => 'utf8mb4_unicode_ci',
-                'table_rows' => 8,
-                'data_length' => 262144,
-                'index_length' => null,
+                'TABLE_NAME' => 'tt_content',
+                'ENGINE' => 'InnoDB',
+                'TABLE_COLLATION' => 'utf8mb4_unicode_ci',
+                'TABLE_ROWS' => 8,
+                'DATA_LENGTH' => 262144,
+                'INDEX_LENGTH' => null,
             ],
         ]);
 
