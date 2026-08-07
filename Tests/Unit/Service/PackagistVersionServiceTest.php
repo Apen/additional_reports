@@ -31,4 +31,29 @@ final class PackagistVersionServiceTest extends TestCase
             'alldownloadcounter' => '',
         ], $result);
     }
+
+    public function testVersionsWithoutConstraintsAreAcceptedAndInvalidDatesStayEmpty(): void
+    {
+        $result = (new PackagistVersionService())->findLatestCompatibleStableVersion([
+            'invalid' => ['version' => 14],
+            '14.0.0-rc1' => ['version' => '14.0.0-rc1'],
+            '13.4.0' => ['version' => '13.4.0', 'time' => 'not-a-date'],
+        ], '14.3.5');
+
+        self::assertSame([
+            'version' => '13.4.0',
+            'updatedate' => '',
+            'alldownloadcounter' => '',
+        ], $result);
+    }
+
+    public function testIncompatiblePhpAndTypo3VersionsAreRejected(): void
+    {
+        $result = (new PackagistVersionService())->findLatestCompatibleStableVersion([
+            '14.2.0' => ['version' => '14.2.0', 'require' => ['php' => '<8.0']],
+            '14.1.0' => ['version' => '14.1.0', 'require' => ['typo3/cms-core' => '^13']],
+        ], '14.3.5');
+
+        self::assertNull($result);
+    }
 }
