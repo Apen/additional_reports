@@ -18,9 +18,7 @@ use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Exception\SiteNotFoundException;
-use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Imaging\IconRegistry;
-use TYPO3\CMS\Core\Imaging\IconSize;
 use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
@@ -388,97 +386,6 @@ class Utility
     }
 
     /**
-     * Get the icon path of refresh icon
-     */
-    public static function getIconRefresh(): string
-    {
-        return GeneralUtility::makeInstance(IconFactory::class)->getIcon(
-            'actions-system-refresh',
-            IconSize::SMALL
-        )->render();
-    }
-
-    /**
-     * Get the icon path of zoom icon
-     */
-    public static function getIconDomain(): string
-    {
-        return GeneralUtility::makeInstance(IconFactory::class)->getIcon(
-            'apps-pagetree-page-domain',
-            IconSize::SMALL
-        )->render();
-    }
-
-    /**
-     * Get the icon path of web page icon
-     */
-    public static function getIconWebPage(): string
-    {
-        return GeneralUtility::makeInstance(IconFactory::class)->getIcon(
-            'actions-version-page-open',
-            IconSize::SMALL
-        )->render();
-    }
-
-    /**
-     * Get the icon path of template
-     */
-    public static function getIconTemplate(): string
-    {
-        return GeneralUtility::makeInstance(IconFactory::class)->getIcon(
-            'mimetypes-x-content-template',
-            IconSize::SMALL
-        )->render();
-    }
-
-    /**
-     * Get the icon path of web list icon
-     */
-    public static function getIconWebList(): string
-    {
-        return GeneralUtility::makeInstance(IconFactory::class)->getIcon(
-            'actions-system-list-open',
-            IconSize::SMALL
-        )->render();
-    }
-
-    /**
-     * Get the icon path of page icon
-     */
-    public static function getIconPage(bool $hidden = false): string
-    {
-        if ($hidden) {
-            return GeneralUtility::makeInstance(IconFactory::class)->getIcon(
-                'apps-pagetree-page-default',
-                IconSize::SMALL,
-                'overlay-hidden'
-            )->render();
-        }
-        return GeneralUtility::makeInstance(IconFactory::class)->getIcon(
-            'apps-pagetree-page-default',
-            IconSize::SMALL
-        )->render();
-    }
-
-    /**
-     * Get the icon path of content icon
-     */
-    public static function getIconContent(bool $hidden = false): string
-    {
-        if ($hidden) {
-            return GeneralUtility::makeInstance(IconFactory::class)->getIcon(
-                'content-text',
-                IconSize::SMALL,
-                'overlay-hidden'
-            )->render();
-        }
-        return GeneralUtility::makeInstance(IconFactory::class)->getIcon(
-            'content-text',
-            IconSize::SMALL
-        )->render();
-    }
-
-    /**
      * Get the type and the path of an extension
      */
     public static function getExtensionType(string $extKey): array
@@ -609,21 +516,6 @@ class Utility
             return $url;
         }
         return "top.nextLoadModuleUrl='" . $url . "';top.goToModule('web_layout');";
-    }
-
-    /**
-     * Return a <a...>...</a> code
-     *
-     * @param array $att
-     * @param string $content
-     */
-    public static function generateLink($att = [], $content = ''): string
-    {
-        $attList = '';
-        foreach ($att as $attKey => $attValue) {
-            $attList .= ' ' . $attKey . '="' . $attValue . '"';
-        }
-        return '<a' . $attList . '>' . $content . '</a>';
     }
 
     /**

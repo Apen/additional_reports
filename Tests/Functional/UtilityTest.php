@@ -147,41 +147,6 @@ class UtilityTest extends FunctionalTestCase
         }
     }
 
-    public function testGetIconRefresh()
-    {
-        self::assertNotEmpty(Utility::getIconRefresh());
-    }
-
-    public function testGetIconDomain()
-    {
-        self::assertNotEmpty(Utility::getIconDomain());
-    }
-
-    public function testGetIconWebPage()
-    {
-        self::assertNotEmpty(Utility::getIconWebPage());
-    }
-
-    public function testGetIconTemplate()
-    {
-        self::assertNotEmpty(Utility::getIconTemplate());
-    }
-
-    public function testGetIconWebList()
-    {
-        self::assertNotEmpty(Utility::getIconWebList());
-    }
-
-    public function testGetIconPage()
-    {
-        self::assertNotEmpty(Utility::getIconPage());
-    }
-
-    public function testGetIconContent()
-    {
-        self::assertNotEmpty(Utility::getIconContent());
-    }
-
     public function testGetRootLine()
     {
         self::assertNotEmpty(Utility::getRootLine(1));

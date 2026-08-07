@@ -131,25 +131,7 @@
                     <tr>
                         <td class="col-icon"><img src="{item.iconext}"/></td>
                         <td>{item.ctype}</td>
-                        <td>
-                            <f:format.raw>{item.domain}</f:format.raw>
-                        </td>
-                        <td>
-                            <f:format.raw>{item.pid}</f:format.raw>
-                        </td>
-                        <td>
-                            <f:format.raw>{item.uid}</f:format.raw>
-                        </td>
-                        <td>{item.pagetitle}</td>
-                        <td>
-                            <f:format.raw>{item.db}</f:format.raw>
-                        </td>
-                        <td>
-                            <f:format.raw>{item.page}</f:format.raw>
-                        </td>
-                        <f:if condition="{tvused}">
-                            <td>{item.usedtv}</td>
-                        </f:if>
+                        <f:render partial="ContentInfoCells" arguments="{item:item,tvused:tvused}"/>
                         <td>
                             <a href="{item.preview}" target="_blank" class="btn btn-default">
                                 <core:icon identifier="actions-version-workspace-preview"/>
@@ -220,25 +202,7 @@
                         <td class="col-icon"><img src="{item.iconext}"/></td>
                         <td>{item.extension}</td>
                         <td>{item.plugin}</td>
-                        <td>
-                            <f:format.raw>{item.domain}</f:format.raw>
-                        </td>
-                        <td>
-                            <f:format.raw>{item.pid}</f:format.raw>
-                        </td>
-                        <td>
-                            <f:format.raw>{item.uid}</f:format.raw>
-                        </td>
-                        <td>{item.pagetitle}</td>
-                        <td>
-                            <f:format.raw>{item.db}</f:format.raw>
-                        </td>
-                        <td>
-                            <f:format.raw>{item.page}</f:format.raw>
-                        </td>
-                        <f:if condition="{tvused}">
-                            <td>{item.usedtv}</td>
-                        </f:if>
+                        <f:render partial="ContentInfoCells" arguments="{item:item,tvused:tvused}"/>
                         <td>
                             <a href="{item.preview}" target="_blank" class="btn btn-default">
                                 <core:icon identifier="actions-version-workspace-preview"/>

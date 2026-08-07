@@ -65,15 +65,6 @@ class UtilityTest extends BaseTestCase
         self::assertStringContainsString('&lt;unsafe&gt;', Utility::viewArray('<unsafe>'));
     }
 
-    public function testGenerateLink(): void
-    {
-        self::assertSame(
-            '<a href="/target" data-value="test">Content</a>',
-            Utility::generateLink(['href' => '/target', 'data-value' => 'test'], 'Content')
-        );
-        self::assertSame('<a></a>', Utility::generateLink());
-    }
-
     public function testWriteInformation()
     {
         self::assertNotEmpty(Utility::writeInformation('foo', 'bar'));

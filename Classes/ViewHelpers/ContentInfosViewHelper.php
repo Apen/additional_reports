@@ -78,50 +78,16 @@ class ContentInfosViewHelper extends AbstractViewHelper
     {
         $markersExt = [];
 
-        $domain = Utility::getDomain($itemValue['pid']);
-        $markersExt['domain'] = Utility::getIconDomain() . ' ' . $domain;
-
-        $iconPage = ($itemValue['hiddenpages'] == 0) ? Utility::getIconPage() : Utility::getIconPage(true);
-        $iconContent = ($itemValue['hiddentt_content'] == 0) ? Utility::getIconContent() : Utility::getIconContent(true);
-
-        $markersExt['pid'] = $iconPage . ' ' . $itemValue['pid'];
-        $markersExt['uid'] = $iconContent . ' ' . $itemValue['uid'];
+        $markersExt['domain'] = Utility::getDomain($itemValue['pid']);
         $markersExt['pagetitle'] = $itemValue['title'];
 
         $markersExt['usedtv'] = '';
         $markersExt['usedtvclass'] = '';
 
-        $linkAtt = [
-            'href' => '#',
-            'title' => Utility::getLl('switch'),
-            'onclick' => Utility::goToModuleList($itemValue['pid']),
-            'class' => 'btn btn-default',
-        ];
-        $markersExt['db'] = Utility::generateLink($linkAtt, Utility::getIconWebList());
-
-        $linkAtt = [
-            'href' => Utility::goToModuleList($itemValue['pid'], true),
-            'target' => '_blank',
-            'title' => Utility::getLl('newwindow'),
-            'class' => 'btn btn-default',
-        ];
-        $markersExt['db'] .= Utility::generateLink($linkAtt, Utility::getIconWebList());
-
-        $linkAtt = [
-            'href' => '#',
-            'title' => Utility::getLl('switch'),
-            'onclick' => Utility::goToModulePage($itemValue['pid']),
-            'class' => 'btn btn-default',
-        ];
-        $markersExt['page'] = Utility::generateLink($linkAtt, Utility::getIconWebPage());
-
-        $linkAtt = [
-            'href' => Utility::goToModulePage($itemValue['pid'], true),
-            'target' => '_blank',
-            'title' => Utility::getLl('newwindow'),
-            'class' => 'btn btn-default',
-        ];
-        $markersExt['page'] .= Utility::generateLink($linkAtt, Utility::getIconWebPage());
+        $markersExt['listOnClick'] = Utility::goToModuleList($itemValue['pid']);
+        $markersExt['listUrl'] = Utility::goToModuleList($itemValue['pid'], true);
+        $markersExt['pageOnClick'] = Utility::goToModulePage($itemValue['pid']);
+        $markersExt['pageUrl'] = Utility::goToModulePage($itemValue['pid'], true);
 
         $markersExt['preview'] = '/index.php?id=' . $itemValue['pid'];
 
