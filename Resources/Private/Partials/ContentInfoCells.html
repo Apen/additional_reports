@@ -8,6 +8,16 @@
     <core:icon identifier="content-text" overlay="{f:if(condition: item.hiddentt_content, then: 'overlay-hidden')}"/> {item.uid}
 </td>
 <td>{item.pagetitle}</td>
+<td>
+    <a href="{f:be.uri(route:'web_list',parameters:{id:item.pid})}" target="_blank" rel="noopener" class="btn btn-default" title="{f:translate(key:'LLL:EXT:backend/Resources/Private/Language/Modules/list.xlf:title')}">
+        <core:icon identifier="actions-system-list-open"/>
+    </a>
+</td>
+<td>
+    <a href="{f:be.uri(route:'web_layout',parameters:{id:item.pid})}" target="_blank" rel="noopener" class="btn btn-default" title="{f:translate(key:'LLL:EXT:backend/Resources/Private/Language/Modules/layout.xlf:title')}">
+        <core:icon identifier="actions-version-page-open"/>
+    </a>
+</td>
 <f:if condition="{tvused}">
     <td>{item.usedtv}</td>
 </f:if>
