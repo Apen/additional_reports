@@ -30,6 +30,8 @@ class PluginsTest extends FunctionalTestCase
 
         self::assertNotEmpty($output);
         self::assertStringContainsString('class="notice col-xs-6"', $output);
+        self::assertStringContainsString('class="additional-reports-view-options"', $output);
+        self::assertStringContainsString('class="form-check-input"', $output);
         self::assertStringContainsString('/typo3/module/system/reports', $output);
         $assetCollector = GeneralUtility::makeInstance(AssetCollector::class);
         self::assertTrue($assetCollector->hasInlineJavaScript('additional-reports-plugins'));

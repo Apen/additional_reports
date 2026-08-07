@@ -1,4 +1,4 @@
-<div class="panel-group">
+<div class="additional-reports-status">
     <f:render section="panel" arguments="{id:'reportsTypo3',title:'TYPO3',content:'{f:render(section:\'TYPO3\',arguments:_all)}'}"/>
     <f:render section="panel" arguments="{id:'reportsgetIndpEnv',title:'System Environment Variables',content:'{f:render(section:\'Env\',arguments:_all)}'}"/>
     <f:render section="panel" arguments="{id:'reportsPHP',title:'PHP',content:'{f:render(section:\'PHP\',arguments:_all)}'}"/>
@@ -131,16 +131,10 @@
 </f:section>
 
 <f:section name="panel">
-    <div class="panel panel-default panel-flat">
-        <div class="panel-heading" role="tab">
-            <h4 class="panel-title">
-                <a role="button" data-bs-toggle="collapse" href="#{id}" class="collapsed"><span class="caret"></span> {title}</a>
-            </h4>
+    <details class="additional-reports-status-section">
+        <summary>{title}</summary>
+        <div class="additional-reports-status-content">
+            <f:format.raw>{content}</f:format.raw>
         </div>
-        <div id="{id}" class="panel-collapse collapse">
-            <div class="panel-body">
-                <f:format.raw>{content}</f:format.raw>
-            </div>
-        </div>
-    </div>
+    </details>
 </f:section>

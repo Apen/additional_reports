@@ -33,7 +33,8 @@ class StatusTest extends FunctionalTestCase
         $output = (new Status(parent::getReportObject()))->display();
 
         self::assertNotEmpty($output);
-        self::assertStringContainsString('reportsMySQL', $output);
+        self::assertStringContainsString('class="additional-reports-status-section"', $output);
+        self::assertStringContainsString('<summary>MySQL</summary>', $output);
         self::assertStringNotContainsString('<script>alert(1)</script>', $output);
         self::assertStringContainsString('&lt;script&gt;alert(1)&lt;/script&gt;', $output);
     }

@@ -18,15 +18,23 @@
             </th>
         </tr>
         <tr>
-            <th width="100">
-                <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:counter"/>
-                <a href="{f:be.uri(route:paginationRoute,parameters:{orderby:'nb DESC',action:'detail',extension:'additional_reports',report:reportname})}"><img src="{f:uri.resource(path:'Icons/reddown.gif',extensionName:'additional_reports')}"/></a>
-                <a href="{f:be.uri(route:paginationRoute,parameters:{orderby:'nb ASC',action:'detail',extension:'additional_reports',report:reportname})}"><img src="{f:uri.resource(path:'Icons/redup.gif',extensionName:'additional_reports')}"/></a>
+            <th class="additional-reports-column-compact">
+                <span class="additional-reports-sort">
+                    <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:counter"/>
+                    <span class="btn-group btn-group-sm" role="group">
+                        <a class="btn btn-default" title="{f:translate(key:'LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.sorting.desc')}" aria-label="{f:translate(key:'LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.sorting.desc')}" href="{f:be.uri(route:paginationRoute,parameters:{orderby:'nb DESC',action:'detail',extension:'additional_reports',report:reportname})}"><core:icon identifier="actions-sort-amount-down" size="small"/></a>
+                        <a class="btn btn-default" title="{f:translate(key:'LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.sorting.asc')}" aria-label="{f:translate(key:'LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.sorting.asc')}" href="{f:be.uri(route:paginationRoute,parameters:{orderby:'nb ASC',action:'detail',extension:'additional_reports',report:reportname})}"><core:icon identifier="actions-sort-amount-up" size="small"/></a>
+                    </span>
+                </span>
             </th>
-            <th width="100">
-                <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:tstamp"/>
-                <a href="{f:be.uri(route:paginationRoute,parameters:{orderby:'tstamp DESC',action:'detail',extension:'additional_reports',report:reportname})}"><img src="{f:uri.resource(path:'Icons/reddown.gif',extensionName:'additional_reports')}"/></a>
-                <a href="{f:be.uri(route:paginationRoute,parameters:{orderby:'tstamp ASC',action:'detail',extension:'additional_reports',report:reportname})}"><img src="{f:uri.resource(path:'Icons/redup.gif',extensionName:'additional_reports')}"/></a>
+            <th class="additional-reports-column-date">
+                <span class="additional-reports-sort">
+                    <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:tstamp"/>
+                    <span class="btn-group btn-group-sm" role="group">
+                        <a class="btn btn-default" title="{f:translate(key:'LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.sorting.desc')}" aria-label="{f:translate(key:'LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.sorting.desc')}" href="{f:be.uri(route:paginationRoute,parameters:{orderby:'tstamp DESC',action:'detail',extension:'additional_reports',report:reportname})}"><core:icon identifier="actions-sort-amount-down" size="small"/></a>
+                        <a class="btn btn-default" title="{f:translate(key:'LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.sorting.asc')}" aria-label="{f:translate(key:'LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.sorting.asc')}" href="{f:be.uri(route:paginationRoute,parameters:{orderby:'tstamp ASC',action:'detail',extension:'additional_reports',report:reportname})}"><core:icon identifier="actions-sort-amount-up" size="small"/></a>
+                    </span>
+                </span>
             </th>
             <th>
                 <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:error"/>
@@ -42,7 +50,7 @@
                 </td>
                 <td>
                     {item.details}<br/>
-                    <img src="{f:uri.resource(path:'Icons/garbage.gif',extensionName:'additional_reports')}"/>DELETE FROM sys_log WHERE error>0 AND details = "{item.details}"
+                    <span class="text-body-secondary"><core:icon identifier="actions-delete" size="small"/> <code>DELETE FROM sys_log WHERE error&gt;0 AND details = "{item.details}"</code></span>
                 </td>
             </tr>
         </f:for>

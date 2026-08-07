@@ -26,45 +26,40 @@
     </tbody>
 </table>
 
-<table id="choice-display">
-    <tr>
-        <td>
-            <input data-url="{f:be.uri(route:paginationRoute,parameters:{display:4,action:'detail',extension:'additional_reports',report:reportname})}" style="margin-right:4px;" type="radio" name="display" value="1" id="radio4" checked="{checkedpluginsmode4}"/>
-            <label for="radio4" style="margin-right:10px;">
+<fieldset id="choice-display" class="additional-reports-view-selector">
+    <div class="additional-reports-view-options">
+        <div class="form-check">
+            <input class="form-check-input" data-url="{f:be.uri(route:paginationRoute,parameters:{display:4,action:'detail',extension:'additional_reports',report:reportname})}" type="radio" name="display" value="1" id="radio4" checked="{checkedpluginsmode4}"/>
+            <label class="form-check-label" for="radio4">
                 <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:pluginsmode4"/>
             </label>
-        </td>
-        <td>
-            <input data-url="{f:be.uri(route:paginationRoute,parameters:{display:6,action:'detail',extension:'additional_reports',report:reportname})}" style="margin-right:4px;" type="radio" name="display" value="1" id="radio6" checked="{checkedpluginsmode6}"/>
-            <label for="radio6" style="margin-right:10px;">
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" data-url="{f:be.uri(route:paginationRoute,parameters:{display:6,action:'detail',extension:'additional_reports',report:reportname})}" type="radio" name="display" value="1" id="radio6" checked="{checkedpluginsmode6}"/>
+            <label class="form-check-label" for="radio6">
                 <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:pluginsmode4hidden"/>
             </label>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <input data-url="{f:be.uri(route:paginationRoute,parameters:{display:3,action:'detail',extension:'additional_reports',report:reportname})}" style="margin-right:4px;" type="radio" name="display" value="1" id="radio3" checked="{checkedpluginsmode3}"/>
-            <label for="radio3" style="margin-right:10px;">
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" data-url="{f:be.uri(route:paginationRoute,parameters:{display:3,action:'detail',extension:'additional_reports',report:reportname})}" type="radio" name="display" value="1" id="radio3" checked="{checkedpluginsmode3}"/>
+            <label class="form-check-label" for="radio3">
                 <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:pluginsmode3"/>
             </label>
-        </td>
-        <td>
-            <input data-url="{f:be.uri(route:paginationRoute,parameters:{display:7,action:'detail',extension:'additional_reports',report:reportname})}" style="margin-right:4px;" type="radio" name="display" value="1" id="radio7" checked="{checkedpluginsmode7}"/>
-            <label for="radio7" style="margin-right:10px;">
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" data-url="{f:be.uri(route:paginationRoute,parameters:{display:7,action:'detail',extension:'additional_reports',report:reportname})}" type="radio" name="display" value="1" id="radio7" checked="{checkedpluginsmode7}"/>
+            <label class="form-check-label" for="radio7">
                 <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:pluginsmode3hidden"/>
             </label>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <input data-url="{f:be.uri(route:paginationRoute,parameters:{display:5,action:'detail',extension:'additional_reports',report:reportname})}" style="margin-right:4px;" type="radio" name="display" value="1" id="radio5" checked="{checkedpluginsmode5}"/>
-            <label for="radio5" style="margin-right:10px;">
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" data-url="{f:be.uri(route:paginationRoute,parameters:{display:5,action:'detail',extension:'additional_reports',report:reportname})}" type="radio" name="display" value="1" id="radio5" checked="{checkedpluginsmode5}"/>
+            <label class="form-check-label" for="radio5">
                 <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:pluginsmode5"/>
             </label>
-        </td>
-    </tr>
-</table>
-<div class="uppercase" style="margin-bottom:5px;"></div>
+        </div>
+    </div>
+</fieldset>
 
 <!-- summary -->
 

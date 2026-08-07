@@ -22,6 +22,8 @@ class LogErrorsTest extends FunctionalTestCase
         $output = $report->display();
 
         self::assertStringContainsString('<code>DELETE FROM sys_log WHERE error &gt; 0;</code>', $output);
+        self::assertStringContainsString('identifier="actions-sort-amount-down"', $output);
+        self::assertStringContainsString('identifier="actions-sort-amount-up"', $output);
     }
 
     public function testErrorsAreEscapedAndOrderingIsWhitelisted(): void
