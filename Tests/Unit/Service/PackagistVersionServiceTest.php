@@ -6,6 +6,9 @@ namespace Sng\AdditionalReports\Tests\Unit\Service;
 
 use PHPUnit\Framework\TestCase;
 use Sng\AdditionalReports\Service\PackagistVersionService;
+use TYPO3\CMS\Core\Cache\CacheManager;
+use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 final class PackagistVersionServiceTest extends TestCase
 {
@@ -55,5 +58,38 @@ final class PackagistVersionServiceTest extends TestCase
         ], '14.3.5');
 
         self::assertNull($result);
+    }
+
+    public function testValidCachedResultIsReturnedWithoutNetworkRequest(): void
+    {
+        $cachedResult = [
+            'version' => '14.2.1',
+            'updatedate' => '01/08/2026',
+            'alldownloadcounter' => '',
+        ];
+
+        self::assertSame($cachedResult, $this->findVersionWithCachedValue($cachedResult));
+    }
+
+    public function testMalformedCachedResultIsIgnored(): void
+    {
+        self::assertNull($this->findVersionWithCachedValue(['version' => 14]));
+    }
+
+    private function findVersionWithCachedValue(mixed $cachedValue): ?array
+    {
+        $cache = $this->createMock(FrontendInterface::class);
+        $cache->expects(self::once())->method('has')->willReturn(true);
+        $cache->expects(self::once())->method('get')->willReturn($cachedValue);
+
+        $cacheManager = $this->createMock(CacheManager::class);
+        $cacheManager->expects(self::once())->method('getCache')->with('hash')->willReturn($cache);
+        GeneralUtility::setSingletonInstance(CacheManager::class, $cacheManager);
+
+        try {
+            return (new PackagistVersionService())->findLatestVersion('vendor/cached-package');
+        } finally {
+            GeneralUtility::removeSingletonInstance(CacheManager::class, $cacheManager);
+        }
     }
 }
