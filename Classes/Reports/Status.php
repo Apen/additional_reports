@@ -12,6 +12,7 @@ namespace Sng\AdditionalReports\Reports;
  */
 
 use Sng\AdditionalReports\Repository\DatabaseStatusRepository;
+use Sng\AdditionalReports\Service\Typo3VersionInformationService;
 use Sng\AdditionalReports\Utility;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Http\NormalizedParams;
@@ -23,11 +24,16 @@ use TYPO3\CMS\Core\View\ViewInterface;
 class Status extends AbstractReport
 {
     private DatabaseStatusRepository $databaseStatusRepository;
+    private Typo3VersionInformationService $versionInformationService;
 
-    public function __construct(?object $reportObject = null, ?DatabaseStatusRepository $databaseStatusRepository = null)
-    {
+    public function __construct(
+        ?object $reportObject = null,
+        ?DatabaseStatusRepository $databaseStatusRepository = null,
+        ?Typo3VersionInformationService $versionInformationService = null,
+    ) {
         parent::__construct($reportObject);
         $this->databaseStatusRepository = $databaseStatusRepository ?? GeneralUtility::makeInstance(DatabaseStatusRepository::class);
+        $this->versionInformationService = $versionInformationService ?? GeneralUtility::makeInstance(Typo3VersionInformationService::class);
     }
 
     /**
@@ -63,11 +69,12 @@ class Status extends AbstractReport
     {
         // infos about typo3 versions
         $datas = [];
-        $jsonVersions = Utility::getJsonVersionInfos();
-        $currentVersionInfos = Utility::getCurrentVersionInfos($jsonVersions, GeneralUtility::makeInstance(Typo3Version::class)->getVersion());
-        $currentBranch = Utility::getCurrentBranchInfos($jsonVersions, GeneralUtility::makeInstance(Typo3Version::class)->getVersion());
-        $latestStable = Utility::getLatestStableInfos($jsonVersions);
-        $latestLts = Utility::getLatestLtsInfos($jsonVersions);
+        $jsonVersions = $this->versionInformationService->fetch();
+        $typo3Version = GeneralUtility::makeInstance(Typo3Version::class)->getVersion();
+        $currentVersionInfos = $this->versionInformationService->getCurrentVersion($jsonVersions, $typo3Version);
+        $currentBranch = $this->versionInformationService->getCurrentBranch($jsonVersions, $typo3Version);
+        $latestStable = $this->versionInformationService->getLatestStable($jsonVersions);
+        $latestLts = $this->versionInformationService->getLatestLts($jsonVersions);
 
         $extensions = [];
         $packageManager = GeneralUtility::makeInstance(PackageManager::class);

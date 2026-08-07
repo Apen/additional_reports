@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Sng\AdditionalReports\Tests\Functional;
 
+use Sng\AdditionalReports\Service\Typo3VersionInformationService;
 use Sng\AdditionalReports\Utility;
 use TYPO3\CMS\Core\Cache\Backend\SimpleFileBackend;
 use TYPO3\CMS\Core\Cache\Frontend\VariableFrontend;
@@ -111,7 +112,7 @@ class UtilityTest extends FunctionalTestCase
         if (getenv('RUN_NETWORK_TESTS') !== '1') {
             self::markTestSkipped('Set RUN_NETWORK_TESTS=1 to run TYPO3 API integration tests.');
         }
-        self::assertNotEmpty(Utility::getJsonVersionInfos());
+        self::assertNotEmpty((new Typo3VersionInformationService())->fetch());
     }
 
     public function testDownloadT3x()

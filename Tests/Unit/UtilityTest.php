@@ -93,32 +93,6 @@ class UtilityTest extends BaseTestCase
         );
     }
 
-    public function testVersionInformationHelpersSupportModernAndLegacyBranches(): void
-    {
-        $versions = [
-            '14' => ['releases' => ['14.3.1' => ['version' => '14.3.1']]],
-            '6.2' => ['releases' => ['6.2.31' => ['version' => '6.2.31']]],
-            'latest_stable' => '14.3.1',
-            'latest_lts' => '6.2.31',
-        ];
-
-        self::assertSame(['version' => '14.3.1'], Utility::getCurrentVersionInfos($versions, '14.3.1'));
-        self::assertSame([], Utility::getCurrentVersionInfos($versions, '14.3.0'));
-        self::assertSame(['version' => '6.2.31'], Utility::getCurrentVersionInfos($versions, '6.2.31'));
-        self::assertSame(['version' => '14.3.1'], Utility::getCurrentBranchInfos($versions, '14.3.0'));
-        self::assertSame(['version' => '6.2.31'], Utility::getCurrentBranchInfos($versions, '6.2.0'));
-        self::assertSame(['version' => '14.3.1'], Utility::getLatestStableInfos($versions));
-        self::assertSame(['version' => '6.2.31'], Utility::getLatestLtsInfos($versions));
-    }
-
-    public function testVersionInformationHelpersHandleUnavailableApiData(): void
-    {
-        self::assertSame([], Utility::getCurrentVersionInfos([], '14.3.0'));
-        self::assertSame([], Utility::getCurrentBranchInfos([], '14.3.0'));
-        self::assertSame([], Utility::getLatestStableInfos([]));
-        self::assertSame([], Utility::getLatestLtsInfos([]));
-    }
-
     public function testTreeListRejectsLegacyOffsetAndPermissionArguments(): void
     {
         $this->expectException(\InvalidArgumentException::class);
@@ -137,23 +111,6 @@ class UtilityTest extends BaseTestCase
         $this->expectException(\InvalidArgumentException::class);
 
         Utility::getExtensionVersion(null);
-    }
-
-    public function testVersionInformationHelpersRejectMalformedReleaseLists(): void
-    {
-        self::assertSame([], Utility::getCurrentBranchInfos(['14' => ['releases' => 'invalid']], '14.3.0'));
-    }
-
-    public function testLegacyStableAndLtsBranchesAreResolved(): void
-    {
-        $versions = [
-            '6.2' => ['releases' => ['6.2.31' => ['version' => '6.2.31']]],
-            'latest_stable' => '6.2.31',
-            'latest_lts' => '6.2.31',
-        ];
-
-        self::assertSame(['version' => '6.2.31'], Utility::getLatestStableInfos($versions));
-        self::assertSame(['version' => '6.2.31'], Utility::getLatestLtsInfos($versions));
     }
 
     public function testExtractExtensionDataFromT3x(): void

@@ -13,6 +13,8 @@ services:
 
   Sng\AdditionalReports\Service\EventListenerRegistry: ~
 
+  Sng\AdditionalReports\Service\Typo3VersionInformationService: ~
+
   Sng\AdditionalReports\Repository\ContentUsageRepository: ~
 
   Sng\AdditionalReports\Repository\PageStatisticsRepository: ~
