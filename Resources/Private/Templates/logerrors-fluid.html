@@ -1,5 +1,3 @@
-{namespace ar=Sng\AdditionalReports\ViewHelpers}
-
 <table class="table table-striped table-hover">
     <tbody>
     <tr>
@@ -24,13 +22,11 @@
                 <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:counter"/>
                 <a href="{f:be.uri(route:paginationRoute,parameters:{orderby:'nb DESC',action:'detail',extension:'additional_reports',report:reportname})}"><img src="{f:uri.resource(path:'Icons/reddown.gif',extensionName:'additional_reports')}"/></a>
                 <a href="{f:be.uri(route:paginationRoute,parameters:{orderby:'nb ASC',action:'detail',extension:'additional_reports',report:reportname})}"><img src="{f:uri.resource(path:'Icons/redup.gif',extensionName:'additional_reports')}"/></a>
-                <f:format.raw>{ordercounter}</f:format.raw>
             </th>
             <th width="100">
                 <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:tstamp"/>
                 <a href="{f:be.uri(route:paginationRoute,parameters:{orderby:'tstamp DESC',action:'detail',extension:'additional_reports',report:reportname})}"><img src="{f:uri.resource(path:'Icons/reddown.gif',extensionName:'additional_reports')}"/></a>
                 <a href="{f:be.uri(route:paginationRoute,parameters:{orderby:'tstamp ASC',action:'detail',extension:'additional_reports',report:reportname})}"><img src="{f:uri.resource(path:'Icons/redup.gif',extensionName:'additional_reports')}"/></a>
-                <f:format.raw>{ordertstamp}</f:format.raw>
             </th>
             <th>
                 <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:error"/>
