@@ -54,7 +54,7 @@ class Plugins extends AbstractReport
         $filter = $this->getRequestParameter('filtersCat');
         $filter = is_string($filter) ? $filter : null;
 
-        $view->assign('reportname', $this->contentUsageRepository->hasLegacyListType() ? 'additionalreports_plugins' : 'plugins');
+        $view->assign('reportname', $this->contentTypeResolver->hasLegacyListType() ? 'additionalreports_plugins' : 'plugins');
         $view->assign('paginationRoute', $this->getCurrentRouteIdentifier());
         $view->assign('checkedpluginsmode3', $displayMode === 3);
         $view->assign('checkedpluginsmode4', $displayMode === 4);
@@ -71,12 +71,12 @@ class Plugins extends AbstractReport
                 Utility::buildPagination($this->enrichContentRows($this->getAllUsedCtypes(false, $filter), 'ctype'), $currentPage, $view);
                 break;
             case 4:
-                $filterField = $this->contentUsageRepository->hasLegacyListType() ? 'list_type' : 'CType';
+                $filterField = $this->contentTypeResolver->hasLegacyListType() ? 'list_type' : 'CType';
                 $view->assign('filterOptions', array_column($this->contentUsageRepository->findDistinctPlugins(), $filterField));
                 Utility::buildPagination($this->enrichContentRows($this->getAllUsedPlugins(false, $filter), 'plugin'), $currentPage, $view);
                 break;
             case 6:
-                $filterField = $this->contentUsageRepository->hasLegacyListType() ? 'list_type' : 'CType';
+                $filterField = $this->contentTypeResolver->hasLegacyListType() ? 'list_type' : 'CType';
                 $view->assign('filterOptions', array_column($this->contentUsageRepository->findDistinctPlugins(true), $filterField));
                 Utility::buildPagination($this->enrichContentRows($this->getAllUsedPlugins(true, $filter), 'plugin'), $currentPage, $view);
                 break;
@@ -104,7 +104,7 @@ class Plugins extends AbstractReport
     public function getSummary()
     {
         $summary = $this->contentUsageRepository->summarizeVisibleContent();
-        $hasLegacyListType = $this->contentUsageRepository->hasLegacyListType();
+        $hasLegacyListType = $this->contentTypeResolver->hasLegacyListType();
 
         $allItems = [];
         foreach ($summary['items'] as $itemValue) {
@@ -130,7 +130,7 @@ class Plugins extends AbstractReport
      */
     public function enrichContentRows(array $items, string $type): array
     {
-        $hasLegacyListType = $this->contentUsageRepository->hasLegacyListType();
+        $hasLegacyListType = $this->contentTypeResolver->hasLegacyListType();
         foreach ($items as &$item) {
             $value = $type === 'plugin' && $hasLegacyListType
                 ? (string) ($item['list_type'] ?? '')

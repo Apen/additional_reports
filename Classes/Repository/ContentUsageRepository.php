@@ -5,22 +5,22 @@ declare(strict_types=1);
 namespace Sng\AdditionalReports\Repository;
 
 use Doctrine\DBAL\ArrayParameterType;
+use Sng\AdditionalReports\Service\ContentTypeResolver;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
-use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 final readonly class ContentUsageRepository
 {
     public function __construct(
         private ?ConnectionPool $connectionPool = null,
-        private ?Typo3Version $typo3Version = null,
+        private ?ContentTypeResolver $contentTypeResolver = null,
     ) {}
 
     public function findDistinctPlugins(bool $includeHidden = false): array
     {
-        if (! $this->hasLegacyListType()) {
-            $pluginContentTypes = $this->getPluginContentTypes();
+        if (! $this->getContentTypeResolver()->hasLegacyListType()) {
+            $pluginContentTypes = $this->getContentTypeResolver()->getPluginContentTypes();
             if ($pluginContentTypes === []) {
                 return [];
             }
@@ -49,12 +49,12 @@ final readonly class ContentUsageRepository
         $queryBuilder = $this->createQueryBuilder($includeHidden);
         $queryBuilder->select('tt_content.CType')->distinct()
             ->andWhere($queryBuilder->expr()->neq('tt_content.CType', $queryBuilder->createNamedParameter('')));
-        if ($this->hasLegacyListType()) {
+        if ($this->getContentTypeResolver()->hasLegacyListType()) {
             $queryBuilder->addSelect('tt_content.list_type')
                 ->andWhere($queryBuilder->expr()->neq('tt_content.CType', $queryBuilder->createNamedParameter('list')))
                 ->orderBy('tt_content.list_type');
         } else {
-            $pluginContentTypes = $this->getPluginContentTypes();
+            $pluginContentTypes = $this->getContentTypeResolver()->getPluginContentTypes();
             if ($pluginContentTypes !== []) {
                 $queryBuilder->andWhere($queryBuilder->expr()->notIn('tt_content.CType', $queryBuilder->createNamedParameter($pluginContentTypes, ArrayParameterType::STRING)));
             }
@@ -65,8 +65,8 @@ final readonly class ContentUsageRepository
 
     public function findPlugins(bool $includeHidden = false, ?string $filter = null): array
     {
-        if (! $this->hasLegacyListType()) {
-            $pluginContentTypes = $this->getPluginContentTypes();
+        if (! $this->getContentTypeResolver()->hasLegacyListType()) {
+            $pluginContentTypes = $this->getContentTypeResolver()->getPluginContentTypes();
             if ($pluginContentTypes === [] || ($filter !== null && $filter !== 'all' && ! in_array($filter, $pluginContentTypes, true))) {
                 return [];
             }
@@ -99,10 +99,10 @@ final readonly class ContentUsageRepository
         $queryBuilder->select('tt_content.CType', 'tt_content.pid', 'tt_content.uid', 'pages.title')
             ->addSelectLiteral('pages.hidden AS hiddenpages', 'tt_content.hidden AS hiddentt_content')
             ->distinct()
-            ->andWhere($queryBuilder->expr()->neq('tt_content.CType', $queryBuilder->createNamedParameter($this->hasLegacyListType() ? 'list' : '')))
+            ->andWhere($queryBuilder->expr()->neq('tt_content.CType', $queryBuilder->createNamedParameter($this->getContentTypeResolver()->hasLegacyListType() ? 'list' : '')))
             ->orderBy('tt_content.CType')->addOrderBy('tt_content.pid');
-        if (! $this->hasLegacyListType()) {
-            $pluginContentTypes = $this->getPluginContentTypes();
+        if (! $this->getContentTypeResolver()->hasLegacyListType()) {
+            $pluginContentTypes = $this->getContentTypeResolver()->getPluginContentTypes();
             if ($pluginContentTypes !== []) {
                 $queryBuilder->andWhere($queryBuilder->expr()->notIn('tt_content.CType', $queryBuilder->createNamedParameter($pluginContentTypes, ArrayParameterType::STRING)));
             }
@@ -130,7 +130,7 @@ final readonly class ContentUsageRepository
             ->addSelectLiteral('COUNT(*) AS item_count')
             ->groupBy('tt_content.CType')
             ->orderBy('item_count', 'DESC');
-        if ($this->hasLegacyListType()) {
+        if ($this->getContentTypeResolver()->hasLegacyListType()) {
             $queryBuilder->addSelect('tt_content.list_type')->addGroupBy('tt_content.list_type');
         }
 
@@ -150,26 +150,9 @@ final readonly class ContentUsageRepository
         return ['total' => $total, 'items' => $items];
     }
 
-    public function hasLegacyListType(): bool
+    private function getContentTypeResolver(): ContentTypeResolver
     {
-        $typo3Version = $this->typo3Version ?? new Typo3Version();
-        return $typo3Version->getMajorVersion() < 14
-            && isset($GLOBALS['TCA']['tt_content']['columns']['list_type']);
-    }
-
-    /** @return list<string> */
-    public function getPluginContentTypes(): array
-    {
-        $contentTypeGroups = ['default', 'lists', 'menu', 'forms', 'special'];
-        $pluginContentTypes = [];
-        foreach (($GLOBALS['TCA']['tt_content']['columns']['CType']['config']['items'] ?? []) as $item) {
-            $value = $item['value'] ?? $item[1] ?? null;
-            $group = $item['group'] ?? $item[3] ?? 'default';
-            if (is_string($value) && $value !== '' && ! in_array($group, $contentTypeGroups, true)) {
-                $pluginContentTypes[] = $value;
-            }
-        }
-        return array_values(array_unique($pluginContentTypes));
+        return $this->contentTypeResolver ?? GeneralUtility::makeInstance(ContentTypeResolver::class);
     }
 
     private function createQueryBuilder(bool $includeHidden): QueryBuilder

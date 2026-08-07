@@ -6,6 +6,7 @@ namespace Sng\AdditionalReports\Service;
 
 use Sng\AdditionalReports\Utility;
 use TYPO3\CMS\Core\Imaging\IconRegistry;
+use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\SystemResource\Publishing\SystemResourcePublisherInterface;
 use TYPO3\CMS\Core\SystemResource\Publishing\UriGenerationOptions;
 use TYPO3\CMS\Core\SystemResource\SystemResourceFactory;
@@ -14,6 +15,8 @@ use TYPO3\CMS\Core\Utility\PathUtility;
 
 final class ContentTypeResolver
 {
+    public function __construct(private readonly ?Typo3Version $typo3Version = null) {}
+
     /** @return array<string, string> */
     public function resolve(string $type, string $value): array
     {
@@ -25,7 +28,7 @@ final class ContentTypeResolver
             $type => $value,
             'extension' => $this->resolveExtensionKey($value),
         ];
-        $field = $type === 'plugin' && Utility::hasLegacyListType() ? 'list_type' : 'CType';
+        $field = $type === 'plugin' && $this->hasLegacyListType() ? 'list_type' : 'CType';
         foreach (($GLOBALS['TCA']['tt_content']['columns'][$field]['config']['items'] ?? []) as $item) {
             if (($item['value'] ?? '') !== $value) {
                 continue;
@@ -40,6 +43,28 @@ final class ContentTypeResolver
             break;
         }
         return $information;
+    }
+
+    public function hasLegacyListType(): bool
+    {
+        $typo3Version = $this->typo3Version ?? new Typo3Version();
+        return $typo3Version->getMajorVersion() < 14
+            && isset($GLOBALS['TCA']['tt_content']['columns']['list_type']);
+    }
+
+    /** @return list<string> */
+    public function getPluginContentTypes(): array
+    {
+        $contentTypeGroups = ['default', 'lists', 'menu', 'forms', 'special'];
+        $pluginContentTypes = [];
+        foreach (($GLOBALS['TCA']['tt_content']['columns']['CType']['config']['items'] ?? []) as $item) {
+            $value = $item['value'] ?? $item[1] ?? null;
+            $group = $item['group'] ?? $item[3] ?? 'default';
+            if (is_string($value) && $value !== '' && ! in_array($group, $contentTypeGroups, true)) {
+                $pluginContentTypes[] = $value;
+            }
+        }
+        return array_values(array_unique($pluginContentTypes));
     }
 
     private function resolveExtensionKey(string $value): string

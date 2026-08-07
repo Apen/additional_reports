@@ -6,6 +6,7 @@ namespace Sng\AdditionalReports\Tests\Unit\Service;
 
 use PHPUnit\Framework\TestCase;
 use Sng\AdditionalReports\Service\ContentTypeResolver;
+use TYPO3\CMS\Core\Information\Typo3Version;
 
 final class ContentTypeResolverTest extends TestCase
 {
@@ -48,5 +49,40 @@ final class ContentTypeResolverTest extends TestCase
             'ctype' => 'text',
             'extension' => '',
         ], (new ContentTypeResolver())->resolve('ctype', 'text'));
+    }
+
+    public function testPluginContentTypesSupportAssociativeAndLegacyTcaItems(): void
+    {
+        $GLOBALS['TCA']['tt_content']['columns']['CType']['config']['items'] = [
+            ['label' => 'Text', 'value' => 'text', 'group' => 'default'],
+            ['label' => 'Plugin', 'value' => 'vendor_plugin', 'group' => 'plugins'],
+            ['Legacy plugin', 'vendor_legacy', null, 'vendor'],
+            ['Duplicate', 'vendor_plugin', null, 'custom'],
+            ['Invalid', 42, null, 'custom'],
+            ['Empty', '', null, 'custom'],
+        ];
+
+        self::assertSame(
+            ['vendor_plugin', 'vendor_legacy'],
+            (new ContentTypeResolver())->getPluginContentTypes(),
+        );
+    }
+
+    public function testLegacyListTypeRequiresTypo3BeforeVersionFourteenAndTcaColumn(): void
+    {
+        $GLOBALS['TCA']['tt_content']['columns']['list_type'] = ['config' => []];
+
+        self::assertTrue((new ContentTypeResolver($this->createTypo3Version(13)))->hasLegacyListType());
+        self::assertFalse((new ContentTypeResolver($this->createTypo3Version(14)))->hasLegacyListType());
+
+        unset($GLOBALS['TCA']['tt_content']['columns']['list_type']);
+        self::assertFalse((new ContentTypeResolver($this->createTypo3Version(13)))->hasLegacyListType());
+    }
+
+    private function createTypo3Version(int $majorVersion): Typo3Version
+    {
+        $version = $this->createMock(Typo3Version::class);
+        $version->method('getMajorVersion')->willReturn($majorVersion);
+        return $version;
     }
 }

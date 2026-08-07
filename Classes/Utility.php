@@ -14,6 +14,7 @@ namespace Sng\AdditionalReports;
 use Sng\AdditionalReports\Repository\ContentUsageRepository;
 use Sng\AdditionalReports\Repository\ExtensionRepository;
 use Sng\AdditionalReports\Repository\PageStatisticsRepository;
+use Sng\AdditionalReports\Service\ContentTypeResolver;
 use Sng\AdditionalReports\Service\ExtensionIconResolver;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Exception\SiteNotFoundException;
@@ -183,7 +184,7 @@ class Utility
 
     public static function hasLegacyListType(): bool
     {
-        return GeneralUtility::makeInstance(ContentUsageRepository::class)->hasLegacyListType();
+        return GeneralUtility::makeInstance(ContentTypeResolver::class)->hasLegacyListType();
     }
 
     /**
@@ -191,7 +192,7 @@ class Utility
      */
     public static function getPluginContentTypes(): array
     {
-        return GeneralUtility::makeInstance(ContentUsageRepository::class)->getPluginContentTypes();
+        return GeneralUtility::makeInstance(ContentTypeResolver::class)->getPluginContentTypes();
     }
 
     /**
