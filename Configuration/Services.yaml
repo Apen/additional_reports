@@ -17,6 +17,8 @@ services:
 
   Sng\AdditionalReports\Service\TerArchiveService: ~
 
+  Sng\AdditionalReports\Service\HookResolver: ~
+
   Sng\AdditionalReports\Repository\ContentUsageRepository: ~
 
   Sng\AdditionalReports\Repository\PageStatisticsRepository: ~

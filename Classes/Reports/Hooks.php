@@ -11,12 +11,21 @@ namespace Sng\AdditionalReports\Reports;
  * LICENSE.txt file that was distributed with this source code.
  */
 
+use Sng\AdditionalReports\Service\HookResolver;
 use Sng\AdditionalReports\Service\StructuredDataNormalizer;
 use Sng\AdditionalReports\Utility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class Hooks extends AbstractReport
 {
+    private HookResolver $hookResolver;
+
+    public function __construct(?object $reportObject = null, ?HookResolver $hookResolver = null)
+    {
+        parent::__construct($reportObject);
+        $this->hookResolver = $hookResolver ?? GeneralUtility::makeInstance(HookResolver::class);
+    }
+
     /**
      * This method renders the report
      *
@@ -44,7 +53,7 @@ class Hooks extends AbstractReport
             foreach ($items as $itemKey => $itemValue) {
                 if (preg_match('#.*?\/.*?\.php#', $itemKey, $matches)) {
                     foreach ($itemValue as $hookName => $hookList) {
-                        $hookList = Utility::getHook($hookList);
+                        $hookList = $this->hookResolver->resolve($hookList);
                         if (!empty($hookList)) {
                             $hooks['core'][] = [
                                 'corefile' => $itemKey,
@@ -61,7 +70,7 @@ class Hooks extends AbstractReport
         if (count($items) > 0) {
             foreach ($items as $itemKey => $itemValue) {
                 foreach ($itemValue as $hookName => $hookList) {
-                    $hookList = Utility::getHook($hookList);
+                    $hookList = $this->hookResolver->resolve($hookList);
                     if (!empty($hookList)) {
                         $hooks['extensions'][] = [
                             'corefile' => $itemKey,

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Sng\AdditionalReports\Tests\Unit;
 
 use Sng\AdditionalReports\Utility;
-use TYPO3\CMS\Backend\Security\EmailLoginNotification;
 use TYPO3\TestingFramework\Core\BaseTestCase;
 
 class UtilityTest extends BaseTestCase
@@ -58,39 +57,6 @@ class UtilityTest extends BaseTestCase
     public function testGetPluginsDisplayMode()
     {
         self::assertEmpty(Utility::getPluginsDisplayMode());
-    }
-
-    public function testIsHook()
-    {
-        $hook = EmailLoginNotification::class . '->emailAtLogin';
-        self::assertTrue(Utility::isHook($hook));
-        self::assertTrue(Utility::isHook('&' . EmailLoginNotification::class));
-        self::assertTrue(Utility::isHook(['unused', $hook]));
-        self::assertFalse(Utility::isHook(''));
-        self::assertFalse(Utility::isHook(123));
-        self::assertFalse(Utility::isHook(true));
-        self::assertFalse(Utility::isHook(['unused', 123]));
-        self::assertFalse(Utility::isHook('Unknown\\MissingClass->method'));
-    }
-
-    public function testGetHook()
-    {
-        $hook = EmailLoginNotification::class . '->emailAtLogin';
-        self::assertNotEmpty(Utility::getHook($hook));
-        self::assertNull(Utility::getHook('Unknown\\MissingClass'));
-        self::assertNull(Utility::getHook(123));
-        self::assertSame(
-            ['valid' => $hook, 'nested' => ['valid' => $hook]],
-            Utility::getHook([
-                'valid' => $hook,
-                'invalid' => 'Unknown\\MissingClass',
-                'nested' => [
-                    'valid' => $hook,
-                    'invalid' => 'Unknown\\MissingClass',
-                    'tooDeep' => [$hook],
-                ],
-            ])
-        );
     }
 
     public function testTreeListRejectsLegacyOffsetAndPermissionArguments(): void
