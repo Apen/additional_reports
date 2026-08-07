@@ -27,7 +27,7 @@
                     <td>{hook.corefile}</td>
                     <td>{hook.name}</td>
                     <td>
-                        <f:format.raw>{hook.file}</f:format.raw>
+                        <f:render partial="StructuredData" arguments="{rows: hook.file}"/>
                     </td>
                 </tr>
             </f:for>
@@ -63,7 +63,7 @@
                     <td>{hook.corefile}</td>
                     <td>{hook.name}</td>
                     <td>
-                        <f:format.raw>{hook.file}</f:format.raw>
+                        <f:render partial="StructuredData" arguments="{rows: hook.file}"/>
                     </td>
                 </tr>
             </f:for>

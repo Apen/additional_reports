@@ -1,0 +1,23 @@
+<f:if condition="{rows}">
+    <table class="table table-striped table-condensed mb-0">
+        <tbody>
+        <f:for each="{rows}" as="row">
+            <tr>
+                <f:if condition="{row.key}">
+                    <th scope="row"><code>{row.key}</code></th>
+                </f:if>
+                <td>
+                    <f:if condition="{row.children}">
+                        <f:then>
+                            <f:render partial="StructuredData" arguments="{rows: row.children}"/>
+                        </f:then>
+                        <f:else>
+                            <code><f:format.nl2br>{row.value}</f:format.nl2br></code>
+                        </f:else>
+                    </f:if>
+                </td>
+            </tr>
+        </f:for>
+        </tbody>
+    </table>
+</f:if>

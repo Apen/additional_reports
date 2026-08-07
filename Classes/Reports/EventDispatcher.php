@@ -11,7 +11,7 @@ namespace Sng\AdditionalReports\Reports;
  * LICENSE.txt file that was distributed with this source code.
  */
 
-use Sng\AdditionalReports\Utility;
+use Sng\AdditionalReports\Service\StructuredDataNormalizer;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder as SymfonyContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
@@ -48,6 +48,7 @@ class EventDispatcher extends AbstractReport
 
     public function getAllEvents()
     {
+        $normalizer = GeneralUtility::makeInstance(StructuredDataNormalizer::class);
         $packageManager = GeneralUtility::makeInstance(PackageManager::class);
         $packages = $packageManager->getActivePackages();
         $containerBuilder = new SymfonyContainerBuilder();
@@ -74,7 +75,7 @@ class EventDispatcher extends AbstractReport
                     if ($tagType === 'event.listener') {
                         $events[] = [
                             'className' => $className,
-                            'list' => Utility::viewArray($tag),
+                            'list' => $normalizer->normalize($tag),
                         ];
                     }
                 }

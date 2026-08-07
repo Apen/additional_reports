@@ -18,7 +18,7 @@
                 <tr>
                     <td>{event.className}</td>
                     <td>
-                        <f:format.raw>{event.list}</f:format.raw>
+                        <f:render partial="StructuredData" arguments="{rows: event.list}"/>
                     </td>
                 </tr>
             </f:for>

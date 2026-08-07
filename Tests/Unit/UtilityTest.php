@@ -63,30 +63,6 @@ class UtilityTest extends BaseTestCase
         ]));
     }
 
-    public function testViewArray(): void
-    {
-        $result = Utility::viewArray([
-            '<key>' => ['nested' => '<value>'],
-            'object' => new class {
-                public function __toString(): string
-                {
-                    return '<object>';
-                }
-            },
-        ]);
-
-        self::assertStringContainsString('&lt;key&gt;', $result);
-        self::assertStringContainsString('&lt;value&gt;', $result);
-        self::assertStringContainsString('&lt;object&gt;', $result);
-        self::assertStringNotContainsString('<value>', $result);
-    }
-
-    public function testViewArrayHandlesEmptyAndScalarValues(): void
-    {
-        self::assertStringContainsString('<strong>EMPTY!</strong>', Utility::viewArray([]));
-        self::assertStringContainsString('&lt;unsafe&gt;', Utility::viewArray('<unsafe>'));
-    }
-
     public function testWriteInformation()
     {
         self::assertNotEmpty(Utility::writeInformation('foo', 'bar'));

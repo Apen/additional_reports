@@ -11,7 +11,9 @@ namespace Sng\AdditionalReports\Reports;
  * LICENSE.txt file that was distributed with this source code.
  */
 
+use Sng\AdditionalReports\Service\StructuredDataNormalizer;
 use Sng\AdditionalReports\Utility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class Hooks extends AbstractReport
 {
@@ -34,6 +36,7 @@ class Hooks extends AbstractReport
     public function display()
     {
         $hooks = [];
+        $normalizer = GeneralUtility::makeInstance(StructuredDataNormalizer::class);
 
         // core hooks
         $items = $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS'];
@@ -46,7 +49,7 @@ class Hooks extends AbstractReport
                             $hooks['core'][] = [
                                 'corefile' => $itemKey,
                                 'name'     => $hookName,
-                                'file'     => Utility::viewArray($hookList),
+                                'file'     => $normalizer->normalize($hookList),
                             ];
                         }
                     }
@@ -63,7 +66,7 @@ class Hooks extends AbstractReport
                         $hooks['extensions'][] = [
                             'corefile' => $itemKey,
                             'name'     => $hookName,
-                            'file'     => Utility::viewArray($hookList),
+                            'file'     => $normalizer->normalize($hookList),
                         ];
                     }
                 }

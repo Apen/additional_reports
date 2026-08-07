@@ -355,43 +355,6 @@ class Utility
     }
 
     /**
-     * Print a debug of an array
-     *
-     * @param array $arrayIn
-     */
-    public static function viewArray($arrayIn): string
-    {
-        if (is_array($arrayIn)) {
-            $result = '<table class="table table-striped table-condensed"><tbody>';
-            if (count($arrayIn) === 0) {
-                $result .= '<tr><td><strong>EMPTY!</strong></td></tr>';
-            } else {
-                foreach ($arrayIn as $key => $val) {
-                    $result .= '<tr><td>' . htmlspecialchars((string) $key) . '</td><td>';
-                    if (is_array($val)) {
-                        $result .= self::viewArray($val);
-                    } elseif (is_object($val)) {
-                        $string = get_class($val);
-                        if (method_exists($val, '__toString')) {
-                            $string .= ': ' . $val;
-                        }
-                        $result .= nl2br(htmlspecialchars($string)) . '<br />';
-                    } else {
-                        $string = gettype($val) === 'object' ? 'Unknown object' : (string) $val;
-                        $result .= nl2br(htmlspecialchars($string)) . '<br />';
-                    }
-                    $result .= '</td></tr>';
-                }
-            }
-            $result .= '</tbody></table>';
-        } else {
-            $result = '<table class="table table-striped table-condensed">';
-            $result .= '<tr><td>' . nl2br(htmlspecialchars((string) $arrayIn)) . '</td></tr></table>';
-        }
-        return $result;
-    }
-
-    /**
      * Get the version of a given extension
      *
      * @param string $key
