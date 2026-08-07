@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Sng\AdditionalReports\Tests\Unit\Service;
 
+use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
 use Sng\AdditionalReports\Service\PackagistVersionService;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface;
+use TYPO3\CMS\Core\Http\RequestFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 final class PackagistVersionServiceTest extends TestCase
@@ -76,6 +78,31 @@ final class PackagistVersionServiceTest extends TestCase
         self::assertNull($this->findVersionWithCachedValue(['version' => 14]));
     }
 
+    public function testPackagistResponseIsParsedAndCached(): void
+    {
+        $response = new Response(200, [], json_encode([
+            'package' => [
+                'versions' => [
+                    '14.2.0' => [
+                        'version' => '14.2.0',
+                        'time' => '2026-08-01T10:00:00+00:00',
+                        'require' => ['typo3/cms-core' => '^14'],
+                    ],
+                ],
+            ],
+        ], JSON_THROW_ON_ERROR));
+
+        $result = $this->findVersionWithResponse($response);
+
+        self::assertSame('14.2.0', $result['version']);
+        self::assertSame('01/08/2026', $result['updatedate']);
+    }
+
+    public function testFailedPackagistResponseIsCachedAsUnavailable(): void
+    {
+        self::assertNull($this->findVersionWithResponse(new Response(503)));
+    }
+
     private function findVersionWithCachedValue(mixed $cachedValue): ?array
     {
         $cache = $this->createMock(FrontendInterface::class);
@@ -90,6 +117,30 @@ final class PackagistVersionServiceTest extends TestCase
             return (new PackagistVersionService())->findLatestVersion('vendor/cached-package');
         } finally {
             GeneralUtility::removeSingletonInstance(CacheManager::class, $cacheManager);
+        }
+    }
+
+    private function findVersionWithResponse(Response $response): ?array
+    {
+        $cache = $this->createMock(FrontendInterface::class);
+        $cache->expects(self::once())->method('has')->willReturn(false);
+        $cache->expects(self::once())->method('set');
+
+        $cacheManager = $this->createMock(CacheManager::class);
+        $cacheManager->method('getCache')->with('hash')->willReturn($cache);
+        $requestFactory = $this->createMock(RequestFactory::class);
+        $requestFactory->expects(self::once())
+            ->method('request')
+            ->with('https://packagist.org/packages/vendor/remote-package.json', 'GET', ['timeout' => 3.0])
+            ->willReturn($response);
+
+        GeneralUtility::setSingletonInstance(CacheManager::class, $cacheManager);
+        GeneralUtility::addInstance(RequestFactory::class, $requestFactory);
+        try {
+            return (new PackagistVersionService())->findLatestVersion('vendor/remote-package');
+        } finally {
+            GeneralUtility::removeSingletonInstance(CacheManager::class, $cacheManager);
+            GeneralUtility::purgeInstances();
         }
     }
 }
