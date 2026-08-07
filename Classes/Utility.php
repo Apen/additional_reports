@@ -889,8 +889,4 @@ class Utility
             null;
     }
 
-    public static function _GET(string $key)
-    {
-        return $GLOBALS['TYPO3_REQUEST']->getQueryParams()[$key] ?? null;
-    }
 }
