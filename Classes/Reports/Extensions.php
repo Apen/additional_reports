@@ -13,6 +13,9 @@ namespace Sng\AdditionalReports\Reports;
 
 use Sng\AdditionalReports\Utility;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
+use TYPO3\CMS\Core\Database\Schema\Parser\Lexer;
+use TYPO3\CMS\Core\Database\Schema\Parser\Parser;
+use TYPO3\CMS\Core\Database\Schema\SqlReader;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class Extensions extends AbstractReport
@@ -125,13 +128,43 @@ class Extensions extends AbstractReport
         }
 
         $listExtensionsTerItem['downloads'] = $itemValue['lastversion']['alldownloadcounter'] ?? '';
-        $listExtensionsTerItem['tablesmodal'] = ! empty($itemValue['fdfile']) ? '<pre class="pre-scrollable">' . (htmlspecialchars($itemValue['fdfile'])) . '</pre>' : '';
+        $listExtensionsTerItem['tables'] = $this->getExtensionTables((string) ($itemValue['fdfile'] ?? ''));
 
         // need extconf update
         $listExtensionsTerItem['confintegrity'] = Utility::getLl('no');
         $listExtensionsTerItem['confintegrityContent'] = '';
 
         return $listExtensionsTerItem;
+    }
+
+    /**
+     * Uses the same SQL reader and schema parser as TYPO3's database analyzer.
+     *
+     * @return list<array{name: string, columns: list<string>}>
+     */
+    public function getExtensionTables(string $sql): array
+    {
+        if (trim($sql) === '') {
+            return [];
+        }
+
+        $sqlReader = GeneralUtility::makeInstance(SqlReader::class);
+        $parser = new Parser(new Lexer());
+        $tables = [];
+        foreach ($sqlReader->getCreateTableStatementArray($sql) as $statement) {
+            try {
+                $parsedTables = $parser->parse($statement);
+            } catch (\Throwable) {
+                continue;
+            }
+            foreach ($parsedTables as $table) {
+                $tables[] = [
+                    'name' => $table->getName(),
+                    'columns' => array_map(static fn($column): string => $column->getName(), $table->getColumns()),
+                ];
+            }
+        }
+        return $tables;
     }
 
     public function getIdentifier(): string

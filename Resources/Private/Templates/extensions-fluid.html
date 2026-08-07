@@ -59,7 +59,7 @@
                         <f:format.raw>{extension.versionlast}</f:format.raw>
                     </td>
                     <td>
-                        <f:render section="details" arguments="{title:'{f:translate(extensionName:\'additional_reports\',key:\'extensions_tablesmodified\')}',content:extension.tablesmodal}"/>
+                        <f:render section="tables" arguments="{title:'{f:translate(extensionName:\'additional_reports\',key:\'extensions_tablesmodified\')}',tables:extension.tables}"/>
                     </td>
                     <td>
                         <f:format.raw>{extension.confintegrity}</f:format.raw>
@@ -104,7 +104,7 @@
                     <td>{extension.extension}</td>
                     <td>{extension.version}</td>
                     <td>
-                        <f:render section="details" arguments="{title:'{f:translate(extensionName:\'additional_reports\',key:\'extensions_tablesmodified\')}',content:extension.tablesmodal}"/>
+                        <f:render section="tables" arguments="{title:'{f:translate(extensionName:\'additional_reports\',key:\'extensions_tablesmodified\')}',tables:extension.tables}"/>
                     </td>
                 </tr>
             </f:for>
@@ -141,7 +141,7 @@
                     <td>{extension.extension}</td>
                     <td>{extension.version}</td>
                     <td>
-                        <f:render section="details" arguments="{title:'{f:translate(extensionName:\'additional_reports\',key:\'extensions_tablesmodified\')}',content:extension.tablesmodal}"/>
+                        <f:render section="tables" arguments="{title:'{f:translate(extensionName:\'additional_reports\',key:\'extensions_tablesmodified\')}',tables:extension.tables}"/>
                     </td>
                 </tr>
             </f:for>
@@ -155,6 +155,20 @@
         <details>
             <summary class="btn btn-default">{title}</summary>
             <f:format.raw>{content}</f:format.raw>
+        </details>
+    </f:if>
+</f:section>
+
+<f:section name="tables">
+    <f:if condition="{tables}">
+        <details>
+            <summary class="btn btn-default">{title}</summary>
+            <dl class="mt-2 mb-0">
+                <f:for each="{tables}" as="table">
+                    <dt><code>{table.name}</code></dt>
+                    <dd><code>{table.columns -> f:join(separator: ', ')}</code></dd>
+                </f:for>
+            </dl>
         </details>
     </f:if>
 </f:section>
