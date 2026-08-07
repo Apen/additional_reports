@@ -14,7 +14,6 @@ namespace Sng\AdditionalReports\Reports;
 use Sng\AdditionalReports\Repository\ContentUsageRepository;
 use Sng\AdditionalReports\Service\ContentTypeResolver;
 use Sng\AdditionalReports\Utility;
-use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class Plugins extends AbstractReport
@@ -44,11 +43,11 @@ class Plugins extends AbstractReport
 
         $view->assign('reportname', $contentUsageRepository->hasLegacyListType() ? 'additionalreports_plugins' : 'plugins');
         $view->assign('paginationRoute', $this->getCurrentRouteIdentifier());
-        $view->assign('checkedpluginsmode3', ($displayMode === 3) ? ' checked="checked"' : '');
-        $view->assign('checkedpluginsmode4', ($displayMode === 4) ? ' checked="checked"' : '');
-        $view->assign('checkedpluginsmode5', ($displayMode === 5) ? ' checked="checked"' : '');
-        $view->assign('checkedpluginsmode6', ($displayMode === 6) ? ' checked="checked"' : '');
-        $view->assign('checkedpluginsmode7', ($displayMode === 7) ? ' checked="checked"' : '');
+        $view->assign('checkedpluginsmode3', $displayMode === 3);
+        $view->assign('checkedpluginsmode4', $displayMode === 4);
+        $view->assign('checkedpluginsmode5', $displayMode === 5);
+        $view->assign('checkedpluginsmode6', $displayMode === 6);
+        $view->assign('checkedpluginsmode7', $displayMode === 7);
         $view->assign('filtersCatParam', $filter);
 
         $currentPage = (int) ($this->getRequestParameter('currentPage') ?? 1);
@@ -80,12 +79,6 @@ class Plugins extends AbstractReport
         $view->assign('display', $displayMode);
         $view->assign('showCtypes', in_array($displayMode, [3, 7], true));
         $view->assign('showPlugins', in_array($displayMode, [4, 6], true));
-
-        if (ExtensionManagementUtility::isLoaded('templavoila') && class_exists('tx_templavoila_api')) {
-            $view->assign('tvused', true);
-        } else {
-            $view->assign('tvused', false);
-        }
 
         return $view->render('plugins-fluid');
     }
@@ -161,8 +154,6 @@ class Plugins extends AbstractReport
             $pageId = (int) ($item['pid'] ?? 0);
             $item['domain'] = Utility::getDomain($pageId);
             $item['pagetitle'] = (string) ($item['title'] ?? '');
-            $item['usedtv'] = '';
-            $item['usedtvclass'] = '';
             $item['preview'] = '/index.php?id=' . $pageId;
         }
         unset($item);

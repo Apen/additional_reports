@@ -29,13 +29,13 @@
 <table id="choice-display">
     <tr>
         <td>
-            <input data-url="{f:be.uri(route:paginationRoute,parameters:{display:4,action:'detail',extension:'additional_reports',report:reportname})}" style="margin-right:4px;" type="radio" name="display" value="1" id="radio4" {checkedpluginsmode4}/>
+            <input data-url="{f:be.uri(route:paginationRoute,parameters:{display:4,action:'detail',extension:'additional_reports',report:reportname})}" style="margin-right:4px;" type="radio" name="display" value="1" id="radio4" checked="{checkedpluginsmode4}"/>
             <label for="radio4" style="margin-right:10px;">
                 <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:pluginsmode4"/>
             </label>
         </td>
         <td>
-            <input data-url="{f:be.uri(route:paginationRoute,parameters:{display:6,action:'detail',extension:'additional_reports',report:reportname})}" style="margin-right:4px;" type="radio" name="display" value="1" id="radio6" {checkedpluginsmode6}/>
+            <input data-url="{f:be.uri(route:paginationRoute,parameters:{display:6,action:'detail',extension:'additional_reports',report:reportname})}" style="margin-right:4px;" type="radio" name="display" value="1" id="radio6" checked="{checkedpluginsmode6}"/>
             <label for="radio6" style="margin-right:10px;">
                 <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:pluginsmode4hidden"/>
             </label>
@@ -43,13 +43,13 @@
     </tr>
     <tr>
         <td>
-            <input data-url="{f:be.uri(route:paginationRoute,parameters:{display:3,action:'detail',extension:'additional_reports',report:reportname})}" style="margin-right:4px;" type="radio" name="display" value="1" id="radio3" {checkedpluginsmode3}/>
+            <input data-url="{f:be.uri(route:paginationRoute,parameters:{display:3,action:'detail',extension:'additional_reports',report:reportname})}" style="margin-right:4px;" type="radio" name="display" value="1" id="radio3" checked="{checkedpluginsmode3}"/>
             <label for="radio3" style="margin-right:10px;">
                 <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:pluginsmode3"/>
             </label>
         </td>
         <td>
-            <input data-url="{f:be.uri(route:paginationRoute,parameters:{display:7,action:'detail',extension:'additional_reports',report:reportname})}" style="margin-right:4px;" type="radio" name="display" value="1" id="radio7" {checkedpluginsmode7}/>
+            <input data-url="{f:be.uri(route:paginationRoute,parameters:{display:7,action:'detail',extension:'additional_reports',report:reportname})}" style="margin-right:4px;" type="radio" name="display" value="1" id="radio7" checked="{checkedpluginsmode7}"/>
             <label for="radio7" style="margin-right:10px;">
                 <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:pluginsmode3hidden"/>
             </label>
@@ -57,7 +57,7 @@
     </tr>
     <tr>
         <td>
-            <input data-url="{f:be.uri(route:paginationRoute,parameters:{display:5,action:'detail',extension:'additional_reports',report:reportname})}" style="margin-right:4px;" type="radio" name="display" value="1" id="radio5" {checkedpluginsmode5}/>
+            <input data-url="{f:be.uri(route:paginationRoute,parameters:{display:5,action:'detail',extension:'additional_reports',report:reportname})}" style="margin-right:4px;" type="radio" name="display" value="1" id="radio5" checked="{checkedpluginsmode5}"/>
             <label for="radio5" style="margin-right:10px;">
                 <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:pluginsmode5"/>
             </label>
@@ -136,11 +136,6 @@
                     <th>
                         <f:translate key="LLL:EXT:backend/Resources/Private/Language/Modules/layout.xlf:title"/>
                     </th>
-                    <f:if condition="{tvused}">
-                        <th>
-                            <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:tvused"/>
-                        </th>
-                    </f:if>
                     <th>
                         <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:preview"/>
                     </th>
@@ -151,7 +146,7 @@
                     <tr>
                         <td class="col-icon"><img src="{item.iconext}"/></td>
                         <td>{item.ctype}</td>
-                        <f:render partial="ContentInfoCells" arguments="{item:item,tvused:tvused}"/>
+                        <f:render partial="ContentInfoCells" arguments="{item:item}"/>
                         <td>
                             <a href="{item.preview}" target="_blank" class="btn btn-default">
                                 <core:icon identifier="actions-version-workspace-preview"/>
@@ -204,11 +199,6 @@
                     <th>
                         <f:translate key="LLL:EXT:backend/Resources/Private/Language/Modules/layout.xlf:title"/>
                     </th>
-                    <f:if condition="{tvused}">
-                        <th>
-                            <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:tvused"/>
-                        </th>
-                    </f:if>
                     <th>
                         <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:preview"/>
                     </th>
@@ -220,7 +210,7 @@
                         <td class="col-icon"><img src="{item.iconext}"/></td>
                         <td>{item.extension}</td>
                         <td>{item.plugin}</td>
-                        <f:render partial="ContentInfoCells" arguments="{item:item,tvused:tvused}"/>
+                        <f:render partial="ContentInfoCells" arguments="{item:item}"/>
                         <td>
                             <a href="{item.preview}" target="_blank" class="btn btn-default">
                                 <core:icon identifier="actions-version-workspace-preview"/>
