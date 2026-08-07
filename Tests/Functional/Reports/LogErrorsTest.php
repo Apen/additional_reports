@@ -17,6 +17,8 @@ class LogErrorsTest extends FunctionalTestCase
     public function testDisplay()
     {
         $report = new LogErrors(parent::getReportObject());
-        self::assertNotEmpty($report->display());
+        $output = $report->display();
+
+        self::assertStringContainsString('<code>DELETE FROM sys_log WHERE error &gt; 0;</code>', $output);
     }
 }

@@ -63,11 +63,6 @@ class UtilityTest extends BaseTestCase
         ]));
     }
 
-    public function testWriteInformation()
-    {
-        self::assertNotEmpty(Utility::writeInformation('foo', 'bar'));
-    }
-
     public function testGetPluginsDisplayMode()
     {
         self::assertEmpty(Utility::getPluginsDisplayMode());

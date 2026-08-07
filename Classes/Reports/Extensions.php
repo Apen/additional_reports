@@ -67,22 +67,18 @@ class Extensions extends AbstractReport
             }
         }
 
-        $addContent = '';
-        $addContent .= (count($listExtensionsTer) + count($listExtensionsDev)) . ' ' . Utility::getLl('extensions_extensions');
-        $addContent .= '<br/>';
-        $addContent .= count($listExtensionsTer) . ' ' . Utility::getLl('extensions_ter');
-        $addContent .= '  /  ';
-        $addContent .= count($listExtensionsDev) . ' ' . Utility::getLl('extensions_dev');
-        $addContent .= '<br/>';
-        $addContent .= $extensionsToUpdate . ' ' . Utility::getLl('extensions_toupdate');
-        $addContentItem = Utility::writeInformation(Utility::getLl('pluginsmode5') . '<br/>' . Utility::getLl('extensions_updateter') . '', $addContent);
-
         $view = $this->createView();
+        $view->assign('extensionsSummary', [
+            'loaded' => count($listExtensionsTer) + count($listExtensionsDev),
+            'ter' => count($listExtensionsTer),
+            'development' => count($listExtensionsDev),
+            'updates' => $extensionsToUpdate,
+        ]);
         $view->assign('listExtensionsTer', $listExtensionsTer);
         $view->assign('listExtensionsDev', $listExtensionsDev);
         $view->assign('listExtensionsUnloaded', $listExtensionsUnloaded);
         $view->assign('composer', Utility::isComposerMode());
-        return $addContentItem . $view->render('extensions-fluid');
+        return $view->render('extensions-fluid');
     }
 
     /**

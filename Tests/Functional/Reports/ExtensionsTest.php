@@ -20,6 +20,7 @@ class ExtensionsTest extends FunctionalTestCase
         $output = $report->display();
 
         self::assertNotEmpty($output);
+        self::assertStringContainsString('class="notice col-xs-6"', $output);
         self::assertStringContainsString('class="table-fit"', $output);
         self::assertStringContainsString('additional-reports-extensions-table', $output);
         self::assertStringContainsString('<colgroup>', $output);

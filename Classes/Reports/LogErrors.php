@@ -51,11 +51,6 @@ class LogErrors extends AbstractReport
         [$orderField, $orderDirection] = $allowedOrderings[$orderKey] ?? ['nb', 'DESC'];
         $queryBuilder->orderBy($orderField, $orderDirection)->addOrderBy('tstamp', 'DESC');
 
-        $content = Utility::writeInformation(
-            Utility::getLl('flushalllog'),
-            'DELETE FROM sys_log WHERE error > 0;'
-        );
-
         $view = $this->createView();
         $view->assign('reportname', Utility::hasLegacyListType() ? 'additionalreports_logerrors' : 'logerrors');
         $view->assign('paginationRoute', $this->getCurrentRouteIdentifier());
@@ -64,7 +59,7 @@ class LogErrors extends AbstractReport
 
         Utility::buildPagination($queryBuilder->executeQuery()->fetchAllAssociative(), (int) (Utility::_GP('currentPage') ?? 1), $view);
 
-        return $content . $view->render('logerrors-fluid');
+        return $view->render('logerrors-fluid');
     }
 
     public function getIdentifier(): string

@@ -1,5 +1,16 @@
 {namespace ar=Sng\AdditionalReports\ViewHelpers}
 
+<table class="table table-striped table-hover">
+    <tbody>
+    <tr>
+        <td class="notice col-xs-6">
+            <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:flushalllog"/>
+        </td>
+        <td class="notice col-xs-6"><code>DELETE FROM sys_log WHERE error &gt; 0;</code></td>
+    </tr>
+    </tbody>
+</table>
+
 <div class="table-fit">
     <table class="table table-striped table-hover table-condensed">
         <thead>

@@ -432,26 +432,6 @@ class Utility
         return $sqlEncoding;
     }
 
-    /**
-     * Generate a special formated div (with icon)
-     *
-     * @param string $label
-     * @param string $value
-     */
-    public static function writeInformation($label, $value): string
-    {
-        return '
-        <table class="table table-striped table-hover">
-            <tbody>
-			<tr>
-				<td class="notice col-xs-6">' . $label . '</td>
-				<td class="notice col-xs-6">' . $value . '</td>
-			</tr>
-		    </tbody>
-		</table>
-		';
-    }
-
     public static function getAllDifferentPlugins(bool $displayHidden = false): array
     {
         if (! self::hasLegacyListType()) {
