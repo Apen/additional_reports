@@ -13,18 +13,6 @@ parameters:
 			path: ../Classes/Controller/ReportController.php
 
 		-
-			message: '#^Access to an undefined property TYPO3\\CMS\\Core\\Utility\\DiffUtility\:\:\$stripTags\.$#'
-			identifier: property.notFound
-			count: 1
-			path: ../Classes/Eid/CallAjax.php
-
-		-
-			message: '#^Call to an undefined method TYPO3\\CMS\\Core\\Utility\\DiffUtility\:\:makeDiffDisplay\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../Classes/Eid/CallAjax.php
-
-		-
 			message: '#^Out of 152 possible return types, only 117 \- 76\.9 %% actually have it\. Add more return types to get over 100 %%$#'
 			identifier: typeCoverage.returnTypeCoverage
 			count: 2

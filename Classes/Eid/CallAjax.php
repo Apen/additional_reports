@@ -96,8 +96,7 @@ class CallAjax
     public function t3Diff($file1, $file2)
     {
         $diff = GeneralUtility::makeInstance(DiffUtility::class);
-        $diff->stripTags = false;
-        $sourcesDiff = $diff->makeDiffDisplay($file1, $file2);
+        $sourcesDiff = $diff->diff($file1, $file2);
         return $this->printT3Diff($sourcesDiff);
     }
 
