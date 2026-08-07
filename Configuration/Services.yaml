@@ -24,45 +24,34 @@ services:
   Sng\AdditionalReports\Repository\WebsiteConfigurationRepository: ~
 
   Sng\AdditionalReports\Reports\CommandControllers:
-    tags:
-      - { name: additionalreports_commandcontrollers.report }
+    public: true
 
   Sng\AdditionalReports\Reports\Eid:
-    tags:
-      - { name: additionalreports_eid.report }
+    public: true
 
   Sng\AdditionalReports\Reports\EventDispatcher:
-    tags:
-      - { name: additionalreports_eventdispatcher.report }
+    public: true
 
   Sng\AdditionalReports\Reports\Extensions:
-    tags:
-      - { name: additionalreports_extensions.report }
+    public: true
 
   Sng\AdditionalReports\Reports\Hooks:
-    tags:
-      - { name: additionalreports_hooks.report }
+    public: true
 
   Sng\AdditionalReports\Reports\LogErrors:
-    tags:
-      - { name: additionalreports_logerrors.report }
+    public: true
 
   Sng\AdditionalReports\Reports\Middlewares:
-    tags:
-      - { name: additionalreports_middlewares.report }
+    public: true
 
   Sng\AdditionalReports\Reports\Plugins:
-    tags:
-      - { name: additionalreports_plugins.report }
+    public: true
 
   Sng\AdditionalReports\Reports\Status:
-    tags:
-      - { name: additionalreports_status.report }
+    public: true
 
   Sng\AdditionalReports\Reports\WebsiteConf:
-    tags:
-      - { name: additionalreports_websitesconf.report }
+    public: true
 
   Sng\AdditionalReports\Reports\Xclass:
-    tags:
-      - { name: additionalreports_xclass.report }
+    public: true

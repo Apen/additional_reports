@@ -23,7 +23,6 @@ $config = ECSConfig::configure()
         $root . '/Configuration',
         $root . '/Tests',
         $root . '/ext_emconf.php',
-        $root . '/ext_tables.php',
     ])
     ->withConfiguredRule(ConcatSpaceFixer::class, ['spacing' => 'one'])
     ->withConfiguredRule(OrderedImportsFixer::class, ['imports_order' => ['class', 'const', 'function']])
@@ -38,8 +37,6 @@ $config = ECSConfig::configure()
         StandaloneLinePromotedPropertyFixer::class,
         DeclareStrictTypesFixer::class => [
             $root . '/ext_emconf.php',
-            $root . '/ext_localconf.php',
-            $root . '/ext_tables.php',
             $root . '/Configuration/TCA/*',
         ],
     ])

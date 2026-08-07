@@ -16,7 +16,6 @@ return RectorConfig::configure()
         $root . '/Configuration',
         $root . '/Tests',
         $root . '/ext_emconf.php',
-        $root . '/ext_tables.php',
     ])
     ->withSets([
         LevelSetList::UP_TO_PHP_82,

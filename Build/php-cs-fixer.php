@@ -10,7 +10,7 @@ $root = dirname(__DIR__);
 $finder = (new PhpCsFixer\Finder())
     ->ignoreVCSIgnored(true)
     ->in([$root . '/Classes', $root . '/Configuration', $root . '/Tests'])
-    ->append([$root . '/ext_emconf.php', $root . '/ext_tables.php']);
+    ->append([$root . '/ext_emconf.php']);
 
 return (new PhpCsFixer\Config())
     ->setFinder($finder)
