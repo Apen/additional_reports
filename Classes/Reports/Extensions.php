@@ -11,6 +11,7 @@ namespace Sng\AdditionalReports\Reports;
  * LICENSE.txt file that was distributed with this source code.
  */
 
+use Sng\AdditionalReports\Repository\ExtensionRepository;
 use Sng\AdditionalReports\Utility;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
 use TYPO3\CMS\Core\Core\Environment;
@@ -40,7 +41,7 @@ class Extensions extends AbstractReport
     {
         $extensionsToUpdate = 0;
 
-        $allExtension = Utility::getExtensionList();
+        $allExtension = GeneralUtility::makeInstance(ExtensionRepository::class)->findGrouped();
 
         $listExtensionsTer = [];
         $listExtensionsDev = [];

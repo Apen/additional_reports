@@ -11,12 +11,10 @@ namespace Sng\AdditionalReports;
  * LICENSE.txt file that was distributed with this source code.
  */
 
-use Composer\Semver\VersionParser;
 use Sng\AdditionalReports\Repository\ContentUsageRepository;
+use Sng\AdditionalReports\Repository\ExtensionRepository;
 use Sng\AdditionalReports\Repository\PageStatisticsRepository;
-use Sng\AdditionalReports\Service\PackagistVersionService;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
-use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
@@ -24,7 +22,6 @@ use TYPO3\CMS\Core\Exception\SiteNotFoundException;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
 use TYPO3\CMS\Core\Package\Exception\UnknownPackageException;
-use TYPO3\CMS\Core\Package\PackageInterface;
 use TYPO3\CMS\Core\Package\PackageManager;
 use TYPO3\CMS\Core\Pagination\ArrayPaginator;
 use TYPO3\CMS\Core\Pagination\SlidingWindowPagination;
@@ -104,45 +101,7 @@ class Utility
      */
     public static function getExtensionList(): array
     {
-        $list = ['ter' => [], 'dev' => [], 'unloaded' => []];
-        $packageManager = GeneralUtility::makeInstance(PackageManager::class);
-
-        foreach ($packageManager->getAvailablePackages() as $package) {
-            if (! self::isThirdPartyExtension($package)) {
-                continue;
-            }
-
-            $extensionKey = $package->getPackageKey();
-            $packagePath = rtrim($package->getPackagePath(), '/\\') . DIRECTORY_SEPARATOR;
-            $sqlFile = $packagePath . 'ext_tables.sql';
-            $extension = [
-                'extkey' => $extensionKey,
-                'installed' => $packageManager->isPackageActive($extensionKey),
-                'composerName' => $package->getValueFromComposerManifest('name'),
-                'version' => $package->getPackageMetaData()->getVersion(),
-                'lastversion' => null,
-                'fdfile' => is_file($sqlFile) ? (string) GeneralUtility::getUrl($sqlFile) : '',
-            ];
-            $extension['lastversion'] = self::checkExtensionUpdate($extension);
-
-            if (! $extension['installed']) {
-                $list['unloaded'][$extensionKey] = $extension;
-            } elseif ($extension['lastversion'] !== null) {
-                $list['ter'][$extensionKey] = $extension;
-            } else {
-                $list['dev'][$extensionKey] = $extension;
-            }
-        }
-
-        return $list;
-    }
-
-    private static function isThirdPartyExtension(PackageInterface $package): bool
-    {
-        $packageType = $package->getPackageMetaData()->getPackageType();
-        return is_string($packageType)
-            && str_starts_with($packageType, 'typo3-cms-')
-            && $packageType !== 'typo3-cms-framework';
+        return GeneralUtility::makeInstance(ExtensionRepository::class)->findGrouped();
     }
 
     /**
@@ -153,30 +112,7 @@ class Utility
      */
     public static function checkExtensionUpdate($extInfo)
     {
-        $packageName = $extInfo['composerName'] ?? null;
-        if (is_string($packageName) && $packageName !== '') {
-            $installedVersion = $extInfo['version'] ?? null;
-            return is_string($installedVersion)
-                && VersionParser::parseStability($installedVersion) === 'stable'
-                ? GeneralUtility::makeInstance(PackagistVersionService::class)->findLatestVersion($packageName)
-                : null;
-        }
-        if (Environment::isComposerMode()) {
-            return null;
-        }
-        $queryBuilder = self::getQueryBuilder('tx_extensionmanager_domain_model_extension');
-        $lastVersion = $queryBuilder
-            ->select('*')
-            ->from('tx_extensionmanager_domain_model_extension')
-            ->where($queryBuilder->expr()->eq('extension_key', $queryBuilder->createNamedParameter($extInfo['extkey'])))
-            ->andWhere($queryBuilder->expr()->eq('current_version', 1))
-            ->executeQuery()
-            ->fetchAllAssociative();
-        if ($lastVersion !== []) {
-            $lastVersion[0]['updatedate'] = date('d/m/Y', $lastVersion[0]['last_updated']);
-            return $lastVersion[0];
-        }
-        return null;
+        return GeneralUtility::makeInstance(ExtensionRepository::class)->findLatestVersion($extInfo);
     }
 
     /**
@@ -228,13 +164,7 @@ class Utility
         if (! is_string($key) || empty($key)) {
             throw new \InvalidArgumentException('Extension key must be a non-empty string.');
         }
-
-        try {
-            $package = GeneralUtility::makeInstance(PackageManager::class)->getPackage($key);
-        } catch (UnknownPackageException) {
-            return null;
-        }
-        return $package->getPackageMetaData()->getVersion();
+        return GeneralUtility::makeInstance(ExtensionRepository::class)->findVersion($key);
     }
 
     /**
