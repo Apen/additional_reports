@@ -281,6 +281,11 @@ table.debug td.debugvar {
     width: 8%;
 }
 
+.additional-reports-events-table code {
+    font-size: 1rem;
+    line-height: 1.4;
+}
+
 .additional-reports-class-name {
     display: flex;
     flex-direction: column;
@@ -289,5 +294,5 @@ table.debug td.debugvar {
 
 .additional-reports-class-name > span {
     color: var(--typo3-text-color-secondary, #666);
-    font-size: 0.85em;
+    font-size: 0.875rem;
 }
