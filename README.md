@@ -53,17 +53,13 @@ After installation, clear the TYPO3 caches if necessary, then open
 
 ## Screenshots
 
-<details>
-<summary>Commands and eID</summary>
+### Commands and eID
 
 ![Registered commands](Resources/Public/Images/commands.png)
 
 ![Registered eID entry points](Resources/Public/Images/eid.png)
 
-</details>
-
-<details>
-<summary>Plugins and content types</summary>
+### Plugins and content types
 
 ![Plugin usage](Resources/Public/Images/plugins.png)
 
@@ -71,10 +67,7 @@ After installation, clear the TYPO3 caches if necessary, then open
 
 ![Plugin and content type summary](Resources/Public/Images/summary.png)
 
-</details>
-
-<details>
-<summary>System diagnostics</summary>
+### System diagnostics
 
 ![System status](Resources/Public/Images/status1.png)
 
@@ -84,10 +77,7 @@ After installation, clear the TYPO3 caches if necessary, then open
 
 ![Website configuration](Resources/Public/Images/websites.png)
 
-</details>
-
-<details>
-<summary>Extensions and TYPO3 registrations</summary>
+### Extensions and TYPO3 registrations
 
 ![Installed extensions](Resources/Public/Images/extensions.png)
 
@@ -97,16 +87,11 @@ After installation, clear the TYPO3 caches if necessary, then open
 
 ![Registered XCLASS overrides](Resources/Public/Images/xclass.png)
 
-</details>
-
-<details>
-<summary>PSR-14 and PSR-15</summary>
+### PSR-14 and PSR-15
 
 ![PSR-14 event listeners](Resources/Public/Images/eventdispatcher.png)
 
 ![PSR-15 middlewares](Resources/Public/Images/middlewares.png)
-
-</details>
 
 ## Development and quality
 
