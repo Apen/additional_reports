@@ -7,7 +7,6 @@ namespace Sng\AdditionalReports\Tests\Unit\ViewHelpers;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Sng\AdditionalReports\ViewHelpers\ContentInfosViewHelper;
-use Sng\AdditionalReports\ViewHelpers\SpriteManagerIconViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 final class ViewHelperArgumentsTest extends TestCase
@@ -37,13 +36,6 @@ final class ViewHelperArgumentsTest extends TestCase
                 'as' => ['type' => 'string', 'required' => false],
                 'plugin' => ['type' => 'boolean', 'required' => false],
                 'ctype' => ['type' => 'boolean', 'required' => false],
-            ],
-        ];
-        yield 'sprite icon' => [
-            SpriteManagerIconViewHelper::class,
-            [
-                'iconName' => ['type' => 'string', 'required' => true],
-                'size' => ['type' => 'string', 'required' => false],
             ],
         ];
     }

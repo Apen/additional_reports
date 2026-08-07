@@ -71,7 +71,10 @@ class Plugins extends AbstractReport
                 break;
         }
 
-        $view->assign('display', Utility::getPluginsDisplayMode());
+        $displayMode = Utility::getPluginsDisplayMode();
+        $view->assign('display', $displayMode);
+        $view->assign('showCtypes', in_array($displayMode, [3, 7], true));
+        $view->assign('showPlugins', in_array($displayMode, [4, 6], true));
 
         if (ExtensionManagementUtility::isLoaded('templavoila') && class_exists('tx_templavoila_api')) {
             $view->assign('tvused', true);

@@ -11,7 +11,6 @@ namespace Sng\AdditionalReports;
  * LICENSE.txt file that was distributed with this source code.
  */
 
-use Sng\AdditionalReports\Pagination\SimplePagination;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Core\Environment;
@@ -28,6 +27,7 @@ use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
 use TYPO3\CMS\Core\Package\Exception\UnknownPackageException;
 use TYPO3\CMS\Core\Package\PackageManager;
 use TYPO3\CMS\Core\Pagination\ArrayPaginator;
+use TYPO3\CMS\Core\Pagination\SlidingWindowPagination;
 use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -1189,8 +1189,7 @@ class Utility
                 $itemsPerPage = 10;
             }
             $paginator = new ArrayPaginator($items, $currentPage, $itemsPerPage);
-            $pagination = new SimplePagination($paginator);
-            $pagination->generate();
+            $pagination = new SlidingWindowPagination($paginator, 5);
             $view->assign('paginator', $paginator);
             $view->assign('pagination', $pagination);
         }

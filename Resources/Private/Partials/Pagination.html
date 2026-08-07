@@ -18,15 +18,15 @@
         <f:if condition="{pagination.hasLessPages}">
             <li class="page-item"><a class="page-link" href="#">…</a></li>
         </f:if>
-        <f:for each="{pagination.pages}" as="page">
-            <f:if condition="{page.isCurrent}">
+        <f:for each="{pagination.allPageNumbers}" as="pageNumber">
+            <f:if condition="{pageNumber} == {paginator.currentPageNumber}">
                 <f:then>
-                    <li class="page-item active"><a class="page-link" href="#">{page.number}</a></li>
+                    <li class="page-item active"><a class="page-link" href="#">{pageNumber}</a></li>
                 </f:then>
                 <f:else>
                     <li class="page-item">
-                        <a class="page-link" href="{f:be.uri(route:paginationRoute,parameters:{currentPage: page.number,action:'detail',extension:'additional_reports',report:reportname,filtersCat:filtersCatParam})}" title="{page.number}">
-                            {page.number}
+                        <a class="page-link" href="{f:be.uri(route:paginationRoute,parameters:{currentPage: pageNumber,action:'detail',extension:'additional_reports',report:reportname,filtersCat:filtersCatParam})}" title="{pageNumber}">
+                            {pageNumber}
                         </a>
                     </li>
                 </f:else>

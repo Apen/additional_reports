@@ -81,7 +81,7 @@
 </f:if>
 
 <!-- ctype -->
-<ar:inList item="{display}" list="3,7">
+<f:if condition="{showCtypes}">
     <f:format.raw>{filtersCat}</f:format.raw>
         <div class="table-fit">
             <table class="table table-striped table-hover table-condensed">
@@ -162,11 +162,11 @@
     </div>
 
     <f:render partial="Pagination" arguments="{_all}"/>
-</ar:inList>
+</f:if>
 
 <!-- plugins -->
 
-<ar:inList item="{display}" list="4,6">
+<f:if condition="{showPlugins}">
         <f:format.raw>{filtersCat}</f:format.raw>
         <div class="table-fit">
             <table class="table table-striped table-hover table-condensed">
@@ -251,7 +251,7 @@
     </div>
 
     <f:render partial="Pagination" arguments="{_all}"/>
-</ar:inList>
+</f:if>
 
 
 
