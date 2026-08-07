@@ -36,7 +36,7 @@ class Plugins extends AbstractReport
         $view = $this->createView();
 
         $view->assign('reportname', Utility::hasLegacyListType() ? 'additionalreports_plugins' : 'plugins');
-        $view->assign('paginationRoute', Utility::getReportRouteIdentifier('plugins'));
+        $view->assign('paginationRoute', $this->getCurrentRouteIdentifier());
         $view->assign('extconf', unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['additional_reports'] ?? ''));
         $view->assign('caution', Utility::writeInformation(Utility::getLl('careful'), Utility::getLl('carefuldesc')));
         $view->assign('checkedpluginsmode3', (Utility::getPluginsDisplayMode() === 3) ? ' checked="checked"' : '');

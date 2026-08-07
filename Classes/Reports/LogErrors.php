@@ -58,7 +58,7 @@ class LogErrors extends AbstractReport
 
         $view = $this->createView();
         $view->assign('reportname', Utility::hasLegacyListType() ? 'additionalreports_logerrors' : 'logerrors');
-        $view->assign('paginationRoute', Utility::getReportRouteIdentifier('logerrors'));
+        $view->assign('paginationRoute', $this->getCurrentRouteIdentifier());
         $view->assign('extconf', unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['additional_reports'] ?? ''));
         $view->assign('requestDir', GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR'));
 

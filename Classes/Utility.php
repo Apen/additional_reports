@@ -58,16 +58,6 @@ class Utility
         ];
     }
 
-    public static function getReportRouteIdentifier(string $report): string
-    {
-        if (GeneralUtility::makeInstance(Typo3Version::class)->getMajorVersion() < 14) {
-            return 'system_reports';
-        }
-
-        $report = preg_replace('/^additionalreports_/', '', $report);
-        return 'system_reports_additionalreports_' . $report;
-    }
-
     /**
      * Define all the sub modules
      *

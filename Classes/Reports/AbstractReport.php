@@ -12,6 +12,8 @@ namespace Sng\AdditionalReports\Reports;
  */
 
 use Psr\Http\Message\ServerRequestInterface;
+use Symfony\Component\Routing\Route as SymfonyRoute;
+use TYPO3\CMS\Backend\Routing\Route;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\View\ViewFactoryData;
@@ -61,6 +63,19 @@ trait AbstractReportImplementation
         );
 
         return GeneralUtility::makeInstance(ViewFactoryInterface::class)->create($viewFactoryData);
+    }
+
+    protected function getCurrentRouteIdentifier(): string
+    {
+        $request = $GLOBALS['TYPO3_REQUEST'] ?? null;
+        $route = $request instanceof ServerRequestInterface ? $request->getAttribute('route') : null;
+        if ($route instanceof Route || $route instanceof SymfonyRoute) {
+            $identifier = $route->getOption('_identifier');
+            if (is_string($identifier) && $identifier !== '') {
+                return $identifier;
+            }
+        }
+        throw new \RuntimeException('The report requires a backend request with an identified route.', 1786128600);
     }
 }
 

@@ -20,7 +20,10 @@ class PluginsTest extends FunctionalTestCase
     public function testDisplay()
     {
         $report = new Plugins(parent::getReportObject());
-        self::assertNotEmpty($report->display());
+        $output = $report->display();
+
+        self::assertNotEmpty($output);
+        self::assertStringContainsString('/typo3/module/system/reports', $output);
         self::assertTrue(GeneralUtility::makeInstance(AssetCollector::class)->hasJavaScript('additional-reports-plugins'));
     }
 

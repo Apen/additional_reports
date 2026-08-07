@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Sng\AdditionalReports\Tests\Functional;
 
+use TYPO3\CMS\Backend\Routing\Route;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
 use TYPO3\CMS\Core\Http\NormalizedParams;
@@ -47,7 +48,8 @@ class FunctionalTestCase extends \TYPO3\TestingFramework\Core\Functional\Functio
             ->withQueryParams([
                 'report' => 'logerrors',
             ])
-            ->withAttribute('normalizedParams', NormalizedParams::createFromRequest($request));
+            ->withAttribute('normalizedParams', NormalizedParams::createFromRequest($request))
+            ->withAttribute('route', new Route('/typo3/module/system/reports', ['_identifier' => 'system_reports']));
         $request = $request->withAttribute('applicationType', SystemEnvironmentBuilder::REQUESTTYPE_BE);
         $GLOBALS['TYPO3_REQUEST'] = $request;
     }

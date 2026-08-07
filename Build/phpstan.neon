@@ -2,6 +2,9 @@ includes:
   - phpstan-baseline.neon
 
 parameters:
+  typo3:
+    requestGetAttributeMapping:
+      route: TYPO3\CMS\Backend\Routing\Route|Symfony\Component\Routing\Route
   phpVersion: 80200
   level: 8
   paths:
