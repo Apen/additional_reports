@@ -17,9 +17,9 @@ use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Exception\SiteNotFoundException;
-use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Imaging\IconRegistry;
+use TYPO3\CMS\Core\Imaging\IconSize;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
 use TYPO3\CMS\Core\Package\Exception\UnknownPackageException;
@@ -73,8 +73,22 @@ class Utility
         $parameters['action'] = 'detail';
         $parameters['report'] = self::_GET('report');
         $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
-        $url = $uriBuilder->buildUriFromRoute('system_reports', $parameters);
+        $route = self::getReportRouteIdentifier((string)$parameters['report']);
+        if ($route !== 'system_reports') {
+            unset($parameters['extension'], $parameters['action'], $parameters['report']);
+        }
+        $url = $uriBuilder->buildUriFromRoute($route, $parameters);
         return (string)$url;
+    }
+
+    public static function getReportRouteIdentifier(string $report): string
+    {
+        if (GeneralUtility::makeInstance(Typo3Version::class)->getMajorVersion() < 14) {
+            return 'system_reports';
+        }
+
+        $report = preg_replace('/^additionalreports_/', '', $report);
+        return 'system_reports_additionalreports_' . $report;
     }
 
     /**
@@ -332,10 +346,11 @@ class Utility
                     $infos['iconext'] = PathUtility::getPublicResourceWebPath($iconPath);
                 } elseif ($iconRegistry->isRegistered($iconPath)) {
                     $icon = $iconRegistry->getIconConfigurationByIdentifier($iconPath);
-                    if (isset($icon['options']) && str_contains($icon['options']['source'], 'EXT:')) {
-                        $infos['iconext'] = PathUtility::getPublicResourceWebPath($icon['options']['source']);
-                    } elseif (isset($icon['options']['source'])) {
-                        $infos['iconext'] = PathUtility::getAbsoluteWebPath($icon['options']['source']);
+                    $iconSource = $icon['options']['source'] ?? null;
+                    if (is_string($iconSource) && str_contains($iconSource, 'EXT:')) {
+                        $infos['iconext'] = PathUtility::getPublicResourceWebPath($iconSource);
+                    } elseif (is_string($iconSource) && $iconSource !== '') {
+                        $infos['iconext'] = PathUtility::getAbsoluteWebPath($iconSource);
                     }
                 }
             }
@@ -372,7 +387,7 @@ class Utility
     {
         return GeneralUtility::makeInstance(IconFactory::class)->getIcon(
             'actions-system-refresh',
-            Icon::SIZE_SMALL
+            IconSize::SMALL
         )->render();
     }
 
@@ -385,7 +400,7 @@ class Utility
     {
         return GeneralUtility::makeInstance(IconFactory::class)->getIcon(
             'apps-pagetree-page-domain',
-            Icon::SIZE_SMALL
+            IconSize::SMALL
         )->render();
     }
 
@@ -398,7 +413,7 @@ class Utility
     {
         return GeneralUtility::makeInstance(IconFactory::class)->getIcon(
             'actions-version-page-open',
-            Icon::SIZE_SMALL
+            IconSize::SMALL
         )->render();
     }
 
@@ -411,7 +426,7 @@ class Utility
     {
         return GeneralUtility::makeInstance(IconFactory::class)->getIcon(
             'mimetypes-x-content-template',
-            Icon::SIZE_SMALL
+            IconSize::SMALL
         )->render();
     }
 
@@ -424,7 +439,7 @@ class Utility
     {
         return GeneralUtility::makeInstance(IconFactory::class)->getIcon(
             'actions-system-list-open',
-            Icon::SIZE_SMALL
+            IconSize::SMALL
         )->render();
     }
 
@@ -439,13 +454,13 @@ class Utility
         if ($hidden) {
             return GeneralUtility::makeInstance(IconFactory::class)->getIcon(
                 'apps-pagetree-page-default',
-                Icon::SIZE_SMALL,
+                IconSize::SMALL,
                 'overlay-hidden'
             )->render();
         }
         return GeneralUtility::makeInstance(IconFactory::class)->getIcon(
             'apps-pagetree-page-default',
-            Icon::SIZE_SMALL
+            IconSize::SMALL
         )->render();
     }
 
@@ -460,13 +475,13 @@ class Utility
         if ($hidden) {
             return GeneralUtility::makeInstance(IconFactory::class)->getIcon(
                 'content-text',
-                Icon::SIZE_SMALL,
+                IconSize::SMALL,
                 'overlay-hidden'
             )->render();
         }
         return GeneralUtility::makeInstance(IconFactory::class)->getIcon(
             'content-text',
-            Icon::SIZE_SMALL
+            IconSize::SMALL
         )->render();
     }
 
@@ -738,6 +753,9 @@ class Utility
      */
     public static function getAllDifferentPlugins($where): array
     {
+        if (!self::hasLegacyListType()) {
+            return self::getAllDifferentCtypes($where);
+        }
         return Utility::exec_SELECTgetRows(
             'DISTINCT tt_content.list_type',
             'tt_content,pages',
@@ -766,12 +784,13 @@ class Utility
             $filterCat .= '<option value="all">' . self::getLL('all') . '</option>';
         }
 
+        $field = self::hasLegacyListType() ? 'list_type' : 'CType';
         foreach ($pluginsList as $pluginsElement) {
-            if (($getFiltersCat == $pluginsElement['list_type']) && ($getFiltersCat !== null)) {
-                $filterCat .= '<option value="' . $pluginsElement['list_type'] . '" selected="selected">';
-                $filterCat .= $pluginsElement['list_type'] . '</option>';
+            if (($getFiltersCat == $pluginsElement[$field]) && ($getFiltersCat !== null)) {
+                $filterCat .= '<option value="' . $pluginsElement[$field] . '" selected="selected">';
+                $filterCat .= $pluginsElement[$field] . '</option>';
             } else {
-                $filterCat .= '<option value="' . $pluginsElement['list_type'] . '">' . $pluginsElement['list_type'] . '</option>';
+                $filterCat .= '<option value="' . $pluginsElement[$field] . '">' . $pluginsElement[$field] . '</option>';
             }
         }
 
@@ -788,6 +807,15 @@ class Utility
      */
     public static function getAllDifferentCtypes($where): array
     {
+        if (!self::hasLegacyListType()) {
+            return Utility::exec_SELECTgetRows(
+                'DISTINCT tt_content.CType',
+                'tt_content,pages',
+                'tt_content.pid=pages.uid AND pages.pid>=0 AND tt_content.deleted=0 AND pages.deleted=0 ' . $where . "AND tt_content.CType<>''",
+                '',
+                'tt_content.CType'
+            );
+        }
         return Utility::exec_SELECTgetRows(
             'DISTINCT tt_content.CType,tt_content.list_type',
             'tt_content,pages',
@@ -839,6 +867,9 @@ class Utility
      */
     public static function getAllPlugins($where, $limit = '', $returnQuery = false)
     {
+        if (!self::hasLegacyListType()) {
+            return self::getAllCtypes($where, $limit, $returnQuery);
+        }
         $query = [
             'SELECT' => 'DISTINCT tt_content.list_type,tt_content.pid,tt_content.uid,pages.title,pages.hidden as "hiddenpages",tt_content.hidden as "hiddentt_content"',
             'FROM' => 'tt_content,pages',
@@ -868,10 +899,13 @@ class Utility
      */
     public static function getAllCtypes($where, $limit = '', $returnQuery = false): array
     {
+        $ctypeCondition = self::hasLegacyListType()
+            ? "AND tt_content.CType<>'list'"
+            : "AND tt_content.CType<>''";
         $query = [
             'SELECT' => 'DISTINCT tt_content.CType,tt_content.pid,tt_content.uid,pages.title,pages.hidden as "hiddenpages",tt_content.hidden as "hiddentt_content"',
             'FROM' => 'tt_content,pages',
-            'WHERE' => 'tt_content.pid=pages.uid AND pages.pid>=0 AND tt_content.deleted=0 AND pages.deleted=0 ' . $where . "AND tt_content.CType<>'list'",
+            'WHERE' => 'tt_content.pid=pages.uid AND pages.pid>=0 AND tt_content.deleted=0 AND pages.deleted=0 ' . $where . ' ' . $ctypeCondition,
             'ORDERBY' => 'tt_content.CType,tt_content.pid',
             'LIMIT' => $limit,
         ];
@@ -886,6 +920,12 @@ class Utility
             $query['ORDERBY'],
             $query['LIMIT']
         );
+    }
+
+    public static function hasLegacyListType(): bool
+    {
+        return GeneralUtility::makeInstance(Typo3Version::class)->getMajorVersion() < 14
+            && isset($GLOBALS['TCA']['tt_content']['columns']['list_type']);
     }
 
     /**

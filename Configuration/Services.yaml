@@ -1,6 +1,9 @@
 services:
   _defaults:
+    autowire: true
     autoconfigure: true
+
+  Sng\AdditionalReports\Controller\ReportController: ~
 
   Sng\AdditionalReports\Reports\CommandControllers:
     tags:

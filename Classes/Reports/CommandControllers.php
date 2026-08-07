@@ -10,9 +10,7 @@ namespace Sng\AdditionalReports\Reports;
  */
 
 use TYPO3\CMS\Core\Console\CommandRegistry;
-use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Fluid\View\StandaloneView;
 use TYPO3\CMS\Reports\ReportInterface;
 
 class CommandControllers extends AbstractReport
@@ -34,15 +32,14 @@ class CommandControllers extends AbstractReport
      */
     public function display(): string
     {
-        $view = GeneralUtility::makeInstance(StandaloneView::class);
-        $view->setTemplatePathAndFilename(ExtensionManagementUtility::extPath('additional_reports') . 'Resources/Private/Templates/commandcontrollers-fluid.html');
+        $view = $this->createView();
         $commands = GeneralUtility::makeInstance(CommandRegistry::class);
         $items = [];
         foreach ($commands->getSchedulableCommands() as $cmd => $el) {
             $items[$cmd] = get_class($el);
         }
         $view->assign('itemsNew', $items);
-        return $view->render();
+        return $view->render('commandcontrollers-fluid');
     }
 
     public function getIdentifier(): string

@@ -11,9 +11,7 @@ namespace Sng\AdditionalReports\Reports;
 
 use Sng\AdditionalReports\Utility;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
-use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Fluid\View\StandaloneView;
 
 class Extensions extends AbstractReport
 {
@@ -74,13 +72,12 @@ class Extensions extends AbstractReport
         $addContent .= $extensionsToUpdate . ' ' . Utility::getLl('extensions_toupdate');
         $addContentItem = Utility::writeInformation(Utility::getLl('pluginsmode5') . '<br/>' . Utility::getLl('extensions_updateter') . '', $addContent);
 
-        $view = GeneralUtility::makeInstance(StandaloneView::class);
-        $view->setTemplatePathAndFilename(ExtensionManagementUtility::extPath('additional_reports') . 'Resources/Private/Templates/extensions-fluid.html');
+        $view = $this->createView();
         $view->assign('listExtensionsTer', $listExtensionsTer);
         $view->assign('listExtensionsDev', $listExtensionsDev);
         $view->assign('listExtensionsUnloaded', $listExtensionsUnloaded);
         $view->assign('composer', Utility::isComposerMode());
-        return $addContentItem . $view->render();
+        return $addContentItem . $view->render('extensions-fluid');
     }
 
     /**

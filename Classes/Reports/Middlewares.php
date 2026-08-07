@@ -11,9 +11,7 @@ namespace Sng\AdditionalReports\Reports;
 
 use TYPO3\CMS\Core\Package\PackageManager;
 use TYPO3\CMS\Core\Service\DependencyOrderingService;
-use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Fluid\View\StandaloneView;
 use TYPO3\CMS\Reports\ReportInterface;
 
 class Middlewares extends AbstractReport
@@ -36,10 +34,9 @@ class Middlewares extends AbstractReport
     public function display()
     {
         $allMiddlewares = $this->getAllMiddlewares();
-        $view = GeneralUtility::makeInstance(StandaloneView::class);
-        $view->setTemplatePathAndFilename(ExtensionManagementUtility::extPath('additional_reports') . 'Resources/Private/Templates/middlewares-fluid.html');
+        $view = $this->createView();
         $view->assign('middlewares', $this->filterAllMiddlewares($allMiddlewares));
-        return $view->render();
+        return $view->render('middlewares-fluid');
     }
 
     public function getAllMiddlewares(): array

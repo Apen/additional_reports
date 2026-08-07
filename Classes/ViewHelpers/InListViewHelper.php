@@ -20,7 +20,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
  */
 class InListViewHelper extends AbstractConditionViewHelper
 {
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         $this->registerArgument('list', 'string', 'List');
         $this->registerArgument('item', 'string', 'Item');
@@ -31,7 +31,7 @@ class InListViewHelper extends AbstractConditionViewHelper
      *
      * @return string
      */
-    public function render()
+    public function render(): mixed
     {
         if (GeneralUtility::inList($this->arguments['list'], $this->arguments['item'])) {
             return $this->renderThenChild();

@@ -56,7 +56,7 @@ class RawViewHelper extends AbstractViewHelper
      * @param mixed $value The value to output
      * @return string
      */
-    public function render($value = null)
+    public function render($value = null): mixed
     {
         if ($value === null) {
             return $this->renderChildren();

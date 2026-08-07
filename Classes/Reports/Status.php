@@ -13,10 +13,8 @@ use Sng\AdditionalReports\Utility;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Package\PackageManager;
-use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Fluid\View\AbstractTemplateView;
-use TYPO3\CMS\Fluid\View\StandaloneView;
+use TYPO3\CMS\Core\View\ViewInterface;
 
 class Status extends AbstractReport
 {
@@ -39,8 +37,7 @@ class Status extends AbstractReport
      */
     public function display()
     {
-        $view = GeneralUtility::makeInstance(StandaloneView::class);
-        $view->setTemplatePathAndFilename(ExtensionManagementUtility::extPath('additional_reports') . 'Resources/Private/Templates/status-fluid.html');
+        $view = $this->createView();
 
         $this->displayTypo3($view);
         $this->displayEnv($view);
@@ -48,13 +45,13 @@ class Status extends AbstractReport
         $this->displayMySql($view);
         $this->displayCronTab($view);
 
-        return $view->render();
+        return $view->render('status-fluid');
     }
 
     /**
-     * @param \TYPO3\CMS\Fluid\View\AbstractTemplateView $view
+     * @param ViewInterface $view
      */
-    public function displayTypo3(AbstractTemplateView $view)
+    public function displayTypo3(ViewInterface $view)
     {
         // infos about typo3 versions
         $datas = [];
@@ -138,7 +135,7 @@ class Status extends AbstractReport
         $view->assign('datas_typo3', $datas);
     }
 
-    public function displayEnv(AbstractTemplateView $view)
+    public function displayEnv(ViewInterface $view)
     {
         $datas = [];
         $vars = GeneralUtility::getIndpEnv('_ARRAY');
@@ -152,7 +149,7 @@ class Status extends AbstractReport
         $view->assign('datas_env', $datas);
     }
 
-    public function displayPhp(AbstractTemplateView $view): void
+    public function displayPhp(ViewInterface $view): void
     {
         $data = [];
         $data['status_version'] = phpversion();
@@ -179,7 +176,7 @@ class Status extends AbstractReport
         $view->assign('datas_php', $data);
     }
 
-    public function displayMySql(AbstractTemplateView $view)
+    public function displayMySql(ViewInterface $view)
     {
         $connection = Utility::getDatabaseConnection();
         $connectionParams = $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections'][ConnectionPool::DEFAULT_CONNECTION_NAME];
@@ -235,7 +232,7 @@ class Status extends AbstractReport
         $view->assign('datas_mysql', $data);
     }
 
-    public function displayCronTab(AbstractTemplateView $view)
+    public function displayCronTab(ViewInterface $view)
     {
         $data = [];
         if (is_executable('crontab')) {

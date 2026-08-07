@@ -18,9 +18,7 @@ use TYPO3\CMS\Core\DependencyInjection\ServiceProviderCompilationPass;
 use TYPO3\CMS\Core\DependencyInjection\ServiceProviderRegistry;
 use TYPO3\CMS\Core\Package\PackageManager;
 use TYPO3\CMS\Core\Service\DependencyOrderingService;
-use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Fluid\View\StandaloneView;
 use TYPO3\CMS\Reports\ReportInterface;
 
 class EventDispatcher extends AbstractReport
@@ -43,10 +41,9 @@ class EventDispatcher extends AbstractReport
     public function display()
     {
         $events = $this->getAllEvents();
-        $view = GeneralUtility::makeInstance(StandaloneView::class);
-        $view->setTemplatePathAndFilename(ExtensionManagementUtility::extPath('additional_reports') . 'Resources/Private/Templates/events-fluid.html');
+        $view = $this->createView();
         $view->assign('events', $events);
-        return $view->render();
+        return $view->render('events-fluid');
     }
 
     public function getAllEvents()

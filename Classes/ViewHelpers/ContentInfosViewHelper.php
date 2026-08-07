@@ -10,8 +10,6 @@ namespace Sng\AdditionalReports\ViewHelpers;
  */
 
 use Sng\AdditionalReports\Utility;
-use TYPO3\CMS\Core\Localization\LocalizationFactory;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
@@ -29,7 +27,7 @@ class ContentInfosViewHelper extends AbstractViewHelper
      */
     protected $escapeOutput = false;
 
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         $this->registerArgument('item', 'array', 'Current item array', false, null);
         $this->registerArgument('as', 'string', 'Name of the items array', false, null);
@@ -40,7 +38,7 @@ class ContentInfosViewHelper extends AbstractViewHelper
     /**
      * Renders else-child or else-argument if variable $item is in $list
      */
-    public function render()
+    public function render(): mixed
     {
         $item = $this->arguments['item'];
         $as = $this->arguments['as'];
@@ -49,7 +47,11 @@ class ContentInfosViewHelper extends AbstractViewHelper
 
         // plugin
         if ($plugin === true) {
-            $item = array_merge($item, \Sng\AdditionalReports\Utility::getContentInfosFromTca('plugin', $item['list_type']));
+            if (Utility::hasLegacyListType()) {
+                $item = array_merge($item, Utility::getContentInfosFromTca('plugin', $item['list_type']));
+            } else {
+                $item = array_merge($item, Utility::getContentInfosFromTca('ctype', $item['CType']));
+            }
         }
 
         // CType
@@ -63,6 +65,8 @@ class ContentInfosViewHelper extends AbstractViewHelper
             $this->templateVariableContainer->remove($as);
         }
         $this->templateVariableContainer->add($as, $item);
+
+        return null;
     }
 
     /**

@@ -10,9 +10,6 @@ namespace Sng\AdditionalReports\Reports;
  */
 
 use Sng\AdditionalReports\Utility;
-use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Fluid\View\StandaloneView;
 use TYPO3\CMS\Reports\ReportInterface;
 
 class Xclass extends AbstractReport
@@ -37,10 +34,9 @@ class Xclass extends AbstractReport
     {
         $xclassList = [];
         $xclassList['objects'] = $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'];
-        $view = GeneralUtility::makeInstance(StandaloneView::class);
-        $view->setTemplatePathAndFilename(ExtensionManagementUtility::extPath('additional_reports') . 'Resources/Private/Templates/xclass-fluid.html');
+        $view = $this->createView();
         $view->assign('xclass', $xclassList);
-        return $view->render();
+        return $view->render('xclass-fluid');
     }
 
     public function getIdentifier(): string

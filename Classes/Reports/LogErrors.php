@@ -10,9 +10,7 @@ namespace Sng\AdditionalReports\Reports;
  */
 
 use Sng\AdditionalReports\Utility;
-use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Fluid\View\StandaloneView;
 use TYPO3\CMS\Reports\ReportInterface;
 
 class LogErrors extends AbstractReport
@@ -52,17 +50,16 @@ class LogErrors extends AbstractReport
             'DELETE FROM sys_log WHERE error > 0;'
         );
 
-        $view = GeneralUtility::makeInstance(StandaloneView::class);
-        $view->setTemplatePathAndFilename(ExtensionManagementUtility::extPath('additional_reports') . 'Resources/Private/Templates/logerrors-fluid.html');
-        $view->setPartialRootPaths([ExtensionManagementUtility::extPath('additional_reports') . 'Resources/Private/Partials/']);
-        $view->assign('reportname', $_GET['report'] ?? 'additionalreports_logerrors');
+        $view = $this->createView();
+        $view->assign('reportname', Utility::hasLegacyListType() ? 'additionalreports_logerrors' : 'logerrors');
+        $view->assign('paginationRoute', Utility::getReportRouteIdentifier('logerrors'));
         $view->assign('extconf', unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['additional_reports'] ?? ''));
         $view->assign('baseUrl', Utility::getBaseUrl());
         $view->assign('requestDir', GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR'));
 
-        Utility::buildPagination(Utility::exec_SELECT_queryArrayRows($query), !empty($_GET['currentPage']) ? (int)$_GET['currentPage'] : 1, $view);
+        Utility::buildPagination(Utility::exec_SELECT_queryArrayRows($query), (int)(Utility::_GP('currentPage') ?? 1), $view);
 
-        return $content . $view->render();
+        return $content . $view->render('logerrors-fluid');
     }
 
     public function getIdentifier(): string

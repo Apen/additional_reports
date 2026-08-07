@@ -11,8 +11,6 @@ namespace Sng\AdditionalReports\Reports;
 
 use Sng\AdditionalReports\Utility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Fluid\View\StandaloneView;
 use TYPO3\CMS\Reports\ReportInterface;
 
 class Plugins extends AbstractReport
@@ -34,11 +32,10 @@ class Plugins extends AbstractReport
      */
     public function display()
     {
-        $view = GeneralUtility::makeInstance(StandaloneView::class);
-        $view->setTemplatePathAndFilename(ExtensionManagementUtility::extPath('additional_reports') . 'Resources/Private/Templates/plugins-fluid.html');
-        $view->setPartialRootPaths([ExtensionManagementUtility::extPath('additional_reports') . 'Resources/Private/Partials/']);
+        $view = $this->createView();
 
-        $view->assign('reportname', $_GET['report'] ?? 'additionalreports_plugins');
+        $view->assign('reportname', Utility::hasLegacyListType() ? 'additionalreports_plugins' : 'plugins');
+        $view->assign('paginationRoute', Utility::getReportRouteIdentifier('plugins'));
         $view->assign('extconf', unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['additional_reports'] ?? ''));
         $view->assign('url', Utility::getBaseUrl());
         $view->assign('caution', Utility::writeInformation(Utility::getLl('careful'), Utility::getLl('carefuldesc')));
@@ -49,7 +46,7 @@ class Plugins extends AbstractReport
         $view->assign('checkedpluginsmode7', (Utility::getPluginsDisplayMode() === 7) ? ' checked="checked"' : '');
         $view->assign('filtersCatParam', Utility::_GP('filtersCat'));
 
-        $currentPage = !empty($_GET['currentPage']) ? (int)$_GET['currentPage'] : 1;
+        $currentPage = (int)(Utility::_GP('currentPage') ?? 1);
 
         switch (Utility::getPluginsDisplayMode()) {
             case 3:
@@ -81,7 +78,7 @@ class Plugins extends AbstractReport
             $view->assign('tvused', false);
         }
 
-        return $view->render();
+        return $view->render('plugins-fluid');
     }
 
     /**
@@ -112,12 +109,16 @@ class Plugins extends AbstractReport
             'AND tt_content.deleted=0 AND pages.hidden=0 AND pages.deleted=0'
         );
 
+        $hasLegacyListType = Utility::hasLegacyListType();
+        $groupFields = $hasLegacyListType
+            ? 'tt_content.CType,tt_content.list_type'
+            : 'tt_content.CType';
         $items = Utility::exec_SELECTgetRows(
-            'tt_content.CType,tt_content.list_type,count(*) as "nb"',
+            $groupFields . ',count(*) as "nb"',
             'tt_content,pages',
             'tt_content.pid=pages.uid AND pages.pid>=0 AND tt_content.hidden=0 ' .
             'AND tt_content.deleted=0 AND pages.hidden=0 AND pages.deleted=0',
-            'tt_content.CType,tt_content.list_type',
+            $groupFields,
             'nb DESC'
         );
 
@@ -125,7 +126,7 @@ class Plugins extends AbstractReport
 
         foreach ($items as $itemValue) {
             $itemTemp = [];
-            if ($itemValue['CType'] == 'list') {
+            if ($hasLegacyListType && $itemValue['CType'] === 'list') {
                 $itemTemp = array_merge($itemTemp, Utility::getContentInfosFromTca('plugin', $itemValue['list_type']));
                 $itemTemp['content'] = $itemTemp['plugin'] ?? '';
             } else {
@@ -147,7 +148,8 @@ class Plugins extends AbstractReport
     {
         $getFiltersCat = Utility::_GP('filtersCat');
         $addHidden = ($displayHidden) ? '' : ' AND tt_content.hidden=0 AND pages.hidden=0 ';
-        $addWhere = ($getFiltersCat !== null && $getFiltersCat != 'all') ? " AND tt_content.list_type='" . $getFiltersCat . "'" : '';
+        $field = Utility::hasLegacyListType() ? 'list_type' : 'CType';
+        $addWhere = ($getFiltersCat !== null && $getFiltersCat != 'all') ? " AND tt_content.$field='" . $getFiltersCat . "'" : '';
         return Utility::getAllPlugins($addHidden . $addWhere, '');
     }
 

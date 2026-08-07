@@ -11,8 +11,6 @@ namespace Sng\AdditionalReports\Reports;
 
 use Sng\AdditionalReports\Utility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Fluid\View\StandaloneView;
 use TYPO3\CMS\Reports\ReportInterface;
 
 class Eid extends AbstractReport
@@ -54,10 +52,9 @@ class Eid extends AbstractReport
             }
         }
 
-        $view = GeneralUtility::makeInstance(StandaloneView::class);
-        $view->setTemplatePathAndFilename(ExtensionManagementUtility::extPath('additional_reports') . 'Resources/Private/Templates/eid-fluid.html');
+        $view = $this->createView();
         $view->assign('eids', $eids);
-        return $view->render();
+        return $view->render('eid-fluid');
     }
 
     public function getIdentifier(): string

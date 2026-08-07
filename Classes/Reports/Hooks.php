@@ -10,9 +10,6 @@ namespace Sng\AdditionalReports\Reports;
  */
 
 use Sng\AdditionalReports\Utility;
-use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Fluid\View\StandaloneView;
 use TYPO3\CMS\Reports\ReportInterface;
 
 class Hooks extends AbstractReport
@@ -72,10 +69,9 @@ class Hooks extends AbstractReport
             }
         }
 
-        $view = GeneralUtility::makeInstance(StandaloneView::class);
-        $view->setTemplatePathAndFilename(ExtensionManagementUtility::extPath('additional_reports') . 'Resources/Private/Templates/hooks-fluid.html');
+        $view = $this->createView();
         $view->assign('hooks', $hooks);
-        return $view->render();
+        return $view->render('hooks-fluid');
     }
 
     public function getIdentifier(): string
