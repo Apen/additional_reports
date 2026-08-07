@@ -1,19 +1,13 @@
 parameters:
 	ignoreErrors:
 		-
-			message: '#^Call to an undefined method object\:\:getReport\(\)\.$#'
+			message: '#^Call to an undefined method Sng\\AdditionalReports\\Reports\\AbstractReport\:\:getReport\(\)\.$#'
 			identifier: method.notFound
 			count: 1
 			path: ../Classes/Controller/ReportController.php
 
 		-
-			message: '#^Call to an undefined method object\:\:getTitle\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../Classes/Controller/ReportController.php
-
-		-
-			message: '#^Call to an undefined method object\:\:setRequest\(\)\.$#'
+			message: '#^Call to an undefined method Sng\\AdditionalReports\\Reports\\AbstractReport\:\:getTitle\(\)\.$#'
 			identifier: method.notFound
 			count: 1
 			path: ../Classes/Controller/ReportController.php

@@ -6,6 +6,7 @@ namespace Sng\AdditionalReports\Controller;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Sng\AdditionalReports\Reports\AbstractReport;
 use Sng\AdditionalReports\Reports\CommandControllers;
 use Sng\AdditionalReports\Reports\Eid;
 use Sng\AdditionalReports\Reports\EventDispatcher;
@@ -85,7 +86,7 @@ final readonly class ReportController
     }
 
     /**
-     * @param class-string $reportClass
+     * @param class-string<AbstractReport> $reportClass
      */
     private function render(ServerRequestInterface $request, string $reportClass, string $identifier): ResponseInterface
     {
