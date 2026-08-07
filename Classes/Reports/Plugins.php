@@ -178,6 +178,6 @@ class Plugins extends AbstractReport
 
     public function getIconIdentifier(): string
     {
-        return 'additionalreports_plugins';
+        return 'module-reports';
     }
 }

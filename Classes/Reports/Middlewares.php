@@ -92,6 +92,6 @@ class Middlewares extends AbstractReport
 
     public function getIconIdentifier(): string
     {
-        return 'additionalreports_middlewares';
+        return 'module-reports';
     }
 }

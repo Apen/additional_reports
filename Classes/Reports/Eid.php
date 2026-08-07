@@ -78,6 +78,6 @@ class Eid extends AbstractReport
 
     public function getIconIdentifier(): string
     {
-        return 'additionalreports_eid';
+        return 'module-reports';
     }
 }

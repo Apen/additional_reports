@@ -63,6 +63,6 @@ class EventDispatcher extends AbstractReport
 
     public function getIconIdentifier(): string
     {
-        return 'additionalreports_eventdispatcher';
+        return 'module-reports';
     }
 }

@@ -208,6 +208,6 @@ class Status extends AbstractReport
 
     public function getIconIdentifier(): string
     {
-        return 'additionalreports_status';
+        return 'module-reports';
     }
 }

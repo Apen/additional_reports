@@ -57,6 +57,6 @@ class Xclass extends AbstractReport
 
     public function getIconIdentifier(): string
     {
-        return 'additionalreports_xclass';
+        return 'module-reports';
     }
 }

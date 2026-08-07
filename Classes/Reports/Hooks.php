@@ -95,6 +95,6 @@ class Hooks extends AbstractReport
 
     public function getIconIdentifier(): string
     {
-        return 'additionalreports_hooks';
+        return 'module-reports';
     }
 }

@@ -165,6 +165,6 @@ class Extensions extends AbstractReport
 
     public function getIconIdentifier(): string
     {
-        return 'additionalreports_extensions';
+        return 'module-reports';
     }
 }

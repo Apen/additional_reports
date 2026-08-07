@@ -73,6 +73,6 @@ class LogErrors extends AbstractReport
 
     public function getIconIdentifier(): string
     {
-        return 'additionalreports_logerrors';
+        return 'module-reports';
     }
 }

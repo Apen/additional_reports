@@ -36,7 +36,7 @@ final class ReportMetadataTest extends TestCase
             'LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:' . $identifier . '_description',
             $report->getDescription()
         );
-        self::assertSame('additionalreports_' . $identifier, $report->getIconIdentifier());
+        self::assertSame('module-reports', $report->getIconIdentifier());
     }
 
     public static function reportProvider(): iterable

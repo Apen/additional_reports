@@ -60,6 +60,6 @@ class CommandControllers extends AbstractReport
 
     public function getIconIdentifier(): string
     {
-        return 'additionalreports_commandcontrollers';
+        return 'module-reports';
     }
 }

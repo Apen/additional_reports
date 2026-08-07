@@ -100,6 +100,6 @@ class WebsiteConf extends AbstractReport
 
     public function getIconIdentifier(): string
     {
-        return 'additionalreports_websitesconf';
+        return 'module-reports';
     }
 }
