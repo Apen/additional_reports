@@ -119,6 +119,43 @@ class UtilityTest extends BaseTestCase
         self::assertSame([], Utility::getLatestLtsInfos([]));
     }
 
+    public function testTreeListRejectsLegacyOffsetAndPermissionArguments(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        Utility::getTreeList(1, 2, 1);
+    }
+
+    public function testPageUidCountHandlesEmptyAndUnfilteredLists(): void
+    {
+        self::assertSame(0, Utility::getCountPagesUids(''));
+        self::assertSame(3, Utility::getCountPagesUids('1,2,3'));
+    }
+
+    public function testExtensionVersionRejectsInvalidKeys(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        Utility::getExtensionVersion(null);
+    }
+
+    public function testVersionInformationHelpersRejectMalformedReleaseLists(): void
+    {
+        self::assertSame([], Utility::getCurrentBranchInfos(['14' => ['releases' => 'invalid']], '14.3.0'));
+    }
+
+    public function testLegacyStableAndLtsBranchesAreResolved(): void
+    {
+        $versions = [
+            '6.2' => ['releases' => ['6.2.31' => ['version' => '6.2.31']]],
+            'latest_stable' => '6.2.31',
+            'latest_lts' => '6.2.31',
+        ];
+
+        self::assertSame(['version' => '6.2.31'], Utility::getLatestStableInfos($versions));
+        self::assertSame(['version' => '6.2.31'], Utility::getLatestLtsInfos($versions));
+    }
+
     public function testExtractExtensionDataFromT3x(): void
     {
         $data = ['FILES' => ['ext_localconf.php' => ['content' => '<?php']]];
