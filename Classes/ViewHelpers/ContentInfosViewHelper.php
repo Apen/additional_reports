@@ -84,11 +84,6 @@ class ContentInfosViewHelper extends AbstractViewHelper
         $markersExt['usedtv'] = '';
         $markersExt['usedtvclass'] = '';
 
-        $markersExt['listOnClick'] = Utility::goToModuleList($itemValue['pid']);
-        $markersExt['listUrl'] = Utility::goToModuleList($itemValue['pid'], true);
-        $markersExt['pageOnClick'] = Utility::goToModulePage($itemValue['pid']);
-        $markersExt['pageUrl'] = Utility::goToModulePage($itemValue['pid'], true);
-
         $markersExt['preview'] = '/index.php?id=' . $itemValue['pid'];
 
         return $markersExt;

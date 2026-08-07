@@ -154,16 +154,6 @@ class UtilityTest extends FunctionalTestCase
         self::assertEquals('acme.com', Utility::getDomain(1));
     }
 
-    public function testGoToModuleList()
-    {
-        self::assertNotEmpty(Utility::goToModuleList(1));
-    }
-
-    public function testGoToModulePage()
-    {
-        self::assertNotEmpty(Utility::goToModulePage(1));
-    }
-
     public function testGetMySqlCacheInformations()
     {
         if (! self::isNotSqlite()) {

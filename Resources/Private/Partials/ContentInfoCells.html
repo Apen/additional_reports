@@ -8,22 +8,6 @@
     <core:icon identifier="content-text" overlay="{f:if(condition: item.hiddentt_content, then: 'overlay-hidden')}"/> {item.uid}
 </td>
 <td>{item.pagetitle}</td>
-<td>
-    <a href="#" title="{f:translate(key:'LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:switch')}" onclick="{item.listOnClick}" class="btn btn-default">
-        <core:icon identifier="actions-system-list-open"/>
-    </a>
-    <a href="{item.listUrl}" target="_blank" title="{f:translate(key:'LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:newwindow')}" class="btn btn-default">
-        <core:icon identifier="actions-system-list-open"/>
-    </a>
-</td>
-<td>
-    <a href="#" title="{f:translate(key:'LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:switch')}" onclick="{item.pageOnClick}" class="btn btn-default">
-        <core:icon identifier="actions-version-page-open"/>
-    </a>
-    <a href="{item.pageUrl}" target="_blank" title="{f:translate(key:'LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:newwindow')}" class="btn btn-default">
-        <core:icon identifier="actions-version-page-open"/>
-    </a>
-</td>
 <f:if condition="{tvused}">
     <td>{item.usedtv}</td>
 </f:if>

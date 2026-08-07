@@ -11,7 +11,6 @@ namespace Sng\AdditionalReports;
  * LICENSE.txt file that was distributed with this source code.
  */
 
-use TYPO3\CMS\Backend\Routing\UriBuilder;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Database\Connection;
@@ -436,38 +435,6 @@ class Utility
             $result .= '<tr><td>' . nl2br(htmlspecialchars((string) $arrayIn)) . '</td></tr></table>';
         }
         return $result;
-    }
-
-    /**
-     * Return a link to the module list
-     *
-     * @param int $uid
-     * @param bool $urlOnly
-     */
-    public static function goToModuleList($uid, $urlOnly = false): string
-    {
-        $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
-        $url = $uriBuilder->buildUriFromRoute('web_list') . '&id=' . $uid;
-        if ($urlOnly) {
-            return $url;
-        }
-        return "top.nextLoadModuleUrl='" . $url . "';top.goToModule('web_list');";
-    }
-
-    /**
-     * Return a link to the module page
-     *
-     * @param int $uid
-     * @param bool $urlOnly
-     */
-    public static function goToModulePage($uid, $urlOnly = false): string
-    {
-        $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
-        $url = $uriBuilder->buildUriFromRoute('web_layout') . '&id=' . $uid;
-        if ($urlOnly) {
-            return $url;
-        }
-        return "top.nextLoadModuleUrl='" . $url . "';top.goToModule('web_layout');";
     }
 
     /**
