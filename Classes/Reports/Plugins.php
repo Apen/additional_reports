@@ -11,6 +11,7 @@ namespace Sng\AdditionalReports\Reports;
  * LICENSE.txt file that was distributed with this source code.
  */
 
+use Sng\AdditionalReports\Repository\ContentUsageRepository;
 use Sng\AdditionalReports\Service\ContentTypeResolver;
 use Sng\AdditionalReports\Utility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
@@ -36,11 +37,12 @@ class Plugins extends AbstractReport
     public function display()
     {
         $view = $this->createView();
+        $contentUsageRepository = GeneralUtility::makeInstance(ContentUsageRepository::class);
         $displayMode = Utility::getPluginsDisplayMode($this->getRequestParameter('display'));
         $filter = $this->getRequestParameter('filtersCat');
         $filter = is_string($filter) ? $filter : null;
 
-        $view->assign('reportname', Utility::hasLegacyListType() ? 'additionalreports_plugins' : 'plugins');
+        $view->assign('reportname', $contentUsageRepository->hasLegacyListType() ? 'additionalreports_plugins' : 'plugins');
         $view->assign('paginationRoute', $this->getCurrentRouteIdentifier());
         $view->assign('checkedpluginsmode3', ($displayMode === 3) ? ' checked="checked"' : '');
         $view->assign('checkedpluginsmode4', ($displayMode === 4) ? ' checked="checked"' : '');
@@ -53,21 +55,21 @@ class Plugins extends AbstractReport
 
         switch ($displayMode) {
             case 3:
-                $view->assign('filterOptions', array_column(Utility::getAllDifferentCtypes(false), 'CType'));
+                $view->assign('filterOptions', array_column($contentUsageRepository->findDistinctContentTypes(), 'CType'));
                 Utility::buildPagination($this->enrichContentRows($this->getAllUsedCtypes(false, $filter), 'ctype'), $currentPage, $view);
                 break;
             case 4:
-                $filterField = Utility::hasLegacyListType() ? 'list_type' : 'CType';
-                $view->assign('filterOptions', array_column(Utility::getAllDifferentPlugins(false), $filterField));
+                $filterField = $contentUsageRepository->hasLegacyListType() ? 'list_type' : 'CType';
+                $view->assign('filterOptions', array_column($contentUsageRepository->findDistinctPlugins(), $filterField));
                 Utility::buildPagination($this->enrichContentRows($this->getAllUsedPlugins(false, $filter), 'plugin'), $currentPage, $view);
                 break;
             case 6:
-                $filterField = Utility::hasLegacyListType() ? 'list_type' : 'CType';
-                $view->assign('filterOptions', array_column(Utility::getAllDifferentPlugins(true), $filterField));
+                $filterField = $contentUsageRepository->hasLegacyListType() ? 'list_type' : 'CType';
+                $view->assign('filterOptions', array_column($contentUsageRepository->findDistinctPlugins(true), $filterField));
                 Utility::buildPagination($this->enrichContentRows($this->getAllUsedPlugins(true, $filter), 'plugin'), $currentPage, $view);
                 break;
             case 7:
-                $view->assign('filterOptions', array_column(Utility::getAllDifferentCtypes(true), 'CType'));
+                $view->assign('filterOptions', array_column($contentUsageRepository->findDistinctContentTypes(true), 'CType'));
                 Utility::buildPagination($this->enrichContentRows($this->getAllUsedCtypes(true, $filter), 'ctype'), $currentPage, $view);
                 break;
             default:
@@ -106,7 +108,7 @@ class Plugins extends AbstractReport
             ->executeQuery()
             ->fetchOne();
 
-        $hasLegacyListType = Utility::hasLegacyListType();
+        $hasLegacyListType = GeneralUtility::makeInstance(ContentUsageRepository::class)->hasLegacyListType();
         $queryBuilder = Utility::getQueryBuilder('tt_content');
         $queryBuilder
             ->select('tt_content.CType')
@@ -150,7 +152,7 @@ class Plugins extends AbstractReport
     public function enrichContentRows(array $items, string $type): array
     {
         $resolver = GeneralUtility::makeInstance(ContentTypeResolver::class);
-        $hasLegacyListType = Utility::hasLegacyListType();
+        $hasLegacyListType = GeneralUtility::makeInstance(ContentUsageRepository::class)->hasLegacyListType();
         foreach ($items as &$item) {
             $value = $type === 'plugin' && $hasLegacyListType
                 ? (string) ($item['list_type'] ?? '')
@@ -172,7 +174,7 @@ class Plugins extends AbstractReport
      */
     public function getAllUsedPlugins(bool $displayHidden = false, ?string $filter = null): array
     {
-        return Utility::getAllPlugins($displayHidden, $filter);
+        return GeneralUtility::makeInstance(ContentUsageRepository::class)->findPlugins($displayHidden, $filter);
     }
 
     /**
@@ -180,7 +182,7 @@ class Plugins extends AbstractReport
      */
     public function getAllUsedCtypes(bool $displayHidden = false, ?string $filter = null): array
     {
-        return Utility::getAllCtypes($displayHidden, $filter);
+        return GeneralUtility::makeInstance(ContentUsageRepository::class)->findContentTypes($displayHidden, $filter);
     }
 
     public function getIdentifier(): string

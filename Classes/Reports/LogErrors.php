@@ -51,7 +51,7 @@ class LogErrors extends AbstractReport
         $queryBuilder->orderBy($orderField, $orderDirection)->addOrderBy('tstamp', 'DESC');
 
         $view = $this->createView();
-        $view->assign('reportname', Utility::hasLegacyListType() ? 'additionalreports_logerrors' : 'logerrors');
+        $view->assign('reportname', interface_exists(\TYPO3\CMS\Reports\ReportInterface::class) ? 'additionalreports_logerrors' : 'logerrors');
         $view->assign('paginationRoute', $this->getCurrentRouteIdentifier());
         Utility::buildPagination($queryBuilder->executeQuery()->fetchAllAssociative(), (int) ($this->getRequestParameter('currentPage') ?? 1), $view);
 

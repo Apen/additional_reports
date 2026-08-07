@@ -7,6 +7,8 @@ services:
 
   Sng\AdditionalReports\Service\ContentTypeResolver: ~
 
+  Sng\AdditionalReports\Repository\ContentUsageRepository: ~
+
   Sng\AdditionalReports\Reports\CommandControllers:
     tags:
       - { name: additionalreports_commandcontrollers.report }
