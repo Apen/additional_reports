@@ -155,41 +155,6 @@ class Utility
         return GeneralUtility::makeInstance(ExtensionRepository::class)->findVersion($key);
     }
 
-    /**
-     * Get informations about the mysql cache
-     */
-    public static function getMySqlCacheInformations(): string
-    {
-        $queryCache = '';
-
-        $res = self::getDatabaseConnection()->executeQuery('SHOW VARIABLES LIKE "%query_cache%";');
-        while ($row = $res->fetchAssociative()) {
-            $queryCache .= $row['Variable_name'] . ' : ' . $row['Value'] . '<br />';
-        }
-
-        $res = self::getDatabaseConnection()->executeQuery('SHOW STATUS LIKE "%Qcache%";');
-        while ($row = $res->fetchAssociative()) {
-            $queryCache .= $row['Variable_name'] . ' : ' . $row['Value'] . '<br />';
-        }
-
-        return $queryCache;
-    }
-
-    /**
-     * Get informations about the mysql character_set
-     */
-    public static function getMySqlCharacterSet(): string
-    {
-        $sqlEncoding = '';
-
-        $res = self::getDatabaseConnection()->executeQuery('SHOW VARIABLES LIKE "%character%";');
-        while ($row = $res->fetchAssociative()) {
-            $sqlEncoding .= $row['Variable_name'] . ' : ' . $row['Value'] . '<br />';
-        }
-
-        return $sqlEncoding;
-    }
-
     public static function getAllDifferentPlugins(bool $displayHidden = false): array
     {
         return GeneralUtility::makeInstance(ContentUsageRepository::class)->findDistinctPlugins($displayHidden);

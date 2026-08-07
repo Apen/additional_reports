@@ -47,7 +47,6 @@ class Status extends AbstractReport
         $this->displayEnv($view);
         $this->displayPhp($view);
         $this->displayMySql($view);
-        $this->displayCronTab($view);
 
         return $view->render('status-fluid');
     }
@@ -186,8 +185,6 @@ class Status extends AbstractReport
 
         $data['default_character_set_name'] = $items[0]['default_character_set_name'] ?? '';
         $data['default_collation_name'] = $items[0]['default_collation_name'] ?? '';
-        $data['query_cache'] = Utility::getMySqlCacheInformations();
-        $data['character_set'] = Utility::getMySqlCharacterSet();
 
         // TYPO3 database
         $items = Utility::getQueryBuilder()
@@ -224,25 +221,6 @@ class Status extends AbstractReport
         $data['typo3db'] = $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['dbname'];
 
         $view->assign('datas_mysql', $data);
-    }
-
-    public function displayCronTab(ViewInterface $view)
-    {
-        $data = [];
-        if (is_executable('crontab')) {
-            exec('crontab -l', $crontab);
-            $crontabString = Utility::getLl('status_nocrontab');
-            if (count($crontab) > 0) {
-                $crontabString = '';
-                foreach ($crontab as $cron) {
-                    if (trim($cron) !== '') {
-                        $crontabString .= $cron . '<br />';
-                    }
-                }
-            }
-            $data['crontab'] = $crontabString;
-        }
-        $view->assign('datas_crontab', $data);
     }
 
     public function getIdentifier(): string

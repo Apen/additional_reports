@@ -1,11 +1,8 @@
-{namespace ar=Sng\AdditionalReports\ViewHelpers}
-
 <div class="panel-group">
     <f:render section="panel" arguments="{id:'reportsTypo3',title:'TYPO3',content:'{f:render(section:\'TYPO3\',arguments:_all)}'}"/>
     <f:render section="panel" arguments="{id:'reportsgetIndpEnv',title:'System Environment Variables',content:'{f:render(section:\'Env\',arguments:_all)}'}"/>
     <f:render section="panel" arguments="{id:'reportsPHP',title:'PHP',content:'{f:render(section:\'PHP\',arguments:_all)}'}"/>
     <f:render section="panel" arguments="{id:'reportsMySQL',title:'MySQL',content:'{f:render(section:\'MySQL\',arguments:_all)}'}"/>
-    <f:render section="panel" arguments="{id:'reportsCrontab',title:'Crontab',content:'{f:render(section:\'Crontab\',arguments:_all)}'}"/>
 </div>
 
 <f:section name="TYPO3">
@@ -65,8 +62,6 @@
             <f:render section="tr" arguments="{label:'status_version',value:datas_mysql.version}"/>
             <f:render section="tr" arguments="{forcelabel:'default_character_set_name',value:datas_mysql.default_character_set_name}"/>
             <f:render section="tr" arguments="{forcelabel:'default_collation_name',value:datas_mysql.default_collation_name}"/>
-            <f:render section="tr" arguments="{forcelabel:'query_cache',value:datas_mysql.query_cache}"/>
-            <f:render section="tr" arguments="{forcelabel:'character_set',value:datas_mysql.character_set}"/>
             </tbody>
         </table>
     </div>
@@ -104,14 +99,6 @@
             </tbody>
         </table>
     </div>
-</f:section>
-
-<f:section name="Crontab">
-    <table class="table table-striped table-hover table-condensed">
-        <tbody>
-        <f:render section="tr" arguments="{forcelabel:'crontab',value:datas_crontab.crontab}"/>
-        </tbody>
-    </table>
 </f:section>
 
 <f:section name="tr">

@@ -149,26 +149,6 @@ class UtilityTest extends FunctionalTestCase
         self::assertEquals('acme.com', Utility::getDomain(1));
     }
 
-    public function testGetMySqlCacheInformations()
-    {
-        if (! self::isNotSqlite()) {
-            self::markTestSkipped('MySQL-specific report.');
-        }
-        if (self::isNotSqlite()) {
-            self::assertNotEmpty(Utility::getMySqlCacheInformations());
-        }
-    }
-
-    public function testGetMySqlCharacterSet()
-    {
-        if (! self::isNotSqlite()) {
-            self::markTestSkipped('MySQL-specific report.');
-        }
-        if (self::isNotSqlite()) {
-            self::assertNotEmpty(Utility::getMySqlCharacterSet());
-        }
-    }
-
     public function testGetAllDifferentPlugins()
     {
         $GLOBALS['TCA']['tt_content']['columns']['CType']['config']['items'][] = [
