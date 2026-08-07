@@ -25,13 +25,13 @@ parameters:
 			path: ../Classes/Eid/CallAjax.php
 
 		-
-			message: '#^Out of 152 possible return types, only 115 \- 75\.6 %% actually have it\. Add more return types to get over 100 %%$#'
+			message: '#^Out of 153 possible return types, only 116 \- 75\.8 %% actually have it\. Add more return types to get over 100 %%$#'
 			identifier: typeCoverage.returnTypeCoverage
 			count: 2
 			path: ../Classes/Eid/CallAjax.php
 
 		-
-			message: '#^Out of 87 possible param types, only 59 \- 67\.8 %% actually have it\. Add more param types to get over 100 %%$#'
+			message: '#^Out of 89 possible param types, only 61 \- 68\.5 %% actually have it\. Add more param types to get over 100 %%$#'
 			identifier: typeCoverage.paramTypeCoverage
 			count: 3
 			path: ../Classes/Eid/CallAjax.php
@@ -43,19 +43,7 @@ parameters:
 			path: ../Classes/Eid/CallAjax.php
 
 		-
-			message: '#^Parameter \#1 \$haystack of function strstr expects string, string\|false given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../Classes/Eid/CallAjax.php
-
-		-
 			message: '#^Parameter \#1 \$string of function md5 expects string, string\|false given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../Classes/Eid/CallAjax.php
-
-		-
-			message: '#^Parameter \#1 \$url of static method TYPO3\\CMS\\Core\\Utility\\GeneralUtility\:\:getUrl\(\) expects string, string\|false given\.$#'
 			identifier: argument.type
 			count: 1
 			path: ../Classes/Eid/CallAjax.php
@@ -67,19 +55,13 @@ parameters:
 			path: ../Classes/Eid/CallAjax.php
 
 		-
-			message: '#^Parameter \#2 \$needle of function strstr expects string, string\|false given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../Classes/Eid/CallAjax.php
-
-		-
 			message: '#^Offset 1 might not exist on array\{\}\|array\{non\-falsy\-string, string\}\.$#'
 			identifier: offsetAccess.notFound
 			count: 2
 			path: ../Classes/Reports/Eid.php
 
 		-
-			message: '#^Out of 152 possible return types, only 115 \- 75\.6 %% actually have it\. Add more return types to get over 100 %%$#'
+			message: '#^Out of 153 possible return types, only 116 \- 75\.8 %% actually have it\. Add more return types to get over 100 %%$#'
 			identifier: typeCoverage.returnTypeCoverage
 			count: 1
 			path: ../Classes/Reports/Eid.php
@@ -91,7 +73,7 @@ parameters:
 			path: ../Classes/Reports/EventDispatcher.php
 
 		-
-			message: '#^Out of 152 possible return types, only 115 \- 75\.6 %% actually have it\. Add more return types to get over 100 %%$#'
+			message: '#^Out of 153 possible return types, only 116 \- 75\.8 %% actually have it\. Add more return types to get over 100 %%$#'
 			identifier: typeCoverage.returnTypeCoverage
 			count: 2
 			path: ../Classes/Reports/EventDispatcher.php
@@ -109,13 +91,13 @@ parameters:
 			path: ../Classes/Reports/Extensions.php
 
 		-
-			message: '#^Out of 152 possible return types, only 115 \- 75\.6 %% actually have it\. Add more return types to get over 100 %%$#'
+			message: '#^Out of 153 possible return types, only 116 \- 75\.8 %% actually have it\. Add more return types to get over 100 %%$#'
 			identifier: typeCoverage.returnTypeCoverage
 			count: 2
 			path: ../Classes/Reports/Extensions.php
 
 		-
-			message: '#^Out of 87 possible param types, only 59 \- 67\.8 %% actually have it\. Add more param types to get over 100 %%$#'
+			message: '#^Out of 89 possible param types, only 61 \- 68\.5 %% actually have it\. Add more param types to get over 100 %%$#'
 			identifier: typeCoverage.paramTypeCoverage
 			count: 2
 			path: ../Classes/Reports/Extensions.php
@@ -127,13 +109,13 @@ parameters:
 			path: ../Classes/Reports/Hooks.php
 
 		-
-			message: '#^Out of 152 possible return types, only 115 \- 75\.6 %% actually have it\. Add more return types to get over 100 %%$#'
+			message: '#^Out of 153 possible return types, only 116 \- 75\.8 %% actually have it\. Add more return types to get over 100 %%$#'
 			identifier: typeCoverage.returnTypeCoverage
 			count: 1
 			path: ../Classes/Reports/Hooks.php
 
 		-
-			message: '#^Out of 152 possible return types, only 115 \- 75\.6 %% actually have it\. Add more return types to get over 100 %%$#'
+			message: '#^Out of 153 possible return types, only 116 \- 75\.8 %% actually have it\. Add more return types to get over 100 %%$#'
 			identifier: typeCoverage.returnTypeCoverage
 			count: 1
 			path: ../Classes/Reports/LogErrors.php
@@ -157,7 +139,7 @@ parameters:
 			path: ../Classes/Reports/Middlewares.php
 
 		-
-			message: '#^Out of 152 possible return types, only 115 \- 75\.6 %% actually have it\. Add more return types to get over 100 %%$#'
+			message: '#^Out of 153 possible return types, only 116 \- 75\.8 %% actually have it\. Add more return types to get over 100 %%$#'
 			identifier: typeCoverage.returnTypeCoverage
 			count: 1
 			path: ../Classes/Reports/Middlewares.php
@@ -181,7 +163,7 @@ parameters:
 			path: ../Classes/Reports/Plugins.php
 
 		-
-			message: '#^Out of 152 possible return types, only 115 \- 75\.6 %% actually have it\. Add more return types to get over 100 %%$#'
+			message: '#^Out of 153 possible return types, only 116 \- 75\.8 %% actually have it\. Add more return types to get over 100 %%$#'
 			identifier: typeCoverage.returnTypeCoverage
 			count: 2
 			path: ../Classes/Reports/Plugins.php
@@ -235,7 +217,7 @@ parameters:
 			path: ../Classes/Reports/Status.php
 
 		-
-			message: '#^Out of 152 possible return types, only 115 \- 75\.6 %% actually have it\. Add more return types to get over 100 %%$#'
+			message: '#^Out of 153 possible return types, only 116 \- 75\.8 %% actually have it\. Add more return types to get over 100 %%$#'
 			identifier: typeCoverage.returnTypeCoverage
 			count: 5
 			path: ../Classes/Reports/Status.php
@@ -247,13 +229,13 @@ parameters:
 			path: ../Classes/Reports/Status.php
 
 		-
-			message: '#^Out of 152 possible return types, only 115 \- 75\.6 %% actually have it\. Add more return types to get over 100 %%$#'
+			message: '#^Out of 153 possible return types, only 116 \- 75\.8 %% actually have it\. Add more return types to get over 100 %%$#'
 			identifier: typeCoverage.returnTypeCoverage
 			count: 1
 			path: ../Classes/Reports/WebsiteConf.php
 
 		-
-			message: '#^Out of 152 possible return types, only 115 \- 75\.6 %% actually have it\. Add more return types to get over 100 %%$#'
+			message: '#^Out of 153 possible return types, only 116 \- 75\.8 %% actually have it\. Add more return types to get over 100 %%$#'
 			identifier: typeCoverage.returnTypeCoverage
 			count: 1
 			path: ../Classes/Reports/Xclass.php
@@ -541,13 +523,13 @@ parameters:
 			path: ../Classes/Utility.php
 
 		-
-			message: '#^Out of 152 possible return types, only 115 \- 75\.6 %% actually have it\. Add more return types to get over 100 %%$#'
+			message: '#^Out of 153 possible return types, only 116 \- 75\.8 %% actually have it\. Add more return types to get over 100 %%$#'
 			identifier: typeCoverage.returnTypeCoverage
 			count: 18
 			path: ../Classes/Utility.php
 
 		-
-			message: '#^Out of 87 possible param types, only 59 \- 67\.8 %% actually have it\. Add more param types to get over 100 %%$#'
+			message: '#^Out of 89 possible param types, only 61 \- 68\.5 %% actually have it\. Add more param types to get over 100 %%$#'
 			identifier: typeCoverage.paramTypeCoverage
 			count: 23
 			path: ../Classes/Utility.php
