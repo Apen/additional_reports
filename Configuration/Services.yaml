@@ -23,6 +23,13 @@ services:
 
   Sng\AdditionalReports\Service\PaginationService: ~
 
+  Sng\AdditionalReports\Service\ExtensionUpdateService: ~
+
+  Sng\AdditionalReports\Service\PackagistVersionService: ~
+
+  Sng\AdditionalReports\Service\PackageVersionProviderInterface:
+    alias: Sng\AdditionalReports\Service\PackagistVersionService
+
   Sng\AdditionalReports\Repository\ContentUsageRepository: ~
 
   Sng\AdditionalReports\Repository\PageStatisticsRepository: ~

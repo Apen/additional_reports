@@ -11,7 +11,7 @@ use TYPO3\CMS\Core\Http\RequestFactory;
 use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-final class PackagistVersionService
+final class PackagistVersionService implements PackageVersionProviderInterface
 {
     /** @var int */
     private const CACHE_LIFETIME = 43200;

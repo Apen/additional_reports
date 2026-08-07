@@ -98,17 +98,6 @@ class Utility
     }
 
     /**
-     * Get last version information for an extkey
-     *
-     * @param array $extInfo
-     * @return array
-     */
-    public static function checkExtensionUpdate($extInfo)
-    {
-        return GeneralUtility::makeInstance(ExtensionRepository::class)->findLatestVersion($extInfo);
-    }
-
-    /**
      * Get the HTTP icon path of an extension
      *
      * @param string $extKey

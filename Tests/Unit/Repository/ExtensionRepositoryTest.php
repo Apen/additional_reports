@@ -16,19 +16,4 @@ final class ExtensionRepositoryTest extends TestCase
         (new ExtensionRepository())->findVersion('');
     }
 
-    public function testDevelopmentVersionIsNotCheckedAgainstPackagist(): void
-    {
-        self::assertNull((new ExtensionRepository())->findLatestVersion([
-            'composerName' => 'vendor/private-package',
-            'version' => 'dev-main',
-        ]));
-    }
-
-    public function testComposerPackageWithoutComposerNameHasNoUpdateSource(): void
-    {
-        self::assertNull((new ExtensionRepository())->findLatestVersion([
-            'extkey' => 'private_extension',
-            'version' => '1.0.0',
-        ]));
-    }
 }

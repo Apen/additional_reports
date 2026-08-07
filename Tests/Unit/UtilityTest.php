@@ -38,22 +38,6 @@ class UtilityTest extends BaseTestCase
         ], Utility::getReportsList());
     }
 
-    public function testCheckExtensionUpdate()
-    {
-        self::assertEmpty(Utility::checkExtensionUpdate([
-            'extkey' => 'additional_reports',
-        ]));
-    }
-
-    public function testDevelopmentVersionIsNotComparedWithPackagist(): void
-    {
-        self::assertNull(Utility::checkExtensionUpdate([
-            'extkey' => 'powermail',
-            'composerName' => 'in2code/powermail',
-            'version' => 'dev-master',
-        ]));
-    }
-
     public function testGetPluginsDisplayMode()
     {
         self::assertEmpty(Utility::getPluginsDisplayMode());

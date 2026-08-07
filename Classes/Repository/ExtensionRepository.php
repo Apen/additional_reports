@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 namespace Sng\AdditionalReports\Repository;
 
-use Composer\Semver\VersionParser;
-use Sng\AdditionalReports\Service\PackagistVersionService;
-use TYPO3\CMS\Core\Core\Environment;
-use TYPO3\CMS\Core\Database\ConnectionPool;
+use Sng\AdditionalReports\Service\ExtensionUpdateService;
 use TYPO3\CMS\Core\Package\Exception\UnknownPackageException;
 use TYPO3\CMS\Core\Package\PackageInterface;
 use TYPO3\CMS\Core\Package\PackageManager;
@@ -17,8 +14,7 @@ final readonly class ExtensionRepository
 {
     public function __construct(
         private ?PackageManager $packageManager = null,
-        private ?PackagistVersionService $packagistVersionService = null,
-        private ?ConnectionPool $connectionPool = null,
+        private ?ExtensionUpdateService $extensionUpdateService = null,
     ) {}
 
     /**
@@ -46,7 +42,8 @@ final readonly class ExtensionRepository
                 'lastversion' => null,
                 'fdfile' => is_file($sqlFile) ? (string) file_get_contents($sqlFile) : '',
             ];
-            $extension['lastversion'] = $this->findLatestVersion($extension);
+            $updateService = $this->extensionUpdateService ?? GeneralUtility::makeInstance(ExtensionUpdateService::class);
+            $extension['lastversion'] = $updateService->findLatestVersion($extension);
             if (! $extension['installed']) {
                 $list['unloaded'][$extensionKey] = $extension;
             } elseif ($extension['lastversion'] !== null) {
@@ -68,34 +65,6 @@ final readonly class ExtensionRepository
         } catch (UnknownPackageException) {
             return null;
         }
-    }
-
-    /** @param array<string, mixed> $extension */
-    public function findLatestVersion(array $extension): ?array
-    {
-        $packageName = $extension['composerName'] ?? null;
-        if (is_string($packageName) && $packageName !== '') {
-            $installedVersion = $extension['version'] ?? null;
-            if (! is_string($installedVersion) || VersionParser::parseStability($installedVersion) !== 'stable') {
-                return null;
-            }
-            $service = $this->packagistVersionService ?? GeneralUtility::makeInstance(PackagistVersionService::class);
-            return $service->findLatestVersion($packageName);
-        }
-        if (Environment::isComposerMode()) {
-            return null;
-        }
-        $connectionPool = $this->connectionPool ?? GeneralUtility::makeInstance(ConnectionPool::class);
-        $queryBuilder = $connectionPool->getQueryBuilderForTable('tx_extensionmanager_domain_model_extension');
-        $lastVersion = $queryBuilder->select('*')->from('tx_extensionmanager_domain_model_extension')
-            ->where($queryBuilder->expr()->eq('extension_key', $queryBuilder->createNamedParameter($extension['extkey'] ?? '')))
-            ->andWhere($queryBuilder->expr()->eq('current_version', 1))
-            ->executeQuery()->fetchAssociative();
-        if (! is_array($lastVersion)) {
-            return null;
-        }
-        $lastVersion['updatedate'] = date('d/m/Y', (int) $lastVersion['last_updated']);
-        return $lastVersion;
     }
 
     private function getPackageManager(): PackageManager
