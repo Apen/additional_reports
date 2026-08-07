@@ -121,7 +121,6 @@ class Status extends AbstractReport
             'transport_smtp_server : ' . $GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_server'],
             'transport_smtp_encrypt : ' . $GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_encrypt'],
             'transport_smtp_username : ' . $GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_username'],
-            'transport_smtp_password : ' . $GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_password'],
         ];
 
         $datas['password'] = [

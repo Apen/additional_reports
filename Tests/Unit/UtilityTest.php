@@ -141,7 +141,16 @@ class UtilityTest extends BaseTestCase
     {
         $serializedData = serialize('not an array');
         $this->expectException(\Exception::class);
-        $this->expectExceptionMessage('could not be unserialized to an array');
+        $this->expectExceptionMessage('could not be safely unserialized to an array');
+
+        Utility::extractExtensionDataFromT3x(md5($serializedData) . ':raw:' . $serializedData);
+    }
+
+    public function testExtractExtensionDataRejectsObjectPayload(): void
+    {
+        $serializedData = serialize(['object' => new \stdClass()]);
+        $this->expectException(\UnexpectedValueException::class);
+        $this->expectExceptionMessage('could not be safely unserialized to an array');
 
         Utility::extractExtensionDataFromT3x(md5($serializedData) . ':raw:' . $serializedData);
     }
