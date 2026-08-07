@@ -7,6 +7,7 @@ namespace Sng\AdditionalReports\Tests\Functional\Reports;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Sng\AdditionalReports\Reports\Plugins;
 use Sng\AdditionalReports\Tests\Functional\FunctionalTestCase;
+use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Page\AssetCollector;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -15,6 +16,11 @@ class PluginsTest extends FunctionalTestCase
     protected function setUp(): void
     {
         parent::setUp();
+        $this->importCSVDataSet(__DIR__ . '/../Fixtures/pages.csv');
+        $contentFixture = GeneralUtility::makeInstance(Typo3Version::class)->getMajorVersion() >= 14
+            ? '/../Fixtures/tt_content_v14.csv'
+            : '/../Fixtures/tt_content.csv';
+        $this->importCSVDataSet(__DIR__ . $contentFixture);
     }
 
     public function testDisplay()
@@ -47,6 +53,15 @@ class PluginsTest extends FunctionalTestCase
         self::assertSame('Example page', $rows[0]['pagetitle']);
         self::assertSame('/index.php?id=42', $rows[0]['preview']);
         self::assertArrayHasKey('domain', $rows[0]);
+    }
+
+    public function testSummaryContainsNormalizedCounters(): void
+    {
+        $summary = (new Plugins(parent::getReportObject()))->getSummary();
+
+        self::assertNotEmpty($summary);
+        self::assertIsInt($summary[0]['references']);
+        self::assertIsFloat($summary[0]['pourc']);
     }
 
     #[DataProvider('displayModeProvider')]

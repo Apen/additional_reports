@@ -113,6 +113,43 @@ final readonly class ContentUsageRepository
         return $queryBuilder->executeQuery()->fetchAllAssociative();
     }
 
+    /**
+     * @return array{total: int, items: list<array{CType: string, list_type?: string, count: int}>}
+     */
+    public function summarizeVisibleContent(): array
+    {
+        $queryBuilder = $this->createQueryBuilder(false);
+        $total = (int) $queryBuilder
+            ->count('tt_content.uid')
+            ->executeQuery()
+            ->fetchOne();
+
+        $queryBuilder = $this->createQueryBuilder(false);
+        $queryBuilder
+            ->select('tt_content.CType')
+            ->addSelectLiteral('COUNT(*) AS item_count')
+            ->groupBy('tt_content.CType')
+            ->orderBy('item_count', 'DESC');
+        if ($this->hasLegacyListType()) {
+            $queryBuilder->addSelect('tt_content.list_type')->addGroupBy('tt_content.list_type');
+        }
+
+        $items = array_map(
+            static function (array $item): array {
+                $item['CType'] = (string) ($item['CType'] ?? '');
+                if (array_key_exists('list_type', $item)) {
+                    $item['list_type'] = (string) $item['list_type'];
+                }
+                $item['count'] = (int) ($item['item_count'] ?? 0);
+                unset($item['item_count']);
+                return $item;
+            },
+            $queryBuilder->executeQuery()->fetchAllAssociative(),
+        );
+
+        return ['total' => $total, 'items' => $items];
+    }
+
     public function hasLegacyListType(): bool
     {
         $typo3Version = $this->typo3Version ?? new Typo3Version();
