@@ -12,16 +12,32 @@ namespace Sng\AdditionalReports\Reports;
  */
 
 use Sng\AdditionalReports\Repository\ExtensionRepository;
+use Sng\AdditionalReports\Service\ExtensionSchemaParser;
 use Sng\AdditionalReports\Utility;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
 use TYPO3\CMS\Core\Core\Environment;
-use TYPO3\CMS\Core\Database\Schema\Parser\Lexer;
-use TYPO3\CMS\Core\Database\Schema\Parser\Parser;
-use TYPO3\CMS\Core\Database\Schema\SqlReader;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class Extensions extends AbstractReport
 {
+    private ExtensionRepository $extensionRepository;
+
+    private UriBuilder $uriBuilder;
+
+    private ExtensionSchemaParser $extensionSchemaParser;
+
+    public function __construct(
+        ?object $reportObject = null,
+        ?ExtensionRepository $extensionRepository = null,
+        ?UriBuilder $uriBuilder = null,
+        ?ExtensionSchemaParser $extensionSchemaParser = null,
+    ) {
+        parent::__construct($reportObject);
+        $this->extensionRepository = $extensionRepository ?? GeneralUtility::makeInstance(ExtensionRepository::class);
+        $this->uriBuilder = $uriBuilder ?? GeneralUtility::makeInstance(UriBuilder::class);
+        $this->extensionSchemaParser = $extensionSchemaParser ?? GeneralUtility::makeInstance(ExtensionSchemaParser::class);
+    }
+
     /**
      * This method renders the report
      *
@@ -41,7 +57,7 @@ class Extensions extends AbstractReport
     {
         $extensionsToUpdate = 0;
 
-        $allExtension = GeneralUtility::makeInstance(ExtensionRepository::class)->findGrouped();
+        $allExtension = $this->extensionRepository->findGrouped();
 
         $listExtensionsTer = [];
         $listExtensionsDev = [];
@@ -97,8 +113,7 @@ class Extensions extends AbstractReport
         $listExtensionsTerItem['extension'] = $extKey;
         $listExtensionsTerItem['version'] = $extVersion;
 
-        $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
-        $listExtensionsTerItem['compareUrl'] = (string) $uriBuilder->buildUriFromRoute('additional_reports_compareFiles', [
+        $listExtensionsTerItem['compareUrl'] = (string) $this->uriBuilder->buildUriFromRoute('additional_reports_compareFiles', [
             'extKey' => $extKey,
             'mode' => 'compareExtension',
             'extVersion' => $extVersion,
@@ -107,7 +122,7 @@ class Extensions extends AbstractReport
         // need extension update ?
         if (version_compare($extVersion, $itemValue['lastversion']['version'] ?? '', '<')) {
             $listExtensionsTerItem['versionlast'] = '<span style="color:green;font-weight:bold;">' . $itemValue['lastversion']['version'] . '&nbsp;(' . $itemValue['lastversion']['updatedate'] . ')</span>';
-            $listExtensionsTerItem['compareUrlLast'] = (string) $uriBuilder->buildUriFromRoute('additional_reports_compareFiles', [
+            $listExtensionsTerItem['compareUrlLast'] = (string) $this->uriBuilder->buildUriFromRoute('additional_reports_compareFiles', [
                 'extKey' => $extKey,
                 'mode' => 'compareExtension',
                 'extVersion' => $itemValue['lastversion']['version'],
@@ -118,43 +133,13 @@ class Extensions extends AbstractReport
         }
 
         $listExtensionsTerItem['downloads'] = $itemValue['lastversion']['alldownloadcounter'] ?? '';
-        $listExtensionsTerItem['tables'] = $this->getExtensionTables((string) ($itemValue['fdfile'] ?? ''));
+        $listExtensionsTerItem['tables'] = $this->extensionSchemaParser->parse((string) ($itemValue['fdfile'] ?? ''));
 
         // need extconf update
         $listExtensionsTerItem['confintegrity'] = Utility::getLl('no');
         $listExtensionsTerItem['confintegrityContent'] = '';
 
         return $listExtensionsTerItem;
-    }
-
-    /**
-     * Uses the same SQL reader and schema parser as TYPO3's database analyzer.
-     *
-     * @return list<array{name: string, columns: list<string>}>
-     */
-    public function getExtensionTables(string $sql): array
-    {
-        if (trim($sql) === '') {
-            return [];
-        }
-
-        $sqlReader = GeneralUtility::makeInstance(SqlReader::class);
-        $parser = new Parser(new Lexer());
-        $tables = [];
-        foreach ($sqlReader->getCreateTableStatementArray($sql) as $statement) {
-            try {
-                $parsedTables = $parser->parse($statement);
-            } catch (\Throwable) {
-                continue;
-            }
-            foreach ($parsedTables as $table) {
-                $tables[] = [
-                    'name' => $table->getName(),
-                    'columns' => array_map(static fn($column): string => $column->getName(), $table->getColumns()),
-                ];
-            }
-        }
-        return $tables;
     }
 
     public function getIdentifier(): string

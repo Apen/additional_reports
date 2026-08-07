@@ -85,9 +85,9 @@ parameters:
 			path: ../Classes/Reports/Extensions.php
 
 		-
-			message: '#^Out of 115 possible param types, only 95 \- 82\.6 %% actually have it\. Add more param types to get over 100 %%$#'
+			message: '#^Out of 116 possible param types, only 96 \- 82\.7 %% actually have it\. Add more param types to get over 100 %%$#'
 			identifier: typeCoverage.paramTypeCoverage
-			count: 2
+			count: 1
 			path: ../Classes/Reports/Extensions.php
 
 		-
@@ -251,6 +251,12 @@ parameters:
 			identifier: missingType.iterableValue
 			count: 1
 			path: ../Classes/Repository/ExtensionRepository.php
+
+		-
+			message: '#^Out of 116 possible param types, only 96 \- 82\.7 %% actually have it\. Add more param types to get over 100 %%$#'
+			identifier: typeCoverage.paramTypeCoverage
+			count: 1
+			path: ../Classes/Service/ExtensionSchemaParser.php
 
 		-
 			message: '#^Out of 1 possible constant types, only 0 \- 0\.0 %% actually have it\. Add more constant types to get over 99 %%$#'
@@ -451,7 +457,7 @@ parameters:
 			path: ../Classes/Utility.php
 
 		-
-			message: '#^Out of 115 possible param types, only 95 \- 82\.6 %% actually have it\. Add more param types to get over 100 %%$#'
+			message: '#^Out of 116 possible param types, only 96 \- 82\.7 %% actually have it\. Add more param types to get over 100 %%$#'
 			identifier: typeCoverage.paramTypeCoverage
 			count: 18
 			path: ../Classes/Utility.php

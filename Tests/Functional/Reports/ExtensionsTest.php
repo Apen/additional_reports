@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Sng\AdditionalReports\Tests\Functional\Reports;
 
 use Sng\AdditionalReports\Reports\Extensions;
+use Sng\AdditionalReports\Service\ExtensionSchemaParser;
 use Sng\AdditionalReports\Tests\Functional\FunctionalTestCase;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class ExtensionsTest extends FunctionalTestCase
 {
@@ -28,14 +30,14 @@ class ExtensionsTest extends FunctionalTestCase
 
     public function testExtensionTablesAreParsedLikeTheDatabaseAnalyzer(): void
     {
-        $report = new Extensions(parent::getReportObject());
+        $parser = GeneralUtility::makeInstance(ExtensionSchemaParser::class);
 
         self::assertSame([
             [
                 'name' => 'tx_example_domain_model_item',
                 'columns' => ['uid', 'pid', 'title'],
             ],
-        ], $report->getExtensionTables(<<<'SQL'
+        ], $parser->parse(<<<'SQL'
             CREATE TABLE tx_example_domain_model_item (
                 uid int(11) NOT NULL auto_increment,
                 pid int(11) DEFAULT '0' NOT NULL,
@@ -47,8 +49,9 @@ class ExtensionsTest extends FunctionalTestCase
 
     public function testInvalidExtensionTableDefinitionDoesNotBreakTheReport(): void
     {
-        $report = new Extensions(parent::getReportObject());
+        $parser = GeneralUtility::makeInstance(ExtensionSchemaParser::class);
 
-        self::assertSame([], $report->getExtensionTables('CREATE TABLE invalid syntax;'));
+        self::assertSame([], $parser->parse('CREATE TABLE invalid syntax;'));
     }
+
 }
