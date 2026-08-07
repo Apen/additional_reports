@@ -92,9 +92,8 @@ final readonly class ReportController
         $queryParams = $request->getQueryParams();
         $queryParams['report'] = $identifier;
         $request = $request->withQueryParams($queryParams);
-        $GLOBALS['TYPO3_REQUEST'] = $request;
-
         $report = GeneralUtility::makeInstance($reportClass);
+        $report->setRequest($request);
         $moduleTemplate = $this->moduleTemplateFactory->create($request);
         $moduleTemplate->setTitle(Utility::getLanguageService()->sL($report->getTitle()));
         $moduleTemplate->makeDocHeaderModuleMenu();

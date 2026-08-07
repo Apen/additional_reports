@@ -33,6 +33,8 @@ trait AbstractReportImplementation
      */
     protected ?object $reportObject;
 
+    private ?ServerRequestInterface $request = null;
+
     /**
      * @param object $reportObject Back-reference to the calling reports module
      */
@@ -40,6 +42,29 @@ trait AbstractReportImplementation
     {
         $this->reportObject = $reportObject;
         $this->setCss('EXT:additional_reports/Resources/Public/Css/tx_additionalreports.css');
+    }
+
+    public function setRequest(ServerRequestInterface $request): void
+    {
+        $this->request = $request;
+    }
+
+    protected function getRequest(): ServerRequestInterface
+    {
+        if ($this->request instanceof ServerRequestInterface) {
+            return $this->request;
+        }
+        $request = $GLOBALS['TYPO3_REQUEST'] ?? null;
+        if ($request instanceof ServerRequestInterface) {
+            return $request;
+        }
+        throw new \RuntimeException('The report requires a backend request.', 1786128601);
+    }
+
+    protected function getRequestParameter(string $name): mixed
+    {
+        $request = $this->getRequest();
+        return $request->getParsedBody()[$name] ?? $request->getQueryParams()[$name] ?? null;
     }
 
     public function setCss(string $path): void
@@ -54,12 +79,12 @@ trait AbstractReportImplementation
 
     protected function createView(): ViewInterface
     {
-        $request = $GLOBALS['TYPO3_REQUEST'] ?? null;
+        $request = $this->getRequest();
         $viewFactoryData = new ViewFactoryData(
             templateRootPaths: ['EXT:additional_reports/Resources/Private/Templates'],
             partialRootPaths: ['EXT:additional_reports/Resources/Private/Partials'],
             layoutRootPaths: ['EXT:additional_reports/Resources/Private/Layouts'],
-            request: $request instanceof ServerRequestInterface ? $request : null,
+            request: $request,
         );
 
         return GeneralUtility::makeInstance(ViewFactoryInterface::class)->create($viewFactoryData);
@@ -67,7 +92,7 @@ trait AbstractReportImplementation
 
     protected function getCurrentRouteIdentifier(): string
     {
-        $request = $GLOBALS['TYPO3_REQUEST'] ?? null;
+        $request = $this->getRequest();
         $route = $request instanceof ServerRequestInterface ? $request->getAttribute('route') : null;
         if ($route instanceof Route || $route instanceof SymfonyRoute) {
             $identifier = $route->getOption('_identifier');

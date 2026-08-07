@@ -40,7 +40,7 @@ class LogErrors extends AbstractReport
             ->from('sys_log')
             ->where($queryBuilder->expr()->gt('error', 0))
             ->groupBy('details');
-        $orderBy = Utility::_GP('orderby');
+        $orderBy = $this->getRequestParameter('orderby');
         $allowedOrderings = [
             'nb ASC' => ['nb', 'ASC'],
             'nb DESC' => ['nb', 'DESC'],
@@ -57,7 +57,7 @@ class LogErrors extends AbstractReport
         $view->assign('extconf', unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['additional_reports'] ?? ''));
         $view->assign('requestDir', GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR'));
 
-        Utility::buildPagination($queryBuilder->executeQuery()->fetchAllAssociative(), (int) (Utility::_GP('currentPage') ?? 1), $view);
+        Utility::buildPagination($queryBuilder->executeQuery()->fetchAllAssociative(), (int) ($this->getRequestParameter('currentPage') ?? 1), $view);
 
         return $view->render('logerrors-fluid');
     }

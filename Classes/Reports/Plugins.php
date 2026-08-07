@@ -36,44 +36,46 @@ class Plugins extends AbstractReport
     public function display()
     {
         $view = $this->createView();
+        $displayMode = Utility::getPluginsDisplayMode($this->getRequestParameter('display'));
+        $filter = $this->getRequestParameter('filtersCat');
+        $filter = is_string($filter) ? $filter : null;
 
         $view->assign('reportname', Utility::hasLegacyListType() ? 'additionalreports_plugins' : 'plugins');
         $view->assign('paginationRoute', $this->getCurrentRouteIdentifier());
         $view->assign('extconf', unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['additional_reports'] ?? ''));
-        $view->assign('checkedpluginsmode3', (Utility::getPluginsDisplayMode() === 3) ? ' checked="checked"' : '');
-        $view->assign('checkedpluginsmode4', (Utility::getPluginsDisplayMode() === 4) ? ' checked="checked"' : '');
-        $view->assign('checkedpluginsmode5', (Utility::getPluginsDisplayMode() === 5) ? ' checked="checked"' : '');
-        $view->assign('checkedpluginsmode6', (Utility::getPluginsDisplayMode() === 6) ? ' checked="checked"' : '');
-        $view->assign('checkedpluginsmode7', (Utility::getPluginsDisplayMode() === 7) ? ' checked="checked"' : '');
-        $view->assign('filtersCatParam', Utility::_GP('filtersCat'));
+        $view->assign('checkedpluginsmode3', ($displayMode === 3) ? ' checked="checked"' : '');
+        $view->assign('checkedpluginsmode4', ($displayMode === 4) ? ' checked="checked"' : '');
+        $view->assign('checkedpluginsmode5', ($displayMode === 5) ? ' checked="checked"' : '');
+        $view->assign('checkedpluginsmode6', ($displayMode === 6) ? ' checked="checked"' : '');
+        $view->assign('checkedpluginsmode7', ($displayMode === 7) ? ' checked="checked"' : '');
+        $view->assign('filtersCatParam', $filter);
 
-        $currentPage = (int) (Utility::_GP('currentPage') ?? 1);
+        $currentPage = (int) ($this->getRequestParameter('currentPage') ?? 1);
 
-        switch (Utility::getPluginsDisplayMode()) {
+        switch ($displayMode) {
             case 3:
                 $view->assign('filterOptions', array_column(Utility::getAllDifferentCtypes(false), 'CType'));
-                Utility::buildPagination($this->enrichContentRows(self::getAllUsedCtypes(), 'ctype'), $currentPage, $view);
+                Utility::buildPagination($this->enrichContentRows($this->getAllUsedCtypes(false, $filter), 'ctype'), $currentPage, $view);
                 break;
             case 4:
                 $filterField = Utility::hasLegacyListType() ? 'list_type' : 'CType';
                 $view->assign('filterOptions', array_column(Utility::getAllDifferentPlugins(false), $filterField));
-                Utility::buildPagination($this->enrichContentRows(self::getAllUsedPlugins(), 'plugin'), $currentPage, $view);
+                Utility::buildPagination($this->enrichContentRows($this->getAllUsedPlugins(false, $filter), 'plugin'), $currentPage, $view);
                 break;
             case 6:
                 $filterField = Utility::hasLegacyListType() ? 'list_type' : 'CType';
                 $view->assign('filterOptions', array_column(Utility::getAllDifferentPlugins(true), $filterField));
-                Utility::buildPagination($this->enrichContentRows(self::getAllUsedPlugins(true), 'plugin'), $currentPage, $view);
+                Utility::buildPagination($this->enrichContentRows($this->getAllUsedPlugins(true, $filter), 'plugin'), $currentPage, $view);
                 break;
             case 7:
                 $view->assign('filterOptions', array_column(Utility::getAllDifferentCtypes(true), 'CType'));
-                Utility::buildPagination($this->enrichContentRows(self::getAllUsedCtypes(true), 'ctype'), $currentPage, $view);
+                Utility::buildPagination($this->enrichContentRows($this->getAllUsedCtypes(true, $filter), 'ctype'), $currentPage, $view);
                 break;
             default:
                 $view->assign('items', $this->getSummary());
                 break;
         }
 
-        $displayMode = Utility::getPluginsDisplayMode();
         $view->assign('display', $displayMode);
         $view->assign('showCtypes', in_array($displayMode, [3, 7], true));
         $view->assign('showPlugins', in_array($displayMode, [4, 6], true));
@@ -169,19 +171,17 @@ class Plugins extends AbstractReport
     /**
      * Generate the used plugins report
      */
-    public static function getAllUsedPlugins(bool $displayHidden = false): array
+    public function getAllUsedPlugins(bool $displayHidden = false, ?string $filter = null): array
     {
-        $getFiltersCat = Utility::_GP('filtersCat');
-        return Utility::getAllPlugins($displayHidden, is_string($getFiltersCat) ? $getFiltersCat : null);
+        return Utility::getAllPlugins($displayHidden, $filter);
     }
 
     /**
      * Generate the used ctypes report
      */
-    public static function getAllUsedCtypes(bool $displayHidden = false): array
+    public function getAllUsedCtypes(bool $displayHidden = false, ?string $filter = null): array
     {
-        $getFiltersCat = Utility::_GP('filtersCat');
-        return Utility::getAllCtypes($displayHidden, is_string($getFiltersCat) ? $getFiltersCat : null);
+        return Utility::getAllCtypes($displayHidden, $filter);
     }
 
     public function getIdentifier(): string

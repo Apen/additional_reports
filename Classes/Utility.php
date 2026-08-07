@@ -599,16 +599,15 @@ class Utility
      *
      * @return int
      */
-    public static function getPluginsDisplayMode()
+    public static function getPluginsDisplayMode(mixed $requestedDisplay = null): int
     {
         $displayMode = 0;
 
         if (! empty($GLOBALS['BE_USER'])) {
             // Check the display mode
-            $display = self::_GP('display');
-            if ($display !== null) {
-                $GLOBALS['BE_USER']->setAndSaveSessionData('additional_reports_menu', $display);
-                $displayMode = $display;
+            if ($requestedDisplay !== null) {
+                $GLOBALS['BE_USER']->setAndSaveSessionData('additional_reports_menu', $requestedDisplay);
+                $displayMode = $requestedDisplay;
             }
 
             // Check the session
@@ -838,14 +837,6 @@ class Utility
             $view->assign('paginator', $paginator);
             $view->assign('pagination', $pagination);
         }
-    }
-
-    public static function _GP(string $key)
-    {
-        return
-            $GLOBALS['TYPO3_REQUEST']->getParsedBody()[$key] ??
-            $GLOBALS['TYPO3_REQUEST']->getQueryParams()[$key] ??
-            null;
     }
 
 }
