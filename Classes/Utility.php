@@ -388,25 +388,6 @@ class Utility
     }
 
     /**
-     * Get the HTTP icon path of an extension
-     *
-     * @param string $path
-     * @return string
-     */
-    public static function getContentTypeIcon($path)
-    {
-        $icon = null;
-        if (is_file(self::getPathSite() . '/typo3/sysext/core/Resources/Public/Icons/T3Icons/content/' . $path . '.svg')) {
-            $icon = GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/core/Resources/Public/Icons/T3Icons/content/' . $path . '.svg';
-        } elseif (preg_match('#^\.\.#', $path, $temp)) {
-            $icon = GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR') . $path;
-        } elseif (preg_match('#^EXT:(.*)$#', $path, $temp)) {
-            $icon = GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR') . '../typo3conf/ext/' . $temp[1];
-        }
-        return $icon;
-    }
-
-    /**
      * Get the icon path of refresh icon
      */
     public static function getIconRefresh(): string
