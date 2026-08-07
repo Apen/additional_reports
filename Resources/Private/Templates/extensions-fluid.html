@@ -59,15 +59,15 @@
                         <f:format.raw>{extension.versionlast}</f:format.raw>
                     </td>
                     <td>
-                        <f:render section="modal" arguments="{id:'tables{extension.extension}',title:'{f:translate(extensionName:\'additional_reports\',key:\'extensions_tablesmodified\')}',content:extension.tablesmodal}"/>
+                        <f:render section="details" arguments="{title:'{f:translate(extensionName:\'additional_reports\',key:\'extensions_tablesmodified\')}',content:extension.tablesmodal}"/>
                     </td>
                     <td>
                         <f:format.raw>{extension.confintegrity}</f:format.raw>
-                        <f:render section="modal" arguments="{id:'integrity{extension.extension}',title:'{f:translate(extensionName:\'additional_reports\',key:\'plus\')}',content:extension.confintegrityContent}"/>
+                        <f:render section="details" arguments="{title:'{f:translate(extensionName:\'additional_reports\',key:\'plus\')}',content:extension.confintegrityContent}"/>
                     </td>
                     <td>
-                        <f:render section="modalIframe" arguments="{id:'compare{extension.extension}',title:'{f:translate(extensionName:\'additional_reports\',key:\'comparesame\')}',url:extension.compareUrl}"/>
-                        <f:render section="modalIframe" arguments="{id:'compareLast{extension.extension}',title:'{f:translate(extensionName:\'additional_reports\',key:\'comparelast\')}',url:extension.compareUrlLast}"/>
+                        <f:render section="externalLink" arguments="{title:'{f:translate(extensionName:\'additional_reports\',key:\'comparesame\')}',url:extension.compareUrl}"/>
+                        <f:render section="externalLink" arguments="{title:'{f:translate(extensionName:\'additional_reports\',key:\'comparelast\')}',url:extension.compareUrlLast}"/>
                     </td>
                 </tr>
             </f:for>
@@ -104,7 +104,7 @@
                     <td>{extension.extension}</td>
                     <td>{extension.version}</td>
                     <td>
-                        <f:render section="modal" arguments="{id:'tables{extension.extension}',title:'{f:translate(extensionName:\'additional_reports\',key:\'extensions_tablesmodified\')}',content:extension.tablesmodal}"/>
+                        <f:render section="details" arguments="{title:'{f:translate(extensionName:\'additional_reports\',key:\'extensions_tablesmodified\')}',content:extension.tablesmodal}"/>
                     </td>
                 </tr>
             </f:for>
@@ -141,7 +141,7 @@
                     <td>{extension.extension}</td>
                     <td>{extension.version}</td>
                     <td>
-                        <f:render section="modal" arguments="{id:'tables{extension.extension}',title:'{f:translate(extensionName:\'additional_reports\',key:\'extensions_tablesmodified\')}',content:extension.tablesmodal}"/>
+                        <f:render section="details" arguments="{title:'{f:translate(extensionName:\'additional_reports\',key:\'extensions_tablesmodified\')}',content:extension.tablesmodal}"/>
                     </td>
                 </tr>
             </f:for>
@@ -150,55 +150,19 @@
     </div>
 </f:if>
 
-<f:section name="modal">
+<f:section name="details">
     <f:if condition="{content}">
-        <button type="button" class="btn btn-default" data-bs-toggle="modal" data-bs-target="#{id}">
-            {title}
-        </button>
-        <div class="modal fade" id="{id}" tabindex="-1" role="dialog">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <f:format.raw>{content}</f:format.raw>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <details>
+            <summary class="btn btn-default">{title}</summary>
+            <f:format.raw>{content}</f:format.raw>
+        </details>
     </f:if>
 </f:section>
 
-<f:section name="modalIframe">
+<f:section name="externalLink">
     <f:if condition="{url}">
-        <button type="button" class="btn btn-default" data-bs-toggle="modal" data-bs-target="#{id}">
+        <a href="{url}" target="_blank" rel="noopener" class="btn btn-default">
             {title}
-        </button>
-        <div class="modal fade" id="{id}" tabindex="-1" role="dialog" data-src="{url}">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body" style="width: 800px;height:550px;overflow:hidden;">
-
-                    </div>
-                </div>
-            </div>
-        </div>
-        <f:format.raw>
-        <script type="text/javascript">
-            require(["jquery"], function ($) {
-                $(document).ready(function () {
-                    $('.modal').on('shown.bs.modal', function () {
-                        if ($(this).find('.modal-body').html().trim() === '') {
-                            $(this).find('.modal-body').html('<iframe src="' + $(this).attr('data-src') + '" frameborder="0" style="width:98%;height:98%;"></iframe>');
-                        }
-                    });
-                });
-            });
-        </script>
-        </f:format.raw>
+        </a>
     </f:if>
 </f:section>
