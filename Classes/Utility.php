@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sng\AdditionalReports;
 
 /*
@@ -20,6 +22,7 @@ use TYPO3\CMS\Core\Exception\SiteNotFoundException;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Imaging\IconRegistry;
 use TYPO3\CMS\Core\Imaging\IconSize;
+use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
 use TYPO3\CMS\Core\Package\Exception\UnknownPackageException;
@@ -30,9 +33,6 @@ use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\PathUtility;
 use TYPO3\CMS\Core\Utility\RootlineUtility;
-use TYPO3\CMS\Extbase\Pagination\QueryResultPaginator;
-use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
-use TYPO3\CMS\Core\Information\Typo3Version;
 
 /**
  * Utility class
@@ -73,12 +73,12 @@ class Utility
         $parameters['action'] = 'detail';
         $parameters['report'] = self::_GET('report');
         $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
-        $route = self::getReportRouteIdentifier((string)$parameters['report']);
+        $route = self::getReportRouteIdentifier((string) $parameters['report']);
         if ($route !== 'system_reports') {
             unset($parameters['extension'], $parameters['action'], $parameters['report']);
         }
         $url = $uriBuilder->buildUriFromRoute($route, $parameters);
-        return (string)$url;
+        return (string) $url;
     }
 
     public static function getReportRouteIdentifier(string $report): string
@@ -123,9 +123,9 @@ class Utility
      */
     public static function getTreeList($id, $depth, $begin = 0, $permsClause = '1=1')
     {
-        $depth = (int)$depth;
-        $begin = (int)$begin;
-        $id = (int)$id;
+        $depth = (int) $depth;
+        $begin = (int) $begin;
+        $id = (int) $id;
         $theList = $begin === 0 ? $id : '';
         if ($id && $depth > 0) {
             $res = self::exec_SELECTquery('uid', 'pages', 'pid=' . $id . ' AND ' . $permsClause);
@@ -184,7 +184,7 @@ class Utility
                         $currentExt['installed'] = ExtensionManagementUtility::isLoaded($extKey);
                         $currentExt['EM_CONF'] = $emConf;
                         $currentExt['files'] = GeneralUtility::getFilesInDir($packagePath);
-                        $currentExt['lastversion'] = Utility::checkExtensionUpdate($currentExt);
+                        $currentExt['lastversion'] = self::checkExtensionUpdate($currentExt);
 
                         // db infos
                         $fileContent = '';
@@ -220,7 +220,7 @@ class Utility
                             $currentExt['installed'] = ExtensionManagementUtility::isLoaded($extKey);
                             $currentExt['EM_CONF'] = $emConf;
                             $currentExt['files'] = GeneralUtility::getFilesInDir($path . $extKey);
-                            $currentExt['lastversion'] = Utility::checkExtensionUpdate($currentExt);
+                            $currentExt['lastversion'] = self::checkExtensionUpdate($currentExt);
 
                             // db infos
                             $fileContent = '';
@@ -257,7 +257,7 @@ class Utility
     public static function includeEMCONF($path, $_EXTKEY)
     {
         $EM_CONF = null;
-        include($path);
+        include $path;
         return $EM_CONF[$_EXTKEY];
     }
 
@@ -272,7 +272,7 @@ class Utility
         if (self::isComposerMode()) {
             return null;
         }
-        $lastVersion = Utility::exec_SELECTgetRows('*', 'tx_extensionmanager_domain_model_extension', 'extension_key="' . $extInfo['extkey'] . '" AND current_version=1');
+        $lastVersion = self::exec_SELECTgetRows('*', 'tx_extensionmanager_domain_model_extension', 'extension_key="' . $extInfo['extkey'] . '" AND current_version=1');
         if ($lastVersion !== []) {
             $lastVersion[0]['updatedate'] = date('d/m/Y', $lastVersion[0]['last_updated']);
             return $lastVersion[0];
@@ -288,15 +288,15 @@ class Utility
      */
     public static function getExtIcon($extKey)
     {
-        if (!empty($extKey)) {
-            $extType = self::getExtensionType($extKey);
-            if (!isset($extType['siteRelPath'])) {
+        if (! empty($extKey)) {
+            try {
+                $package = GeneralUtility::makeInstance(PackageManager::class)->getPackage($extKey);
+            } catch (UnknownPackageException) {
                 return '';
             }
-            $path = $extType['siteRelPath'] . ExtensionManagementUtility::getExtensionIcon(
-                    Utility::getPathSite() . '/' . $extType['siteRelPath']
-                );
-            return GeneralUtility::getIndpEnv('TYPO3_SITE_URL') . $path;
+
+            $icon = $package->getPackageIcon();
+            return $icon === null ? '' : PathUtility::getPublicResourceWebPath('EXT:' . $extKey . '/' . $icon);
         }
         return '';
     }
@@ -322,12 +322,12 @@ class Utility
                     if (isset($itemValue['icon']) && PathUtility::isExtensionPath($itemValue['icon'])) {
                         $infos['iconext'] = PathUtility::getPublicResourceWebPath($itemValue['icon']);
                     }
-                    $infos[$type] = Utility::getLanguageService()->sL($itemValue['label']) . ' (' . $value . ')';
+                    $infos[$type] = self::getLanguageService()->sL($itemValue['label']) . ' (' . $value . ')';
                 }
                 // v11
                 if (trim($itemValue[1] ?? '') === $value) {
                     $infos['iconext'] = PathUtility::getPublicResourceWebPath($itemValue[2]);
-                    $infos[$type] = Utility::getLanguageService()->sL($itemValue[0]) . ' (' . $value . ')';
+                    $infos[$type] = self::getLanguageService()->sL($itemValue[0]) . ' (' . $value . ')';
                 }
             }
         }
@@ -368,7 +368,7 @@ class Utility
     public static function getContentTypeIcon($path)
     {
         $icon = null;
-        if (is_file(Utility::getPathSite() . '/typo3/sysext/core/Resources/Public/Icons/T3Icons/content/' . $path . '.svg')) {
+        if (is_file(self::getPathSite() . '/typo3/sysext/core/Resources/Public/Icons/T3Icons/content/' . $path . '.svg')) {
             $icon = GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR') . 'sysext/core/Resources/Public/Icons/T3Icons/content/' . $path . '.svg';
         } elseif (preg_match('#^\.\.#', $path, $temp)) {
             $icon = GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR') . $path;
@@ -380,8 +380,6 @@ class Utility
 
     /**
      * Get the icon path of refresh icon
-     *
-     * @return string
      */
     public static function getIconRefresh(): string
     {
@@ -393,8 +391,6 @@ class Utility
 
     /**
      * Get the icon path of zoom icon
-     *
-     * @return string
      */
     public static function getIconDomain(): string
     {
@@ -406,8 +402,6 @@ class Utility
 
     /**
      * Get the icon path of web page icon
-     *
-     * @return string
      */
     public static function getIconWebPage(): string
     {
@@ -419,8 +413,6 @@ class Utility
 
     /**
      * Get the icon path of template
-     *
-     * @return string
      */
     public static function getIconTemplate(): string
     {
@@ -432,8 +424,6 @@ class Utility
 
     /**
      * Get the icon path of web list icon
-     *
-     * @return string
      */
     public static function getIconWebList(): string
     {
@@ -445,9 +435,6 @@ class Utility
 
     /**
      * Get the icon path of page icon
-     *
-     * @param bool $hidden
-     * @return string
      */
     public static function getIconPage(bool $hidden = false): string
     {
@@ -466,9 +453,6 @@ class Utility
 
     /**
      * Get the icon path of content icon
-     *
-     * @param bool $hidden
-     * @return string
      */
     public static function getIconContent(bool $hidden = false): string
     {
@@ -487,13 +471,10 @@ class Utility
 
     /**
      * Get the type and the path of an extension
-     *
-     * @param string $extKey
-     * @return array
      */
     public static function getExtensionType(string $extKey): array
     {
-        if (is_dir(Utility::getPathTypo3Conf() . 'ext/' . $extKey . '/')) {
+        if (is_dir(self::getPathTypo3Conf() . 'ext/' . $extKey . '/')) {
             return [
                 'type' => 'L',
                 'siteRelPath' => 'typo3conf/ext/' . $extKey . '/',
@@ -534,8 +515,9 @@ class Utility
         $siteFinder = GeneralUtility::makeInstance(SiteFinder::class);
         try {
             $siteConf = $siteFinder->getSiteByPageId($pageUid);
-            if (!empty($siteConf)) {
-                return $siteConf->getBase()->getHost();
+            if (! empty($siteConf)) {
+                return $siteConf->getBase()
+                    ->getHost();
             }
         } catch (SiteNotFoundException $siteNotFoundException) {
             return '';
@@ -545,9 +527,6 @@ class Utility
 
     /**
      * Get the absolute path of an extension
-     *
-     * @param string $extKey
-     * @return string
      */
     public static function getExtPath(string $extKey): string
     {
@@ -558,7 +537,6 @@ class Utility
      * Print a debug of an array
      *
      * @param array $arrayIn
-     * @return string
      */
     public static function viewArray($arrayIn): string
     {
@@ -568,7 +546,7 @@ class Utility
                 $result .= '<tr><td><strong>EMPTY!</strong></td></tr>';
             } else {
                 foreach ($arrayIn as $key => $val) {
-                    $result .= '<tr><td>' . htmlspecialchars((string)$key) . '</td><td>';
+                    $result .= '<tr><td>' . htmlspecialchars((string) $key) . '</td><td>';
                     if (is_array($val)) {
                         $result .= self::viewArray($val);
                     } elseif (is_object($val)) {
@@ -578,7 +556,7 @@ class Utility
                         }
                         $result .= nl2br(htmlspecialchars($string)) . '<br />';
                     } else {
-                        $string = gettype($val) === 'object' ? 'Unknown object' : (string)$val;
+                        $string = gettype($val) === 'object' ? 'Unknown object' : (string) $val;
                         $result .= nl2br(htmlspecialchars($string)) . '<br />';
                     }
                     $result .= '</td></tr>';
@@ -587,7 +565,7 @@ class Utility
             $result .= '</tbody></table>';
         } else {
             $result = '<table class="table table-striped table-condensed">';
-            $result .= '<tr><td>' . nl2br(htmlspecialchars((string)$arrayIn)) . '</td></tr></table>';
+            $result .= '<tr><td>' . nl2br(htmlspecialchars((string) $arrayIn)) . '</td></tr></table>';
         }
         return $result;
     }
@@ -597,7 +575,6 @@ class Utility
      *
      * @param int $uid
      * @param bool $urlOnly
-     * @return string
      */
     public static function goToModuleList($uid, $urlOnly = false): string
     {
@@ -614,7 +591,6 @@ class Utility
      *
      * @param int $uid
      * @param bool $urlOnly
-     * @return string
      */
     public static function goToModulePage($uid, $urlOnly = false): string
     {
@@ -631,7 +607,6 @@ class Utility
      *
      * @param array $att
      * @param string $content
-     * @return string
      */
     public static function generateLink($att = [], $content = ''): string
     {
@@ -646,12 +621,11 @@ class Utility
      * Get the version of a given extension
      *
      * @param string $key
-     * @return string|null
      */
     public static function getExtensionVersion($key): ?string
     {
         $EM_CONF = [];
-        if (!is_string($key) || empty($key)) {
+        if (! is_string($key) || empty($key)) {
             throw new \InvalidArgumentException('Extension key must be a non-empty string.');
         }
 
@@ -659,47 +633,46 @@ class Utility
             $packageManager = GeneralUtility::makeInstance(PackageManager::class);
             /** @var \TYPO3\CMS\Core\Package\PackageInterface $package */
             try {
-            $package = $packageManager->getPackage($key);
+                $package = $packageManager->getPackage($key);
             } catch (UnknownPackageException $e) {
                 return null;
             }
             if ($package === null) {
                 return null;
             }
-            return $package->getPackageMetaData()->getVersion();
+            return $package->getPackageMetaData()
+                ->getVersion();
         }
 
-        if (!ExtensionManagementUtility::isLoaded($key)) {
+        if (! ExtensionManagementUtility::isLoaded($key)) {
             return null;
         }
 
         // need for the next include
         $_EXTKEY = $key;
 
-        if (!is_file(ExtensionManagementUtility::extPath($key) . 'ext_emconf.php')) {
+        if (! is_file(ExtensionManagementUtility::extPath($key) . 'ext_emconf.php')) {
             return null;
         }
 
-        include(ExtensionManagementUtility::extPath($key) . 'ext_emconf.php');
+        include ExtensionManagementUtility::extPath($key) . 'ext_emconf.php';
 
         return $EM_CONF[$key]['version'] ?? '?';
     }
 
     /**
      * Get informations about the mysql cache
-     *
-     * @return string
      */
     public static function getMySqlCacheInformations(): string
     {
         $queryCache = '';
 
-        $res = Utility::sql_query('SHOW VARIABLES LIKE "%query_cache%";');
+        $res = self::sql_query('SHOW VARIABLES LIKE "%query_cache%";');
         while ($row = $res->fetchAssociative()) {
             $queryCache .= $row['Variable_name'] . ' : ' . $row['Value'] . '<br />';
         }
 
-        $res = Utility::sql_query('SHOW STATUS LIKE "%Qcache%";');
+        $res = self::sql_query('SHOW STATUS LIKE "%Qcache%";');
         while ($row = $res->fetchAssociative()) {
             $queryCache .= $row['Variable_name'] . ' : ' . $row['Value'] . '<br />';
         }
@@ -709,14 +682,12 @@ class Utility
 
     /**
      * Get informations about the mysql character_set
-     *
-     * @return string
      */
     public static function getMySqlCharacterSet(): string
     {
         $sqlEncoding = '';
 
-        $res = Utility::sql_query('SHOW VARIABLES LIKE "%character%";');
+        $res = self::sql_query('SHOW VARIABLES LIKE "%character%";');
         while ($row = $res->fetchAssociative()) {
             $sqlEncoding .= $row['Variable_name'] . ' : ' . $row['Value'] . '<br />';
         }
@@ -729,7 +700,6 @@ class Utility
      *
      * @param string $label
      * @param string $value
-     * @return string
      */
     public static function writeInformation($label, $value): string
     {
@@ -746,17 +716,14 @@ class Utility
     }
 
     /**
-     * Get all the different plugins
-     *
      * @param string $where
-     * @return array
      */
     public static function getAllDifferentPlugins($where): array
     {
-        if (!self::hasLegacyListType()) {
+        if (! self::hasLegacyListType()) {
             return self::getAllDifferentCtypes($where);
         }
-        return Utility::exec_SELECTgetRows(
+        return self::exec_SELECTgetRows(
             'DISTINCT tt_content.list_type',
             'tt_content,pages',
             'tt_content.pid=pages.uid AND pages.pid>=0 AND tt_content.deleted=0 AND pages.deleted=0 ' . $where . 'AND tt_content.CType=\'list\' AND tt_content.list_type<>""',
@@ -769,7 +736,6 @@ class Utility
      * Get all the different plugins (html select)
      *
      * @param bool $displayHidden
-     * @return string
      */
     public static function getAllDifferentPluginsSelect($displayHidden): string
     {
@@ -794,21 +760,18 @@ class Utility
             }
         }
 
-        $listUrlOrig = Utility::getBaseUrl() . '&display=' . Utility::getPluginsDisplayMode();
+        $listUrlOrig = self::getBaseUrl() . '&display=' . self::getPluginsDisplayMode();
 
         return '<select name="filtersCat" id="filtersCat" data-url="' . $listUrlOrig . '">' . $filterCat . '</select>';
     }
 
     /**
-     * Get all the different ctypes
-     *
      * @param string $where
-     * @return array
      */
     public static function getAllDifferentCtypes($where): array
     {
-        if (!self::hasLegacyListType()) {
-            return Utility::exec_SELECTgetRows(
+        if (! self::hasLegacyListType()) {
+            return self::exec_SELECTgetRows(
                 'DISTINCT tt_content.CType',
                 'tt_content,pages',
                 'tt_content.pid=pages.uid AND pages.pid>=0 AND tt_content.deleted=0 AND pages.deleted=0 ' . $where . "AND tt_content.CType<>''",
@@ -816,7 +779,7 @@ class Utility
                 'tt_content.CType'
             );
         }
-        return Utility::exec_SELECTgetRows(
+        return self::exec_SELECTgetRows(
             'DISTINCT tt_content.CType,tt_content.list_type',
             'tt_content,pages',
             'tt_content.pid=pages.uid AND pages.pid>=0 AND tt_content.deleted=0 AND pages.deleted=0 ' . $where . "AND tt_content.CType<>'list'",
@@ -829,7 +792,6 @@ class Utility
      * Get all the different ctypes (html select)
      *
      * @param bool $displayHidden
-     * @return string
      */
     public static function getAllDifferentCtypesSelect($displayHidden): string
     {
@@ -853,7 +815,7 @@ class Utility
             }
         }
 
-        $listUrlOrig = Utility::getBaseUrl() . '&display=' . Utility::getPluginsDisplayMode();
+        $listUrlOrig = self::getBaseUrl() . '&display=' . self::getPluginsDisplayMode();
 
         return '<select name="filtersCat" id="filtersCat" data-url="' . $listUrlOrig . '">' . $filterCat . '</select>';
     }
@@ -867,7 +829,7 @@ class Utility
      */
     public static function getAllPlugins($where, $limit = '', $returnQuery = false)
     {
-        if (!self::hasLegacyListType()) {
+        if (! self::hasLegacyListType()) {
             return self::getAllCtypes($where, $limit, $returnQuery);
         }
         $query = [
@@ -880,7 +842,7 @@ class Utility
         if ($returnQuery === true) {
             return $query;
         }
-        return Utility::exec_SELECTgetRows(
+        return self::exec_SELECTgetRows(
             $query['SELECT'],
             $query['FROM'],
             $query['WHERE'],
@@ -895,7 +857,6 @@ class Utility
      *
      * @param string $where
      * @param string $limit
-     * @return array
      */
     public static function getAllCtypes($where, $limit = '', $returnQuery = false): array
     {
@@ -912,7 +873,7 @@ class Utility
         if ($returnQuery === true) {
             return $query;
         }
-        return Utility::exec_SELECTgetRows(
+        return self::exec_SELECTgetRows(
             $query['SELECT'],
             $query['FROM'],
             $query['WHERE'],
@@ -941,15 +902,12 @@ class Utility
     /**
      * Return an array with current version infos
      *
-     * @param $jsonVersions
-     * @param $version
-     *
      * @return array
      */
     public static function getCurrentVersionInfos($jsonVersions, $version)
     {
         $currentVersion = explode('.', $version);
-        if ((int)($currentVersion[0]) >= 7) {
+        if ((int) ($currentVersion[0]) >= 7) {
             return $jsonVersions[$currentVersion[0]]['releases'][$version] ?? [];
         }
         return $jsonVersions[$currentVersion[0] . '.' . $currentVersion[1]]['releases'][$version];
@@ -958,15 +916,12 @@ class Utility
     /**
      * Return an array with current branch infos
      *
-     * @param $jsonVersions
-     * @param $version
-     *
      * @return array
      */
     public static function getCurrentBranchInfos($jsonVersions, $version)
     {
         $currentVersion = explode('.', $version);
-        if ((int)($currentVersion[0]) >= 7) {
+        if ((int) ($currentVersion[0]) >= 7) {
             return @reset($jsonVersions[$currentVersion[0]]['releases']);
         }
         return @reset($jsonVersions[$currentVersion[0] . '.' . $currentVersion[1]]['releases']);
@@ -975,14 +930,12 @@ class Utility
     /**
      * Return an array with latest stable infos
      *
-     * @param $jsonVersions
-     *
      * @return array
      */
     public static function getLatestStableInfos($jsonVersions)
     {
         $currentVersion = explode('.', $jsonVersions['latest_stable']);
-        if ((int)($currentVersion[0]) >= 7) {
+        if ((int) ($currentVersion[0]) >= 7) {
             return $jsonVersions[$currentVersion[0]]['releases'][$jsonVersions['latest_stable']];
         }
         return $jsonVersions[$currentVersion[0] . '.' . $currentVersion[1]]['releases'][$jsonVersions['latest_stable']];
@@ -991,14 +944,12 @@ class Utility
     /**
      * Return an array with latest LTS infos
      *
-     * @param $jsonVersions
-     *
      * @return array
      */
     public static function getLatestLtsInfos($jsonVersions)
     {
         $currentVersion = explode('.', $jsonVersions['latest_lts']);
-        if ((int)($currentVersion[0]) >= 7) {
+        if ((int) ($currentVersion[0]) >= 7) {
             return $jsonVersions[$currentVersion[0]]['releases'][$jsonVersions['latest_lts']];
         }
         return $jsonVersions[$currentVersion[0] . '.' . $currentVersion[1]]['releases'][$jsonVersions['latest_lts']];
@@ -1013,7 +964,7 @@ class Utility
     {
         $displayMode = 0;
 
-        if (!empty($GLOBALS['BE_USER'])) {
+        if (! empty($GLOBALS['BE_USER'])) {
             // Check the display mode
             $display = self::_GP('display');
             if ($display !== null) {
@@ -1033,15 +984,12 @@ class Utility
             }
         }
 
-        return (int)$displayMode;
+        return (int) $displayMode;
     }
 
     /**
      * Download an extension content
      *
-     * @param $extension
-     * @param $version
-     * @param $extFile
      * @return array
      */
     public static function downloadT3x($extension, $version, $extFile = null)
@@ -1060,7 +1008,6 @@ class Utility
     /**
      * Extract a t3x file
      *
-     * @param $content
      * @return array
      */
     public static function extractExtensionDataFromT3x($content)
@@ -1087,12 +1034,11 @@ class Utility
      * Check if string given is hook
      *
      * @param string $hook
-     * @return bool
      */
     public static function isHook($hook): bool
     {
         $isHook = false;
-        if (!empty($hook)) {
+        if (! empty($hook)) {
             // if it's a key-path hook
             if (is_array($hook)) {
                 $isHook = self::isHook($hook[1]);
@@ -1101,24 +1047,24 @@ class Utility
             if (substr($hook, 0, 1) === '&') {
                 $hook = substr($hook, 1);
             }
-            //Check class exists
+            // Check class exists
             if (class_exists($hook)) {
                 $isHook = true;
             } elseif (strpos($hook, '\\') !== false && class_exists($hook)) {
                 $isHook = true;
             } elseif (strpos($hook, '.php') !== false) {
                 $hookArray = explode('.php', $hook);
-                if (!empty($hookArray) && is_array($hookArray)) {
+                if (! empty($hookArray) && is_array($hookArray)) {
                     $file = GeneralUtility::getFileAbsFileName($hookArray[0] . '.php');
                     if (file_exists($file)) {
                         $isHook = true;
                     }
                 }
             }
-            //Check if function is used
-            if (!$isHook && strpos($hook, '->') !== false) {
+            // Check if function is used
+            if (! $isHook && strpos($hook, '->') !== false) {
                 $hookArray = explode('->', $hook);
-                if (!empty($hookArray) && is_array($hookArray) && class_exists($hookArray[0])) {
+                if (! empty($hookArray) && is_array($hookArray) && class_exists($hookArray[0])) {
                     $isHook = true;
                 }
             }
@@ -1137,17 +1083,17 @@ class Utility
     {
         if (is_array($hookPotential)) {
             foreach ($hookPotential as $key => $value) {
-                //if array nested
+                // if array nested
                 if (is_array($value)) {
                     foreach ($value as $keySecond => $valueSecond) {
-                        //stop allowing array nested
+                        // stop allowing array nested
                         if (is_array($valueSecond)) {
                             unset($value[$keySecond]);
-                        } elseif (!self::isHook($valueSecond)) {
+                        } elseif (! self::isHook($valueSecond)) {
                             unset($value[$keySecond]);
                         }
                     }
-                } elseif (!self::isHook($value)) {
+                } elseif (! self::isHook($value)) {
                     $value = null;
                 }
 
@@ -1157,7 +1103,7 @@ class Utility
                     $hookPotential[$key] = $value;
                 }
             }
-        } elseif (!self::isHook($hookPotential)) {
+        } elseif (! self::isHook($hookPotential)) {
             $hookPotential = null;
         }
 
@@ -1169,7 +1115,7 @@ class Utility
      */
     public static function getLl(string $key): string
     {
-        return Utility::getLanguageService()->sL('LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:' . $key);
+        return self::getLanguageService()->sL('LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:' . $key);
     }
 
     /**
@@ -1245,7 +1191,8 @@ class Utility
     public static function sql_query($query)
     {
         $queryBuilder = self::getQueryBuilder();
-        return $queryBuilder->getConnection()->executeQuery($query);
+        return $queryBuilder->getConnection()
+            ->executeQuery($query);
     }
 
     /**
@@ -1263,13 +1210,13 @@ class Utility
     {
         // Table and fieldnames should be "SQL-injection-safe" when supplied to this function
         // Build basic query
-        $query = 'SELECT ' . $select_fields . ' FROM ' . $from_table . ((string)$where_clause !== '' ? ' WHERE ' . $where_clause : '');
+        $query = 'SELECT ' . $select_fields . ' FROM ' . $from_table . ((string) $where_clause !== '' ? ' WHERE ' . $where_clause : '');
         // Group by
-        $query .= (string)$groupBy !== '' ? ' GROUP BY ' . $groupBy : '';
+        $query .= (string) $groupBy !== '' ? ' GROUP BY ' . $groupBy : '';
         // Order by
-        $query .= (string)$orderBy !== '' ? ' ORDER BY ' . $orderBy : '';
+        $query .= (string) $orderBy !== '' ? ' ORDER BY ' . $orderBy : '';
         // Group by
-        $query .= (string)$limit !== '' ? ' LIMIT ' . $limit : '';
+        $query .= (string) $limit !== '' ? ' LIMIT ' . $limit : '';
         return $query;
     }
 
@@ -1286,11 +1233,11 @@ class Utility
     public static function getLanguageService(): LanguageService
     {
         // be
-        if (!empty($GLOBALS['LANG'])) {
+        if (! empty($GLOBALS['LANG'])) {
             return $GLOBALS['LANG'];
         }
         // fe
-        if (!empty($GLOBALS['TSFE'])) {
+        if (! empty($GLOBALS['TSFE'])) {
             return $GLOBALS['TSFE'];
         }
         $languageService = GeneralUtility::makeInstance(LanguageServiceFactory::class)->create($GLOBALS['BE_USER']->uc['lang'] ?? 'default');
@@ -1317,7 +1264,7 @@ class Utility
     {
         if (count($items) > 0) {
             try {
-                $itemsPerPage = (int)GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('additional_reports', 'itemsPerPage');
+                $itemsPerPage = (int) GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('additional_reports', 'itemsPerPage');
                 if ($itemsPerPage < 1) {
                     $itemsPerPage = 10;
                 }

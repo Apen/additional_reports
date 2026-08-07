@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sng\AdditionalReports\Reports;
 
 /*
@@ -48,9 +50,6 @@ class Status extends AbstractReport
         return $view->render('status-fluid');
     }
 
-    /**
-     * @param ViewInterface $view
-     */
     public function displayTypo3(ViewInterface $view)
     {
         // infos about typo3 versions
@@ -63,7 +62,7 @@ class Status extends AbstractReport
 
         $extensions = [];
         if (is_file(Utility::getPathSite() . '/typo3conf/PackageStates.php')) {
-            $packages = include(Utility::getPathSite() . '/typo3conf/PackageStates.php');
+            $packages = include Utility::getPathSite() . '/typo3conf/PackageStates.php';
             foreach ($packages['packages'] as $extensionKey => $package) {
                 $extensions[] = $extensionKey;
             }
@@ -152,7 +151,7 @@ class Status extends AbstractReport
     public function displayPhp(ViewInterface $view): void
     {
         $data = [];
-        $data['status_version'] = phpversion();
+        $data['status_version'] = PHP_VERSION;
         $data['memory_limit'] = ini_get('memory_limit');
         $data['max_execution_time'] = ini_get('max_execution_time');
         $data['post_max_size'] = ini_get('post_max_size');

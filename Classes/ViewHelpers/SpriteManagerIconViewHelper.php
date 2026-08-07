@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sng\AdditionalReports\ViewHelpers;
 
 /*
@@ -19,7 +21,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  */
 class SpriteManagerIconViewHelper extends AbstractViewHelper
 {
-
     /**
      * Plain HTML should be returned, no output escaping allowed
      *
@@ -28,7 +29,6 @@ class SpriteManagerIconViewHelper extends AbstractViewHelper
     protected $escapeOutput = false;
 
     /**
-     * Initialize arguments.
      */
     public function initializeArguments(): void
     {
@@ -46,6 +46,6 @@ class SpriteManagerIconViewHelper extends AbstractViewHelper
     {
         $iconFactory = GeneralUtility::makeInstance(IconFactory::class);
         $size = IconSize::tryFrom($this->arguments['size']) ?? IconSize::SMALL;
-        return $iconFactory->getIcon($this->arguments['iconName'], $size);
+        return (string) $iconFactory->getIcon($this->arguments['iconName'], $size);
     }
 }

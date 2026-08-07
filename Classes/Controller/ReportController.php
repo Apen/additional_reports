@@ -6,7 +6,6 @@ namespace Sng\AdditionalReports\Controller;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Sng\AdditionalReports\Utility;
 use Sng\AdditionalReports\Reports\CommandControllers;
 use Sng\AdditionalReports\Reports\Eid;
 use Sng\AdditionalReports\Reports\EventDispatcher;
@@ -18,6 +17,7 @@ use Sng\AdditionalReports\Reports\Plugins;
 use Sng\AdditionalReports\Reports\Status;
 use Sng\AdditionalReports\Reports\WebsiteConf;
 use Sng\AdditionalReports\Reports\Xclass;
+use Sng\AdditionalReports\Utility;
 use TYPO3\CMS\Backend\Attribute\AsController;
 use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -27,8 +27,7 @@ final readonly class ReportController
 {
     public function __construct(
         private ModuleTemplateFactory $moduleTemplateFactory,
-    ) {
-    }
+    ) {}
 
     public function eid(ServerRequestInterface $request): ResponseInterface
     {

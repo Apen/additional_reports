@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 return [
     'additionalreports_eid' => [
         'provider' => \TYPO3\CMS\Core\Imaging\IconProvider\BitmapIconProvider::class,

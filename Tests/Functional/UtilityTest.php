@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sng\AdditionalReports\Tests\Functional;
 
 use Sng\AdditionalReports\Utility;
@@ -10,6 +12,7 @@ use TYPO3\CMS\Core\Configuration\SiteConfiguration;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
+use TYPO3\CMS\Core\Http\NormalizedParams;
 use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\CMS\Core\Http\Uri;
 use TYPO3\CMS\Core\Information\Typo3Version;
@@ -37,7 +40,7 @@ class UtilityTest extends FunctionalTestCase
                         'options' => [
                             'defaultLifetime' => 0,
                         ],
-                        'groups' => ['system']
+                        'groups' => ['system'],
                     ],
                     'l10n' => [
                         'frontend' => VariableFrontend::class,
@@ -45,11 +48,11 @@ class UtilityTest extends FunctionalTestCase
                         'options' => [
                             'defaultLifetime' => 0,
                         ],
-                        'groups' => ['system']
+                        'groups' => ['system'],
                     ],
-                ]
-            ]
-        ]
+                ],
+            ],
+        ],
     ];
 
     protected function setUp(): void
@@ -59,9 +62,24 @@ class UtilityTest extends FunctionalTestCase
         $this->setUpBackendUser(1);
         $GLOBALS['LANG'] = GeneralUtility::makeInstance(LanguageServiceFactory::class)->createFromUserPreferences($GLOBALS['BE_USER']);
         $this->importCSVDataSet(__DIR__ . '/Fixtures/pages.csv');
-        $this->importCSVDataSet(__DIR__ . '/Fixtures/tt_content.csv');
+        $fixture = GeneralUtility::makeInstance(Typo3Version::class)->getMajorVersion() >= 14
+            ? '/Fixtures/tt_content_v14.csv'
+            : '/Fixtures/tt_content.csv';
+        $this->importCSVDataSet(__DIR__ . $fixture);
         $uri = new Uri('https://localhost/typo3/');
-        $request = new ServerRequest($uri);
+        $request = new ServerRequest($uri, 'GET', null, [], [
+            'DOCUMENT_ROOT' => Environment::getPublicPath(),
+            'HTTP_HOST' => 'localhost',
+            'REQUEST_URI' => '/typo3/',
+            'SCRIPT_NAME' => '/typo3/index.php',
+            'SERVER_PORT' => '443',
+            'HTTPS' => 'on',
+        ]);
+        $request = $request
+            ->withQueryParams([
+                'report' => 'logerrors',
+            ])
+            ->withAttribute('normalizedParams', NormalizedParams::createFromRequest($request));
         $request = $request->withAttribute('applicationType', SystemEnvironmentBuilder::REQUESTTYPE_BE);
         $GLOBALS['TYPO3_REQUEST'] = $request;
     }
@@ -70,7 +88,7 @@ class UtilityTest extends FunctionalTestCase
     {
         $extLits = Utility::getInstExtList(Environment::getPublicPath() . '/typo3/sysext/');
         self::assertNotEmpty($extLits);
-        self::assertEquals('core', $extLits['dev']['core']['extkey']);
+        self::assertEquals('additional_reports', $extLits['dev']['additional_reports']['extkey']);
     }
 
     public function testGetExtensionType()
@@ -95,31 +113,37 @@ class UtilityTest extends FunctionalTestCase
 
     public function testGetJsonVersionInfos()
     {
+        if (getenv('RUN_NETWORK_TESTS') !== '1') {
+            self::markTestSkipped('Set RUN_NETWORK_TESTS=1 to run TYPO3 API integration tests.');
+        }
         self::assertNotEmpty(Utility::getJsonVersionInfos());
     }
 
     public function testGetCurrentVersionInfos()
     {
-        self::assertNotEmpty(Utility::getCurrentVersionInfos(Utility::getJsonVersionInfos(), GeneralUtility::makeInstance(Typo3Version::class)->getVersion()));
+        self::assertNotEmpty(Utility::getCurrentVersionInfos(self::versionInformationFixture(), '14.3.5'));
     }
 
     public function testGetCurrentBranchInfos()
     {
-        self::assertNotEmpty(Utility::getCurrentBranchInfos(Utility::getJsonVersionInfos(), GeneralUtility::makeInstance(Typo3Version::class)->getVersion()));
+        self::assertNotEmpty(Utility::getCurrentBranchInfos(self::versionInformationFixture(), '14.3.5'));
     }
 
     public function testGetLatestStableInfos()
     {
-        self::assertNotEmpty(Utility::getLatestStableInfos(Utility::getJsonVersionInfos()));
+        self::assertNotEmpty(Utility::getLatestStableInfos(self::versionInformationFixture()));
     }
 
     public function testGetLatestLtsInfos()
     {
-        self::assertNotEmpty(Utility::getLatestLtsInfos(Utility::getJsonVersionInfos()));
+        self::assertNotEmpty(Utility::getLatestLtsInfos(self::versionInformationFixture()));
     }
 
     public function testDownloadT3x()
     {
+        if (getenv('RUN_NETWORK_TESTS') !== '1') {
+            self::markTestSkipped('Set RUN_NETWORK_TESTS=1 to run TER integration tests.');
+        }
         self::assertNotEmpty(Utility::downloadT3x('additional_reports', '3.3.2'));
     }
 
@@ -138,6 +162,8 @@ class UtilityTest extends FunctionalTestCase
         if (self::isNotSqlite()) {
             self::assertEquals(0, Utility::getCountPagesUids($this->pagesListProvider(), 'hidden=1'));
             self::assertEquals(1, Utility::getCountPagesUids($this->pagesListProvider(), 'no_search=1'));
+        } else {
+            self::markTestSkipped('This query is MySQL-specific.');
         }
     }
 
@@ -205,6 +231,9 @@ class UtilityTest extends FunctionalTestCase
 
     public function testGetMySqlCacheInformations()
     {
+        if (! self::isNotSqlite()) {
+            self::markTestSkipped('MySQL-specific report.');
+        }
         if (self::isNotSqlite()) {
             self::assertNotEmpty(Utility::getMySqlCacheInformations());
         }
@@ -212,6 +241,9 @@ class UtilityTest extends FunctionalTestCase
 
     public function testGetMySqlCharacterSet()
     {
+        if (! self::isNotSqlite()) {
+            self::markTestSkipped('MySQL-specific report.');
+        }
         if (self::isNotSqlite()) {
             self::assertNotEmpty(Utility::getMySqlCharacterSet());
         }
@@ -262,12 +294,16 @@ class UtilityTest extends FunctionalTestCase
         self::assertNotEmpty(Utility::getSubModules());
     }
 
-    public function testExec_SELECT_queryArray()
+    public function testExecSELECTQueryArray()
     {
-        self::assertNotEmpty(Utility::exec_SELECT_queryArray(['SELECT' => '*', 'FROM' => 'pages', 'WHERE' => '']));
+        self::assertNotEmpty(Utility::exec_SELECT_queryArray([
+            'SELECT' => '*',
+            'FROM' => 'pages',
+            'WHERE' => '',
+        ]));
     }
 
-    public function testExec_SELECTgetRows()
+    public function testExecSELECTgetRows()
     {
         self::assertNotEmpty(Utility::exec_SELECTgetRows(' * ', 'pages', ''));
     }
@@ -282,31 +318,47 @@ class UtilityTest extends FunctionalTestCase
         return $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['driver'] !== 'pdo_sqlite';
     }
 
-    /**
-     * @param string $identifier
-     * @param array $site
-     * @param array $languages
-     * @param array $errorHandling
-     */
+    private static function versionInformationFixture(): array
+    {
+        return [
+            'latest_stable' => '14.3.5',
+            'latest_lts' => '13.4.20',
+            14 => [
+                'releases' => [
+                    '14.3.5' => [
+                        'version' => '14.3.5',
+                    ],
+                ],
+            ],
+            13 => [
+                'releases' => [
+                    '13.4.20' => [
+                        'version' => '13.4.20',
+                    ],
+                ],
+            ],
+        ];
+    }
+
     protected function writeSiteConfiguration(
         string $identifier,
-        array  $site = [],
-        array  $languages = [],
-        array  $errorHandling = []
-    )
-    {
+        array $site = [],
+        array $languages = [],
+        array $errorHandling = []
+    ) {
         $configuration = $site;
-        if (!empty($languages)) {
+        if (! empty($languages)) {
             $configuration['languages'] = $languages;
         }
-        if (!empty($errorHandling)) {
+        if (! empty($errorHandling)) {
             $configuration['errorHandling'] = $errorHandling;
         }
 
         if (GeneralUtility::makeInstance(Typo3Version::class)->getBranch() === '12.4') {
             $siteConfiguration = new SiteConfiguration(
                 $this->instancePath . '/typo3conf/sites/',
-                $this->getContainer()->get(EventDispatcher::class)
+                $this->getContainer()
+                    ->get(EventDispatcher::class)
             );
             try {
                 // ensure no previous site configuration influences the test
@@ -322,7 +374,8 @@ class UtilityTest extends FunctionalTestCase
                 $siteWriter = GeneralUtility::makeInstance(
                     \TYPO3\CMS\Core\Configuration\SiteWriter::class,
                     $this->instancePath . '/typo3conf/sites/',
-                    $this->getContainer()->get(EventDispatcher::class),
+                    $this->getContainer()
+                        ->get(EventDispatcher::class),
                     GeneralUtility::makeInstance(YamlFileLoader::class)
                 );
                 $siteWriter->write($identifier, $configuration);

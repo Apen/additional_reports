@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sng\AdditionalReports\ViewHelpers;
 
 /*
@@ -23,7 +25,7 @@ class ContentInfosViewHelper extends AbstractViewHelper
     /**
      * Disable escaping of tag based ViewHelpers so that the rendered tag is not htmlspecialchar'd
      *
-     * @var boolean
+     * @var bool
      */
     protected $escapeOutput = false;
 
@@ -71,9 +73,6 @@ class ContentInfosViewHelper extends AbstractViewHelper
 
     /**
      * Return informations about a ctype or plugin
-     *
-     * @param array $itemValue
-     * @return array
      */
     public function getContentInfos(array $itemValue): array
     {
@@ -92,16 +91,36 @@ class ContentInfosViewHelper extends AbstractViewHelper
         $markersExt['usedtv'] = '';
         $markersExt['usedtvclass'] = '';
 
-        $linkAtt = ['href' => '#', 'title' => Utility::getLl('switch'), 'onclick' => Utility::goToModuleList($itemValue['pid']), 'class' => 'btn btn-default'];
+        $linkAtt = [
+            'href' => '#',
+            'title' => Utility::getLl('switch'),
+            'onclick' => Utility::goToModuleList($itemValue['pid']),
+            'class' => 'btn btn-default',
+        ];
         $markersExt['db'] = Utility::generateLink($linkAtt, Utility::getIconWebList());
 
-        $linkAtt = ['href' => Utility::goToModuleList($itemValue['pid'], true), 'target' => '_blank', 'title' => Utility::getLl('newwindow'), 'class' => 'btn btn-default'];
+        $linkAtt = [
+            'href' => Utility::goToModuleList($itemValue['pid'], true),
+            'target' => '_blank',
+            'title' => Utility::getLl('newwindow'),
+            'class' => 'btn btn-default',
+        ];
         $markersExt['db'] .= Utility::generateLink($linkAtt, Utility::getIconWebList());
 
-        $linkAtt = ['href' => '#', 'title' => Utility::getLl('switch'), 'onclick' => Utility::goToModulePage($itemValue['pid']), 'class' => 'btn btn-default'];
+        $linkAtt = [
+            'href' => '#',
+            'title' => Utility::getLl('switch'),
+            'onclick' => Utility::goToModulePage($itemValue['pid']),
+            'class' => 'btn btn-default',
+        ];
         $markersExt['page'] = Utility::generateLink($linkAtt, Utility::getIconWebPage());
 
-        $linkAtt = ['href' => Utility::goToModulePage($itemValue['pid'], true), 'target' => '_blank', 'title' => Utility::getLl('newwindow'), 'class' => 'btn btn-default'];
+        $linkAtt = [
+            'href' => Utility::goToModulePage($itemValue['pid'], true),
+            'target' => '_blank',
+            'title' => Utility::getLl('newwindow'),
+            'class' => 'btn btn-default',
+        ];
         $markersExt['page'] .= Utility::generateLink($linkAtt, Utility::getIconWebPage());
 
         $markersExt['preview'] = '/index.php?id=' . $itemValue['pid'];

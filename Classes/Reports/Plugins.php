@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sng\AdditionalReports\Reports;
 
 /*
@@ -11,7 +13,6 @@ namespace Sng\AdditionalReports\Reports;
 
 use Sng\AdditionalReports\Utility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
-use TYPO3\CMS\Reports\ReportInterface;
 
 class Plugins extends AbstractReport
 {
@@ -46,7 +47,7 @@ class Plugins extends AbstractReport
         $view->assign('checkedpluginsmode7', (Utility::getPluginsDisplayMode() === 7) ? ' checked="checked"' : '');
         $view->assign('filtersCatParam', Utility::_GP('filtersCat'));
 
-        $currentPage = (int)(Utility::_GP('currentPage') ?? 1);
+        $currentPage = (int) (Utility::_GP('currentPage') ?? 1);
 
         switch (Utility::getPluginsDisplayMode()) {
             case 3:
@@ -149,7 +150,7 @@ class Plugins extends AbstractReport
         $getFiltersCat = Utility::_GP('filtersCat');
         $addHidden = ($displayHidden) ? '' : ' AND tt_content.hidden=0 AND pages.hidden=0 ';
         $field = Utility::hasLegacyListType() ? 'list_type' : 'CType';
-        $addWhere = ($getFiltersCat !== null && $getFiltersCat != 'all') ? " AND tt_content.$field='" . $getFiltersCat . "'" : '';
+        $addWhere = ($getFiltersCat !== null && $getFiltersCat != 'all') ? " AND tt_content.{$field}='" . $getFiltersCat . "'" : '';
         return Utility::getAllPlugins($addHidden . $addWhere, '');
     }
 

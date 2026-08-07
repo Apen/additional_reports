@@ -1,0 +1,13 @@
+filePatterns:
+  - "*.typoscript"
+  - "*.ts"
+
+sniffs:
+  - class: Indentation
+    parameters:
+      indentConditions: true
+      indentPerLevel: 2
+  - class: RepeatingRValue
+    disabled: true
+  - class: DeadCode
+    disabled: false

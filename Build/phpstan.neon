@@ -1,11 +1,20 @@
+includes:
+  - phpstan-baseline.neon
+
 parameters:
-  level: 4
-  reportUnmatchedIgnoredErrors: false
+  phpVersion: 80200
+  level: 8
   paths:
-    - ../Classes/
+    - ../Classes
   excludePaths:
-    - ../Build/*
-    - ../.Build/*
-  ignoreErrors:
-    - "#Undefined variable: \\$_EXTKEY#"
-    - "#Constant .*? not found.#"
+    analyse:
+      - ../.Build/*
+  reportUnmatchedIgnoredErrors: true
+  treatPhpDocTypesAsCertain: false
+  type_coverage:
+    return: 100
+    param: 100
+    property: 95
+  cognitive_complexity:
+    class: 35
+    function: 20

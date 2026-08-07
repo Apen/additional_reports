@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sng\AdditionalReports\Reports;
 
 /*
@@ -17,9 +19,7 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use TYPO3\CMS\Core\DependencyInjection\ServiceProviderCompilationPass;
 use TYPO3\CMS\Core\DependencyInjection\ServiceProviderRegistry;
 use TYPO3\CMS\Core\Package\PackageManager;
-use TYPO3\CMS\Core\Service\DependencyOrderingService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Reports\ReportInterface;
 
 class EventDispatcher extends AbstractReport
 {
@@ -69,12 +69,12 @@ class EventDispatcher extends AbstractReport
         $events = [];
         foreach ($containerBuilder->getDefinitions() as $className => $definition) {
             $tags = $definition->getTags();
-            if (!empty($tags)) {
+            if (! empty($tags)) {
                 foreach ($tags as $tagType => $tag) {
                     if ($tagType === 'event.listener') {
                         $events[] = [
                             'className' => $className,
-                            'list' => Utility::viewArray($tag)
+                            'list' => Utility::viewArray($tag),
                         ];
                     }
                 }

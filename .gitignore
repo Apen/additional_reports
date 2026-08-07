@@ -1,4 +1,9 @@
 .idea/
+.Build/
+var/
+
 composer.lock
+
+Build/.phpunit.cache/
 Build/.phpunit.result.cache
 Build/coverage/

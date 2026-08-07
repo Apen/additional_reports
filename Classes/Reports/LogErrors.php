@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sng\AdditionalReports\Reports;
 
 /*
@@ -11,7 +13,6 @@ namespace Sng\AdditionalReports\Reports;
 
 use Sng\AdditionalReports\Utility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Reports\ReportInterface;
 
 class LogErrors extends AbstractReport
 {
@@ -57,7 +58,7 @@ class LogErrors extends AbstractReport
         $view->assign('baseUrl', Utility::getBaseUrl());
         $view->assign('requestDir', GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR'));
 
-        Utility::buildPagination(Utility::exec_SELECT_queryArrayRows($query), (int)(Utility::_GP('currentPage') ?? 1), $view);
+        Utility::buildPagination(Utility::exec_SELECT_queryArrayRows($query), (int) (Utility::_GP('currentPage') ?? 1), $view);
 
         return $content . $view->render('logerrors-fluid');
     }

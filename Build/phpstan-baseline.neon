@@ -1,0 +1,757 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Call to an undefined method object\:\:getReport\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: ../Classes/Controller/ReportController.php
+
+		-
+			message: '#^Call to an undefined method object\:\:getTitle\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: ../Classes/Controller/ReportController.php
+
+		-
+			message: '#^Access to an undefined property TYPO3\\CMS\\Core\\Utility\\DiffUtility\:\:\$stripTags\.$#'
+			identifier: property.notFound
+			count: 1
+			path: ../Classes/Eid/CallAjax.php
+
+		-
+			message: '#^Call to an undefined method TYPO3\\CMS\\Core\\Utility\\DiffUtility\:\:makeDiffDisplay\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: ../Classes/Eid/CallAjax.php
+
+		-
+			message: '#^Out of 117 possible param types, only 44 \- 37\.6 %% actually have it\. Add more param types to get over 100 %%$#'
+			identifier: typeCoverage.paramTypeCoverage
+			count: 3
+			path: ../Classes/Eid/CallAjax.php
+
+		-
+			message: '#^Out of 184 possible return types, only 137 \- 74\.4 %% actually have it\. Add more return types to get over 100 %%$#'
+			identifier: typeCoverage.returnTypeCoverage
+			count: 2
+			path: ../Classes/Eid/CallAjax.php
+
+		-
+			message: '#^Parameter \#1 \$file1 of method Sng\\AdditionalReports\\Eid\\CallAjax\:\:t3Diff\(\) expects string, string\|false given\.$#'
+			identifier: argument.type
+			count: 2
+			path: ../Classes/Eid/CallAjax.php
+
+		-
+			message: '#^Parameter \#1 \$haystack of function strstr expects string, string\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../Classes/Eid/CallAjax.php
+
+		-
+			message: '#^Parameter \#1 \$string of function md5 expects string, string\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../Classes/Eid/CallAjax.php
+
+		-
+			message: '#^Parameter \#1 \$url of static method TYPO3\\CMS\\Core\\Utility\\GeneralUtility\:\:getUrl\(\) expects string, string\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../Classes/Eid/CallAjax.php
+
+		-
+			message: '#^Parameter \#2 \$file2 of method Sng\\AdditionalReports\\Eid\\CallAjax\:\:t3Diff\(\) expects string, array given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../Classes/Eid/CallAjax.php
+
+		-
+			message: '#^Parameter \#2 \$needle of function strstr expects string, string\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../Classes/Eid/CallAjax.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Pagination\\SimplePagination\:\:getPages\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: ../Classes/Pagination/SimplePagination.php
+
+		-
+			message: '#^Out of 8 possible property types, only 2 \- 25\.0 %% actually have it\. Add more property types to get over 95 %%$#'
+			identifier: typeCoverage.propertyTypeCoverage
+			count: 5
+			path: ../Classes/Pagination/SimplePagination.php
+
+		-
+			message: '#^Property Sng\\AdditionalReports\\Pagination\\SimplePagination\:\:\$pages type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: ../Classes/Pagination/SimplePagination.php
+
+		-
+			message: '#^Offset 1 might not exist on array\{\}\|array\{non\-falsy\-string, string\}\.$#'
+			identifier: offsetAccess.notFound
+			count: 2
+			path: ../Classes/Reports/Eid.php
+
+		-
+			message: '#^Out of 184 possible return types, only 137 \- 74\.4 %% actually have it\. Add more return types to get over 100 %%$#'
+			identifier: typeCoverage.returnTypeCoverage
+			count: 1
+			path: ../Classes/Reports/Eid.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Reports\\EventDispatcher\:\:getAllEvents\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: ../Classes/Reports/EventDispatcher.php
+
+		-
+			message: '#^Out of 184 possible return types, only 137 \- 74\.4 %% actually have it\. Add more return types to get over 100 %%$#'
+			identifier: typeCoverage.returnTypeCoverage
+			count: 2
+			path: ../Classes/Reports/EventDispatcher.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Reports\\Extensions\:\:getExtensionInformations\(\) has parameter \$itemValue with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: ../Classes/Reports/Extensions.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Reports\\Extensions\:\:getExtensionInformations\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: ../Classes/Reports/Extensions.php
+
+		-
+			message: '#^Out of 117 possible param types, only 44 \- 37\.6 %% actually have it\. Add more param types to get over 100 %%$#'
+			identifier: typeCoverage.paramTypeCoverage
+			count: 1
+			path: ../Classes/Reports/Extensions.php
+
+		-
+			message: '#^Out of 184 possible return types, only 137 \- 74\.4 %% actually have it\. Add more return types to get over 100 %%$#'
+			identifier: typeCoverage.returnTypeCoverage
+			count: 2
+			path: ../Classes/Reports/Extensions.php
+
+		-
+			message: '#^Cognitive complexity for "Sng\\AdditionalReports\\Reports\\Hooks\:\:display\(\)" is 25, keep it under 20$#'
+			identifier: complexity.functionLike
+			count: 1
+			path: ../Classes/Reports/Hooks.php
+
+		-
+			message: '#^Out of 184 possible return types, only 137 \- 74\.4 %% actually have it\. Add more return types to get over 100 %%$#'
+			identifier: typeCoverage.returnTypeCoverage
+			count: 1
+			path: ../Classes/Reports/Hooks.php
+
+		-
+			message: '#^Out of 184 possible return types, only 137 \- 74\.4 %% actually have it\. Add more return types to get over 100 %%$#'
+			identifier: typeCoverage.returnTypeCoverage
+			count: 1
+			path: ../Classes/Reports/LogErrors.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Reports\\Middlewares\:\:filterAllMiddlewares\(\) has parameter \$allMiddlewares with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: ../Classes/Reports/Middlewares.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Reports\\Middlewares\:\:filterAllMiddlewares\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: ../Classes/Reports/Middlewares.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Reports\\Middlewares\:\:getAllMiddlewares\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: ../Classes/Reports/Middlewares.php
+
+		-
+			message: '#^Out of 184 possible return types, only 137 \- 74\.4 %% actually have it\. Add more return types to get over 100 %%$#'
+			identifier: typeCoverage.returnTypeCoverage
+			count: 1
+			path: ../Classes/Reports/Middlewares.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Reports\\Plugins\:\:getAllUsedCtypes\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: ../Classes/Reports/Plugins.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Reports\\Plugins\:\:getAllUsedPlugins\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: ../Classes/Reports/Plugins.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Reports\\Plugins\:\:getSummary\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: ../Classes/Reports/Plugins.php
+
+		-
+			message: '#^Out of 184 possible return types, only 137 \- 74\.4 %% actually have it\. Add more return types to get over 100 %%$#'
+			identifier: typeCoverage.returnTypeCoverage
+			count: 2
+			path: ../Classes/Reports/Plugins.php
+
+		-
+			message: '#^Cannot access offset ''gid'' on array\{name\: string, passwd\: string, gid\: int, members\: list\<string\>\}\|false\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: ../Classes/Reports/Status.php
+
+		-
+			message: '#^Cannot access offset ''gid'' on array\{name\: string, passwd\: string, uid\: int, gid\: int, gecos\: string, dir\: string, shell\: string\}\|false\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: ../Classes/Reports/Status.php
+
+		-
+			message: '#^Cannot access offset ''name'' on array\{name\: string, passwd\: string, gid\: int, members\: list\<string\>\}\|false\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: ../Classes/Reports/Status.php
+
+		-
+			message: '#^Cannot access offset ''name'' on array\{name\: string, passwd\: string, uid\: int, gid\: int, gecos\: string, dir\: string, shell\: string\}\|false\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: ../Classes/Reports/Status.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Reports\\Status\:\:displayCronTab\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: ../Classes/Reports/Status.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Reports\\Status\:\:displayEnv\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: ../Classes/Reports/Status.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Reports\\Status\:\:displayMySql\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: ../Classes/Reports/Status.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Reports\\Status\:\:displayTypo3\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: ../Classes/Reports/Status.php
+
+		-
+			message: '#^Out of 184 possible return types, only 137 \- 74\.4 %% actually have it\. Add more return types to get over 100 %%$#'
+			identifier: typeCoverage.returnTypeCoverage
+			count: 5
+			path: ../Classes/Reports/Status.php
+
+		-
+			message: '#^Variable \$package in PHPDoc tag @var does not match assigned variable \$activePackages\.$#'
+			identifier: varTag.differentVariable
+			count: 1
+			path: ../Classes/Reports/Status.php
+
+		-
+			message: '#^Out of 184 possible return types, only 137 \- 74\.4 %% actually have it\. Add more return types to get over 100 %%$#'
+			identifier: typeCoverage.returnTypeCoverage
+			count: 1
+			path: ../Classes/Reports/WebsiteConf.php
+
+		-
+			message: '#^Out of 184 possible return types, only 137 \- 74\.4 %% actually have it\. Add more return types to get over 100 %%$#'
+			identifier: typeCoverage.returnTypeCoverage
+			count: 1
+			path: ../Classes/Reports/Xclass.php
+
+		-
+			message: '#^Call to an undefined method Doctrine\\DBAL\\Driver\\Statement\:\:fetchAllAssociative\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Call to an undefined method Doctrine\\DBAL\\Driver\\Statement\:\:fetchAssociative\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Call to an undefined method Doctrine\\DBAL\\Driver\\Statement\:\:rowCount\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Call to function is_array\(\) with non\-empty\-list\<string\> will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 2
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Call to method fetchAssociative\(\) on an unknown class Doctrine\\DBAL\\Driver\\ResultStatement\.$#'
+			identifier: class.notFound
+			count: 3
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Class cognitive complexity is 248, keep it under 35$#'
+			identifier: complexity.classLike
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Cognitive complexity for "Sng\\AdditionalReports\\Utility\:\:getContentInfosFromTca\(\)" is 29, keep it under 20$#'
+			identifier: complexity.functionLike
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Cognitive complexity for "Sng\\AdditionalReports\\Utility\:\:getInstExtList\(\)" is 58, keep it under 20$#'
+			identifier: complexity.functionLike
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Cognitive complexity for "Sng\\AdditionalReports\\Utility\:\:isHook\(\)" is 23, keep it under 20$#'
+			identifier: complexity.functionLike
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Cognitive complexity for "Sng\\AdditionalReports\\Utility\:\:viewArray\(\)" is 24, keep it under 20$#'
+			identifier: complexity.functionLike
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Constant TYPO3_mainDir not found\.$#'
+			identifier: constant.notFound
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Utility\:\:_GET\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Utility\:\:_GP\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Utility\:\:buildPagination\(\) has parameter \$items with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Utility\:\:buildPagination\(\) has parameter \$view with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Utility\:\:checkExtensionUpdate\(\) has parameter \$extInfo with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Utility\:\:checkExtensionUpdate\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Utility\:\:checkExtensionUpdate\(\) should return array but returns null\.$#'
+			identifier: return.type
+			count: 2
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Utility\:\:downloadT3x\(\) has parameter \$extFile with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Utility\:\:downloadT3x\(\) has parameter \$extension with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Utility\:\:downloadT3x\(\) has parameter \$version with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Utility\:\:downloadT3x\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Utility\:\:exec_SELECT_queryArray\(\) has parameter \$queryParts with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Utility\:\:exec_SELECT_queryArrayRows\(\) has parameter \$queryParts with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Utility\:\:exec_SELECT_queryArrayRows\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Utility\:\:exec_SELECTgetRows\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Utility\:\:exec_SELECTquery\(\) should return Doctrine\\DBAL\\Driver\\Statement but returns Doctrine\\DBAL\\Driver\\ResultStatement\.$#'
+			identifier: return.type
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Utility\:\:extractExtensionDataFromT3x\(\) has parameter \$content with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Utility\:\:extractExtensionDataFromT3x\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Utility\:\:generateLink\(\) has parameter \$att with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Utility\:\:getAllCtypes\(\) has parameter \$returnQuery with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Utility\:\:getAllCtypes\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Utility\:\:getAllDifferentCtypes\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Utility\:\:getAllDifferentPlugins\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Utility\:\:getAllPlugins\(\) has parameter \$returnQuery with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Utility\:\:getAllPlugins\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Utility\:\:getContentInfosFromTca\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Utility\:\:getContentInfosFromTca\(\) has parameter \$type with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Utility\:\:getContentInfosFromTca\(\) has parameter \$value with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Utility\:\:getContentTypeIcon\(\) should return string but returns string\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Utility\:\:getCurrentBranchInfos\(\) has parameter \$jsonVersions with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Utility\:\:getCurrentBranchInfos\(\) has parameter \$version with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Utility\:\:getCurrentBranchInfos\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Utility\:\:getCurrentVersionInfos\(\) has parameter \$jsonVersions with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Utility\:\:getCurrentVersionInfos\(\) has parameter \$version with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Utility\:\:getCurrentVersionInfos\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Utility\:\:getExtensionType\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Utility\:\:getHook\(\) has parameter \$hookPotential with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Utility\:\:getHook\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Utility\:\:getHook\(\) should return array\|null but returns array\|string\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Utility\:\:getInstExtList\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Utility\:\:getJsonVersionInfos\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Utility\:\:getLatestLtsInfos\(\) has parameter \$jsonVersions with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Utility\:\:getLatestLtsInfos\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Utility\:\:getLatestStableInfos\(\) has parameter \$jsonVersions with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Utility\:\:getLatestStableInfos\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Utility\:\:getReportsList\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Utility\:\:getRootLine\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Utility\:\:getSubModules\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Utility\:\:getTreeList\(\) should return string but returns int\|string\.$#'
+			identifier: return.type
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Utility\:\:includeEMCONF\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Utility\:\:sql_query\(\) has invalid return type Doctrine\\DBAL\\Driver\\ResultStatement\.$#'
+			identifier: class.notFound
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Utility\:\:sql_query\(\) should return Doctrine\\DBAL\\Driver\\ResultStatement but returns Doctrine\\DBAL\\Result\.$#'
+			identifier: return.type
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\Utility\:\:viewArray\(\) has parameter \$arrayIn with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Offset non\-falsy\-string on array\{\} on left side of \?\? does not exist\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Offset string does not exist on null\.$#'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Out of 117 possible param types, only 44 \- 37\.6 %% actually have it\. Add more param types to get over 100 %%$#'
+			identifier: typeCoverage.paramTypeCoverage
+			count: 69
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Out of 184 possible return types, only 137 \- 74\.4 %% actually have it\. Add more return types to get over 100 %%$#'
+			identifier: typeCoverage.returnTypeCoverage
+			count: 28
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Parameter \#1 \$data of function unserialize expects string, string\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Parameter \#1 \$json of function json_decode expects string, string\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Parameter \#1 \$string of function md5 expects string, string\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Right side of && is always false\.$#'
+			identifier: booleanAnd.rightAlwaysFalse
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Variable \$package in PHPDoc tag @var does not exist\.$#'
+			identifier: varTag.variableNotFound
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Variable \$package in PHPDoc tag @var does not match assigned variable \$activePackages\.$#'
+			identifier: varTag.differentVariable
+			count: 1
+			path: ../Classes/Utility.php
+
+		-
+			message: '#^Cannot call method add\(\) on TYPO3Fluid\\Fluid\\Core\\Variables\\VariableProviderInterface\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: ../Classes/ViewHelpers/ContentInfosViewHelper.php
+
+		-
+			message: '#^Cannot call method exists\(\) on TYPO3Fluid\\Fluid\\Core\\Variables\\VariableProviderInterface\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: ../Classes/ViewHelpers/ContentInfosViewHelper.php
+
+		-
+			message: '#^Cannot call method remove\(\) on TYPO3Fluid\\Fluid\\Core\\Variables\\VariableProviderInterface\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: ../Classes/ViewHelpers/ContentInfosViewHelper.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\ViewHelpers\\ContentInfosViewHelper\:\:getContentInfos\(\) has parameter \$itemValue with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: ../Classes/ViewHelpers/ContentInfosViewHelper.php
+
+		-
+			message: '#^Method Sng\\AdditionalReports\\ViewHelpers\\ContentInfosViewHelper\:\:getContentInfos\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: ../Classes/ViewHelpers/ContentInfosViewHelper.php
+
+		-
+			message: '#^Out of 8 possible property types, only 2 \- 25\.0 %% actually have it\. Add more property types to get over 95 %%$#'
+			identifier: typeCoverage.propertyTypeCoverage
+			count: 1
+			path: ../Classes/ViewHelpers/RawViewHelper.php

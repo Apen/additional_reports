@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sng\AdditionalReports\Reports;
 
 /*
@@ -25,14 +27,14 @@ trait AbstractReportImplementation
     /**
      * Back-reference to the calling reports module
      *
-     * @var object $reportObject
+     * @var object
      */
-    protected $reportObject;
+    protected ?object $reportObject;
 
     /**
-     * @param object Back-reference to the calling reports module
+     * @param object $reportObject Back-reference to the calling reports module
      */
-    public function __construct($reportObject = null)
+    public function __construct(?object $reportObject = null)
     {
         $this->reportObject = $reportObject;
         $this->setCss('EXT:additional_reports/Resources/Public/Css/tx_additionalreports.css');
@@ -42,7 +44,8 @@ trait AbstractReportImplementation
     public function setCss(string $path): void
     {
         if (isset($this->reportObject->doc)) {
-            $this->reportObject->doc->getPageRenderer()->addCssFile($path);
+            $this->reportObject->doc->getPageRenderer()
+                ->addCssFile($path);
         }
         $pageRenderer = GeneralUtility::makeInstance(PageRenderer::class);
         $pageRenderer->addCssFile($path);
@@ -51,7 +54,8 @@ trait AbstractReportImplementation
     public function setJs(string $path): void
     {
         if (isset($this->reportObject->doc)) {
-            $this->reportObject->doc->getPageRenderer()->addJsFile($path);
+            $this->reportObject->doc->getPageRenderer()
+                ->addJsFile($path);
         }
         $pageRenderer = GeneralUtility::makeInstance(PageRenderer::class);
         $pageRenderer->addJsFile($path);

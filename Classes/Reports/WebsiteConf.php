@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sng\AdditionalReports\Reports;
 
 /*
@@ -9,10 +11,7 @@ namespace Sng\AdditionalReports\Reports;
  * LICENSE.txt file that was distributed with this source code.
  */
 
-use Psr\Http\Message\ServerRequestInterface;
 use Sng\AdditionalReports\Utility;
-use TYPO3\CMS\Core\TypoScript\ExtendedTemplateService;
-use TYPO3\CMS\Reports\ReportInterface;
 
 class WebsiteConf extends AbstractReport
 {
@@ -45,7 +44,7 @@ class WebsiteConf extends AbstractReport
 
         $websiteconf = [];
 
-        if (!empty($items)) {
+        if (! empty($items)) {
             foreach ($items as $itemValue) {
                 $websiteconfItem = [];
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sng\AdditionalReports\Reports;
 
 /*
@@ -11,7 +13,6 @@ namespace Sng\AdditionalReports\Reports;
 
 use TYPO3\CMS\Core\Console\CommandRegistry;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Reports\ReportInterface;
 
 class CommandControllers extends AbstractReport
 {

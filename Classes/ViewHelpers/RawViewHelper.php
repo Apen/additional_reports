@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sng\AdditionalReports\ViewHelpers;
 
 /*
@@ -43,7 +45,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  */
 class RawViewHelper extends AbstractViewHelper
 {
-
     /**
      * Disable the escaping interceptor because otherwise the child nodes would be escaped before this view helper
      * can decode the text's entities.

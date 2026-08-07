@@ -90,3 +90,21 @@ Text diff with TER and last version
 ### Middlewares (PSR-15)
 
 ![](https://raw.githubusercontent.com/Apen/additional_reports/master/Resources/Public/Images/middlewares.png)
+
+## Development and quality
+
+The local toolchain targets the shared TYPO3 v13/v14 API surface and requires PHP 8.4 for development tools.
+
+```bash
+composer install
+composer quality
+composer coverage
+```
+
+The HTML coverage report is generated in `.Build/public/coverage/html`. Rector and Fractor migration proposals are intentionally kept outside the blocking quality command so they can be reviewed before a refactor:
+
+```bash
+composer quality:migrations
+```
+
+Network-dependent TYPO3 API and TER tests are disabled by default. Enable them explicitly with `RUN_NETWORK_TESTS=1`.

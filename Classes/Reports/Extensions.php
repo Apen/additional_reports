@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sng\AdditionalReports\Reports;
 
 /*
@@ -40,7 +42,7 @@ class Extensions extends AbstractReport
         $listExtensionsDev = [];
         $listExtensionsUnloaded = [];
 
-        if (!empty($allExtension['ter'])) {
+        if (! empty($allExtension['ter'])) {
             foreach ($allExtension['ter'] as $itemValue) {
                 $currentExtension = $this->getExtensionInformations($itemValue);
                 if (version_compare($itemValue['EM_CONF']['version'], $itemValue['lastversion']['version'], '<')) {
@@ -50,13 +52,13 @@ class Extensions extends AbstractReport
             }
         }
 
-        if (!empty($allExtension['dev'])) {
+        if (! empty($allExtension['dev'])) {
             foreach ($allExtension['dev'] as $itemValue) {
                 $listExtensionsDev[] = $this->getExtensionInformations($itemValue);
             }
         }
 
-        if (!empty($allExtension['unloaded'])) {
+        if (! empty($allExtension['unloaded'])) {
             foreach ($allExtension['unloaded'] as $itemValue) {
                 $listExtensionsUnloaded[] = $this->getExtensionInformations($itemValue);
             }
@@ -99,7 +101,7 @@ class Extensions extends AbstractReport
 
         $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
         $routeIdentifier = 'additional_reports_compareFiles';
-        $uri = (string)$uriBuilder->buildUriFromRoute($routeIdentifier, []);
+        $uri = (string) $uriBuilder->buildUriFromRoute($routeIdentifier, []);
 
         // Bugfix for wrong CompareUrl in case of TYPO3 is installed in a subdirectory
         if (strpos($uri, 'typo3/index.php') > 0) {
@@ -123,7 +125,7 @@ class Extensions extends AbstractReport
         }
 
         $listExtensionsTerItem['downloads'] = $itemValue['lastversion']['alldownloadcounter'] ?? '';
-        $listExtensionsTerItem['tablesmodal'] = !empty($itemValue['fdfile']) ? '<pre class="pre-scrollable">' . (htmlspecialchars($itemValue['fdfile'])) . '</pre>' : '';
+        $listExtensionsTerItem['tablesmodal'] = ! empty($itemValue['fdfile']) ? '<pre class="pre-scrollable">' . (htmlspecialchars($itemValue['fdfile'])) . '</pre>' : '';
 
         // need extconf update
         $listExtensionsTerItem['confintegrity'] = Utility::getLl('no');

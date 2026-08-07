@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sng\AdditionalReports\Reports;
 
 /*
@@ -10,7 +12,6 @@ namespace Sng\AdditionalReports\Reports;
  */
 
 use Sng\AdditionalReports\Utility;
-use TYPO3\CMS\Reports\ReportInterface;
 
 class Xclass extends AbstractReport
 {

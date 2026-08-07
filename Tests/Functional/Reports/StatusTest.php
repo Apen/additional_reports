@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sng\AdditionalReports\Tests\Functional\Reports;
 
 use Sng\AdditionalReports\Reports\Status;
@@ -17,6 +19,8 @@ class StatusTest extends FunctionalTestCase
         if (self::isNotSqlite()) {
             $report = new Status(parent::getReportObject());
             self::assertNotEmpty($report->display());
+        } else {
+            self::markTestSkipped('The status report contains MySQL-specific queries.');
         }
     }
 

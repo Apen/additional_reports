@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sng\AdditionalReports\Eid;
 
 /*
@@ -35,7 +37,7 @@ class CallAjax
         $content = '<div style="background:white;">';
 
         if ($mode == 'compareFile') {
-            if (!strstr($file1, $realPathExt)) {
+            if (! strstr($file1, $realPathExt)) {
                 die('Access denied.');
             }
             $terFileContent = Utility::downloadT3x($extKey, $extVersion, $extFile);

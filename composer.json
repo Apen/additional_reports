@@ -1,7 +1,8 @@
 {
   "name": "apen/additional_reports",
-  "type": "typo3-cms-extension",
   "description": "Useful information in the reports module : xclass, ajax, cliKeys, eID, general status of the system (encoding, DB, php vars...), hooks, compare local and TER extension (diff), used content type, used plugins, ExtDirect... It can really help you during migration or new existing project (to have a global reports of the system).",
+  "license": "GPL-2.0+",
+  "type": "typo3-cms-extension",
   "keywords": [
     "TYPO3"
   ],
@@ -9,32 +10,36 @@
     {
       "name": "Yohann Cerdan",
       "email": "yohann@site-ngo.fr",
-      "role": "Developer",
-      "homepage": "https://www.site-ngo.fr"
+      "homepage": "https://www.site-ngo.fr",
+      "role": "Developer"
     }
   ],
-  "license": "GPL-2.0+",
   "require": {
     "php": ">=8.2 <=8.4.99",
-    "typo3/cms-core": "^13||^14",
-    "typo3/cms-reports": "^13||^14"
+    "typo3/cms-core": "^13 || ^14",
+    "typo3/cms-reports": "^13 || ^14"
   },
   "require-dev": {
+    "a9f/fractor-composer-json": "*",
+    "a9f/fractor-htaccess": "*",
+    "a9f/fractor-xml": "*",
+    "a9f/fractor-yaml": "*",
+    "a9f/typo3-fractor": "*",
+    "brianium/paratest": "^7.8",
+    "ergebnis/composer-normalize": "^2.48",
     "friendsofphp/php-cs-fixer": "^3",
-    "saschaegerer/phpstan-typo3": "^1",
-    "typo3/testing-framework": "^8",
-    "nikic/php-parser": "^4||^5",
     "helmich/typo3-typoscript-lint": "^3",
-    "symplify/easy-coding-standard": "^11"
-  },
-  "config": {
-    "vendor-dir": ".Build/vendor",
-    "bin-dir": ".Build/bin",
-    "allow-plugins": {
-      "typo3/class-alias-loader": true,
-      "typo3/cms-composer-installers": true,
-      "sbuerk/typo3-cmscomposerinstallers-testingframework-bridge": true
-    }
+    "nikic/php-parser": "^5",
+    "phpstan/extension-installer": "^1.4",
+    "phpunit/phpunit": "^11.5",
+    "rector/rector": "^2",
+    "saschaegerer/phpstan-typo3": "^2 || ^3",
+    "ssch/typo3-rector": "^3",
+    "symplify/easy-coding-standard": "^13",
+    "tomasvotruba/cognitive-complexity": "*",
+    "tomasvotruba/lines": "*",
+    "tomasvotruba/type-coverage": "*",
+    "typo3/testing-framework": "^9"
   },
   "autoload": {
     "psr-4": {
@@ -42,24 +47,71 @@
       "Sng\\AdditionalReports\\Tests\\": "Tests"
     }
   },
-  "scripts": {
-    "php:ecs": ".Build/bin/ecs check . --config ./Build/ecs.php --fix --ansi",
-    "php:ecsdry": ".Build/bin/ecs check . --config ./Build/ecs.php --ansi",
-    "php:fix": ".Build/bin/php-cs-fixer --config=./Build/.php-cs-fixer.php fix",
-    "php:fixdry": ".Build/bin/php-cs-fixer -vvv --diff --dry-run --config=./Build/.php-cs-fixer.php fix",
-    "php:phpstan": ".Build/bin/phpstan analyse -c ./Build/phpstan.neon --ansi",
-    "php:rector": ".Build/bin/rector process . -c ./Build/rector.php --ansi",
-    "php:rectordry": ".Build/bin/rector process . -c ./Build/rector.php --dry-run --ansi",
-    "post-autoload-dump": [
-      "TYPO3\\TestingFramework\\Composer\\ExtensionTestEnvironment::prepare"
-    ]
+  "config": {
+    "allow-plugins": {
+      "a9f/fractor-extension-installer": true,
+      "ergebnis/composer-normalize": true,
+      "phpstan/extension-installer": true,
+      "sbuerk/typo3-cmscomposerinstallers-testingframework-bridge": true,
+      "typo3/class-alias-loader": true,
+      "typo3/cms-composer-installers": true
+    },
+    "bin-dir": ".Build/bin",
+    "vendor-dir": ".Build/vendor"
   },
   "extra": {
     "typo3/cms": {
       "extension-key": "additional_reports",
-      "cms-package-dir": "{$vendor-dir}/typo3/cms",
-      "app-dir": ".Build",
       "web-dir": ".Build/public"
     }
+  },
+  "scripts": {
+    "composer:normalize": "@composer normalize --no-check-lock",
+    "composer:normalizedry": "@composer normalize --no-check-lock --dry-run",
+    "coverage": [
+      "@coverage:clean",
+      "@coverage:unit",
+      "@coverage:functional",
+      "@coverage:report"
+    ],
+    "coverage:clean": "@php Build/CleanCoverage.php",
+    "coverage:functional": [
+      "@test:functional:clean",
+      "@php -d pcov.enabled=1 -d pcov.directory=Classes .Build/bin/phpunit -c Build/FunctionalTests.xml --coverage-php .Build/coverage/additional_reports/functional.cov"
+    ],
+    "coverage:report": "@php Build/MergeCoverage.php",
+    "coverage:unit": "@php -d pcov.enabled=1 -d pcov.directory=Classes .Build/bin/phpunit -c Build/UnitTests.xml --coverage-php .Build/coverage/additional_reports/unit.cov",
+    "fluid:fractor": "@php .Build/bin/fractor process --config ./Build/fractor.php --ansi",
+    "fluid:fractordry": "@php .Build/bin/fractor process --config ./Build/fractor.php --dry-run --ansi",
+    "php:ecs": "@php .Build/bin/ecs check --config ./Build/ecs.php --fix --ansi",
+    "php:ecsdry": "@php .Build/bin/ecs check --config ./Build/ecs.php --ansi",
+    "php:fix": "@php .Build/bin/php-cs-fixer --config=./Build/php-cs-fixer.php fix",
+    "php:fixdry": "@php .Build/bin/php-cs-fixer -vvv --diff --dry-run --config=./Build/php-cs-fixer.php fix",
+    "php:phpstan": "@php .Build/bin/phpstan analyse -c ./Build/phpstan.neon --ansi",
+    "php:rector": "@php .Build/bin/rector process -c ./Build/rector.php --ansi",
+    "php:rectordry": "@php .Build/bin/rector process -c ./Build/rector.php --dry-run --ansi",
+    "quality": [
+      "@composer:normalizedry",
+      "@php:ecsdry",
+      "@php:fixdry",
+      "@php:phpstan",
+      "@typoscript:lint",
+      "@test"
+    ],
+    "quality:migrations": [
+      "@php:rectordry",
+      "@fluid:fractordry"
+    ],
+    "test": [
+      "@test:unit",
+      "@test:functional"
+    ],
+    "test:functional": [
+      "@test:functional:clean",
+      "@php .Build/bin/phpunit -c Build/FunctionalTests.xml"
+    ],
+    "test:functional:clean": "@php Build/CleanFunctionalTests.php",
+    "test:unit": "@php .Build/bin/phpunit -c Build/UnitTests.xml",
+    "typoscript:lint": "@php .Build/bin/typoscript-lint -c ./Build/.tslint.yaml"
   }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sng\AdditionalReports\Reports;
 
 /*
@@ -10,7 +12,6 @@ namespace Sng\AdditionalReports\Reports;
  */
 
 use Sng\AdditionalReports\Utility;
-use TYPO3\CMS\Reports\ReportInterface;
 
 class Hooks extends AbstractReport
 {
@@ -45,7 +46,7 @@ class Hooks extends AbstractReport
                             $hooks['core'][] = [
                                 'corefile' => $itemKey,
                                 'name'     => $hookName,
-                                'file'     => Utility::viewArray($hookList)
+                                'file'     => Utility::viewArray($hookList),
                             ];
                         }
                     }
@@ -62,7 +63,7 @@ class Hooks extends AbstractReport
                         $hooks['extensions'][] = [
                             'corefile' => $itemKey,
                             'name'     => $hookName,
-                            'file'     => Utility::viewArray($hookList)
+                            'file'     => Utility::viewArray($hookList),
                         ];
                     }
                 }
