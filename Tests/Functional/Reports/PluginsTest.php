@@ -6,6 +6,7 @@ namespace Sng\AdditionalReports\Tests\Functional\Reports;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use Sng\AdditionalReports\Reports\Plugins;
+use Sng\AdditionalReports\Service\ContentTypeResolver;
 use Sng\AdditionalReports\Tests\Functional\FunctionalTestCase;
 use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Page\AssetCollector;
@@ -55,6 +56,22 @@ class PluginsTest extends FunctionalTestCase
         self::assertSame('Example page', $rows[0]['pagetitle']);
         self::assertSame('/index.php?id=42', $rows[0]['preview']);
         self::assertArrayHasKey('domain', $rows[0]);
+    }
+
+    public function testTcaExtensionIconIsPublished(): void
+    {
+        $GLOBALS['TCA']['tt_content']['columns']['CType']['config']['items'][] = [
+            'label' => 'Example content type',
+            'value' => 'vendor_example',
+            'icon' => 'EXT:additional_reports/Resources/Public/Icons/Extension.svg',
+        ];
+
+        $result = GeneralUtility::makeInstance(ContentTypeResolver::class)->resolve('ctype', 'vendor_example');
+
+        self::assertStringContainsString(
+            'additional_reports/Resources/Public/Icons/Extension.svg',
+            $result['iconext'],
+        );
     }
 
     public function testSummaryContainsNormalizedCounters(): void

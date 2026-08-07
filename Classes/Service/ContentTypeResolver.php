@@ -6,6 +6,9 @@ namespace Sng\AdditionalReports\Service;
 
 use Sng\AdditionalReports\Utility;
 use TYPO3\CMS\Core\Imaging\IconRegistry;
+use TYPO3\CMS\Core\SystemResource\Publishing\SystemResourcePublisherInterface;
+use TYPO3\CMS\Core\SystemResource\Publishing\UriGenerationOptions;
+use TYPO3\CMS\Core\SystemResource\SystemResourceFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\PathUtility;
 
@@ -51,7 +54,7 @@ final class ContentTypeResolver
             return '';
         }
         if (PathUtility::isExtensionPath($icon)) {
-            return PathUtility::getPublicResourceWebPath($icon);
+            return $this->publishExtensionResource($icon);
         }
 
         $iconRegistry = GeneralUtility::makeInstance(IconRegistry::class);
@@ -64,7 +67,17 @@ final class ContentTypeResolver
             return '';
         }
         return PathUtility::isExtensionPath($source)
-            ? PathUtility::getPublicResourceWebPath($source)
+            ? $this->publishExtensionResource($source)
             : PathUtility::getAbsoluteWebPath($source);
+    }
+
+    private function publishExtensionResource(string $identifier): string
+    {
+        $resource = GeneralUtility::makeInstance(SystemResourceFactory::class)->createPublicResource($identifier);
+        return (string) GeneralUtility::makeInstance(SystemResourcePublisherInterface::class)->generateUri(
+            $resource,
+            null,
+            new UriGenerationOptions(absoluteUri: false),
+        );
     }
 }

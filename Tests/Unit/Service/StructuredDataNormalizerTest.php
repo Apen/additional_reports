@@ -28,4 +28,27 @@ final class StructuredDataNormalizerTest extends TestCase
             ['key' => 'priority', 'value' => '10', 'children' => []],
         ], $result);
     }
+
+    public function testScalarAndObjectValuesAreNormalized(): void
+    {
+        $stringable = new class implements \Stringable {
+            public function __toString(): string
+            {
+                return 'example';
+            }
+        };
+
+        $normalizer = new StructuredDataNormalizer();
+
+        self::assertSame([['key' => '', 'value' => 'null', 'children' => []]], $normalizer->normalize(null));
+        self::assertSame([['key' => '', 'value' => 'false', 'children' => []]], $normalizer->normalize(false));
+        self::assertSame(
+            [['key' => '', 'value' => $stringable::class . ': example', 'children' => []]],
+            $normalizer->normalize($stringable),
+        );
+        self::assertSame(
+            [['key' => '', 'value' => \stdClass::class, 'children' => []]],
+            $normalizer->normalize(new \stdClass()),
+        );
+    }
 }
