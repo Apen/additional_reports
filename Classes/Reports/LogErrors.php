@@ -12,7 +12,6 @@ namespace Sng\AdditionalReports\Reports;
  */
 
 use Sng\AdditionalReports\Utility;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class LogErrors extends AbstractReport
 {
@@ -54,9 +53,6 @@ class LogErrors extends AbstractReport
         $view = $this->createView();
         $view->assign('reportname', Utility::hasLegacyListType() ? 'additionalreports_logerrors' : 'logerrors');
         $view->assign('paginationRoute', $this->getCurrentRouteIdentifier());
-        $view->assign('extconf', unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['additional_reports'] ?? ''));
-        $view->assign('requestDir', GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR'));
-
         Utility::buildPagination($queryBuilder->executeQuery()->fetchAllAssociative(), (int) ($this->getRequestParameter('currentPage') ?? 1), $view);
 
         return $view->render('logerrors-fluid');

@@ -96,29 +96,21 @@ class Extensions extends AbstractReport
         $listExtensionsTerItem['extension'] = $extKey;
         $listExtensionsTerItem['version'] = $extVersion;
 
-        // version compare
-        $compareUrl = GeneralUtility::getIndpEnv('TYPO3_SITE_URL');
-
         $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
-        $routeIdentifier = 'additional_reports_compareFiles';
-        $uri = (string) $uriBuilder->buildUriFromRoute($routeIdentifier, []);
-
-        // Bugfix for wrong CompareUrl in case of TYPO3 is installed in a subdirectory
-        if (strpos($uri, 'typo3/index.php') > 0) {
-            $uri = substr($uri, strpos($uri, 'typo3/index.php'));
-        }
-
-        $compareUrl .= $uri;
-        $compareUrl .= '&extKey=' . $extKey . '&mode=compareExtension&extVersion=' . $extVersion;
-        $listExtensionsTerItem['compareUrl'] = $compareUrl;
+        $listExtensionsTerItem['compareUrl'] = (string) $uriBuilder->buildUriFromRoute('additional_reports_compareFiles', [
+            'extKey' => $extKey,
+            'mode' => 'compareExtension',
+            'extVersion' => $extVersion,
+        ]);
 
         // need extension update ?
         if (version_compare($extVersion, $itemValue['lastversion']['version'] ?? '', '<')) {
             $listExtensionsTerItem['versionlast'] = '<span style="color:green;font-weight:bold;">' . $itemValue['lastversion']['version'] . '&nbsp;(' . $itemValue['lastversion']['updatedate'] . ')</span>';
-            $compareUrl = GeneralUtility::getIndpEnv('TYPO3_SITE_URL');
-            $compareUrl .= $uri;
-            $compareUrl .= '&extKey=' . $extKey . '&mode=compareExtension&extVersion=' . $itemValue['lastversion']['version'];
-            $listExtensionsTerItem['compareUrlLast'] = $compareUrl;
+            $listExtensionsTerItem['compareUrlLast'] = (string) $uriBuilder->buildUriFromRoute('additional_reports_compareFiles', [
+                'extKey' => $extKey,
+                'mode' => 'compareExtension',
+                'extVersion' => $itemValue['lastversion']['version'],
+            ]);
         } else {
             $listExtensionsTerItem['versionlast'] = ($itemValue['lastversion']['version'] ?? '') . '&nbsp;(' . ($itemValue['lastversion']['updatedate'] ?? '') . ')';
             $listExtensionsTerItem['compareUrlLast'] = '';
