@@ -17,7 +17,11 @@ class ExtensionsTest extends FunctionalTestCase
     public function testDisplay()
     {
         $report = new Extensions(parent::getReportObject());
-        self::assertNotEmpty($report->display());
+        $output = $report->display();
+
+        self::assertNotEmpty($output);
+        self::assertStringContainsString('class="table-fit"', $output);
+        self::assertStringContainsString('class="table table-striped table-hover table-condensed"', $output);
     }
 
     public function testExtensionTablesAreParsedLikeTheDatabaseAnalyzer(): void
