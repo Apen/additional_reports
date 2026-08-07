@@ -11,9 +11,9 @@ namespace Sng\AdditionalReports\Reports;
  * LICENSE.txt file that was distributed with this source code.
  */
 
+use Sng\AdditionalReports\Repository\DatabaseStatusRepository;
 use Sng\AdditionalReports\Utility;
 use TYPO3\CMS\Core\Core\Environment;
-use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Http\NormalizedParams;
 use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Package\PackageManager;
@@ -22,6 +22,14 @@ use TYPO3\CMS\Core\View\ViewInterface;
 
 class Status extends AbstractReport
 {
+    private DatabaseStatusRepository $databaseStatusRepository;
+
+    public function __construct(?object $reportObject = null, ?DatabaseStatusRepository $databaseStatusRepository = null)
+    {
+        parent::__construct($reportObject);
+        $this->databaseStatusRepository = $databaseStatusRepository ?? GeneralUtility::makeInstance(DatabaseStatusRepository::class);
+    }
+
     /**
      * This method renders the report
      *
@@ -74,13 +82,13 @@ class Status extends AbstractReport
 
         $datas['sitename'] = $GLOBALS['TYPO3_CONF_VARS']['SYS']['sitename'];
         $datas['version'] = GeneralUtility::makeInstance(Typo3Version::class)->getVersion() . ' [' . ($currentVersionInfos['date'] ?? '') . ']';
-        $datas['current_branch'] = $currentBranch['version'] . ' [' . $currentBranch['date'] . ']';
-        $datas['latest_stable'] = $latestStable['version'] . ' [' . $latestStable['date'] . ']';
-        $datas['latest_lts'] = $latestLts['version'] . ' [' . $latestLts['date'] . ']';
+        $datas['current_branch'] = ($currentBranch['version'] ?? '') . ' [' . ($currentBranch['date'] ?? '') . ']';
+        $datas['latest_stable'] = ($latestStable['version'] ?? '') . ' [' . ($latestStable['date'] ?? '') . ']';
+        $datas['latest_lts'] = ($latestLts['version'] ?? '') . ' [' . ($latestLts['date'] ?? '') . ']';
         $datas['path'] = Environment::getPublicPath();
-        $datas['db_name'] = $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['dbname'];
-        $datas['db_user'] = $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['user'];
-        $datas['db_host'] = $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['host'];
+        $datas['db_name'] = $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['dbname'] ?? '';
+        $datas['db_user'] = $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['user'] ?? '';
+        $datas['db_host'] = $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['host'] ?? '';
         $datas['db_init'] = $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['initCommands'] ?? '';
         $datas['db_pcon'] = $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['persistentConnection'] ?? '';
 
@@ -168,57 +176,17 @@ class Status extends AbstractReport
         $view->assign('datas_php', $data);
     }
 
-    public function displayMySql(ViewInterface $view)
+    public function displayMySql(ViewInterface $view): void
     {
-        $connection = Utility::getDatabaseConnection();
-        $connectionParams = $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections'][ConnectionPool::DEFAULT_CONNECTION_NAME];
-
-        $data = [];
-        $data['version'] = $connection->getServerVersion();
-
-        $items = Utility::getQueryBuilder()
-            ->select('default_character_set_name', 'default_collation_name')
-            ->from('information_schema.schemata')
-            ->where("schema_name = '" . $connectionParams['dbname'] . "'")
-            ->executeQuery()
-            ->fetchAllAssociative();
-
-        $data['default_character_set_name'] = $items[0]['default_character_set_name'] ?? '';
-        $data['default_collation_name'] = $items[0]['default_collation_name'] ?? '';
-
-        // TYPO3 database
-        $items = Utility::getQueryBuilder()
-            ->select(
-                'table_name as table_name',
-                'engine as engine',
-                'table_collation as table_collation',
-                'table_rows as table_rows'
-            )
-            ->addSelectLiteral('((data_length+index_length)/1024/1024) as "size"')
-            ->from('information_schema.tables')
-            ->where("table_schema = '" . $connectionParams['dbname'] . "'")
-            ->orderBy('table_name')
-            ->executeQuery()
-            ->fetchAllAssociative();
-
-        $tables = [];
-        $size = 0;
-
-        foreach ($items as $itemValue) {
-            $tableSize = round((float) ($itemValue['size'] ?? 0), 2);
-            $tables[] = [
-                'name' => $itemValue['table_name'],
-                'engine' => $itemValue['engine'],
-                'collation' => $itemValue['table_collation'],
-                'rows' => $itemValue['table_rows'],
-                'size' => $tableSize,
-            ];
-            $size += $tableSize;
-        }
-
-        $data['tables'] = $tables;
-        $data['tablessize'] = round($size, 2);
-        $data['typo3db'] = $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['dbname'];
+        $status = $this->databaseStatusRepository->getStatus();
+        $data = [
+            'version' => $status['version'],
+            'default_character_set_name' => $status['defaultCharacterSet'],
+            'default_collation_name' => $status['defaultCollation'],
+            'tables' => $status['tables'],
+            'tablessize' => $status['totalSize'],
+            'typo3db' => $status['database'],
+        ];
 
         $view->assign('datas_mysql', $data);
     }

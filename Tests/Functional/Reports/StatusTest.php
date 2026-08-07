@@ -16,16 +16,9 @@ class StatusTest extends FunctionalTestCase
 
     public function testDisplay()
     {
-        if (self::isNotSqlite()) {
-            $report = new Status(parent::getReportObject());
-            self::assertNotEmpty($report->display());
-        } else {
-            self::markTestSkipped('The status report contains MySQL-specific queries.');
-        }
-    }
+        $output = (new Status(parent::getReportObject()))->display();
 
-    public static function isNotSqlite()
-    {
-        return $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['driver'] !== 'pdo_sqlite';
+        self::assertNotEmpty($output);
+        self::assertStringContainsString('reportsMySQL', $output);
     }
 }

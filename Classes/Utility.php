@@ -202,9 +202,14 @@ class Utility
      *
      * @return array
      */
-    public static function getJsonVersionInfos()
+    public static function getJsonVersionInfos(): array
     {
-        return json_decode(GeneralUtility::getUrl('https://get.typo3.org/json'), true);
+        $response = GeneralUtility::getUrl('https://get.typo3.org/json');
+        if (! is_string($response) || $response === '') {
+            return [];
+        }
+        $versions = json_decode($response, true);
+        return is_array($versions) ? $versions : [];
     }
 
     /**
@@ -212,13 +217,13 @@ class Utility
      *
      * @return array
      */
-    public static function getCurrentVersionInfos($jsonVersions, $version)
+    public static function getCurrentVersionInfos(array $jsonVersions, string $version): array
     {
         $currentVersion = explode('.', $version);
         if ((int) ($currentVersion[0]) >= 7) {
             return $jsonVersions[$currentVersion[0]]['releases'][$version] ?? [];
         }
-        return $jsonVersions[$currentVersion[0] . '.' . $currentVersion[1]]['releases'][$version];
+        return $jsonVersions[$currentVersion[0] . '.' . ($currentVersion[1] ?? '0')]['releases'][$version] ?? [];
     }
 
     /**
@@ -226,13 +231,18 @@ class Utility
      *
      * @return array
      */
-    public static function getCurrentBranchInfos($jsonVersions, $version)
+    public static function getCurrentBranchInfos(array $jsonVersions, string $version): array
     {
         $currentVersion = explode('.', $version);
-        if ((int) ($currentVersion[0]) >= 7) {
-            return @reset($jsonVersions[$currentVersion[0]]['releases']);
+        $branch = (int) ($currentVersion[0]) >= 7
+            ? $currentVersion[0]
+            : $currentVersion[0] . '.' . ($currentVersion[1] ?? '0');
+        $releases = $jsonVersions[$branch]['releases'] ?? [];
+        if (! is_array($releases)) {
+            return [];
         }
-        return @reset($jsonVersions[$currentVersion[0] . '.' . $currentVersion[1]]['releases']);
+        $release = reset($releases);
+        return is_array($release) ? $release : [];
     }
 
     /**
@@ -240,13 +250,17 @@ class Utility
      *
      * @return array
      */
-    public static function getLatestStableInfos($jsonVersions)
+    public static function getLatestStableInfos(array $jsonVersions): array
     {
-        $currentVersion = explode('.', $jsonVersions['latest_stable']);
-        if ((int) ($currentVersion[0]) >= 7) {
-            return $jsonVersions[$currentVersion[0]]['releases'][$jsonVersions['latest_stable']];
+        $latestStable = $jsonVersions['latest_stable'] ?? null;
+        if (! is_string($latestStable)) {
+            return [];
         }
-        return $jsonVersions[$currentVersion[0] . '.' . $currentVersion[1]]['releases'][$jsonVersions['latest_stable']];
+        $currentVersion = explode('.', $latestStable);
+        if ((int) ($currentVersion[0]) >= 7) {
+            return $jsonVersions[$currentVersion[0]]['releases'][$latestStable] ?? [];
+        }
+        return $jsonVersions[$currentVersion[0] . '.' . ($currentVersion[1] ?? '0')]['releases'][$latestStable] ?? [];
     }
 
     /**
@@ -254,13 +268,17 @@ class Utility
      *
      * @return array
      */
-    public static function getLatestLtsInfos($jsonVersions)
+    public static function getLatestLtsInfos(array $jsonVersions): array
     {
-        $currentVersion = explode('.', $jsonVersions['latest_lts']);
-        if ((int) ($currentVersion[0]) >= 7) {
-            return $jsonVersions[$currentVersion[0]]['releases'][$jsonVersions['latest_lts']];
+        $latestLts = $jsonVersions['latest_lts'] ?? null;
+        if (! is_string($latestLts)) {
+            return [];
         }
-        return $jsonVersions[$currentVersion[0] . '.' . $currentVersion[1]]['releases'][$jsonVersions['latest_lts']];
+        $currentVersion = explode('.', $latestLts);
+        if ((int) ($currentVersion[0]) >= 7) {
+            return $jsonVersions[$currentVersion[0]]['releases'][$latestLts] ?? [];
+        }
+        return $jsonVersions[$currentVersion[0] . '.' . ($currentVersion[1] ?? '0')]['releases'][$latestLts] ?? [];
     }
 
     /**

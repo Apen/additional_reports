@@ -111,6 +111,14 @@ class UtilityTest extends BaseTestCase
         self::assertSame(['version' => '6.2.31'], Utility::getLatestLtsInfos($versions));
     }
 
+    public function testVersionInformationHelpersHandleUnavailableApiData(): void
+    {
+        self::assertSame([], Utility::getCurrentVersionInfos([], '14.3.0'));
+        self::assertSame([], Utility::getCurrentBranchInfos([], '14.3.0'));
+        self::assertSame([], Utility::getLatestStableInfos([]));
+        self::assertSame([], Utility::getLatestLtsInfos([]));
+    }
+
     public function testExtractExtensionDataFromT3x(): void
     {
         $data = ['FILES' => ['ext_localconf.php' => ['content' => '<?php']]];
