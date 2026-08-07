@@ -27,4 +27,37 @@ final class ReportControllerTest extends FunctionalTestCase
         self::assertStringContainsString('AfterBackendPageRenderEvent', $body);
         self::assertStringContainsString('module-body', $body);
     }
+
+    public function testEveryReportActionRendersAModuleResponse(): void
+    {
+        $controller = $this->getContainer()->get(ReportController::class);
+        $actions = [
+            'eid',
+            'commandControllers',
+            'plugins',
+            'xclass',
+            'hooks',
+            'status',
+            'logErrors',
+            'websiteConf',
+            'extensions',
+            'middlewares',
+        ];
+
+        foreach ($actions as $action) {
+            $request = $GLOBALS['TYPO3_REQUEST']->withAttribute('route', new Route(
+                '/typo3/module/system/reports/additional-reports/' . strtolower($action),
+                [
+                    '_identifier' => 'system_reports_additionalreports_' . strtolower($action),
+                    'packageName' => 'apen/additional_reports',
+                ],
+            ));
+
+            $response = $controller->{$action}($request);
+            $body = (string) $response->getBody();
+
+            self::assertSame(200, $response->getStatusCode(), $action);
+            self::assertStringContainsString('module-body', $body, $action);
+        }
+    }
 }
