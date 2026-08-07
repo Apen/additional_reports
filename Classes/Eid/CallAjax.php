@@ -51,17 +51,17 @@ class CallAjax
             if ($localFile === null) {
                 return new HtmlResponse('Access denied.', 403);
             }
-            $terFileContent = Utility::downloadT3x($extensionKey, $extensionVersion, $extensionFile);
-            $content .= $this->t3Diff(GeneralUtility::getURL($localFile), $terFileContent);
+            $terFileContent = $this->downloadT3x($extensionKey, $extensionVersion, $extensionFile);
+            $content .= $this->t3Diff($this->readLocalFile($localFile), $terFileContent);
         } else {
-            $t3xfiles = Utility::downloadT3x($extensionKey, $extensionVersion);
+            $t3xfiles = $this->downloadT3x($extensionKey, $extensionVersion);
             $diff = 0;
             foreach ($t3xfiles['FILES'] as $filePath => $file) {
                 $localFile = $this->resolveExtensionFile($extensionPath, $filePath);
                 if ($localFile === null) {
                     continue;
                 }
-                $currentFileContent = GeneralUtility::getURL($localFile);
+                $currentFileContent = $this->readLocalFile($localFile);
                 if ($file['content_md5'] !== md5($currentFileContent)) {
                     $diff++;
                     $content .= '<h2>' . $filePath . '</h2>';
@@ -75,6 +75,16 @@ class CallAjax
 
         $content .= '</div>';
         return new HtmlResponse($content);
+    }
+
+    protected function downloadT3x(string $extensionKey, string $extensionVersion, ?string $extensionFile = null): mixed
+    {
+        return Utility::downloadT3x($extensionKey, $extensionVersion, $extensionFile);
+    }
+
+    protected function readLocalFile(string $file): string
+    {
+        return (string) GeneralUtility::getURL($file);
     }
 
     private function resolveExtensionFile(string $extensionPath, string $relativeFile): ?string
