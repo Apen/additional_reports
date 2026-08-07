@@ -245,3 +245,41 @@ table.debug td.debugvar {
 .additional-reports-extension-schema code {
     white-space: normal;
 }
+
+.additional-reports-events-table {
+    table-layout: fixed;
+    width: 100%;
+}
+
+.additional-reports-events-table th,
+.additional-reports-events-table td {
+    overflow-wrap: anywhere;
+    vertical-align: top;
+}
+
+.additional-reports-events-event {
+    width: 34%;
+}
+
+.additional-reports-events-listener {
+    width: 24%;
+}
+
+.additional-reports-events-service {
+    width: 34%;
+}
+
+.additional-reports-events-method {
+    width: 8%;
+}
+
+.additional-reports-class-name {
+    display: flex;
+    flex-direction: column;
+    white-space: normal;
+}
+
+.additional-reports-class-name > span {
+    color: var(--typo3-text-color-secondary, #666);
+    font-size: 0.85em;
+}

@@ -15,6 +15,7 @@ final class EventDispatcherTest extends FunctionalTestCase
 
         self::assertNotEmpty($output);
         self::assertStringContainsString('AfterBackendPageRenderEvent', $output);
+        self::assertStringContainsString('class="additional-reports-class-name"', $output);
         self::assertStringContainsString('__invoke', $output);
     }
 }

@@ -1,6 +1,12 @@
 <f:if condition="{events}">
     <div class="table-fit">
-        <table class="table table-striped table-hover table-condensed">
+        <table class="table table-striped table-hover table-condensed additional-reports-events-table">
+            <colgroup>
+                <col class="additional-reports-events-event"/>
+                <col class="additional-reports-events-listener"/>
+                <col class="additional-reports-events-service"/>
+                <col class="additional-reports-events-method"/>
+            </colgroup>
             <thead>
             <tr>
                 <th>
@@ -20,10 +26,14 @@
             <tbody>
             <f:for each="{events}" as="event">
                 <tr>
-                    <td>{event.event}</td>
-                    <td>{event.identifier}</td>
-                    <td>{event.service}</td>
-                    <td>{event.method}</td>
+                    <td title="{event.event}">
+                        <code class="additional-reports-class-name"><span>{event.eventNamespace}</span><strong>{event.eventName}</strong></code>
+                    </td>
+                    <td><code>{event.identifier}</code></td>
+                    <td title="{event.service}">
+                        <code class="additional-reports-class-name"><span>{event.serviceNamespace}</span><strong>{event.serviceName}</strong></code>
+                    </td>
+                    <td><code>{event.method}</code></td>
                 </tr>
             </f:for>
             </tbody>

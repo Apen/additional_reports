@@ -21,14 +21,22 @@ final class EventListenerRegistryTest extends TestCase
         self::assertSame([
             [
                 'event' => 'Vendor\\Event\\FirstEvent',
+                'eventNamespace' => 'Vendor\\Event\\',
+                'eventName' => 'FirstEvent',
                 'identifier' => 'first',
                 'service' => 'listener.first',
+                'serviceNamespace' => '',
+                'serviceName' => 'listener.first',
                 'method' => 'handle',
             ],
             [
                 'event' => 'Vendor\\Event\\SecondEvent',
+                'eventNamespace' => 'Vendor\\Event\\',
+                'eventName' => 'SecondEvent',
                 'identifier' => 'second',
                 'service' => 'listener.second',
+                'serviceNamespace' => '',
+                'serviceName' => 'listener.second',
                 'method' => '__invoke',
             ],
         ], (new EventListenerRegistry($provider))->findAll());
