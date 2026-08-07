@@ -13,6 +13,7 @@ namespace Sng\AdditionalReports\Reports;
 
 use Sng\AdditionalReports\Repository\ContentUsageRepository;
 use Sng\AdditionalReports\Service\ContentTypeResolver;
+use Sng\AdditionalReports\Service\PaginationService;
 use Sng\AdditionalReports\Utility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -22,14 +23,18 @@ class Plugins extends AbstractReport
 
     private ContentTypeResolver $contentTypeResolver;
 
+    private PaginationService $paginationService;
+
     public function __construct(
         ?object $reportObject = null,
         ?ContentUsageRepository $contentUsageRepository = null,
         ?ContentTypeResolver $contentTypeResolver = null,
+        ?PaginationService $paginationService = null,
     ) {
         parent::__construct($reportObject);
         $this->contentUsageRepository = $contentUsageRepository ?? GeneralUtility::makeInstance(ContentUsageRepository::class);
         $this->contentTypeResolver = $contentTypeResolver ?? GeneralUtility::makeInstance(ContentTypeResolver::class);
+        $this->paginationService = $paginationService ?? GeneralUtility::makeInstance(PaginationService::class);
     }
 
     /**
@@ -68,21 +73,21 @@ class Plugins extends AbstractReport
         switch ($displayMode) {
             case 3:
                 $view->assign('filterOptions', array_column($this->contentUsageRepository->findDistinctContentTypes(), 'CType'));
-                Utility::buildPagination($this->enrichContentRows($this->getAllUsedCtypes(false, $filter), 'ctype'), $currentPage, $view);
+                $this->paginationService->assign($this->enrichContentRows($this->getAllUsedCtypes(false, $filter), 'ctype'), $currentPage, $view);
                 break;
             case 4:
                 $filterField = $this->contentTypeResolver->hasLegacyListType() ? 'list_type' : 'CType';
                 $view->assign('filterOptions', array_column($this->contentUsageRepository->findDistinctPlugins(), $filterField));
-                Utility::buildPagination($this->enrichContentRows($this->getAllUsedPlugins(false, $filter), 'plugin'), $currentPage, $view);
+                $this->paginationService->assign($this->enrichContentRows($this->getAllUsedPlugins(false, $filter), 'plugin'), $currentPage, $view);
                 break;
             case 6:
                 $filterField = $this->contentTypeResolver->hasLegacyListType() ? 'list_type' : 'CType';
                 $view->assign('filterOptions', array_column($this->contentUsageRepository->findDistinctPlugins(true), $filterField));
-                Utility::buildPagination($this->enrichContentRows($this->getAllUsedPlugins(true, $filter), 'plugin'), $currentPage, $view);
+                $this->paginationService->assign($this->enrichContentRows($this->getAllUsedPlugins(true, $filter), 'plugin'), $currentPage, $view);
                 break;
             case 7:
                 $view->assign('filterOptions', array_column($this->contentUsageRepository->findDistinctContentTypes(true), 'CType'));
-                Utility::buildPagination($this->enrichContentRows($this->getAllUsedCtypes(true, $filter), 'ctype'), $currentPage, $view);
+                $this->paginationService->assign($this->enrichContentRows($this->getAllUsedCtypes(true, $filter), 'ctype'), $currentPage, $view);
                 break;
             default:
                 $view->assign('items', $this->getSummary());

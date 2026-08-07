@@ -12,17 +12,23 @@ namespace Sng\AdditionalReports\Reports;
  */
 
 use Sng\AdditionalReports\Repository\LogErrorRepository;
-use Sng\AdditionalReports\Utility;
+use Sng\AdditionalReports\Service\PaginationService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class LogErrors extends AbstractReport
 {
     private LogErrorRepository $logErrorRepository;
 
-    public function __construct(?object $reportObject = null, ?LogErrorRepository $logErrorRepository = null)
-    {
+    private PaginationService $paginationService;
+
+    public function __construct(
+        ?object $reportObject = null,
+        ?LogErrorRepository $logErrorRepository = null,
+        ?PaginationService $paginationService = null,
+    ) {
         parent::__construct($reportObject);
         $this->logErrorRepository = $logErrorRepository ?? GeneralUtility::makeInstance(LogErrorRepository::class);
+        $this->paginationService = $paginationService ?? GeneralUtility::makeInstance(PaginationService::class);
     }
 
     /**
@@ -47,7 +53,7 @@ class LogErrors extends AbstractReport
         $view = $this->createView();
         $view->assign('reportname', interface_exists(\TYPO3\CMS\Reports\ReportInterface::class) ? 'additionalreports_logerrors' : 'logerrors');
         $view->assign('paginationRoute', $this->getCurrentRouteIdentifier());
-        Utility::buildPagination(
+        $this->paginationService->assign(
             $this->logErrorRepository->findGrouped(is_string($orderBy) ? $orderBy : null),
             (int) ($this->getRequestParameter('currentPage') ?? 1),
             $view,

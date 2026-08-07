@@ -16,12 +16,9 @@ use Sng\AdditionalReports\Repository\ExtensionRepository;
 use Sng\AdditionalReports\Repository\PageStatisticsRepository;
 use Sng\AdditionalReports\Service\ContentTypeResolver;
 use Sng\AdditionalReports\Service\ExtensionIconResolver;
-use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Exception\SiteNotFoundException;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
-use TYPO3\CMS\Core\Pagination\ArrayPaginator;
-use TYPO3\CMS\Core\Pagination\SlidingWindowPagination;
 use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -247,24 +244,6 @@ class Utility
         $languageService = GeneralUtility::makeInstance(LanguageServiceFactory::class)->create($GLOBALS['BE_USER']->uc['lang'] ?? 'default');
         $GLOBALS['LANG'] = $languageService;
         return $languageService;
-    }
-
-    public static function buildPagination(array $items, int $currentPage, &$view): void
-    {
-        if (count($items) > 0) {
-            try {
-                $itemsPerPage = (int) GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('additional_reports', 'itemsPerPage');
-                if ($itemsPerPage < 1) {
-                    $itemsPerPage = 10;
-                }
-            } catch (\Exception $e) {
-                $itemsPerPage = 10;
-            }
-            $paginator = new ArrayPaginator($items, $currentPage, $itemsPerPage);
-            $pagination = new SlidingWindowPagination($paginator, 5);
-            $view->assign('paginator', $paginator);
-            $view->assign('pagination', $pagination);
-        }
     }
 
 }
