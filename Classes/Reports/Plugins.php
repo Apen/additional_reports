@@ -81,13 +81,11 @@ class Plugins extends AbstractReport
                 $this->paginationService->assign($this->enrichContentRows($this->getAllUsedCtypes(false, $filter), 'ctype'), $currentPage, $view);
                 break;
             case 4:
-                $filterField = $this->contentTypeResolver->hasLegacyListType() ? 'list_type' : 'CType';
-                $view->assign('filterOptions', array_column($this->contentUsageRepository->findDistinctPlugins(), $filterField));
+                $view->assign('filterOptions', array_column($this->contentUsageRepository->findDistinctPlugins(), 'pluginIdentifier'));
                 $this->paginationService->assign($this->enrichContentRows($this->getAllUsedPlugins(false, $filter), 'plugin'), $currentPage, $view);
                 break;
             case 6:
-                $filterField = $this->contentTypeResolver->hasLegacyListType() ? 'list_type' : 'CType';
-                $view->assign('filterOptions', array_column($this->contentUsageRepository->findDistinctPlugins(true), $filterField));
+                $view->assign('filterOptions', array_column($this->contentUsageRepository->findDistinctPlugins(true), 'pluginIdentifier'));
                 $this->paginationService->assign($this->enrichContentRows($this->getAllUsedPlugins(true, $filter), 'plugin'), $currentPage, $view);
                 break;
             case 7:
@@ -142,8 +140,8 @@ class Plugins extends AbstractReport
     {
         $hasLegacyListType = $this->contentTypeResolver->hasLegacyListType();
         foreach ($items as &$item) {
-            $value = $type === 'plugin' && $hasLegacyListType
-                ? (string) ($item['list_type'] ?? '')
+            $value = $type === 'plugin'
+                ? (string) ($item['pluginIdentifier'] ?? $item['list_type'] ?? $item['CType'] ?? '')
                 : (string) ($item['CType'] ?? '');
             $item = array_merge($item, $this->contentTypeResolver->resolve($type, $value));
             $pageId = (int) ($item['pid'] ?? 0);

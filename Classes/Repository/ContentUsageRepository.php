@@ -19,29 +19,37 @@ final readonly class ContentUsageRepository
 
     public function findDistinctPlugins(bool $includeHidden = false): array
     {
-        if (! $this->getContentTypeResolver()->hasLegacyListType()) {
-            $pluginContentTypes = $this->getContentTypeResolver()->getPluginContentTypes();
-            if ($pluginContentTypes === []) {
-                return [];
-            }
+        $plugins = [];
+        $pluginContentTypes = $this->getContentTypeResolver()->getPluginContentTypes();
+        if ($pluginContentTypes !== []) {
             $queryBuilder = $this->createQueryBuilder($includeHidden);
-            return $queryBuilder
+            $plugins = array_map(static function (array $row): array {
+                $row['pluginIdentifier'] = (string) ($row['CType'] ?? '');
+                return $row;
+            }, $queryBuilder
                 ->select('tt_content.CType')
                 ->distinct()
                 ->andWhere($queryBuilder->expr()->in('tt_content.CType', $queryBuilder->createNamedParameter($pluginContentTypes, ArrayParameterType::STRING)))
                 ->orderBy('tt_content.CType')
                 ->executeQuery()
-                ->fetchAllAssociative();
+                ->fetchAllAssociative());
+        }
+        if (! $this->getContentTypeResolver()->hasLegacyListType()) {
+            return $plugins;
         }
         $queryBuilder = $this->createQueryBuilder($includeHidden);
-        return $queryBuilder
+        $legacyPlugins = array_map(static function (array $row): array {
+            $row['pluginIdentifier'] = (string) ($row['list_type'] ?? '');
+            return $row;
+        }, $queryBuilder
             ->select('tt_content.list_type')
             ->distinct()
             ->andWhere($queryBuilder->expr()->eq('tt_content.CType', $queryBuilder->createNamedParameter('list')))
             ->andWhere($queryBuilder->expr()->neq('tt_content.list_type', $queryBuilder->createNamedParameter('')))
             ->orderBy('tt_content.list_type')
             ->executeQuery()
-            ->fetchAllAssociative();
+            ->fetchAllAssociative());
+        return [...$plugins, ...$legacyPlugins];
     }
 
     public function findDistinctContentTypes(bool $includeHidden = false): array
@@ -50,26 +58,21 @@ final readonly class ContentUsageRepository
         $queryBuilder->select('tt_content.CType')->distinct()
             ->andWhere($queryBuilder->expr()->neq('tt_content.CType', $queryBuilder->createNamedParameter('')));
         if ($this->getContentTypeResolver()->hasLegacyListType()) {
-            $queryBuilder->addSelect('tt_content.list_type')
-                ->andWhere($queryBuilder->expr()->neq('tt_content.CType', $queryBuilder->createNamedParameter('list')))
-                ->orderBy('tt_content.list_type');
-        } else {
-            $pluginContentTypes = $this->getContentTypeResolver()->getPluginContentTypes();
-            if ($pluginContentTypes !== []) {
-                $queryBuilder->andWhere($queryBuilder->expr()->notIn('tt_content.CType', $queryBuilder->createNamedParameter($pluginContentTypes, ArrayParameterType::STRING)));
-            }
-            $queryBuilder->orderBy('tt_content.CType');
+            $queryBuilder->andWhere($queryBuilder->expr()->neq('tt_content.CType', $queryBuilder->createNamedParameter('list')));
         }
+        $pluginContentTypes = $this->getContentTypeResolver()->getPluginContentTypes();
+        if ($pluginContentTypes !== []) {
+            $queryBuilder->andWhere($queryBuilder->expr()->notIn('tt_content.CType', $queryBuilder->createNamedParameter($pluginContentTypes, ArrayParameterType::STRING)));
+        }
+        $queryBuilder->orderBy('tt_content.CType');
         return $queryBuilder->executeQuery()->fetchAllAssociative();
     }
 
     public function findPlugins(bool $includeHidden = false, ?string $filter = null): array
     {
-        if (! $this->getContentTypeResolver()->hasLegacyListType()) {
-            $pluginContentTypes = $this->getContentTypeResolver()->getPluginContentTypes();
-            if ($pluginContentTypes === [] || ($filter !== null && $filter !== 'all' && ! in_array($filter, $pluginContentTypes, true))) {
-                return [];
-            }
+        $plugins = [];
+        $pluginContentTypes = $this->getContentTypeResolver()->getPluginContentTypes();
+        if ($pluginContentTypes !== [] && ($filter === null || $filter === 'all' || in_array($filter, $pluginContentTypes, true))) {
             $queryBuilder = $this->createQueryBuilder($includeHidden);
             $queryBuilder->select('tt_content.CType', 'tt_content.pid', 'tt_content.uid', 'pages.title')
                 ->addSelectLiteral('pages.hidden AS hiddenpages', 'tt_content.hidden AS hiddentt_content')
@@ -79,7 +82,13 @@ final readonly class ContentUsageRepository
             if ($filter !== null && $filter !== 'all') {
                 $queryBuilder->andWhere($queryBuilder->expr()->eq('tt_content.CType', $queryBuilder->createNamedParameter($filter)));
             }
-            return $queryBuilder->executeQuery()->fetchAllAssociative();
+            $plugins = array_map(static function (array $row): array {
+                $row['pluginIdentifier'] = (string) ($row['CType'] ?? '');
+                return $row;
+            }, $queryBuilder->executeQuery()->fetchAllAssociative());
+        }
+        if (! $this->getContentTypeResolver()->hasLegacyListType()) {
+            return $plugins;
         }
         $queryBuilder = $this->createQueryBuilder($includeHidden);
         $queryBuilder->select('tt_content.list_type', 'tt_content.pid', 'tt_content.uid', 'pages.title')
@@ -90,7 +99,11 @@ final readonly class ContentUsageRepository
         if ($filter !== null && $filter !== 'all') {
             $queryBuilder->andWhere($queryBuilder->expr()->eq('tt_content.list_type', $queryBuilder->createNamedParameter($filter)));
         }
-        return $queryBuilder->executeQuery()->fetchAllAssociative();
+        $legacyPlugins = array_map(static function (array $row): array {
+            $row['pluginIdentifier'] = (string) ($row['list_type'] ?? '');
+            return $row;
+        }, $queryBuilder->executeQuery()->fetchAllAssociative());
+        return [...$plugins, ...$legacyPlugins];
     }
 
     public function findContentTypes(bool $includeHidden = false, ?string $filter = null): array
@@ -101,11 +114,9 @@ final readonly class ContentUsageRepository
             ->distinct()
             ->andWhere($queryBuilder->expr()->neq('tt_content.CType', $queryBuilder->createNamedParameter($this->getContentTypeResolver()->hasLegacyListType() ? 'list' : '')))
             ->orderBy('tt_content.CType')->addOrderBy('tt_content.pid');
-        if (! $this->getContentTypeResolver()->hasLegacyListType()) {
-            $pluginContentTypes = $this->getContentTypeResolver()->getPluginContentTypes();
-            if ($pluginContentTypes !== []) {
-                $queryBuilder->andWhere($queryBuilder->expr()->notIn('tt_content.CType', $queryBuilder->createNamedParameter($pluginContentTypes, ArrayParameterType::STRING)));
-            }
+        $pluginContentTypes = $this->getContentTypeResolver()->getPluginContentTypes();
+        if ($pluginContentTypes !== []) {
+            $queryBuilder->andWhere($queryBuilder->expr()->notIn('tt_content.CType', $queryBuilder->createNamedParameter($pluginContentTypes, ArrayParameterType::STRING)));
         }
         if ($filter !== null && $filter !== 'all') {
             $queryBuilder->andWhere($queryBuilder->expr()->eq('tt_content.CType', $queryBuilder->createNamedParameter($filter)));

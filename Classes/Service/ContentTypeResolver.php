@@ -7,15 +7,15 @@ namespace Sng\AdditionalReports\Service;
 use Sng\AdditionalReports\Utility;
 use TYPO3\CMS\Core\Imaging\IconRegistry;
 use TYPO3\CMS\Core\Information\Typo3Version;
-use TYPO3\CMS\Core\SystemResource\Publishing\SystemResourcePublisherInterface;
-use TYPO3\CMS\Core\SystemResource\Publishing\UriGenerationOptions;
-use TYPO3\CMS\Core\SystemResource\SystemResourceFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\PathUtility;
 
 final class ContentTypeResolver
 {
-    public function __construct(private readonly ?Typo3Version $typo3Version = null) {}
+    public function __construct(
+        private readonly ?Typo3Version $typo3Version = null,
+        private readonly ?PublicResourceUriResolver $publicResourceUriResolver = null,
+    ) {}
 
     /** @return array<string, string> */
     public function resolve(string $type, string $value): array
@@ -98,11 +98,7 @@ final class ContentTypeResolver
 
     private function publishExtensionResource(string $identifier): string
     {
-        $resource = GeneralUtility::makeInstance(SystemResourceFactory::class)->createPublicResource($identifier);
-        return (string) GeneralUtility::makeInstance(SystemResourcePublisherInterface::class)->generateUri(
-            $resource,
-            null,
-            new UriGenerationOptions(absoluteUri: false),
-        );
+        $resolver = $this->publicResourceUriResolver ?? GeneralUtility::makeInstance(PublicResourceUriResolver::class);
+        return $resolver->resolve($identifier);
     }
 }

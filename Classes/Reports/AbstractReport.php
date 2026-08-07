@@ -14,6 +14,7 @@ namespace Sng\AdditionalReports\Reports;
 use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Component\Routing\Route as SymfonyRoute;
 use TYPO3\CMS\Backend\Routing\Route;
+use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\View\ViewFactoryData;
@@ -26,6 +27,10 @@ use TYPO3\CMS\Reports\ReportInterface;
  */
 trait AbstractReportImplementation
 {
+    abstract public function getReport(): string;
+
+    abstract public function getTitle(): string;
+
     /**
      * Back-reference to the calling reports module
      *
@@ -92,6 +97,9 @@ trait AbstractReportImplementation
 
     protected function getCurrentRouteIdentifier(): string
     {
+        if ((new Typo3Version())->getMajorVersion() < 14) {
+            return 'system_reports';
+        }
         $request = $this->getRequest();
         $route = $request instanceof ServerRequestInterface ? $request->getAttribute('route') : null;
         if ($route instanceof Route || $route instanceof SymfonyRoute) {

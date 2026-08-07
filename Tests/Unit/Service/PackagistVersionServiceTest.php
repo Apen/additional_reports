@@ -83,10 +83,10 @@ final class PackagistVersionServiceTest extends TestCase
         $response = new Response(200, [], json_encode([
             'package' => [
                 'versions' => [
-                    '14.2.0' => [
-                        'version' => '14.2.0',
+                    '1.2.0' => [
+                        'version' => '1.2.0',
                         'time' => '2026-08-01T10:00:00+00:00',
-                        'require' => ['typo3/cms-core' => '^14'],
+                        'require' => ['typo3/cms-core' => '^13 || ^14'],
                     ],
                 ],
             ],
@@ -94,7 +94,7 @@ final class PackagistVersionServiceTest extends TestCase
 
         $result = $this->findVersionWithResponse($response);
 
-        self::assertSame('14.2.0', $result['version']);
+        self::assertSame('1.2.0', $result['version']);
         self::assertSame('01/08/2026', $result['updatedate']);
     }
 

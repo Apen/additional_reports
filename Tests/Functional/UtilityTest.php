@@ -65,10 +65,7 @@ class UtilityTest extends FunctionalTestCase
         $this->setUpBackendUser(1);
         $GLOBALS['LANG'] = GeneralUtility::makeInstance(LanguageServiceFactory::class)->createFromUserPreferences($GLOBALS['BE_USER']);
         $this->importCSVDataSet(__DIR__ . '/Fixtures/pages.csv');
-        $fixture = GeneralUtility::makeInstance(Typo3Version::class)->getMajorVersion() >= 14
-            ? '/Fixtures/tt_content_v14.csv'
-            : '/Fixtures/tt_content.csv';
-        $this->importCSVDataSet(__DIR__ . $fixture);
+        $this->importCSVDataSet(__DIR__ . '/Fixtures/tt_content_v14.csv');
         $uri = new Uri('https://localhost/typo3/');
         $request = new ServerRequest($uri, 'GET', null, [], [
             'DOCUMENT_ROOT' => Environment::getPublicPath(),

@@ -18,10 +18,7 @@ class PluginsTest extends FunctionalTestCase
     {
         parent::setUp();
         $this->importCSVDataSet(__DIR__ . '/../Fixtures/pages.csv');
-        $contentFixture = GeneralUtility::makeInstance(Typo3Version::class)->getMajorVersion() >= 14
-            ? '/../Fixtures/tt_content_v14.csv'
-            : '/../Fixtures/tt_content.csv';
-        $this->importCSVDataSet(__DIR__ . $contentFixture);
+        $this->importCSVDataSet(__DIR__ . '/../Fixtures/tt_content_v14.csv');
     }
 
     public function testDisplay()
@@ -36,7 +33,9 @@ class PluginsTest extends FunctionalTestCase
         self::assertStringContainsString('/typo3/module/system/reports', $output);
         $assetCollector = GeneralUtility::makeInstance(AssetCollector::class);
         self::assertTrue($assetCollector->hasInlineJavaScript('additional-reports-plugins'));
-        self::assertTrue($assetCollector->getInlineJavaScripts()['additional-reports-plugins']['options']['csp']);
+        if (GeneralUtility::makeInstance(Typo3Version::class)->getMajorVersion() >= 14) {
+            self::assertTrue($assetCollector->getInlineJavaScripts()['additional-reports-plugins']['options']['csp']);
+        }
     }
 
     public function testContentRowsAreEnrichedBeforeRendering(): void
