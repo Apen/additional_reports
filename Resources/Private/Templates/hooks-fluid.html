@@ -24,9 +24,9 @@
             <tbody>
             <f:for each="{hooks.core}" as="hook">
                 <tr>
-                    <td>{hook.corefile}</td>
-                    <td>{hook.name}</td>
-                    <td>
+                    <td class="align-top">{hook.corefile}</td>
+                    <td class="align-top">{hook.name}</td>
+                    <td class="align-top">
                         <f:render partial="StructuredData" arguments="{rows: hook.file}"/>
                     </td>
                 </tr>
@@ -60,9 +60,9 @@
             <tbody>
             <f:for each="{hooks.extensions}" as="hook">
                 <tr>
-                    <td>{hook.corefile}</td>
-                    <td>{hook.name}</td>
-                    <td>
+                    <td class="align-top">{hook.corefile}</td>
+                    <td class="align-top">{hook.name}</td>
+                    <td class="align-top">
                         <f:render partial="StructuredData" arguments="{rows: hook.file}"/>
                     </td>
                 </tr>

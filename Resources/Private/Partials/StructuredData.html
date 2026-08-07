@@ -1,23 +1,22 @@
 <f:if condition="{rows}">
-    <table class="table table-striped table-condensed mb-0">
-        <tbody>
+    <ul class="additional-reports-structured-data list-unstyled mb-0">
         <f:for each="{rows}" as="row">
-            <tr>
-                <f:if condition="{row.key}">
-                    <th scope="row"><code>{row.key}</code></th>
-                </f:if>
-                <td>
-                    <f:if condition="{row.children}">
-                        <f:then>
+            <li class="mb-1">
+                <f:if condition="{row.children}">
+                    <f:then>
+                        <f:if condition="{row.key}"><code>{row.key}</code></f:if>
+                        <div class="border-start ms-2 ps-2">
                             <f:render partial="StructuredData" arguments="{rows: row.children}"/>
-                        </f:then>
-                        <f:else>
-                            <code><f:format.nl2br>{row.value}</f:format.nl2br></code>
-                        </f:else>
-                    </f:if>
-                </td>
-            </tr>
+                        </div>
+                    </f:then>
+                    <f:else>
+                        <span class="d-flex flex-wrap gap-2">
+                            <f:if condition="{row.key}"><code class="text-nowrap">{row.key}</code></f:if>
+                            <span class="text-break"><f:format.nl2br>{row.value}</f:format.nl2br></span>
+                        </span>
+                    </f:else>
+                </f:if>
+            </li>
         </f:for>
-        </tbody>
-    </table>
+    </ul>
 </f:if>

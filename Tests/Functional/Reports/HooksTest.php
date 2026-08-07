@@ -22,5 +22,7 @@ class HooksTest extends FunctionalTestCase
 
         self::assertStringContainsString('backend/test.php', $output);
         self::assertStringContainsString('Sng\\AdditionalReports\\Reports\\Hooks', $output);
+        self::assertStringContainsString('additional-reports-structured-data', $output);
+        self::assertStringNotContainsString('table table-striped table-condensed mb-0', $output);
     }
 }
