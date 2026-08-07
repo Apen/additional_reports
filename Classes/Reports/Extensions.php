@@ -39,7 +39,7 @@ class Extensions extends AbstractReport
     {
         $extensionsToUpdate = 0;
 
-        $allExtension = Utility::getInstExtList(Utility::getPathTypo3Conf() . 'ext/');
+        $allExtension = Utility::getExtensionList();
 
         $listExtensionsTer = [];
         $listExtensionsDev = [];
@@ -48,7 +48,7 @@ class Extensions extends AbstractReport
         if (! empty($allExtension['ter'])) {
             foreach ($allExtension['ter'] as $itemValue) {
                 $currentExtension = $this->getExtensionInformations($itemValue);
-                if (version_compare($itemValue['EM_CONF']['version'], $itemValue['lastversion']['version'], '<')) {
+                if (version_compare($itemValue['version'], $itemValue['lastversion']['version'], '<')) {
                     $extensionsToUpdate++;
                 }
                 $listExtensionsTer[] = $currentExtension;
@@ -94,7 +94,7 @@ class Extensions extends AbstractReport
     public function getExtensionInformations($itemValue)
     {
         $extKey = $itemValue['extkey'];
-        $extVersion = $itemValue['EM_CONF']['version'] ?? '';
+        $extVersion = $itemValue['version'] ?? '';
         $listExtensionsTerItem = [];
         $listExtensionsTerItem['extension'] = $extKey;
         $listExtensionsTerItem['version'] = $extVersion;

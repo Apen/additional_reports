@@ -22,6 +22,7 @@ use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
 use TYPO3\CMS\Core\Package\Exception\UnknownPackageException;
+use TYPO3\CMS\Core\Package\PackageInterface;
 use TYPO3\CMS\Core\Package\PackageManager;
 use TYPO3\CMS\Core\Pagination\ArrayPaginator;
 use TYPO3\CMS\Core\Pagination\SlidingWindowPagination;
@@ -144,94 +145,52 @@ class Utility
     }
 
     /**
-     * Gathers all extensions in $path
-     *
-     * @param string $path Absolute path to local, global or system extensions
-     * @return array
+     * @return array{
+     *     ter: array<string, array<string, mixed>>,
+     *     dev: array<string, array<string, mixed>>,
+     *     unloaded: array<string, array<string, mixed>>
+     * }
      */
-    public static function getInstExtList($path)
+    public static function getExtensionList(): array
     {
-        $list = [];
-        $list['ter'] = $list['dev'] = $list['unloaded'] = [];
+        $list = ['ter' => [], 'dev' => [], 'unloaded' => []];
+        $packageManager = GeneralUtility::makeInstance(PackageManager::class);
 
-        if (self::isComposerMode()) {
-            $packageManager = GeneralUtility::makeInstance(PackageManager::class);
-            /** @var \TYPO3\CMS\Core\Package\PackageInterface $package */
-            $activePackages = $packageManager->getActivePackages();
-            foreach ($activePackages as $package) {
-                $packagePath = $package->getPackagePath();
-                $extKey = $package->getPackageKey();
-                if (str_contains($packagePath, 'vendor/typo3')) {
-                    continue;
-                }
-                if (@is_file($packagePath . '/ext_emconf.php')) {
-                    $emConf = self::includeEMCONF($packagePath . '/ext_emconf.php', $package->getPackageKey());
-                    if (is_array($emConf)) {
-                        $currentExt = [];
-                        $currentExt['extkey'] = $extKey;
-                        $currentExt['installed'] = ExtensionManagementUtility::isLoaded($extKey);
-                        $currentExt['EM_CONF'] = $emConf;
-                        $currentExt['files'] = GeneralUtility::getFilesInDir($packagePath);
-                        $currentExt['lastversion'] = self::checkExtensionUpdate($currentExt);
-
-                        // db infos
-                        $fileContent = '';
-                        if (is_array($currentExt['files']) && in_array('ext_tables.sql', $currentExt['files'])) {
-                            $fileContent = GeneralUtility::getUrl($packagePath . 'ext_tables.sql');
-                        }
-                        $currentExt['fdfile'] = $fileContent;
-
-                        if ($currentExt['installed']) {
-                            if ($currentExt['lastversion']) {
-                                $list['ter'][$extKey] = $currentExt;
-                            } else {
-                                $list['dev'][$extKey] = $currentExt;
-                            }
-                        } else {
-                            $list['unloaded'][$extKey] = $currentExt;
-                        }
-                    }
-                }
+        foreach ($packageManager->getAvailablePackages() as $package) {
+            if (! self::isThirdPartyExtension($package)) {
+                continue;
             }
-            return $list;
-        }
 
-        if (@is_dir($path)) {
-            $extList = GeneralUtility::get_dirs($path);
-            if (is_array($extList)) {
-                foreach ($extList as $extKey) {
-                    if (@is_file($path . $extKey . '/ext_emconf.php')) {
-                        $emConf = self::includeEMCONF($path . $extKey . '/ext_emconf.php', $extKey);
-                        if (is_array($emConf)) {
-                            $currentExt = [];
-                            $currentExt['extkey'] = $extKey;
-                            $currentExt['installed'] = ExtensionManagementUtility::isLoaded($extKey);
-                            $currentExt['EM_CONF'] = $emConf;
-                            $currentExt['files'] = GeneralUtility::getFilesInDir($path . $extKey);
-                            $currentExt['lastversion'] = self::checkExtensionUpdate($currentExt);
+            $extensionKey = $package->getPackageKey();
+            $packagePath = rtrim($package->getPackagePath(), '/\\') . DIRECTORY_SEPARATOR;
+            $sqlFile = $packagePath . 'ext_tables.sql';
+            $extension = [
+                'extkey' => $extensionKey,
+                'installed' => $packageManager->isPackageActive($extensionKey),
+                'version' => $package->getPackageMetaData()->getVersion(),
+                'lastversion' => null,
+                'fdfile' => is_file($sqlFile) ? (string) GeneralUtility::getUrl($sqlFile) : '',
+            ];
+            $extension['lastversion'] = self::checkExtensionUpdate($extension);
 
-                            // db infos
-                            $fileContent = '';
-                            if (is_array($currentExt['files']) && in_array('ext_tables.sql', $currentExt['files'])) {
-                                $fileContent = GeneralUtility::getUrl(self::getExtPath($currentExt['extkey']) . 'ext_tables.sql');
-                            }
-                            $currentExt['fdfile'] = $fileContent;
-
-                            if ($currentExt['installed']) {
-                                if ($currentExt['lastversion']) {
-                                    $list['ter'][$extKey] = $currentExt;
-                                } else {
-                                    $list['dev'][$extKey] = $currentExt;
-                                }
-                            } else {
-                                $list['unloaded'][$extKey] = $currentExt;
-                            }
-                        }
-                    }
-                }
+            if (! $extension['installed']) {
+                $list['unloaded'][$extensionKey] = $extension;
+            } elseif ($extension['lastversion'] !== null) {
+                $list['ter'][$extensionKey] = $extension;
+            } else {
+                $list['dev'][$extensionKey] = $extension;
             }
         }
+
         return $list;
+    }
+
+    private static function isThirdPartyExtension(PackageInterface $package): bool
+    {
+        $packageType = $package->getPackageMetaData()->getPackageType();
+        return is_string($packageType)
+            && str_starts_with($packageType, 'typo3-cms-')
+            && $packageType !== 'typo3-cms-framework';
     }
 
     /**

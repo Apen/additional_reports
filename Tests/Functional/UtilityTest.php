@@ -84,11 +84,16 @@ class UtilityTest extends FunctionalTestCase
         $GLOBALS['TYPO3_REQUEST'] = $request;
     }
 
-    public function testGetInstExtList()
+    public function testGetExtensionListUsesRegisteredPackages()
     {
-        $extLits = Utility::getInstExtList(Environment::getPublicPath() . '/typo3/sysext/');
-        self::assertNotEmpty($extLits);
-        self::assertEquals('additional_reports', $extLits['dev']['additional_reports']['extkey']);
+        $extensions = Utility::getExtensionList();
+        $activeExtensions = $extensions['ter'] + $extensions['dev'];
+
+        self::assertSame(['ter', 'dev', 'unloaded'], array_keys($extensions));
+        self::assertSame('additional_reports', $activeExtensions['additional_reports']['extkey']);
+        self::assertTrue($activeExtensions['additional_reports']['installed']);
+        self::assertNotSame('', $activeExtensions['additional_reports']['version']);
+        self::assertArrayNotHasKey('core', $activeExtensions + $extensions['unloaded']);
     }
 
     public function testGetExtPath()
