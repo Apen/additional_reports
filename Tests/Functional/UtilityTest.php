@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Sng\AdditionalReports\Tests\Functional;
 
+use Sng\AdditionalReports\Service\TerArchiveService;
 use Sng\AdditionalReports\Service\Typo3VersionInformationService;
 use Sng\AdditionalReports\Utility;
 use TYPO3\CMS\Core\Cache\Backend\SimpleFileBackend;
@@ -120,7 +121,7 @@ class UtilityTest extends FunctionalTestCase
         if (getenv('RUN_NETWORK_TESTS') !== '1') {
             self::markTestSkipped('Set RUN_NETWORK_TESTS=1 to run TER integration tests.');
         }
-        self::assertNotEmpty(Utility::downloadT3x('additional_reports', '3.3.2'));
+        self::assertNotEmpty((new TerArchiveService())->download('additional_reports', '3.3.2'));
     }
 
     public function testGetTreeList()

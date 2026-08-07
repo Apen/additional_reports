@@ -227,68 +227,6 @@ class Utility
     }
 
     /**
-     * Download an extension content
-     *
-     * @return array
-     */
-    public static function downloadT3x($extension, $version, $extFile = null)
-    {
-        $firstLetter = strtolower(substr($extension, 0, 1));
-        $secondLetter = strtolower(substr($extension, 1, 1));
-        $from = 'https://typo3.org/fileadmin/ter/' . $firstLetter . '/' . $secondLetter . '/' . $extension . '_' . trim($version) . '.t3x';
-        $content = GeneralUtility::getURL($from);
-        if (! is_string($content)) {
-            throw new \RuntimeException('The extension archive could not be downloaded.');
-        }
-        $t3xfiles = self::extractExtensionDataFromT3x($content);
-        if (empty($extFile)) {
-            return $t3xfiles;
-        }
-        return $t3xfiles['FILES'][$extFile]['content'];
-    }
-
-    /**
-     * Extract a t3x file
-     *
-     * @return array
-     */
-    public static function extractExtensionDataFromT3x(string $content): array
-    {
-        $parts = explode(':', $content, 3);
-        if (($parts[1] ?? '') === 'gzcompress') {
-            if (function_exists('gzuncompress')) {
-                $uncompressedContent = gzuncompress($parts[2] ?? '');
-                if (! is_string($uncompressedContent)) {
-                    throw new \RuntimeException('Decoding Error: The compressed extension payload is invalid.');
-                }
-                $parts[2] = $uncompressedContent;
-            } else {
-                throw new \RuntimeException('Decoding Error: No decompressor available for compressed content. gzcompress()/gzuncompress() functions are not available!');
-            }
-        }
-        $serializedContent = $parts[2] ?? '';
-        if (isset($parts[0]) && hash_equals($parts[0], md5($serializedContent))) {
-            $output = unserialize($serializedContent, ['allowed_classes' => false]);
-            if (is_array($output) && ! self::containsObject($output)) {
-                return $output;
-            }
-            throw new \UnexpectedValueException('Error: Content could not be safely unserialized to an array.');
-        }
-        throw new \UnexpectedValueException('Error: MD5 mismatch. Maybe the extension file was downloaded and saved as a text file by the browser and thereby corrupted!? (Always select "All" filetype when saving extensions)');
-    }
-
-    /** @param array<mixed> $values */
-    private static function containsObject(array $values): bool
-    {
-        foreach ($values as $value) {
-            if (is_object($value) || (is_array($value) && self::containsObject($value))) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
      * Check if string given is hook
      *
      * @param mixed $hook

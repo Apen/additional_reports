@@ -113,41 +113,4 @@ class UtilityTest extends BaseTestCase
         Utility::getExtensionVersion(null);
     }
 
-    public function testExtractExtensionDataFromT3x(): void
-    {
-        $data = ['FILES' => ['ext_localconf.php' => ['content' => '<?php']]];
-        $serializedData = serialize($data);
-
-        self::assertSame($data, Utility::extractExtensionDataFromT3x(md5($serializedData) . ':raw:' . $serializedData));
-
-        $compressedData = gzcompress($serializedData);
-        self::assertSame($data, Utility::extractExtensionDataFromT3x(md5($serializedData) . ':gzcompress:' . $compressedData));
-    }
-
-    public function testExtractExtensionDataRejectsInvalidContent(): void
-    {
-        $this->expectException(\Exception::class);
-        $this->expectExceptionMessage('MD5 mismatch');
-
-        Utility::extractExtensionDataFromT3x('invalid:raw:content');
-    }
-
-    public function testExtractExtensionDataRejectsNonArrayPayload(): void
-    {
-        $serializedData = serialize('not an array');
-        $this->expectException(\Exception::class);
-        $this->expectExceptionMessage('could not be safely unserialized to an array');
-
-        Utility::extractExtensionDataFromT3x(md5($serializedData) . ':raw:' . $serializedData);
-    }
-
-    public function testExtractExtensionDataRejectsObjectPayload(): void
-    {
-        $serializedData = serialize(['object' => new \stdClass()]);
-        $this->expectException(\UnexpectedValueException::class);
-        $this->expectExceptionMessage('could not be safely unserialized to an array');
-
-        Utility::extractExtensionDataFromT3x(md5($serializedData) . ':raw:' . $serializedData);
-    }
-
 }

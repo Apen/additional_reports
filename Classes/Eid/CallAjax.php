@@ -15,7 +15,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use SebastianBergmann\Diff\Differ;
 use SebastianBergmann\Diff\Output\UnifiedDiffOutputBuilder;
-use Sng\AdditionalReports\Utility;
+use Sng\AdditionalReports\Service\TerArchiveService;
 use TYPO3\CMS\Core\Http\HtmlResponse;
 use TYPO3\CMS\Core\Package\Exception\UnknownPackageException;
 use TYPO3\CMS\Core\Package\PackageManager;
@@ -79,7 +79,7 @@ class CallAjax
 
     protected function downloadT3x(string $extensionKey, string $extensionVersion, ?string $extensionFile = null): mixed
     {
-        return Utility::downloadT3x($extensionKey, $extensionVersion, $extensionFile);
+        return GeneralUtility::makeInstance(TerArchiveService::class)->download($extensionKey, $extensionVersion, $extensionFile);
     }
 
     protected function readLocalFile(string $file): string
