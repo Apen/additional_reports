@@ -59,26 +59,6 @@ class Utility
         ];
     }
 
-    /**
-     * Get base url of the report (use to generate links)
-     *
-     * @return string url
-     */
-    public static function getBaseUrl(): string
-    {
-        $parameters = [];
-        $parameters['extension'] = 'additional_reports';
-        $parameters['action'] = 'detail';
-        $parameters['report'] = self::_GET('report');
-        $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
-        $route = self::getReportRouteIdentifier((string) $parameters['report']);
-        if ($route !== 'system_reports') {
-            unset($parameters['extension'], $parameters['action'], $parameters['report']);
-        }
-        $url = $uriBuilder->buildUriFromRoute($route, $parameters);
-        return (string) $url;
-    }
-
     public static function getReportRouteIdentifier(string $report): string
     {
         if (GeneralUtility::makeInstance(Typo3Version::class)->getMajorVersion() < 14) {
@@ -603,38 +583,6 @@ class Utility
             ->fetchAllAssociative();
     }
 
-    /**
-     * Get all the different plugins (html select)
-     *
-     * @param bool $displayHidden
-     */
-    public static function getAllDifferentPluginsSelect($displayHidden): string
-    {
-        $getFiltersCat = self::_GP('filtersCat');
-        $pluginsList = self::getAllDifferentPlugins((bool) $displayHidden);
-        $filterCat = '';
-
-        if ($getFiltersCat == 'all') {
-            $filterCat .= '<option value="all" selected="selected">' . self::getLL('all') . '</option>';
-        } else {
-            $filterCat .= '<option value="all">' . self::getLL('all') . '</option>';
-        }
-
-        $field = self::hasLegacyListType() ? 'list_type' : 'CType';
-        foreach ($pluginsList as $pluginsElement) {
-            if (($getFiltersCat == $pluginsElement[$field]) && ($getFiltersCat !== null)) {
-                $filterCat .= '<option value="' . $pluginsElement[$field] . '" selected="selected">';
-                $filterCat .= $pluginsElement[$field] . '</option>';
-            } else {
-                $filterCat .= '<option value="' . $pluginsElement[$field] . '">' . $pluginsElement[$field] . '</option>';
-            }
-        }
-
-        $listUrlOrig = self::getBaseUrl() . '&display=' . self::getPluginsDisplayMode();
-
-        return '<select name="filtersCat" id="filtersCat" data-url="' . $listUrlOrig . '">' . $filterCat . '</select>';
-    }
-
     public static function getAllDifferentCtypes(bool $displayHidden = false): array
     {
         $queryBuilder = self::createContentQueryBuilder($displayHidden);
@@ -651,37 +599,6 @@ class Utility
             $queryBuilder->orderBy('tt_content.CType');
         }
         return $queryBuilder->executeQuery()->fetchAllAssociative();
-    }
-
-    /**
-     * Get all the different ctypes (html select)
-     *
-     * @param bool $displayHidden
-     */
-    public static function getAllDifferentCtypesSelect($displayHidden): string
-    {
-        $getFiltersCat = self::_GP('filtersCat');
-        $pluginsList = self::getAllDifferentCtypes((bool) $displayHidden);
-        $filterCat = '';
-
-        if ($getFiltersCat == 'all') {
-            $filterCat .= '<option value="all" selected="selected">' . self::getLL('all') . '</option>';
-        } else {
-            $filterCat .= '<option value="all">' . self::getLL('all') . '</option>';
-        }
-
-        foreach ($pluginsList as $pluginsElement) {
-            if (($getFiltersCat == $pluginsElement['CType']) && ($getFiltersCat !== null)) {
-                $filterCat .= '<option value="' . $pluginsElement['CType'] . '" selected="selected">';
-                $filterCat .= $pluginsElement['CType'] . '</option>';
-            } else {
-                $filterCat .= '<option value="' . $pluginsElement['CType'] . '">' . $pluginsElement['CType'] . '</option>';
-            }
-        }
-
-        $listUrlOrig = self::getBaseUrl() . '&display=' . self::getPluginsDisplayMode();
-
-        return '<select name="filtersCat" id="filtersCat" data-url="' . $listUrlOrig . '">' . $filterCat . '</select>';
     }
 
     /**

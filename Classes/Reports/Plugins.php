@@ -38,7 +38,6 @@ class Plugins extends AbstractReport
         $view->assign('reportname', Utility::hasLegacyListType() ? 'additionalreports_plugins' : 'plugins');
         $view->assign('paginationRoute', Utility::getReportRouteIdentifier('plugins'));
         $view->assign('extconf', unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['additional_reports'] ?? ''));
-        $view->assign('url', Utility::getBaseUrl());
         $view->assign('caution', Utility::writeInformation(Utility::getLl('careful'), Utility::getLl('carefuldesc')));
         $view->assign('checkedpluginsmode3', (Utility::getPluginsDisplayMode() === 3) ? ' checked="checked"' : '');
         $view->assign('checkedpluginsmode4', (Utility::getPluginsDisplayMode() === 4) ? ' checked="checked"' : '');
@@ -51,19 +50,21 @@ class Plugins extends AbstractReport
 
         switch (Utility::getPluginsDisplayMode()) {
             case 3:
-                $view->assign('filtersCat', Utility::getAllDifferentCtypesSelect(false));
+                $view->assign('filterOptions', array_column(Utility::getAllDifferentCtypes(false), 'CType'));
                 Utility::buildPagination(self::getAllUsedCtypes(), $currentPage, $view);
                 break;
             case 4:
-                $view->assign('filtersCat', Utility::getAllDifferentPluginsSelect(false));
+                $filterField = Utility::hasLegacyListType() ? 'list_type' : 'CType';
+                $view->assign('filterOptions', array_column(Utility::getAllDifferentPlugins(false), $filterField));
                 Utility::buildPagination(self::getAllUsedPlugins(), $currentPage, $view);
                 break;
             case 6:
-                $view->assign('filtersCat', Utility::getAllDifferentPluginsSelect(true));
+                $filterField = Utility::hasLegacyListType() ? 'list_type' : 'CType';
+                $view->assign('filterOptions', array_column(Utility::getAllDifferentPlugins(true), $filterField));
                 Utility::buildPagination(self::getAllUsedPlugins(true), $currentPage, $view);
                 break;
             case 7:
-                $view->assign('filtersCat', Utility::getAllDifferentCtypesSelect(true));
+                $view->assign('filterOptions', array_column(Utility::getAllDifferentCtypes(true), 'CType'));
                 Utility::buildPagination(self::getAllUsedCtypes(true), $currentPage, $view);
                 break;
             default:

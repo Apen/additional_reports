@@ -7,13 +7,13 @@
 <table id="choice-display">
     <tr>
         <td>
-            <input data-url="{url}&display=4" style="margin-right:4px;" type="radio" name="display" value="1" id="radio4" {checkedpluginsmode4}/>
+            <input data-url="{f:be.uri(route:paginationRoute,parameters:{display:4,action:'detail',extension:'additional_reports',report:reportname})}" style="margin-right:4px;" type="radio" name="display" value="1" id="radio4" {checkedpluginsmode4}/>
             <label for="radio4" style="margin-right:10px;">
                 <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:pluginsmode4"/>
             </label>
         </td>
         <td>
-            <input data-url="{url}&display=6" style="margin-right:4px;" type="radio" name="display" value="1" id="radio6" {checkedpluginsmode6}/>
+            <input data-url="{f:be.uri(route:paginationRoute,parameters:{display:6,action:'detail',extension:'additional_reports',report:reportname})}" style="margin-right:4px;" type="radio" name="display" value="1" id="radio6" {checkedpluginsmode6}/>
             <label for="radio6" style="margin-right:10px;">
                 <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:pluginsmode4hidden"/>
             </label>
@@ -21,13 +21,13 @@
     </tr>
     <tr>
         <td>
-            <input data-url="{url}&display=3" style="margin-right:4px;" type="radio" name="display" value="1" id="radio3" {checkedpluginsmode3}/>
+            <input data-url="{f:be.uri(route:paginationRoute,parameters:{display:3,action:'detail',extension:'additional_reports',report:reportname})}" style="margin-right:4px;" type="radio" name="display" value="1" id="radio3" {checkedpluginsmode3}/>
             <label for="radio3" style="margin-right:10px;">
                 <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:pluginsmode3"/>
             </label>
         </td>
         <td>
-            <input data-url="{url}&display=7" style="margin-right:4px;" type="radio" name="display" value="1" id="radio7" {checkedpluginsmode7}/>
+            <input data-url="{f:be.uri(route:paginationRoute,parameters:{display:7,action:'detail',extension:'additional_reports',report:reportname})}" style="margin-right:4px;" type="radio" name="display" value="1" id="radio7" {checkedpluginsmode7}/>
             <label for="radio7" style="margin-right:10px;">
                 <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:pluginsmode3hidden"/>
             </label>
@@ -35,7 +35,7 @@
     </tr>
     <tr>
         <td>
-            <input data-url="{url}&display=5" style="margin-right:4px;" type="radio" name="display" value="1" id="radio5" {checkedpluginsmode5}/>
+            <input data-url="{f:be.uri(route:paginationRoute,parameters:{display:5,action:'detail',extension:'additional_reports',report:reportname})}" style="margin-right:4px;" type="radio" name="display" value="1" id="radio5" {checkedpluginsmode5}/>
             <label for="radio5" style="margin-right:10px;">
                 <f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:pluginsmode5"/>
             </label>
@@ -82,7 +82,7 @@
 
 <!-- ctype -->
 <f:if condition="{showCtypes}">
-    <f:format.raw>{filtersCat}</f:format.raw>
+    <f:render partial="FilterSelect" arguments="{_all}"/>
         <div class="table-fit">
             <table class="table table-striped table-hover table-condensed">
                 <thead>
@@ -149,7 +149,7 @@
 <!-- plugins -->
 
 <f:if condition="{showPlugins}">
-        <f:format.raw>{filtersCat}</f:format.raw>
+        <f:render partial="FilterSelect" arguments="{_all}"/>
         <div class="table-fit">
             <table class="table table-striped table-hover table-condensed">
                 <thead>

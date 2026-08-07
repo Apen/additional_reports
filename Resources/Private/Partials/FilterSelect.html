@@ -1,0 +1,16 @@
+<select name="filtersCat" id="filtersCat" data-url="{f:be.uri(route:paginationRoute,parameters:{display:display,action:'detail',extension:'additional_reports',report:reportname})}">
+    <f:if condition="{filtersCatParam} == 'all'">
+        <f:then>
+            <option value="all" selected="selected"><f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:all"/></option>
+        </f:then>
+        <f:else>
+            <option value="all"><f:translate key="LLL:EXT:additional_reports/Resources/Private/Language/locallang.xlf:all"/></option>
+        </f:else>
+    </f:if>
+    <f:for each="{filterOptions}" as="filterOption">
+        <f:if condition="{filtersCatParam} == {filterOption}">
+            <f:then><option value="{filterOption}" selected="selected">{filterOption}</option></f:then>
+            <f:else><option value="{filterOption}">{filterOption}</option></f:else>
+        </f:if>
+    </f:for>
+</select>

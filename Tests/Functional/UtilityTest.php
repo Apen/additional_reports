@@ -122,11 +122,6 @@ class UtilityTest extends FunctionalTestCase
         self::assertNotEmpty(Utility::downloadT3x('additional_reports', '3.3.2'));
     }
 
-    public function testBaseUrl()
-    {
-        self::assertNotEmpty(Utility::getBaseUrl());
-    }
-
     public function testGetTreeList()
     {
         self::assertEquals($this->pagesListProvider(), Utility::getTreeList(1, 99));
@@ -194,19 +189,9 @@ class UtilityTest extends FunctionalTestCase
         self::assertNotEmpty(Utility::getAllDifferentPlugins());
     }
 
-    public function testGetAllDifferentPluginsSelect()
-    {
-        self::assertNotEmpty(Utility::getAllDifferentPluginsSelect(true));
-    }
-
     public function testGetAllDifferentCtypes()
     {
         self::assertNotEmpty(Utility::getAllDifferentCtypes());
-    }
-
-    public function testGetAllDifferentCtypesSelect()
-    {
-        self::assertNotEmpty(Utility::getAllDifferentCtypesSelect(true));
     }
 
     public function testGetAllPlugins()
