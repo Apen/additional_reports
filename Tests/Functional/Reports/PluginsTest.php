@@ -28,6 +28,25 @@ class PluginsTest extends FunctionalTestCase
         self::assertTrue(GeneralUtility::makeInstance(AssetCollector::class)->hasInlineJavaScript('additional-reports-plugins'));
     }
 
+    public function testContentRowsAreEnrichedBeforeRendering(): void
+    {
+        $GLOBALS['TCA']['tt_content']['columns']['CType']['config']['items'][] = [
+            'label' => 'Example plugin',
+            'value' => 'vendor_plugin',
+        ];
+
+        $rows = (new Plugins(parent::getReportObject()))->enrichContentRows([[
+            'CType' => 'vendor_plugin',
+            'pid' => 42,
+            'title' => 'Example page',
+        ]], 'plugin');
+
+        self::assertSame('vendor', $rows[0]['extension']);
+        self::assertSame('Example page', $rows[0]['pagetitle']);
+        self::assertSame('/index.php?id=42', $rows[0]['preview']);
+        self::assertArrayHasKey('domain', $rows[0]);
+    }
+
     #[DataProvider('displayModeProvider')]
     public function testDisplayModes(int $displayMode): void
     {

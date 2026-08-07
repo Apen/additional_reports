@@ -5,6 +5,8 @@ services:
 
   Sng\AdditionalReports\Controller\ReportController: ~
 
+  Sng\AdditionalReports\Service\ContentTypeResolver: ~
+
   Sng\AdditionalReports\Reports\CommandControllers:
     tags:
       - { name: additionalreports_commandcontrollers.report }

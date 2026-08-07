@@ -19,7 +19,6 @@ use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Exception\SiteNotFoundException;
-use TYPO3\CMS\Core\Imaging\IconRegistry;
 use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
@@ -262,65 +261,6 @@ class Utility
             return $icon === null ? '' : PathUtility::getPublicResourceWebPath('EXT:' . $extKey . '/' . $icon);
         }
         return '';
-    }
-
-    public static function getContentInfosFromTca($type, $value)
-    {
-        $infos = [];
-
-        if (trim($value) === '') {
-            return $infos;
-        }
-
-        $infos[$type] = $value;
-
-        preg_match('#(^.*?)_#', $value, $matches);
-        $infos['extension'] = $matches[1] ?? '';
-
-        if ($type === 'plugin') {
-            $pluginField = self::hasLegacyListType() ? 'list_type' : 'CType';
-            foreach (($GLOBALS['TCA']['tt_content']['columns'][$pluginField]['config']['items'] ?? []) as $itemValue) {
-                // v12
-                if (trim($itemValue['value'] ?? '') === $value) {
-                    $infos['iconext'] = '';
-                    if (isset($itemValue['icon']) && PathUtility::isExtensionPath($itemValue['icon'])) {
-                        $infos['iconext'] = PathUtility::getPublicResourceWebPath($itemValue['icon']);
-                    }
-                    $infos[$type] = self::getLanguageService()->sL($itemValue['label']) . ' (' . $value . ')';
-                }
-                // v11
-                if (trim($itemValue[1] ?? '') === $value) {
-                    $infos['iconext'] = PathUtility::getPublicResourceWebPath($itemValue[2]);
-                    $infos[$type] = self::getLanguageService()->sL($itemValue[0]) . ' (' . $value . ')';
-                }
-            }
-        }
-
-        if ($type === 'ctype') {
-            $iconRegistry = GeneralUtility::makeInstance(IconRegistry::class);
-            foreach ($GLOBALS['TCA']['tt_content']['columns']['CType']['config']['items'] as $itemValue) {
-                if (($itemValue['value'] ?? $itemValue[1] ?? '') === '--div--') {
-                    continue;
-                }
-                if (trim($itemValue['value'] ?? $itemValue[1] ?? '') !== $value) {
-                    continue;
-                }
-                $iconPath = $itemValue['icon'] ?? $itemValue[2] ?? '';
-                if (str_contains($iconPath, 'EXT:')) {
-                    $infos['iconext'] = PathUtility::getPublicResourceWebPath($iconPath);
-                } elseif ($iconRegistry->isRegistered($iconPath)) {
-                    $icon = $iconRegistry->getIconConfigurationByIdentifier($iconPath);
-                    $iconSource = $icon['options']['source'] ?? null;
-                    if (is_string($iconSource) && str_contains($iconSource, 'EXT:')) {
-                        $infos['iconext'] = PathUtility::getPublicResourceWebPath($iconSource);
-                    } elseif (is_string($iconSource) && $iconSource !== '') {
-                        $infos['iconext'] = PathUtility::getAbsoluteWebPath($iconSource);
-                    }
-                }
-            }
-        }
-
-        return $infos;
     }
 
     /**

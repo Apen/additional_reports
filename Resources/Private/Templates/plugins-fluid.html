@@ -1,5 +1,3 @@
-{namespace ar=Sng\AdditionalReports\ViewHelpers}
-
 <f:cache.disable />
 <f:asset.script identifier="additional-reports-plugins">
     document.addEventListener('DOMContentLoaded', () => {
@@ -150,7 +148,6 @@
                 </thead>
                 <tbody>
                 <f:for each="{paginator.paginatedItems}" as="item">
-                    <ar:contentInfos item="{item}" as="item" ctype="TRUE"/>
                     <tr>
                         <td class="col-icon"><img src="{item.iconext}"/></td>
                         <td>{item.ctype}</td>
@@ -219,7 +216,6 @@
                 </thead>
                 <tbody>
                 <f:for each="{paginator.paginatedItems}" as="item">
-                    <ar:contentInfos item="{item}" as="item" plugin="TRUE"/>
                     <tr>
                         <td class="col-icon"><img src="{item.iconext}"/></td>
                         <td>{item.extension}</td>

@@ -11,8 +11,10 @@ namespace Sng\AdditionalReports\Reports;
  * LICENSE.txt file that was distributed with this source code.
  */
 
+use Sng\AdditionalReports\Service\ContentTypeResolver;
 use Sng\AdditionalReports\Utility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class Plugins extends AbstractReport
 {
@@ -50,24 +52,24 @@ class Plugins extends AbstractReport
         switch (Utility::getPluginsDisplayMode()) {
             case 3:
                 $view->assign('filterOptions', array_column(Utility::getAllDifferentCtypes(false), 'CType'));
-                Utility::buildPagination(self::getAllUsedCtypes(), $currentPage, $view);
+                Utility::buildPagination($this->enrichContentRows(self::getAllUsedCtypes(), 'ctype'), $currentPage, $view);
                 break;
             case 4:
                 $filterField = Utility::hasLegacyListType() ? 'list_type' : 'CType';
                 $view->assign('filterOptions', array_column(Utility::getAllDifferentPlugins(false), $filterField));
-                Utility::buildPagination(self::getAllUsedPlugins(), $currentPage, $view);
+                Utility::buildPagination($this->enrichContentRows(self::getAllUsedPlugins(), 'plugin'), $currentPage, $view);
                 break;
             case 6:
                 $filterField = Utility::hasLegacyListType() ? 'list_type' : 'CType';
                 $view->assign('filterOptions', array_column(Utility::getAllDifferentPlugins(true), $filterField));
-                Utility::buildPagination(self::getAllUsedPlugins(true), $currentPage, $view);
+                Utility::buildPagination($this->enrichContentRows(self::getAllUsedPlugins(true), 'plugin'), $currentPage, $view);
                 break;
             case 7:
                 $view->assign('filterOptions', array_column(Utility::getAllDifferentCtypes(true), 'CType'));
-                Utility::buildPagination(self::getAllUsedCtypes(true), $currentPage, $view);
+                Utility::buildPagination($this->enrichContentRows(self::getAllUsedCtypes(true), 'ctype'), $currentPage, $view);
                 break;
             default:
-                $view->assign('items', self::getSummary());
+                $view->assign('items', $this->getSummary());
                 break;
         }
 
@@ -90,22 +92,8 @@ class Plugins extends AbstractReport
      *
      * @return array
      */
-    public static function getSummary()
+    public function getSummary()
     {
-        $plugins = [];
-        foreach (($GLOBALS['TCA']['tt_content']['columns']['list_type']['config']['items'] ?? []) as $itemValue) {
-            if (trim($itemValue[1] ?? '') !== '') {
-                $plugins[$itemValue[1]] = $itemValue;
-            }
-        }
-
-        $ctypes = [];
-        foreach (($GLOBALS['TCA']['tt_content']['columns']['CType']['config']['items'] ?? []) as $itemValue) {
-            if (($itemValue[1] ?? '') != '--div--') {
-                $ctypes[$itemValue[1] ?? ''] = $itemValue;
-            }
-        }
-
         $queryBuilder = Utility::getQueryBuilder('tt_content');
         $itemsCount = (int) $queryBuilder
             ->count('tt_content.uid')
@@ -118,9 +106,6 @@ class Plugins extends AbstractReport
             ->fetchOne();
 
         $hasLegacyListType = Utility::hasLegacyListType();
-        $groupFields = $hasLegacyListType
-            ? 'tt_content.CType,tt_content.list_type'
-            : 'tt_content.CType';
         $queryBuilder = Utility::getQueryBuilder('tt_content');
         $queryBuilder
             ->select('tt_content.CType')
@@ -138,14 +123,15 @@ class Plugins extends AbstractReport
         $items = $queryBuilder->executeQuery()->fetchAllAssociative();
 
         $allItems = [];
+        $resolver = GeneralUtility::makeInstance(ContentTypeResolver::class);
 
         foreach ($items as $itemValue) {
             $itemTemp = [];
             if ($hasLegacyListType && $itemValue['CType'] === 'list') {
-                $itemTemp = array_merge($itemTemp, Utility::getContentInfosFromTca('plugin', $itemValue['list_type']));
+                $itemTemp = array_merge($itemTemp, $resolver->resolve('plugin', $itemValue['list_type']));
                 $itemTemp['content'] = $itemTemp['plugin'] ?? '';
             } else {
-                $itemTemp = array_merge($itemTemp, Utility::getContentInfosFromTca('ctype', $itemValue['CType']));
+                $itemTemp = array_merge($itemTemp, $resolver->resolve('ctype', $itemValue['CType']));
                 $itemTemp['content'] = $itemTemp['ctype'] ?? '';
             }
             $itemTemp['references'] = $itemValue['nb'];
@@ -154,6 +140,30 @@ class Plugins extends AbstractReport
         }
 
         return $allItems;
+    }
+
+    /**
+     * @param array<int, array<string, mixed>> $items
+     * @return array<int, array<string, mixed>>
+     */
+    public function enrichContentRows(array $items, string $type): array
+    {
+        $resolver = GeneralUtility::makeInstance(ContentTypeResolver::class);
+        $hasLegacyListType = Utility::hasLegacyListType();
+        foreach ($items as &$item) {
+            $value = $type === 'plugin' && $hasLegacyListType
+                ? (string) ($item['list_type'] ?? '')
+                : (string) ($item['CType'] ?? '');
+            $item = array_merge($item, $resolver->resolve($type, $value));
+            $pageId = (int) ($item['pid'] ?? 0);
+            $item['domain'] = Utility::getDomain($pageId);
+            $item['pagetitle'] = (string) ($item['title'] ?? '');
+            $item['usedtv'] = '';
+            $item['usedtvclass'] = '';
+            $item['preview'] = '/index.php?id=' . $pageId;
+        }
+        unset($item);
+        return $items;
     }
 
     /**
