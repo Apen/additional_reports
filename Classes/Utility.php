@@ -893,15 +893,18 @@ class Utility
     /**
      * Check if string given is hook
      *
-     * @param string $hook
+     * @param mixed $hook
      */
-    public static function isHook($hook): bool
+    public static function isHook(mixed $hook): bool
     {
         $isHook = false;
         if (! empty($hook)) {
             // if it's a key-path hook
             if (is_array($hook)) {
                 $hook = $hook[1] ?? '';
+            }
+            if (! is_string($hook)) {
+                return false;
             }
             // classname begin with &
             if (substr($hook, 0, 1) === '&') {

@@ -82,6 +82,9 @@ class UtilityTest extends BaseTestCase
         self::assertTrue(Utility::isHook('&' . EmailLoginNotification::class));
         self::assertTrue(Utility::isHook(['unused', $hook]));
         self::assertFalse(Utility::isHook(''));
+        self::assertFalse(Utility::isHook(123));
+        self::assertFalse(Utility::isHook(true));
+        self::assertFalse(Utility::isHook(['unused', 123]));
         self::assertFalse(Utility::isHook('Unknown\\MissingClass->method'));
     }
 
@@ -90,6 +93,7 @@ class UtilityTest extends BaseTestCase
         $hook = EmailLoginNotification::class . '->emailAtLogin';
         self::assertNotEmpty(Utility::getHook($hook));
         self::assertNull(Utility::getHook('Unknown\\MissingClass'));
+        self::assertNull(Utility::getHook(123));
         self::assertSame(
             ['valid' => $hook, 'nested' => ['valid' => $hook]],
             Utility::getHook([

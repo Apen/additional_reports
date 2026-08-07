@@ -31,7 +31,7 @@ parameters:
 			path: ../Classes/Eid/CallAjax.php
 
 		-
-			message: '#^Out of 88 possible param types, only 50 \- 56\.8 %% actually have it\. Add more param types to get over 100 %%$#'
+			message: '#^Out of 88 possible param types, only 51 \- 57\.9 %% actually have it\. Add more param types to get over 100 %%$#'
 			identifier: typeCoverage.paramTypeCoverage
 			count: 3
 			path: ../Classes/Eid/CallAjax.php
@@ -115,7 +115,7 @@ parameters:
 			path: ../Classes/Reports/Extensions.php
 
 		-
-			message: '#^Out of 88 possible param types, only 50 \- 56\.8 %% actually have it\. Add more param types to get over 100 %%$#'
+			message: '#^Out of 88 possible param types, only 51 \- 57\.9 %% actually have it\. Add more param types to get over 100 %%$#'
 			identifier: typeCoverage.paramTypeCoverage
 			count: 1
 			path: ../Classes/Reports/Extensions.php
@@ -265,7 +265,7 @@ parameters:
 			path: ../Classes/Utility.php
 
 		-
-			message: '#^Class cognitive complexity is 241, keep it under 35$#'
+			message: '#^Class cognitive complexity is 242, keep it under 35$#'
 			identifier: complexity.classLike
 			count: 1
 			path: ../Classes/Utility.php
@@ -283,7 +283,7 @@ parameters:
 			path: ../Classes/Utility.php
 
 		-
-			message: '#^Cognitive complexity for "Sng\\AdditionalReports\\Utility\:\:isHook\(\)" is 23, keep it under 20$#'
+			message: '#^Cognitive complexity for "Sng\\AdditionalReports\\Utility\:\:isHook\(\)" is 24, keep it under 20$#'
 			identifier: complexity.functionLike
 			count: 1
 			path: ../Classes/Utility.php
@@ -559,9 +559,9 @@ parameters:
 			path: ../Classes/Utility.php
 
 		-
-			message: '#^Out of 88 possible param types, only 50 \- 56\.8 %% actually have it\. Add more param types to get over 100 %%$#'
+			message: '#^Out of 88 possible param types, only 51 \- 57\.9 %% actually have it\. Add more param types to get over 100 %%$#'
 			identifier: typeCoverage.paramTypeCoverage
-			count: 34
+			count: 33
 			path: ../Classes/Utility.php
 
 		-
