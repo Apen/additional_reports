@@ -19,6 +19,8 @@ services:
 
   Sng\AdditionalReports\Service\HookResolver: ~
 
+  Sng\AdditionalReports\Service\UnifiedDiffRenderer: ~
+
   Sng\AdditionalReports\Repository\ContentUsageRepository: ~
 
   Sng\AdditionalReports\Repository\PageStatisticsRepository: ~

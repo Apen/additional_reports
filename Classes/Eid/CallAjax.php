@@ -13,9 +13,8 @@ namespace Sng\AdditionalReports\Eid;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use SebastianBergmann\Diff\Differ;
-use SebastianBergmann\Diff\Output\UnifiedDiffOutputBuilder;
 use Sng\AdditionalReports\Service\TerArchiveService;
+use Sng\AdditionalReports\Service\UnifiedDiffRenderer;
 use TYPO3\CMS\Core\Http\HtmlResponse;
 use TYPO3\CMS\Core\Package\Exception\UnknownPackageException;
 use TYPO3\CMS\Core\Package\PackageManager;
@@ -52,7 +51,7 @@ class CallAjax
                 return new HtmlResponse('Access denied.', 403);
             }
             $terFileContent = $this->downloadT3x($extensionKey, $extensionVersion, $extensionFile);
-            $content .= $this->t3Diff($this->readLocalFile($localFile), $terFileContent);
+            $content .= $this->renderDiff($this->readLocalFile($localFile), $terFileContent);
         } else {
             $t3xfiles = $this->downloadT3x($extensionKey, $extensionVersion);
             $diff = 0;
@@ -65,7 +64,7 @@ class CallAjax
                 if ($file['content_md5'] !== md5($currentFileContent)) {
                     $diff++;
                     $content .= '<h2>' . $filePath . '</h2>';
-                    $content .= $this->t3Diff($currentFileContent, $file['content']);
+                    $content .= $this->renderDiff($currentFileContent, $file['content']);
                 }
             }
             if (empty($diff)) {
@@ -99,26 +98,8 @@ class CallAjax
             : null;
     }
 
-    public function t3Diff(string $file1, string $file2): string
+    protected function renderDiff(string $localContent, string $remoteContent): string
     {
-        $differ = new Differ(new UnifiedDiffOutputBuilder('', true));
-        return $this->printT3Diff($differ->diff($file1, $file2));
-    }
-
-    public function printT3Diff(string $sourcesDiff): string
-    {
-        $lines = preg_split('/(?<=\n)/', $sourcesDiff, -1, PREG_SPLIT_NO_EMPTY) ?: [];
-        $output = '<pre style="overflow:auto; padding:8px;">';
-        foreach ($lines as $line) {
-            $escapedLine = htmlspecialchars($line, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-            $style = match ($line[0] ?? '') {
-                '-' => 'background-color:#FDD;',
-                '+' => 'background-color:#DFD;',
-                '@' => 'color:#555; font-weight:bold;',
-                default => '',
-            };
-            $output .= '<span style="display:block;' . $style . '">' . $escapedLine . '</span>';
-        }
-        return $output . '</pre>';
+        return GeneralUtility::makeInstance(UnifiedDiffRenderer::class)->render($localContent, $remoteContent);
     }
 }
