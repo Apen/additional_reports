@@ -14,6 +14,7 @@ namespace Sng\AdditionalReports\Reports;
 use Sng\AdditionalReports\Utility;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Http\NormalizedParams;
 use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Package\PackageManager;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -125,15 +126,19 @@ class Status extends AbstractReport
 
     public function displayEnv(ViewInterface $view)
     {
-        $datas = [];
-        $vars = GeneralUtility::getIndpEnv('_ARRAY');
-        foreach ($vars as $varKey => $varValue) {
-            $datas[$varKey] = $varValue;
-        }
-        $gE_keys = explode(',', 'HTTP_ACCEPT,HTTP_ACCEPT_ENCODING,HTTP_CONNECTION,HTTP_COOKIE,REMOTE_PORT,SERVER_ADDR,SERVER_ADMIN,SERVER_NAME,SERVER_PORT,SERVER_SIGNATURE,SERVER_SOFTWARE,GATEWAY_INTERFACE,SERVER_PROTOCOL,REQUEST_METHOD,PATH_TRANSLATED');
-        foreach ($gE_keys as $k) {
-            $datas[$k] = getenv($k);
-        }
+        $normalizedParams = $this->getRequest()->getAttribute('normalizedParams');
+        $datas = $normalizedParams instanceof NormalizedParams ? [
+            'HTTP_HOST' => $normalizedParams->getHttpHost(),
+            'REQUEST_URL' => $normalizedParams->getRequestUrl(),
+            'REQUEST_DIR' => $normalizedParams->getRequestDir(),
+            'REMOTE_ADDR' => $normalizedParams->getRemoteAddress(),
+            'DOCUMENT_ROOT' => $normalizedParams->getDocumentRoot(),
+            'SITE_URL' => $normalizedParams->getSiteUrl(),
+            'HTTP_REFERER' => $normalizedParams->getHttpReferer(),
+            'HTTP_USER_AGENT' => $normalizedParams->getHttpUserAgent(),
+            'HTTP_ACCEPT_ENCODING' => $normalizedParams->getHttpAcceptEncoding(),
+            'HTTP_ACCEPT_LANGUAGE' => $normalizedParams->getHttpAcceptLanguage(),
+        ] : [];
         $view->assign('datas_env', $datas);
     }
 

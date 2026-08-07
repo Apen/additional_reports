@@ -62,7 +62,11 @@
   },
   "extra": {
     "typo3/cms": {
+      "Package": {
+        "providesPackages": {}
+      },
       "extension-key": "additional_reports",
+      "version": "3.4.9",
       "web-dir": ".Build/public"
     }
   },
