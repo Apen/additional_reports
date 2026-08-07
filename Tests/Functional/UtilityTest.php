@@ -96,11 +96,6 @@ class UtilityTest extends FunctionalTestCase
         self::assertArrayNotHasKey('core', $activeExtensions + $extensions['unloaded']);
     }
 
-    public function testGetExtPath()
-    {
-        self::assertNotEmpty(Utility::getExtPath('core'));
-    }
-
     public function testGetExtensionVersion()
     {
         self::assertEquals(GeneralUtility::makeInstance(Typo3Version::class)->getVersion(), Utility::getExtensionVersion('core'));
@@ -140,11 +135,6 @@ class UtilityTest extends FunctionalTestCase
         } else {
             self::markTestSkipped('This query is MySQL-specific.');
         }
-    }
-
-    public function testGetRootLine()
-    {
-        self::assertNotEmpty(Utility::getRootLine(1));
     }
 
     public function testGetDomain()
@@ -239,11 +229,6 @@ class UtilityTest extends FunctionalTestCase
     public function testGetLanguageService()
     {
         self::assertNotEmpty(Utility::getLanguageService());
-    }
-
-    public function testSubModules()
-    {
-        self::assertNotEmpty(Utility::getSubModules());
     }
 
     public function pagesListProvider()

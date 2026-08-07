@@ -55,7 +55,7 @@ parameters:
 			path: ../Classes/Reports/Eid.php
 
 		-
-			message: '#^Out of 158 possible return types, only 128 \- 81\.0 %% actually have it\. Add more return types to get over 100 %%$#'
+			message: '#^Out of 151 possible return types, only 123 \- 81\.4 %% actually have it\. Add more return types to get over 100 %%$#'
 			identifier: typeCoverage.returnTypeCoverage
 			count: 1
 			path: ../Classes/Reports/Eid.php
@@ -67,7 +67,7 @@ parameters:
 			path: ../Classes/Reports/EventDispatcher.php
 
 		-
-			message: '#^Out of 158 possible return types, only 128 \- 81\.0 %% actually have it\. Add more return types to get over 100 %%$#'
+			message: '#^Out of 151 possible return types, only 123 \- 81\.4 %% actually have it\. Add more return types to get over 100 %%$#'
 			identifier: typeCoverage.returnTypeCoverage
 			count: 2
 			path: ../Classes/Reports/EventDispatcher.php
@@ -85,13 +85,13 @@ parameters:
 			path: ../Classes/Reports/Extensions.php
 
 		-
-			message: '#^Out of 158 possible return types, only 128 \- 81\.0 %% actually have it\. Add more return types to get over 100 %%$#'
+			message: '#^Out of 151 possible return types, only 123 \- 81\.4 %% actually have it\. Add more return types to get over 100 %%$#'
 			identifier: typeCoverage.returnTypeCoverage
 			count: 2
 			path: ../Classes/Reports/Extensions.php
 
 		-
-			message: '#^Out of 98 possible param types, only 76 \- 77\.5 %% actually have it\. Add more param types to get over 100 %%$#'
+			message: '#^Out of 94 possible param types, only 74 \- 78\.7 %% actually have it\. Add more param types to get over 100 %%$#'
 			identifier: typeCoverage.paramTypeCoverage
 			count: 2
 			path: ../Classes/Reports/Extensions.php
@@ -103,13 +103,13 @@ parameters:
 			path: ../Classes/Reports/Hooks.php
 
 		-
-			message: '#^Out of 158 possible return types, only 128 \- 81\.0 %% actually have it\. Add more return types to get over 100 %%$#'
+			message: '#^Out of 151 possible return types, only 123 \- 81\.4 %% actually have it\. Add more return types to get over 100 %%$#'
 			identifier: typeCoverage.returnTypeCoverage
 			count: 1
 			path: ../Classes/Reports/Hooks.php
 
 		-
-			message: '#^Out of 158 possible return types, only 128 \- 81\.0 %% actually have it\. Add more return types to get over 100 %%$#'
+			message: '#^Out of 151 possible return types, only 123 \- 81\.4 %% actually have it\. Add more return types to get over 100 %%$#'
 			identifier: typeCoverage.returnTypeCoverage
 			count: 1
 			path: ../Classes/Reports/LogErrors.php
@@ -133,7 +133,7 @@ parameters:
 			path: ../Classes/Reports/Middlewares.php
 
 		-
-			message: '#^Out of 158 possible return types, only 128 \- 81\.0 %% actually have it\. Add more return types to get over 100 %%$#'
+			message: '#^Out of 151 possible return types, only 123 \- 81\.4 %% actually have it\. Add more return types to get over 100 %%$#'
 			identifier: typeCoverage.returnTypeCoverage
 			count: 1
 			path: ../Classes/Reports/Middlewares.php
@@ -157,7 +157,7 @@ parameters:
 			path: ../Classes/Reports/Plugins.php
 
 		-
-			message: '#^Out of 158 possible return types, only 128 \- 81\.0 %% actually have it\. Add more return types to get over 100 %%$#'
+			message: '#^Out of 151 possible return types, only 123 \- 81\.4 %% actually have it\. Add more return types to get over 100 %%$#'
 			identifier: typeCoverage.returnTypeCoverage
 			count: 2
 			path: ../Classes/Reports/Plugins.php
@@ -211,25 +211,19 @@ parameters:
 			path: ../Classes/Reports/Status.php
 
 		-
-			message: '#^Out of 158 possible return types, only 128 \- 81\.0 %% actually have it\. Add more return types to get over 100 %%$#'
+			message: '#^Out of 151 possible return types, only 123 \- 81\.4 %% actually have it\. Add more return types to get over 100 %%$#'
 			identifier: typeCoverage.returnTypeCoverage
 			count: 5
 			path: ../Classes/Reports/Status.php
 
 		-
-			message: '#^Variable \$package in PHPDoc tag @var does not match assigned variable \$activePackages\.$#'
-			identifier: varTag.differentVariable
-			count: 1
-			path: ../Classes/Reports/Status.php
-
-		-
-			message: '#^Out of 158 possible return types, only 128 \- 81\.0 %% actually have it\. Add more return types to get over 100 %%$#'
+			message: '#^Out of 151 possible return types, only 123 \- 81\.4 %% actually have it\. Add more return types to get over 100 %%$#'
 			identifier: typeCoverage.returnTypeCoverage
 			count: 1
 			path: ../Classes/Reports/WebsiteConf.php
 
 		-
-			message: '#^Out of 158 possible return types, only 128 \- 81\.0 %% actually have it\. Add more return types to get over 100 %%$#'
+			message: '#^Out of 151 possible return types, only 123 \- 81\.4 %% actually have it\. Add more return types to get over 100 %%$#'
 			identifier: typeCoverage.returnTypeCoverage
 			count: 1
 			path: ../Classes/Reports/Xclass.php
@@ -247,7 +241,7 @@ parameters:
 			path: ../Classes/Utility.php
 
 		-
-			message: '#^Class cognitive complexity is 153, keep it under 35$#'
+			message: '#^Class cognitive complexity is 148, keep it under 35$#'
 			identifier: complexity.classLike
 			count: 1
 			path: ../Classes/Utility.php
@@ -291,7 +285,7 @@ parameters:
 		-
 			message: '#^Method Sng\\AdditionalReports\\Utility\:\:checkExtensionUpdate\(\) should return array but returns null\.$#'
 			identifier: return.type
-			count: 1
+			count: 2
 			path: ../Classes/Utility.php
 
 		-
@@ -439,51 +433,21 @@ parameters:
 			path: ../Classes/Utility.php
 
 		-
-			message: '#^Method Sng\\AdditionalReports\\Utility\:\:getRootLine\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: ../Classes/Utility.php
-
-		-
-			message: '#^Method Sng\\AdditionalReports\\Utility\:\:getSubModules\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: ../Classes/Utility.php
-
-		-
 			message: '#^Method Sng\\AdditionalReports\\Utility\:\:getTreeList\(\) should return string but returns int\|string\.$#'
 			identifier: return.type
 			count: 1
 			path: ../Classes/Utility.php
 
 		-
-			message: '#^Method Sng\\AdditionalReports\\Utility\:\:includeEMCONF\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: ../Classes/Utility.php
-
-		-
-			message: '#^Offset non\-falsy\-string on array\{\} on left side of \?\? does not exist\.$#'
-			identifier: nullCoalesce.offset
-			count: 1
-			path: ../Classes/Utility.php
-
-		-
-			message: '#^Offset string does not exist on null\.$#'
-			identifier: offsetAccess.notFound
-			count: 1
-			path: ../Classes/Utility.php
-
-		-
-			message: '#^Out of 158 possible return types, only 128 \- 81\.0 %% actually have it\. Add more return types to get over 100 %%$#'
+			message: '#^Out of 151 possible return types, only 123 \- 81\.4 %% actually have it\. Add more return types to get over 100 %%$#'
 			identifier: typeCoverage.returnTypeCoverage
-			count: 13
+			count: 11
 			path: ../Classes/Utility.php
 
 		-
-			message: '#^Out of 98 possible param types, only 76 \- 77\.5 %% actually have it\. Add more param types to get over 100 %%$#'
+			message: '#^Out of 94 possible param types, only 74 \- 78\.7 %% actually have it\. Add more param types to get over 100 %%$#'
 			identifier: typeCoverage.paramTypeCoverage
-			count: 20
+			count: 18
 			path: ../Classes/Utility.php
 
 		-
@@ -495,11 +459,5 @@ parameters:
 		-
 			message: '#^Right side of && is always false\.$#'
 			identifier: booleanAnd.rightAlwaysFalse
-			count: 1
-			path: ../Classes/Utility.php
-
-		-
-			message: '#^Variable \$package in PHPDoc tag @var does not exist\.$#'
-			identifier: varTag.variableNotFound
 			count: 1
 			path: ../Classes/Utility.php

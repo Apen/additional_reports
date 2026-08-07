@@ -39,13 +39,6 @@ class UtilityTest extends BaseTestCase
         ], Utility::getReportsList());
     }
 
-    public function testIncludeEMCONF()
-    {
-        $emConf = Utility::includeEMCONF(__DIR__ . '../../../ext_emconf.php', 'additional_reports');
-        self::assertNotEmpty($emConf);
-        self::assertEquals('CERDAN Yohann', $emConf['author']);
-    }
-
     public function testCheckExtensionUpdate()
     {
         self::assertEmpty(Utility::checkExtensionUpdate([
@@ -155,18 +148,4 @@ class UtilityTest extends BaseTestCase
         Utility::extractExtensionDataFromT3x(md5($serializedData) . ':raw:' . $serializedData);
     }
 
-    public function testGetPathSite()
-    {
-        self::assertNotEmpty(Utility::getPathSite());
-    }
-
-    public function testGetPathTypo3Conf()
-    {
-        self::assertNotEmpty(Utility::getPathTypo3Conf());
-    }
-
-    public function testIsComposerMode()
-    {
-        self::assertTrue(Utility::isComposerMode());
-    }
 }

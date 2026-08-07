@@ -28,10 +28,8 @@ use TYPO3\CMS\Core\Package\PackageManager;
 use TYPO3\CMS\Core\Pagination\ArrayPaginator;
 use TYPO3\CMS\Core\Pagination\SlidingWindowPagination;
 use TYPO3\CMS\Core\Site\SiteFinder;
-use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\PathUtility;
-use TYPO3\CMS\Core\Utility\RootlineUtility;
 
 /**
  * Utility class
@@ -57,27 +55,6 @@ class Utility
             ['Extensions', 'extensions'],
             ['EventDispatcher', 'eventdispatcher'],
             ['Middlewares', 'middlewares'],
-        ];
-    }
-
-    /**
-     * Define all the sub modules
-     *
-     * @return array
-     */
-    public static function getSubModules()
-    {
-        return [
-            'displayAjax' => self::getLL('ajax_title'),
-            'displayEid' => self::getLL('eid_title'),
-            'displayCliKeys' => self::getLL('clikeys_title'),
-            'displayPlugins' => self::getLL('plugins_title'),
-            'displayXclass' => self::getLL('xclass_title'),
-            'displayHooks' => self::getLL('hooks_title'),
-            'displayStatus' => self::getLL('status_title'),
-            'displayExtensions' => self::getLL('extensions_title'),
-            'displayLogErrors' => self::getLL('logerrors_title'),
-            'displayWebsitesConf' => self::getLL('websitesconf_title'),
         ];
     }
 
@@ -196,21 +173,6 @@ class Utility
     }
 
     /**
-     * Returns the $EM_CONF array from an extensions ext_emconf.php file
-     *
-     * @param string $path Absolute path to EMCONF file.
-     * @param string $_EXTKEY Extension key.
-     * @return array
-     * @noRector
-     */
-    public static function includeEMCONF($path, $_EXTKEY)
-    {
-        $EM_CONF = null;
-        include $path;
-        return $EM_CONF[$_EXTKEY];
-    }
-
-    /**
      * Get last version information for an extkey
      *
      * @param array $extInfo
@@ -218,14 +180,16 @@ class Utility
      */
     public static function checkExtensionUpdate($extInfo)
     {
-        if (self::isComposerMode()) {
-            $packageName = $extInfo['composerName'] ?? null;
+        $packageName = $extInfo['composerName'] ?? null;
+        if (is_string($packageName) && $packageName !== '') {
             $installedVersion = $extInfo['version'] ?? null;
-            return is_string($packageName)
-                && is_string($installedVersion)
+            return is_string($installedVersion)
                 && VersionParser::parseStability($installedVersion) === 'stable'
                 ? GeneralUtility::makeInstance(PackagistVersionService::class)->findLatestVersion($packageName)
                 : null;
+        }
+        if (Environment::isComposerMode()) {
+            return null;
         }
         $queryBuilder = self::getQueryBuilder('tx_extensionmanager_domain_model_extension');
         $lastVersion = $queryBuilder
@@ -264,15 +228,6 @@ class Utility
     }
 
     /**
-     * Get rootline by page uid
-     */
-    public static function getRootLine(int $pageUid): array
-    {
-        $rootline = GeneralUtility::makeInstance(RootlineUtility::class, $pageUid);
-        return $rootline->get();
-    }
-
-    /**
      * Get principal domain by page uid
      */
     public static function getDomain(int $pageUid): string
@@ -291,54 +246,22 @@ class Utility
     }
 
     /**
-     * Get the absolute path of an extension
-     */
-    public static function getExtPath(string $extKey): string
-    {
-        return self::getPathTypo3Conf() . 'ext/' . $extKey . '/';
-    }
-
-    /**
      * Get the version of a given extension
      *
      * @param string $key
      */
     public static function getExtensionVersion($key): ?string
     {
-        $EM_CONF = [];
         if (! is_string($key) || empty($key)) {
             throw new \InvalidArgumentException('Extension key must be a non-empty string.');
         }
 
-        if (self::isComposerMode()) {
-            $packageManager = GeneralUtility::makeInstance(PackageManager::class);
-            /** @var \TYPO3\CMS\Core\Package\PackageInterface $package */
-            try {
-                $package = $packageManager->getPackage($key);
-            } catch (UnknownPackageException $e) {
-                return null;
-            }
-            if ($package === null) {
-                return null;
-            }
-            return $package->getPackageMetaData()
-                ->getVersion();
-        }
-
-        if (! ExtensionManagementUtility::isLoaded($key)) {
+        try {
+            $package = GeneralUtility::makeInstance(PackageManager::class)->getPackage($key);
+        } catch (UnknownPackageException) {
             return null;
         }
-
-        // need for the next include
-        $_EXTKEY = $key;
-
-        if (! is_file(ExtensionManagementUtility::extPath($key) . 'ext_emconf.php')) {
-            return null;
-        }
-
-        include ExtensionManagementUtility::extPath($key) . 'ext_emconf.php';
-
-        return $EM_CONF[$key]['version'] ?? '?';
+        return $package->getPackageMetaData()->getVersion();
     }
 
     /**
@@ -804,21 +727,6 @@ class Utility
         $languageService = GeneralUtility::makeInstance(LanguageServiceFactory::class)->create($GLOBALS['BE_USER']->uc['lang'] ?? 'default');
         $GLOBALS['LANG'] = $languageService;
         return $languageService;
-    }
-
-    public static function getPathSite(): string
-    {
-        return Environment::getPublicPath();
-    }
-
-    public static function getPathTypo3Conf(): string
-    {
-        return Environment::getPublicPath() . '/typo3conf/';
-    }
-
-    public static function isComposerMode(): bool
-    {
-        return defined('TYPO3_COMPOSER_MODE') && TYPO3_COMPOSER_MODE;
     }
 
     public static function buildPagination(array $items, int $currentPage, &$view): void

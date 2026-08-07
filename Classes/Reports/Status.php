@@ -12,6 +12,7 @@ namespace Sng\AdditionalReports\Reports;
  */
 
 use Sng\AdditionalReports\Utility;
+use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Package\PackageManager;
@@ -61,20 +62,9 @@ class Status extends AbstractReport
         $latestLts = Utility::getLatestLtsInfos($jsonVersions);
 
         $extensions = [];
-        if (is_file(Utility::getPathSite() . '/typo3conf/PackageStates.php')) {
-            $packages = include Utility::getPathSite() . '/typo3conf/PackageStates.php';
-            foreach ($packages['packages'] as $extensionKey => $package) {
-                $extensions[] = $extensionKey;
-            }
-        } else {
-            if (Utility::isComposerMode()) {
-                $packageManager = GeneralUtility::makeInstance(PackageManager::class);
-                /** @var \TYPO3\CMS\Core\Package\PackageInterface $package */
-                $activePackages = $packageManager->getActivePackages();
-                foreach ($activePackages as $package) {
-                    $extensions[] = $package->getPackageKey();
-                }
-            }
+        $packageManager = GeneralUtility::makeInstance(PackageManager::class);
+        foreach ($packageManager->getActivePackages() as $package) {
+            $extensions[] = $package->getPackageKey();
         }
 
         sort($extensions);
@@ -87,7 +77,7 @@ class Status extends AbstractReport
         $datas['current_branch'] = $currentBranch['version'] . ' [' . $currentBranch['date'] . ']';
         $datas['latest_stable'] = $latestStable['version'] . ' [' . $latestStable['date'] . ']';
         $datas['latest_lts'] = $latestLts['version'] . ' [' . $latestLts['date'] . ']';
-        $datas['path'] = Utility::getPathSite();
+        $datas['path'] = Environment::getPublicPath();
         $datas['db_name'] = $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['dbname'];
         $datas['db_user'] = $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['user'];
         $datas['db_host'] = $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['host'];
