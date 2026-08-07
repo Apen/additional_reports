@@ -11,11 +11,19 @@ namespace Sng\AdditionalReports\Reports;
  * LICENSE.txt file that was distributed with this source code.
  */
 
-use Sng\AdditionalReports\Utility;
-use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use Sng\AdditionalReports\Service\ExtensionIconResolver;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class Eid extends AbstractReport
 {
+    private ExtensionIconResolver $extensionIconResolver;
+
+    public function __construct(?object $reportObject = null, ?ExtensionIconResolver $extensionIconResolver = null)
+    {
+        parent::__construct($reportObject);
+        $this->extensionIconResolver = $extensionIconResolver ?? GeneralUtility::makeInstance(ExtensionIconResolver::class);
+    }
+
     /**
      * This method renders the report
      *
@@ -33,24 +41,19 @@ class Eid extends AbstractReport
      */
     public function display()
     {
-        $items = $GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include'];
+        $items = $GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include'] ?? [];
         $eids = [];
 
-        if (count($items) > 0) {
-            foreach ($items as $itemKey => $itemValue) {
-                preg_match('#EXT:(.*?)\/#', $itemValue, $ext);
-                if ($ext[1] ?? false) {
-                    continue;
-                }
-                if (ExtensionManagementUtility::isLoaded($ext[1] ?? '')) {
-                    $eids[] = [
-                        'icon' => Utility::getExtIcon($ext[1]),
-                        'extension' => $ext[1],
-                        'name' => $itemKey,
-                        'path' => $itemValue,
-                    ];
-                }
-            }
+        foreach ($items as $itemKey => $itemValue) {
+            $path = is_string($itemValue) ? $itemValue : get_debug_type($itemValue);
+            preg_match('#^EXT:([^/]+)/#', $path, $matches);
+            $extensionKey = $matches[1] ?? '';
+            $eids[] = [
+                'icon' => $this->extensionIconResolver->resolve($extensionKey),
+                'extension' => $extensionKey,
+                'name' => (string) $itemKey,
+                'path' => $path,
+            ];
         }
 
         $view = $this->createView();

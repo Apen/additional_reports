@@ -16,7 +16,18 @@ class EidTest extends FunctionalTestCase
 
     public function testDisplay()
     {
+        $GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include'] = [
+            'legacy' => 'EXT:additional_reports/Classes/Eid/CallAjax.php',
+            'modern' => self::class . '::handleRequest',
+            'callable' => [self::class, 'handleRequest'],
+        ];
+
         $report = new Eid(parent::getReportObject());
-        self::assertNotEmpty($report->display());
+        $output = $report->display();
+
+        self::assertStringContainsString('additional_reports', $output);
+        self::assertStringContainsString('EXT:additional_reports/Classes/Eid/CallAjax.php', $output);
+        self::assertStringContainsString(self::class . '::handleRequest', $output);
+        self::assertStringContainsString('array', $output);
     }
 }
