@@ -214,14 +214,15 @@ class Status extends AbstractReport
         $size = 0;
 
         foreach ($items as $itemValue) {
+            $tableSize = round((float) ($itemValue['size'] ?? 0), 2);
             $tables[] = [
                 'name' => $itemValue['table_name'],
                 'engine' => $itemValue['engine'],
                 'collation' => $itemValue['table_collation'],
                 'rows' => $itemValue['table_rows'],
-                'size' => round($itemValue['size'], 2),
+                'size' => $tableSize,
             ];
-            $size += round($itemValue['size'], 2);
+            $size += $tableSize;
         }
 
         $data['tables'] = $tables;
