@@ -11,10 +11,32 @@ namespace Sng\AdditionalReports\Reports;
  * LICENSE.txt file that was distributed with this source code.
  */
 
-use Sng\AdditionalReports\Utility;
+use Sng\AdditionalReports\Repository\PageStatisticsRepository;
+use Sng\AdditionalReports\Repository\WebsiteConfigurationRepository;
+use TYPO3\CMS\Core\Exception\SiteNotFoundException;
+use TYPO3\CMS\Core\Site\SiteFinder;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class WebsiteConf extends AbstractReport
 {
+    private WebsiteConfigurationRepository $websiteConfigurationRepository;
+
+    private PageStatisticsRepository $pageStatisticsRepository;
+
+    private SiteFinder $siteFinder;
+
+    public function __construct(
+        ?object $reportObject = null,
+        ?WebsiteConfigurationRepository $websiteConfigurationRepository = null,
+        ?PageStatisticsRepository $pageStatisticsRepository = null,
+        ?SiteFinder $siteFinder = null,
+    ) {
+        parent::__construct($reportObject);
+        $this->websiteConfigurationRepository = $websiteConfigurationRepository ?? GeneralUtility::makeInstance(WebsiteConfigurationRepository::class);
+        $this->pageStatisticsRepository = $pageStatisticsRepository ?? GeneralUtility::makeInstance(PageStatisticsRepository::class);
+        $this->siteFinder = $siteFinder ?? GeneralUtility::makeInstance(SiteFinder::class);
+    }
+
     /**
      * This method renders the report
      *
@@ -32,57 +54,33 @@ class WebsiteConf extends AbstractReport
      */
     public function display()
     {
-        $queryBuilder = Utility::getQueryBuilder('pages');
-        $items = $queryBuilder
-            ->select('uid', 'title')
-            ->from('pages')
-            ->where($queryBuilder->expr()->eq('is_siteroot', 1))
-            ->andWhere($queryBuilder->expr()->eq('hidden', 0))
-            ->andWhere($queryBuilder->expr()->neq('pid', -1))
-            ->executeQuery()
-            ->fetchAllAssociative();
-
         $websiteconf = [];
-
-        if (! empty($items)) {
-            foreach ($items as $itemValue) {
-                $websiteconfItem = [];
-
-                $websiteconfItem['pid'] = $itemValue['uid'];
-                $websiteconfItem['pagetitle'] = $itemValue['title'];
-                $websiteconfItem['domains'] = '';
-                $websiteconfItem['template'] = '';
-                $websiteconfItem['domains'] = Utility::getDomain($itemValue['uid']) . '<br/>';
-
-                $queryBuilder = Utility::getQueryBuilder('sys_template');
-                $templates = $queryBuilder
-                    ->select('uid', 'title', 'root')
-                    ->from('sys_template')
-                    ->where($queryBuilder->expr()->eq('pid', $queryBuilder->createNamedParameter((int) $itemValue['uid'])))
-                    ->andWhere($queryBuilder->expr()->eq('hidden', 0))
-                    ->orderBy('sorting')
-                    ->executeQuery()
-                    ->fetchAllAssociative();
-
-                foreach ($templates as $templateObj) {
-                    $websiteconfItem['template'] .= $templateObj['title'] . ' ';
-                    $websiteconfItem['template'] .= '[uid=' . $templateObj['uid'] . ',root=' . $templateObj['root'] . ']<br/>';
-                }
-
-                // count pages
-                $list = Utility::getTreeList($itemValue['uid'], 99);
-                $listArray = explode(',', $list);
-                $websiteconfItem['pages'] = (count($listArray) - 1);
-                $websiteconfItem['pageshidden'] = Utility::getCountPagesUids($list, 'hidden');
-                $websiteconfItem['pagesnosearch'] = Utility::getCountPagesUids($list, 'no_search');
-
-                $websiteconf[] = $websiteconfItem;
-            }
+        foreach ($this->websiteConfigurationRepository->findVisibleRootPages() as $rootPage) {
+            $pageIds = $this->pageStatisticsRepository->findPageIdsRecursive($rootPage['uid'], 99);
+            $domain = $this->findDomain($rootPage['uid']);
+            $websiteconf[] = [
+                'pid' => $rootPage['uid'],
+                'pagetitle' => $rootPage['title'],
+                'domains' => $domain === '' ? [] : [$domain],
+                'templates' => $this->websiteConfigurationRepository->findVisibleTemplates($rootPage['uid']),
+                'pages' => max(0, count($pageIds) - 1),
+                'pageshidden' => $this->pageStatisticsRepository->countByFlag($pageIds, 'hidden'),
+                'pagesnosearch' => $this->pageStatisticsRepository->countByFlag($pageIds, 'no_search'),
+            ];
         }
 
         $view = $this->createView();
         $view->assign('items', $websiteconf);
         return $view->render('websiteconf-fluid');
+    }
+
+    private function findDomain(int $pageId): string
+    {
+        try {
+            return $this->siteFinder->getSiteByPageId($pageId)->getBase()->getHost();
+        } catch (SiteNotFoundException) {
+            return '';
+        }
     }
 
     public function getIdentifier(): string

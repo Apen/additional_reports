@@ -19,6 +19,8 @@ services:
 
   Sng\AdditionalReports\Repository\DatabaseStatusRepository: ~
 
+  Sng\AdditionalReports\Repository\WebsiteConfigurationRepository: ~
+
   Sng\AdditionalReports\Reports\CommandControllers:
     tags:
       - { name: additionalreports_commandcontrollers.report }
