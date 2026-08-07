@@ -174,3 +174,23 @@ table.debug td.debugvar {
 #filtersCat {
     margin: 10px;
 }
+
+.additional-reports-extensions-table {
+    table-layout: fixed;
+}
+
+.additional-reports-extensions-table th,
+.additional-reports-extensions-table td {
+    overflow-wrap: anywhere;
+    vertical-align: top;
+}
+
+.additional-reports-extension-schema {
+    max-height: 20rem;
+    overflow: auto;
+    padding-inline-end: 0.5rem;
+}
+
+.additional-reports-extension-schema code {
+    white-space: normal;
+}

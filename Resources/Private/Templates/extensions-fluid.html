@@ -20,7 +20,15 @@
 
 <f:if condition="{listExtensionsTer}">
     <div class="table-fit">
-        <table class="table table-striped table-hover table-condensed">
+        <table class="table table-striped table-hover table-condensed additional-reports-extensions-table">
+            <colgroup>
+                <col style="width: 18%"/>
+                <col style="width: 10%"/>
+                <col style="width: 15%"/>
+                <col style="width: 18%"/>
+                <col style="width: 15%"/>
+                <col style="width: 24%"/>
+            </colgroup>
             <thead>
             <tr>
                 <th colspan="6">
@@ -78,7 +86,12 @@
 
 <f:if condition="{listExtensionsDev}">
     <div class="table-fit">
-        <table class="table table-striped table-hover table-condensed">
+        <table class="table table-striped table-hover table-condensed additional-reports-extensions-table">
+            <colgroup>
+                <col style="width: 30%"/>
+                <col style="width: 15%"/>
+                <col style="width: 55%"/>
+            </colgroup>
             <thead>
             <tr>
                 <th colspan="3">
@@ -115,7 +128,12 @@
 
 <f:if condition="{listExtensionsUnloaded}">
     <div class="table-fit">
-        <table class="table table-striped table-hover table-condensed">
+        <table class="table table-striped table-hover table-condensed additional-reports-extensions-table">
+            <colgroup>
+                <col style="width: 30%"/>
+                <col style="width: 15%"/>
+                <col style="width: 55%"/>
+            </colgroup>
             <thead>
             <tr>
                 <th colspan="3">
@@ -163,7 +181,7 @@
     <f:if condition="{tables}">
         <details>
             <summary class="btn btn-default">{title}</summary>
-            <dl class="mt-2 mb-0">
+            <dl class="additional-reports-extension-schema mt-2 mb-0">
                 <f:for each="{tables}" as="table">
                     <dt><code>{table.name}</code></dt>
                     <dd><code>{table.columns -> f:join(separator: ', ')}</code></dd>

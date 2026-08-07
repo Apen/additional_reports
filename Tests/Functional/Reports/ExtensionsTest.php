@@ -21,7 +21,8 @@ class ExtensionsTest extends FunctionalTestCase
 
         self::assertNotEmpty($output);
         self::assertStringContainsString('class="table-fit"', $output);
-        self::assertStringContainsString('class="table table-striped table-hover table-condensed"', $output);
+        self::assertStringContainsString('additional-reports-extensions-table', $output);
+        self::assertStringContainsString('<colgroup>', $output);
     }
 
     public function testExtensionTablesAreParsedLikeTheDatabaseAnalyzer(): void
