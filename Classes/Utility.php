@@ -14,6 +14,7 @@ namespace Sng\AdditionalReports;
 use Sng\AdditionalReports\Repository\ContentUsageRepository;
 use Sng\AdditionalReports\Repository\ExtensionRepository;
 use Sng\AdditionalReports\Repository\PageStatisticsRepository;
+use Sng\AdditionalReports\Service\ExtensionIconResolver;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -21,13 +22,10 @@ use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Exception\SiteNotFoundException;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
-use TYPO3\CMS\Core\Package\Exception\UnknownPackageException;
-use TYPO3\CMS\Core\Package\PackageManager;
 use TYPO3\CMS\Core\Pagination\ArrayPaginator;
 use TYPO3\CMS\Core\Pagination\SlidingWindowPagination;
 use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\PathUtility;
 
 /**
  * Utility class
@@ -123,17 +121,7 @@ class Utility
      */
     public static function getExtIcon($extKey)
     {
-        if (! empty($extKey)) {
-            try {
-                $package = GeneralUtility::makeInstance(PackageManager::class)->getPackage($extKey);
-            } catch (UnknownPackageException) {
-                return '';
-            }
-
-            $icon = $package->getPackageIcon();
-            return $icon === null ? '' : PathUtility::getPublicResourceWebPath('EXT:' . $extKey . '/' . $icon);
-        }
-        return '';
+        return GeneralUtility::makeInstance(ExtensionIconResolver::class)->resolve(is_string($extKey) ? $extKey : '');
     }
 
     /**
