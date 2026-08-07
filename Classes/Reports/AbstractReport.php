@@ -38,7 +38,6 @@ trait AbstractReportImplementation
     {
         $this->reportObject = $reportObject;
         $this->setCss('EXT:additional_reports/Resources/Public/Css/tx_additionalreports.css');
-        $this->setJs('EXT:additional_reports/Resources/Public/JavaScript/plugins.js');
     }
 
     public function setCss(string $path): void
@@ -49,16 +48,6 @@ trait AbstractReportImplementation
         }
         $pageRenderer = GeneralUtility::makeInstance(PageRenderer::class);
         $pageRenderer->addCssFile($path);
-    }
-
-    public function setJs(string $path): void
-    {
-        if (isset($this->reportObject->doc)) {
-            $this->reportObject->doc->getPageRenderer()
-                ->addJsFile($path);
-        }
-        $pageRenderer = GeneralUtility::makeInstance(PageRenderer::class);
-        $pageRenderer->addJsFile($path);
     }
 
     protected function createView(): ViewInterface

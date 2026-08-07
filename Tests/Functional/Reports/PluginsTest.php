@@ -7,6 +7,8 @@ namespace Sng\AdditionalReports\Tests\Functional\Reports;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Sng\AdditionalReports\Reports\Plugins;
 use Sng\AdditionalReports\Tests\Functional\FunctionalTestCase;
+use TYPO3\CMS\Core\Page\AssetCollector;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class PluginsTest extends FunctionalTestCase
 {
@@ -19,6 +21,7 @@ class PluginsTest extends FunctionalTestCase
     {
         $report = new Plugins(parent::getReportObject());
         self::assertNotEmpty($report->display());
+        self::assertTrue(GeneralUtility::makeInstance(AssetCollector::class)->hasJavaScript('additional-reports-plugins'));
     }
 
     #[DataProvider('displayModeProvider')]
