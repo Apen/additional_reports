@@ -11,6 +11,8 @@ services:
 
   Sng\AdditionalReports\Service\ExtensionSchemaParser: ~
 
+  Sng\AdditionalReports\Service\EventListenerRegistry: ~
+
   Sng\AdditionalReports\Repository\ContentUsageRepository: ~
 
   Sng\AdditionalReports\Repository\PageStatisticsRepository: ~

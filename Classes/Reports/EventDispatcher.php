@@ -11,18 +11,19 @@ namespace Sng\AdditionalReports\Reports;
  * LICENSE.txt file that was distributed with this source code.
  */
 
-use Sng\AdditionalReports\Service\StructuredDataNormalizer;
-use Symfony\Component\Config\FileLocator;
-use Symfony\Component\DependencyInjection\ContainerBuilder as SymfonyContainerBuilder;
-use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
-use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
-use TYPO3\CMS\Core\DependencyInjection\ServiceProviderCompilationPass;
-use TYPO3\CMS\Core\DependencyInjection\ServiceProviderRegistry;
-use TYPO3\CMS\Core\Package\PackageManager;
+use Sng\AdditionalReports\Service\EventListenerRegistry;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class EventDispatcher extends AbstractReport
 {
+    private EventListenerRegistry $eventListenerRegistry;
+
+    public function __construct(?object $reportObject = null, ?EventListenerRegistry $eventListenerRegistry = null)
+    {
+        parent::__construct($reportObject);
+        $this->eventListenerRegistry = $eventListenerRegistry ?? GeneralUtility::makeInstance(EventListenerRegistry::class);
+    }
+
     /**
      * This method renders the report
      *
@@ -40,48 +41,9 @@ class EventDispatcher extends AbstractReport
      */
     public function display()
     {
-        $events = $this->getAllEvents();
         $view = $this->createView();
-        $view->assign('events', $events);
+        $view->assign('events', $this->eventListenerRegistry->findAll());
         return $view->render('events-fluid');
-    }
-
-    public function getAllEvents()
-    {
-        $normalizer = GeneralUtility::makeInstance(StructuredDataNormalizer::class);
-        $packageManager = GeneralUtility::makeInstance(PackageManager::class);
-        $packages = $packageManager->getActivePackages();
-        $containerBuilder = new SymfonyContainerBuilder();
-        $registry = new ServiceProviderRegistry($packageManager);
-        $containerBuilder->addCompilerPass(new ServiceProviderCompilationPass($registry, 'service_provider_registry'));
-
-        foreach ($packages as $package) {
-            $diConfigDir = $package->getPackagePath() . 'Configuration/';
-            if (file_exists($diConfigDir . 'Services.php')) {
-                $phpFileLoader = new PhpFileLoader($containerBuilder, new FileLocator($diConfigDir));
-                $phpFileLoader->load('Services.php');
-            }
-            if (file_exists($diConfigDir . 'Services.yaml')) {
-                $yamlFileLoader = new YamlFileLoader($containerBuilder, new FileLocator($diConfigDir));
-                $yamlFileLoader->load('Services.yaml');
-            }
-        }
-
-        $events = [];
-        foreach ($containerBuilder->getDefinitions() as $className => $definition) {
-            $tags = $definition->getTags();
-            if (! empty($tags)) {
-                foreach ($tags as $tagType => $tag) {
-                    if ($tagType === 'event.listener') {
-                        $events[] = [
-                            'className' => $className,
-                            'list' => $normalizer->normalize($tag),
-                        ];
-                    }
-                }
-            }
-        }
-        return $events;
     }
 
     public function getIdentifier(): string

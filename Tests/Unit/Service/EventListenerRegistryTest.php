@@ -1,0 +1,36 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Sng\AdditionalReports\Tests\Unit\Service;
+
+use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerInterface;
+use Sng\AdditionalReports\Service\EventListenerRegistry;
+use TYPO3\CMS\Core\EventDispatcher\ListenerProvider;
+
+final class EventListenerRegistryTest extends TestCase
+{
+    public function testListenerDefinitionsAreNormalizedAndSorted(): void
+    {
+        $container = $this->createStub(ContainerInterface::class);
+        $provider = new ListenerProvider($container);
+        $provider->addListener('Vendor\\Event\\SecondEvent', 'listener.second', null, 'second');
+        $provider->addListener('Vendor\\Event\\FirstEvent', 'listener.first', 'handle', 'first');
+
+        self::assertSame([
+            [
+                'event' => 'Vendor\\Event\\FirstEvent',
+                'identifier' => 'first',
+                'service' => 'listener.first',
+                'method' => 'handle',
+            ],
+            [
+                'event' => 'Vendor\\Event\\SecondEvent',
+                'identifier' => 'second',
+                'service' => 'listener.second',
+                'method' => '__invoke',
+            ],
+        ], (new EventListenerRegistry($provider))->findAll());
+    }
+}
