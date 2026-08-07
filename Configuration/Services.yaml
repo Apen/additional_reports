@@ -9,6 +9,8 @@ services:
 
   Sng\AdditionalReports\Repository\ContentUsageRepository: ~
 
+  Sng\AdditionalReports\Repository\PageStatisticsRepository: ~
+
   Sng\AdditionalReports\Reports\CommandControllers:
     tags:
       - { name: additionalreports_commandcontrollers.report }

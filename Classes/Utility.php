@@ -13,6 +13,7 @@ namespace Sng\AdditionalReports;
 
 use Composer\Semver\VersionParser;
 use Sng\AdditionalReports\Repository\ContentUsageRepository;
+use Sng\AdditionalReports\Repository\PageStatisticsRepository;
 use Sng\AdditionalReports\Service\PackagistVersionService;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Core\Environment;
@@ -69,30 +70,10 @@ class Utility
      */
     public static function getTreeList($id, $depth, $begin = 0, $permsClause = '1=1')
     {
-        $depth = (int) $depth;
-        $begin = (int) $begin;
-        $id = (int) $id;
-        $theList = $begin === 0 ? $id : '';
-        if ($id && $depth > 0) {
-            $queryBuilder = self::getQueryBuilder('pages');
-            $queryBuilder
-                ->select('uid')
-                ->from('pages')
-                ->where($queryBuilder->expr()->eq('pid', $queryBuilder->createNamedParameter($id)));
-            if ($permsClause !== '1=1') {
-                $queryBuilder->andWhere($permsClause);
-            }
-            $res = $queryBuilder->executeQuery();
-            while ($row = $res->fetchAssociative()) {
-                if ($begin <= 0) {
-                    $theList .= ',' . $row['uid'];
-                }
-                if ($depth > 1) {
-                    $theList .= self::getTreeList($row['uid'], $depth - 1, $begin - 1, $permsClause);
-                }
-            }
+        if ((int) $begin !== 0 || $permsClause !== '1=1') {
+            throw new \InvalidArgumentException('Custom tree offsets and SQL permission clauses are no longer supported.');
         }
-        return $theList;
+        return implode(',', GeneralUtility::makeInstance(PageStatisticsRepository::class)->findPageIdsRecursive((int) $id, (int) $depth));
     }
 
     /**
@@ -108,18 +89,10 @@ class Utility
         if ($pageUids === []) {
             return 0;
         }
-        $queryBuilder = self::getQueryBuilder('pages');
-        $queryBuilder
-            ->count('uid')
-            ->from('pages')
-            ->where($queryBuilder->expr()->in('uid', $queryBuilder->createNamedParameter($pageUids, Connection::PARAM_INT_ARRAY)));
-        if ($field !== '') {
-            if (! in_array($field, ['hidden', 'no_search'], true)) {
-                throw new \InvalidArgumentException('Unsupported page field: ' . $field);
-            }
-            $queryBuilder->andWhere($queryBuilder->expr()->eq($field, 1));
+        if ($field === '') {
+            return count($pageUids);
         }
-        return (int) $queryBuilder->executeQuery()->fetchOne();
+        return GeneralUtility::makeInstance(PageStatisticsRepository::class)->countByFlag($pageUids, $field);
     }
 
     /**
