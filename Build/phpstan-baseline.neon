@@ -253,7 +253,7 @@ parameters:
 			path: ../Classes/Utility.php
 
 		-
-			message: '#^Class cognitive complexity is 171, keep it under 35$#'
+			message: '#^Class cognitive complexity is 173, keep it under 35$#'
 			identifier: complexity.classLike
 			count: 1
 			path: ../Classes/Utility.php

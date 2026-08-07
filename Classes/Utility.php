@@ -11,6 +11,7 @@ namespace Sng\AdditionalReports;
  * LICENSE.txt file that was distributed with this source code.
  */
 
+use Composer\Semver\VersionParser;
 use Sng\AdditionalReports\Service\PackagistVersionService;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Core\Environment;
@@ -220,7 +221,10 @@ class Utility
     {
         if (self::isComposerMode()) {
             $packageName = $extInfo['composerName'] ?? null;
+            $installedVersion = $extInfo['version'] ?? null;
             return is_string($packageName)
+                && is_string($installedVersion)
+                && VersionParser::parseStability($installedVersion) === 'stable'
                 ? GeneralUtility::makeInstance(PackagistVersionService::class)->findLatestVersion($packageName)
                 : null;
         }

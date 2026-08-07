@@ -63,6 +63,15 @@ class UtilityTest extends BaseTestCase
         ]));
     }
 
+    public function testDevelopmentVersionIsNotComparedWithPackagist(): void
+    {
+        self::assertNull(Utility::checkExtensionUpdate([
+            'extkey' => 'powermail',
+            'composerName' => 'in2code/powermail',
+            'version' => 'dev-master',
+        ]));
+    }
+
     public function testGetPluginsDisplayMode()
     {
         self::assertEmpty(Utility::getPluginsDisplayMode());
