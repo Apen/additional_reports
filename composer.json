@@ -66,7 +66,7 @@
         "providesPackages": {}
       },
       "extension-key": "additional_reports",
-      "version": "3.4.9",
+      "version": "4.0.0",
       "web-dir": ".Build/public"
     }
   },
