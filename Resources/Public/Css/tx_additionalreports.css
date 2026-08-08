@@ -282,7 +282,7 @@ table.debug td.debugvar {
 }
 
 .additional-reports-events-table code {
-    font-size: 1rem;
+    font-size: inherit;
     line-height: 1.4;
 }
 
@@ -294,5 +294,4 @@ table.debug td.debugvar {
 
 .additional-reports-class-name > span {
     color: var(--typo3-text-color-secondary, #666);
-    font-size: 0.875rem;
 }
