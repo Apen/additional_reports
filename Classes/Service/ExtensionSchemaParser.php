@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Sng\AdditionalReports\Service;
 
+use Doctrine\DBAL\Schema\Column;
 use TYPO3\CMS\Core\Database\Schema\Parser\Lexer;
 use TYPO3\CMS\Core\Database\Schema\Parser\Parser;
 use TYPO3\CMS\Core\Database\Schema\SqlReader;
@@ -33,7 +34,7 @@ final readonly class ExtensionSchemaParser
             foreach ($parsedTables as $parsedTable) {
                 $tables[] = [
                     'name' => $parsedTable->getName(),
-                    'columns' => array_map(static fn($column): string => $column->getName(), $parsedTable->getColumns()),
+                    'columns' => array_map(static fn(Column $column): string => $column->getName(), $parsedTable->getColumns()),
                 ];
             }
         }

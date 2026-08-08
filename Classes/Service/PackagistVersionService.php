@@ -13,9 +13,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 final class PackagistVersionService implements PackageVersionProviderInterface
 {
-    /** @var int */
-    private const CACHE_LIFETIME = 43200;
-
     /**
      * @return array{version: string, updatedate: string, alldownloadcounter: string}|null
      */
@@ -60,7 +57,7 @@ final class PackagistVersionService implements PackageVersionProviderInterface
             // Private packages, unavailable repositories and network errors have no public update information.
         }
 
-        $frontend->set($cacheIdentifier, $result ?? false, [], self::CACHE_LIFETIME);
+        $frontend->set($cacheIdentifier, $result ?? false, [], 43200);
         return $result;
     }
 

@@ -13,35 +13,29 @@ use TYPO3\CMS\Core\Utility\PathUtility;
 
 final class PublicResourceUriResolver
 {
-    private const FACTORY_CLASS = SystemResourceFactory::class;
-
-    private const PUBLISHER_INTERFACE = SystemResourcePublisherInterface::class;
-
-    private const OPTIONS_CLASS = UriGenerationOptions::class;
-
     public function resolve(string $identifier, ?ServerRequestInterface $serverRequest = null): string
     {
         if (
-            ! class_exists(self::FACTORY_CLASS)
-            || ! interface_exists(self::PUBLISHER_INTERFACE)
-            || ! class_exists(self::OPTIONS_CLASS)
+            ! class_exists(SystemResourceFactory::class)
+            || ! interface_exists(SystemResourcePublisherInterface::class)
+            || ! class_exists(UriGenerationOptions::class)
         ) {
             return PathUtility::getPublicResourceWebPath($identifier);
         }
 
-        $self = GeneralUtility::makeInstance(self::FACTORY_CLASS);
-        if (! method_exists($self, 'createPublicResource')) {
+        $systemResourceFactory = GeneralUtility::makeInstance(SystemResourceFactory::class);
+        if (! method_exists($systemResourceFactory, 'createPublicResource')) {
             return PathUtility::getPublicResourceWebPath($identifier);
         }
 
-        $resource = $self->createPublicResource($identifier);
-        $publisher = GeneralUtility::makeInstance(self::PUBLISHER_INTERFACE);
-        if (! method_exists($publisher, 'generateUri')) {
+        $publicResource = $systemResourceFactory->createPublicResource($identifier);
+        $systemResourcePublisher = GeneralUtility::makeInstance(SystemResourcePublisherInterface::class);
+        if (! method_exists($systemResourcePublisher, 'generateUri')) {
             return PathUtility::getPublicResourceWebPath($identifier);
         }
 
-        $uriGenerationOptions = (new \ReflectionClass(self::OPTIONS_CLASS))->newInstanceArgs(['absoluteUri' => false]);
+        $uriGenerationOptions = (new \ReflectionClass(UriGenerationOptions::class))->newInstanceArgs(['absoluteUri' => false]);
 
-        return (string) $publisher->generateUri($resource, $serverRequest, $uriGenerationOptions);
+        return (string) $systemResourcePublisher->generateUri($publicResource, $serverRequest, $uriGenerationOptions);
     }
 }

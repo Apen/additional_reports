@@ -40,6 +40,7 @@ class Middlewares extends AbstractReport
         return $view->render();
     }
 
+    /** @return array<string, array<string, array<string, mixed>>> */
     public function getAllMiddlewares(): array
     {
         $packageManager = GeneralUtility::makeInstance(PackageManager::class);
@@ -58,6 +59,10 @@ class Middlewares extends AbstractReport
         return array_replace_recursive(...$allMiddlewares);
     }
 
+    /**
+     * @param array<string, array<string, array<string, mixed>>> $allMiddlewares
+     * @return array<string, array<string, mixed>>
+     */
     public function filterAllMiddlewares(array $allMiddlewares): array
     {
         $dependencyOrderingService = GeneralUtility::makeInstance(DependencyOrderingService::class);

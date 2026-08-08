@@ -171,8 +171,12 @@ class Status extends AbstractReport
         if (function_exists('posix_getpwuid') && function_exists('posix_getgrgid')) {
             $apacheUser = posix_getpwuid(posix_getuid());
             $apacheGroup = posix_getgrgid(posix_getgid());
-            $data['apache_user'] = $apacheUser['name'] . ' (' . $apacheUser['gid'] . ')';
-            $data['apache_group'] = $apacheGroup['name'] . ' (' . $apacheGroup['gid'] . ')';
+            if (is_array($apacheUser)) {
+                $data['apache_user'] = $apacheUser['name'] . ' (' . $apacheUser['gid'] . ')';
+            }
+            if (is_array($apacheGroup)) {
+                $data['apache_group'] = $apacheGroup['name'] . ' (' . $apacheGroup['gid'] . ')';
+            }
         }
 
         if (function_exists('get_loaded_extensions')) {

@@ -17,6 +17,7 @@ final readonly class ContentUsageRepository
         private ?ContentTypeResolver $contentTypeResolver = null,
     ) {}
 
+    /** @return list<array<string, mixed>> */
     public function findDistinctPlugins(bool $includeHidden = false): array
     {
         $plugins = [];
@@ -54,6 +55,7 @@ final readonly class ContentUsageRepository
         return [...$plugins, ...$legacyPlugins];
     }
 
+    /** @return list<array<string, mixed>> */
     public function findDistinctContentTypes(bool $includeHidden = false): array
     {
         $queryBuilder = $this->createQueryBuilder($includeHidden);
@@ -72,6 +74,7 @@ final readonly class ContentUsageRepository
         return $queryBuilder->executeQuery()->fetchAllAssociative();
     }
 
+    /** @return list<array<string, mixed>> */
     public function findPlugins(bool $includeHidden = false, ?string $filter = null): array
     {
         $plugins = [];
@@ -114,6 +117,7 @@ final readonly class ContentUsageRepository
         return [...$plugins, ...$legacyPlugins];
     }
 
+    /** @return list<array<string, mixed>> */
     public function findContentTypes(bool $includeHidden = false, ?string $filter = null): array
     {
         $queryBuilder = $this->createQueryBuilder($includeHidden);

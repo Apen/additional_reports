@@ -107,6 +107,7 @@ class Plugins extends AbstractReport
     /**
      * Generate the summary of the plugins and ctypes report
      */
+    /** @return list<array<string, mixed>> */
     public function getSummary(): array
     {
         $summary = $this->contentUsageRepository->summarizeVisibleContent();
@@ -156,6 +157,7 @@ class Plugins extends AbstractReport
     /**
      * Generate the used plugins report
      */
+    /** @return list<array<string, mixed>> */
     public function getAllUsedPlugins(bool $displayHidden = false, ?string $filter = null): array
     {
         return $this->contentUsageRepository->findPlugins($displayHidden, $filter);
@@ -164,6 +166,7 @@ class Plugins extends AbstractReport
     /**
      * Generate the used ctypes report
      */
+    /** @return list<array<string, mixed>> */
     public function getAllUsedCtypes(bool $displayHidden = false, ?string $filter = null): array
     {
         return $this->contentUsageRepository->findContentTypes($displayHidden, $filter);

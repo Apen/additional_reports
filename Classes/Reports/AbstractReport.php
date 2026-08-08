@@ -69,7 +69,10 @@ trait AbstractReportImplementation
     protected function getRequestParameter(string $name): mixed
     {
         $request = $this->getRequest();
-        return $request->getParsedBody()[$name] ?? $request->getQueryParams()[$name] ?? null;
+        $parsedBody = $request->getParsedBody();
+        return (is_array($parsedBody) ? $parsedBody[$name] ?? null : null)
+            ?? $request->getQueryParams()[$name]
+            ?? null;
     }
 
     public function setCss(string $path): void
@@ -104,7 +107,7 @@ trait AbstractReportImplementation
         }
 
         $request = $this->getRequest();
-        $route = $request instanceof ServerRequestInterface ? $request->getAttribute('route') : null;
+        $route = $request->getAttribute('route');
         if ($route instanceof Route || $route instanceof SymfonyRoute) {
             $identifier = $route->getOption('_identifier');
             if (is_string($identifier) && $identifier !== '') {

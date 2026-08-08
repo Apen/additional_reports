@@ -28,6 +28,7 @@ class Utility
     /**
      * Define all the reports
      */
+    /** @return list<array{string, string}> */
     public static function getReportsList(): array
     {
         return [
@@ -47,19 +48,14 @@ class Utility
 
     /**
      * Generates a list of Page-uid's from $id
-     *
-     * @param int $id
-     * @param int $depth
-     * @param int $begin
-     * @param string $permsClause
      */
-    public static function getTreeList($id, $depth, $begin = 0, $permsClause = '1=1'): string
+    public static function getTreeList(int $id, int $depth, int $begin = 0, string $permsClause = '1=1'): string
     {
-        if ((int) $begin !== 0 || $permsClause !== '1=1') {
+        if ($begin !== 0 || $permsClause !== '1=1') {
             throw new \InvalidArgumentException('Custom tree offsets and SQL permission clauses are no longer supported.', 3882860459);
         }
 
-        return implode(',', GeneralUtility::makeInstance(PageStatisticsRepository::class)->findPageIdsRecursive((int) $id, (int) $depth));
+        return implode(',', GeneralUtility::makeInstance(PageStatisticsRepository::class)->findPageIdsRecursive($id, $depth));
     }
 
     /**
@@ -93,33 +89,31 @@ class Utility
 
     /**
      * Get the HTTP icon path of an extension
-     *
-     * @param string $extKey
      */
-    public static function getExtIcon($extKey): string
+    public static function getExtIcon(string $extKey): string
     {
-        return GeneralUtility::makeInstance(ExtensionIconResolver::class)->resolve(is_string($extKey) ? $extKey : '');
+        return GeneralUtility::makeInstance(ExtensionIconResolver::class)->resolve($extKey);
     }
 
     /**
      * Get the version of a given extension
-     *
-     * @param string $key
      */
-    public static function getExtensionVersion($key): ?string
+    public static function getExtensionVersion(mixed $key): ?string
     {
-        if (! is_string($key) || ($key === '' || $key === '0')) {
+        if (! is_string($key) || $key === '' || $key === '0') {
             throw new \InvalidArgumentException('Extension key must be a non-empty string.', 2138750667);
         }
 
         return GeneralUtility::makeInstance(ExtensionRepository::class)->findVersion($key);
     }
 
+    /** @return list<array<string, mixed>> */
     public static function getAllDifferentPlugins(bool $displayHidden = false): array
     {
         return GeneralUtility::makeInstance(ContentUsageRepository::class)->findDistinctPlugins($displayHidden);
     }
 
+    /** @return list<array<string, mixed>> */
     public static function getAllDifferentCtypes(bool $displayHidden = false): array
     {
         return GeneralUtility::makeInstance(ContentUsageRepository::class)->findDistinctContentTypes($displayHidden);
@@ -128,6 +122,7 @@ class Utility
     /**
      * Get all the usage of a all the plugins
      */
+    /** @return list<array<string, mixed>> */
     public static function getAllPlugins(bool $displayHidden = false, ?string $filter = null): array
     {
         return GeneralUtility::makeInstance(ContentUsageRepository::class)->findPlugins($displayHidden, $filter);
@@ -137,6 +132,7 @@ class Utility
      * Get all the usage of a all the ctypes
      *
      */
+    /** @return list<array<string, mixed>> */
     public static function getAllCtypes(bool $displayHidden = false, ?string $filter = null): array
     {
         return GeneralUtility::makeInstance(ContentUsageRepository::class)->findContentTypes($displayHidden, $filter);

@@ -43,6 +43,10 @@ final readonly class EidTargetResolver
 
     private function resolvePackageKey(string $className): string
     {
+        if (! class_exists($className)) {
+            return '';
+        }
+
         $packageManager = $this->packageManager ?? GeneralUtility::makeInstance(PackageManager::class);
         foreach ($packageManager->getAvailablePackages() as $package) {
             $autoload = (array) $package->getValueFromComposerManifest('autoload');

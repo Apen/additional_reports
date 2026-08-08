@@ -8,6 +8,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 final class Typo3VersionInformationService
 {
+    /** @return array<string, mixed> */
     public function fetch(): array
     {
         $response = GeneralUtility::getUrl('https://get.typo3.org/json');
@@ -19,6 +20,10 @@ final class Typo3VersionInformationService
         return is_array($versions) ? $versions : [];
     }
 
+    /**
+     * @param array<string, mixed> $versions
+     * @return array<string, mixed>
+     */
     public function getCurrentVersion(array $versions, string $version): array
     {
         $versionParts = explode('.', $version);
@@ -29,6 +34,10 @@ final class Typo3VersionInformationService
         return $versions[$versionParts[0] . '.' . ($versionParts[1] ?? '0')]['releases'][$version] ?? [];
     }
 
+    /**
+     * @param array<string, mixed> $versions
+     * @return array<string, mixed>
+     */
     public function getCurrentBranch(array $versions, string $version): array
     {
         $versionParts = explode('.', $version);
@@ -44,16 +53,28 @@ final class Typo3VersionInformationService
         return is_array($release) ? $release : [];
     }
 
+    /**
+     * @param array<string, mixed> $versions
+     * @return array<string, mixed>
+     */
     public function getLatestStable(array $versions): array
     {
         return $this->getNamedRelease($versions, 'latest_stable');
     }
 
+    /**
+     * @param array<string, mixed> $versions
+     * @return array<string, mixed>
+     */
     public function getLatestLts(array $versions): array
     {
         return $this->getNamedRelease($versions, 'latest_lts');
     }
 
+    /**
+     * @param array<string, mixed> $versions
+     * @return array<string, mixed>
+     */
     private function getNamedRelease(array $versions, string $key): array
     {
         $version = $versions[$key] ?? null;

@@ -16,7 +16,10 @@ final readonly class ExtensionUpdateService
         private ?ConnectionPool $connectionPool = null,
     ) {}
 
-    /** @param array<string, mixed> $extension */
+    /**
+     * @param array<string, mixed> $extension
+     * @return array<string, mixed>|null
+     */
     public function findLatestVersion(array $extension): ?array
     {
         $packageName = $extension['composerName'] ?? null;

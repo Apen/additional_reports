@@ -44,47 +44,52 @@ class Hooks extends AbstractReport
      */
     public function display(): string
     {
-        $hooks = [];
         $structuredDataNormalizer = GeneralUtility::makeInstance(StructuredDataNormalizer::class);
-
-        // core hooks
-        $items = $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS'];
-        if (count($items) > 0) {
-            foreach ($items as $itemKey => $itemValue) {
-                if (preg_match('#.*?\/.*?\.php#', $itemKey, $matches)) {
-                    foreach ($itemValue as $hookName => $hookList) {
-                        $hookList = $this->hookResolver->resolve($hookList);
-                        if (!empty($hookList)) {
-                            $hooks['core'][] = [
-                                'corefile' => $itemKey,
-                                'name'     => $hookName,
-                                'file'     => $structuredDataNormalizer->normalize($hookList),
-                            ];
-                        }
-                    }
-                }
-            }
-        }
-
-        $items = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'];
-        if (count($items) > 0) {
-            foreach ($items as $itemKey => $itemValue) {
-                foreach ($itemValue as $hookName => $hookList) {
-                    $hookList = $this->hookResolver->resolve($hookList);
-                    if (!empty($hookList)) {
-                        $hooks['extensions'][] = [
-                            'corefile' => $itemKey,
-                            'name'     => $hookName,
-                            'file'     => $structuredDataNormalizer->normalize($hookList),
-                        ];
-                    }
-                }
-            }
-        }
+        $hooks = [
+            'core' => $this->collectHooks($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS'], $structuredDataNormalizer, true),
+            'extensions' => $this->collectHooks($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'], $structuredDataNormalizer),
+        ];
 
         $view = $this->createView('hooks-fluid');
         $view->assign('hooks', $hooks);
         return $view->render();
+    }
+
+    /**
+     * @param array<string, mixed> $items
+     * @return list<array{corefile: string, name: string, file: array<int, array<string, mixed>>}>
+     */
+    private function collectHooks(array $items, StructuredDataNormalizer $structuredDataNormalizer, bool $coreHooks = false): array
+    {
+        $hooks = [];
+        foreach ($items as $itemKey => $itemValue) {
+            if (! is_array($itemValue)) {
+                continue;
+            }
+            if ($coreHooks && preg_match('#.*?/.*?\.php#', $itemKey) !== 1) {
+                continue;
+            }
+            foreach ($itemValue as $hookName => $hookList) {
+                $resolvedHook = $this->hookResolver->resolve($hookList);
+                if ($resolvedHook === null) {
+                    continue;
+                }
+                if ($resolvedHook === []) {
+                    continue;
+                }
+                if ($resolvedHook === '') {
+                    continue;
+                }
+
+                $hooks[] = [
+                    'corefile' => $itemKey,
+                    'name' => (string) $hookName,
+                    'file' => $structuredDataNormalizer->normalize($resolvedHook),
+                ];
+            }
+        }
+
+        return $hooks;
     }
 
     public function getIdentifier(): string
