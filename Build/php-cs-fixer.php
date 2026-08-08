@@ -9,8 +9,7 @@ if (PHP_SAPI !== 'cli') {
 $root = dirname(__DIR__);
 $finder = (new PhpCsFixer\Finder())
     ->ignoreVCSIgnored(true)
-    ->in([$root . '/Classes', $root . '/Configuration', $root . '/Tests'])
-    ->append([$root . '/ext_emconf.php']);
+    ->in([$root . '/Classes', $root . '/Configuration', $root . '/Tests']);
 
 return (new PhpCsFixer\Config())
     ->setFinder($finder)
