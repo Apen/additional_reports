@@ -31,6 +31,8 @@ services:
 
   Sng\AdditionalReports\Service\PublicResourceUriResolver: ~
 
+  Sng\AdditionalReports\Service\EidTargetResolver: ~
+
   Sng\AdditionalReports\Service\PackageVersionProviderInterface:
     alias: Sng\AdditionalReports\Service\PackagistVersionService
 

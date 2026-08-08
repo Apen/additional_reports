@@ -11,6 +11,7 @@ namespace Sng\AdditionalReports\Reports;
  * LICENSE.txt file that was distributed with this source code.
  */
 
+use Sng\AdditionalReports\Service\EidTargetResolver;
 use Sng\AdditionalReports\Service\ExtensionIconResolver;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -18,10 +19,16 @@ class Eid extends AbstractReport
 {
     private ExtensionIconResolver $extensionIconResolver;
 
-    public function __construct(?object $reportObject = null, ?ExtensionIconResolver $extensionIconResolver = null)
-    {
+    private EidTargetResolver $eidTargetResolver;
+
+    public function __construct(
+        ?object $reportObject = null,
+        ?ExtensionIconResolver $extensionIconResolver = null,
+        ?EidTargetResolver $eidTargetResolver = null,
+    ) {
         parent::__construct($reportObject);
         $this->extensionIconResolver = $extensionIconResolver ?? GeneralUtility::makeInstance(ExtensionIconResolver::class);
+        $this->eidTargetResolver = $eidTargetResolver ?? GeneralUtility::makeInstance(EidTargetResolver::class);
     }
 
     /**
@@ -45,14 +52,13 @@ class Eid extends AbstractReport
         $eids = [];
 
         foreach ($items as $itemKey => $itemValue) {
-            $path = is_string($itemValue) ? $itemValue : get_debug_type($itemValue);
-            preg_match('#^EXT:([^/]+)/#', $path, $matches);
-            $extensionKey = $matches[1] ?? '';
+            $target = $this->eidTargetResolver->resolve($itemValue);
+            $extensionKey = $target['extension'];
             $eids[] = [
                 'icon' => $this->extensionIconResolver->resolve($extensionKey),
                 'extension' => $extensionKey,
                 'name' => (string) $itemKey,
-                'path' => $path,
+                'path' => $target['target'],
             ];
         }
 
