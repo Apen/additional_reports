@@ -50,7 +50,7 @@ class LogErrors extends AbstractReport
     {
         $orderBy = $this->getRequestParameter('orderby');
 
-        $view = $this->createView();
+        $view = $this->createView('logerrors-fluid');
         $view->assign('reportname', interface_exists(ReportInterface::class) ? 'additionalreports_logerrors' : 'logerrors');
         $view->assign('paginationRoute', $this->getCurrentRouteIdentifier());
 
@@ -60,7 +60,7 @@ class LogErrors extends AbstractReport
             $view,
         );
 
-        return $view->render('logerrors-fluid');
+        return $view->render();
     }
 
     public function getIdentifier(): string

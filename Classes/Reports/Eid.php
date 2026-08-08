@@ -62,9 +62,9 @@ class Eid extends AbstractReport
             ];
         }
 
-        $view = $this->createView();
+        $view = $this->createView('eid-fluid');
         $view->assign('eids', $eids);
-        return $view->render('eid-fluid');
+        return $view->render();
     }
 
     public function getIdentifier(): string

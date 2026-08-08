@@ -41,9 +41,9 @@ class EventDispatcher extends AbstractReport
      */
     public function display(): string
     {
-        $view = $this->createView();
+        $view = $this->createView('events-fluid');
         $view->assign('events', $this->eventListenerRegistry->findAll());
-        return $view->render('events-fluid');
+        return $view->render();
     }
 
     public function getIdentifier(): string

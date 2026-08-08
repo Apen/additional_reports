@@ -35,9 +35,9 @@ class Middlewares extends AbstractReport
     public function display(): string
     {
         $allMiddlewares = $this->getAllMiddlewares();
-        $view = $this->createView();
+        $view = $this->createView('middlewares-fluid');
         $view->assign('middlewares', $this->filterAllMiddlewares($allMiddlewares));
-        return $view->render('middlewares-fluid');
+        return $view->render();
     }
 
     public function getAllMiddlewares(): array

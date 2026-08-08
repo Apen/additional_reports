@@ -109,7 +109,7 @@ parameters:
 			path: ../Classes/Service/EidTargetResolver.php
 
 		-
-			message: '#^Out of 153 possible param types, only 146 \- 95\.4 %% actually have it\. Add more param types to get over 100 %%$#'
+			message: '#^Out of 155 possible param types, only 148 \- 95\.4 %% actually have it\. Add more param types to get over 100 %%$#'
 			identifier: typeCoverage.paramTypeCoverage
 			count: 1
 			path: ../Classes/Service/ExtensionSchemaParser.php
@@ -229,7 +229,7 @@ parameters:
 			path: ../Classes/Utility.php
 
 		-
-			message: '#^Out of 153 possible param types, only 146 \- 95\.4 %% actually have it\. Add more param types to get over 100 %%$#'
+			message: '#^Out of 155 possible param types, only 148 \- 95\.4 %% actually have it\. Add more param types to get over 100 %%$#'
 			identifier: typeCoverage.paramTypeCoverage
 			count: 6
 			path: ../Classes/Utility.php

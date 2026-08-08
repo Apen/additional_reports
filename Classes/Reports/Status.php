@@ -56,14 +56,14 @@ class Status extends AbstractReport
      */
     public function display(): string
     {
-        $view = $this->createView();
+        $view = $this->createView('status-fluid');
 
         $this->displayTypo3($view);
         $this->displayEnv($view);
         $this->displayPhp($view);
         $this->displayMySql($view);
 
-        return $view->render('status-fluid');
+        return $view->render();
     }
 
     public function displayTypo3(ViewInterface $view): void

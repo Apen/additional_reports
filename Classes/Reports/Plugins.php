@@ -59,7 +59,7 @@ class Plugins extends AbstractReport
      */
     public function display(): string
     {
-        $view = $this->createView();
+        $view = $this->createView('plugins-fluid');
         $displayMode = Utility::getPluginsDisplayMode($this->getRequestParameter('display'));
         $filter = $this->getRequestParameter('filtersCat');
         $filter = is_string($filter) ? $filter : null;
@@ -101,7 +101,7 @@ class Plugins extends AbstractReport
         $view->assign('showCtypes', in_array($displayMode, [3, 7], true));
         $view->assign('showPlugins', in_array($displayMode, [4, 6], true));
 
-        return $view->render('plugins-fluid');
+        return $view->render();
     }
 
     /**

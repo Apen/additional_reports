@@ -83,13 +83,14 @@ trait AbstractReportImplementation
         $pageRenderer->addCssFile($path);
     }
 
-    protected function createView(): ViewInterface
+    protected function createView(string $templateName): ViewInterface
     {
         $request = $this->getRequest();
         $viewFactoryData = new ViewFactoryData(
             templateRootPaths: ['EXT:additional_reports/Resources/Private/Templates'],
             partialRootPaths: ['EXT:additional_reports/Resources/Private/Partials'],
             layoutRootPaths: ['EXT:additional_reports/Resources/Private/Layouts'],
+            templatePathAndFilename: 'EXT:additional_reports/Resources/Private/Templates/' . $templateName . '.html',
             request: $request,
         );
 

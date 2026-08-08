@@ -82,9 +82,9 @@ class Hooks extends AbstractReport
             }
         }
 
-        $view = $this->createView();
+        $view = $this->createView('hooks-fluid');
         $view->assign('hooks', $hooks);
-        return $view->render('hooks-fluid');
+        return $view->render();
     }
 
     public function getIdentifier(): string

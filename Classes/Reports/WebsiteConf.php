@@ -68,9 +68,9 @@ class WebsiteConf extends AbstractReport
             ];
         }
 
-        $view = $this->createView();
+        $view = $this->createView('websiteconf-fluid');
         $view->assign('items', $websiteconf);
-        return $view->render('websiteconf-fluid');
+        return $view->render();
     }
 
     public function getIdentifier(): string

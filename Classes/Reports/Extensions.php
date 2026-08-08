@@ -79,7 +79,7 @@ class Extensions extends AbstractReport
             $listExtensionsUnloaded[] = $this->getExtensionInformations($itemValue);
         }
 
-        $view = $this->createView();
+        $view = $this->createView('extensions-fluid');
         $view->assign('extensionsSummary', [
             'loaded' => count($listExtensionsTer) + count($listExtensionsDev),
             'ter' => count($listExtensionsTer),
@@ -90,7 +90,7 @@ class Extensions extends AbstractReport
         $view->assign('listExtensionsDev', $listExtensionsDev);
         $view->assign('listExtensionsUnloaded', $listExtensionsUnloaded);
         $view->assign('composer', Environment::isComposerMode());
-        return $view->render('extensions-fluid');
+        return $view->render();
     }
 
     /**

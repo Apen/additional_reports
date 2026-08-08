@@ -33,7 +33,7 @@ class CommandControllers extends AbstractReport
      */
     public function display(): string
     {
-        $view = $this->createView();
+        $view = $this->createView('commandcontrollers-fluid');
         $commandRegistry = GeneralUtility::makeInstance(CommandRegistry::class);
         $items = [];
         foreach ($commandRegistry->getSchedulableCommands() as $cmd => $schedulableCommand) {
@@ -41,7 +41,7 @@ class CommandControllers extends AbstractReport
         }
 
         $view->assign('itemsNew', $items);
-        return $view->render('commandcontrollers-fluid');
+        return $view->render();
     }
 
     public function getIdentifier(): string

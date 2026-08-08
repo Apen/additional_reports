@@ -35,9 +35,9 @@ class Xclass extends AbstractReport
     {
         $xclassList = [];
         $xclassList['objects'] = $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'];
-        $view = $this->createView();
+        $view = $this->createView('xclass-fluid');
         $view->assign('xclass', $xclassList);
-        return $view->render('xclass-fluid');
+        return $view->render();
     }
 
     public function getIdentifier(): string
