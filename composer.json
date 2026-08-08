@@ -16,7 +16,7 @@
   ],
   "require": {
     "php": ">=8.2 <=8.5.99",
-    "sebastian/diff": "^6.0",
+    "sebastian/diff": "^6 || ^7",
     "typo3/cms-core": "^13 || ^14",
     "typo3/cms-reports": "^13 || ^14"
   },
