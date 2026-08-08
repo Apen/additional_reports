@@ -38,7 +38,7 @@ class UtilityTest extends BaseTestCase
         ], Utility::getReportsList());
     }
 
-    public function testGetPluginsDisplayMode()
+    public function testGetPluginsDisplayMode(): void
     {
         self::assertEmpty(Utility::getPluginsDisplayMode());
     }

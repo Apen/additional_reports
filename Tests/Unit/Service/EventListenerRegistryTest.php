@@ -14,9 +14,9 @@ final class EventListenerRegistryTest extends TestCase
     public function testListenerDefinitionsAreNormalizedAndSorted(): void
     {
         $container = $this->createStub(ContainerInterface::class);
-        $provider = new ListenerProvider($container);
-        $provider->addListener('Vendor\\Event\\SecondEvent', 'listener.second', null, 'second');
-        $provider->addListener('Vendor\\Event\\FirstEvent', 'listener.first', 'handle', 'first');
+        $listenerProvider = new ListenerProvider($container);
+        $listenerProvider->addListener('Vendor\\Event\\SecondEvent', 'listener.second', null, 'second');
+        $listenerProvider->addListener('Vendor\\Event\\FirstEvent', 'listener.first', 'handle', 'first');
 
         self::assertSame([
             [
@@ -39,6 +39,6 @@ final class EventListenerRegistryTest extends TestCase
                 'serviceName' => 'listener.second',
                 'method' => '__invoke',
             ],
-        ], (new EventListenerRegistry($provider))->findAll());
+        ], (new EventListenerRegistry($listenerProvider))->findAll());
     }
 }

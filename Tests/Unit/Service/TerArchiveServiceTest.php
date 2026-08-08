@@ -13,10 +13,10 @@ final class TerArchiveServiceTest extends TestCase
     {
         $data = ['FILES' => ['ext_localconf.php' => ['content' => '<?php']]];
         $serializedData = serialize($data);
-        $service = new TerArchiveService();
+        $terArchiveService = new TerArchiveService();
 
-        self::assertSame($data, $service->extract(md5($serializedData) . ':raw:' . $serializedData));
-        self::assertSame($data, $service->extract(md5($serializedData) . ':gzcompress:' . gzcompress($serializedData)));
+        self::assertSame($data, $terArchiveService->extract(md5($serializedData) . ':raw:' . $serializedData));
+        self::assertSame($data, $terArchiveService->extract(md5($serializedData) . ':gzcompress:' . gzcompress($serializedData)));
     }
 
     public function testInvalidChecksumIsRejected(): void

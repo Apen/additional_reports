@@ -11,12 +11,7 @@ use TYPO3\CMS\Core\Http\ServerRequest;
 
 class StatusTest extends FunctionalTestCase
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-    }
-
-    public function testDisplay()
+    public function testDisplay(): void
     {
         $originalRequest = $GLOBALS['TYPO3_REQUEST'];
         $request = new ServerRequest(
@@ -26,9 +21,10 @@ class StatusTest extends FunctionalTestCase
             $originalRequest->getHeaders(),
             [...$originalRequest->getServerParams(), 'HTTP_USER_AGENT' => '<script>alert(1)</script>'],
         );
-        foreach ($originalRequest->getAttributes() as $name => $value) {
-            $request = $request->withAttribute($name, $value);
+        foreach ($originalRequest->getAttributes() as $name => $attribute) {
+            $request = $request->withAttribute($name, $attribute);
         }
+
         $GLOBALS['TYPO3_REQUEST'] = $request->withAttribute('normalizedParams', NormalizedParams::createFromRequest($request));
         $output = (new Status(parent::getReportObject()))->display();
 

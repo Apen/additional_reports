@@ -33,8 +33,6 @@ trait AbstractReportImplementation
 
     /**
      * Back-reference to the calling reports module
-     *
-     * @var object
      */
     protected ?object $reportObject;
 
@@ -49,9 +47,9 @@ trait AbstractReportImplementation
         $this->setCss('EXT:additional_reports/Resources/Public/Css/tx_additionalreports.css');
     }
 
-    public function setRequest(ServerRequestInterface $request): void
+    public function setRequest(ServerRequestInterface $serverRequest): void
     {
-        $this->request = $request;
+        $this->request = $serverRequest;
     }
 
     protected function getRequest(): ServerRequestInterface
@@ -59,10 +57,12 @@ trait AbstractReportImplementation
         if ($this->request instanceof ServerRequestInterface) {
             return $this->request;
         }
+
         $request = $GLOBALS['TYPO3_REQUEST'] ?? null;
         if ($request instanceof ServerRequestInterface) {
             return $request;
         }
+
         throw new \RuntimeException('The report requires a backend request.', 1786128601);
     }
 
@@ -78,6 +78,7 @@ trait AbstractReportImplementation
             $this->reportObject->doc->getPageRenderer()
                 ->addCssFile($path);
         }
+
         $pageRenderer = GeneralUtility::makeInstance(PageRenderer::class);
         $pageRenderer->addCssFile($path);
     }
@@ -100,6 +101,7 @@ trait AbstractReportImplementation
         if ((new Typo3Version())->getMajorVersion() < 14) {
             return 'system_reports';
         }
+
         $request = $this->getRequest();
         $route = $request instanceof ServerRequestInterface ? $request->getAttribute('route') : null;
         if ($route instanceof Route || $route instanceof SymfonyRoute) {
@@ -108,6 +110,7 @@ trait AbstractReportImplementation
                 return $identifier;
             }
         }
+
         throw new \RuntimeException('The report requires a backend request with an identified route.', 1786128600);
     }
 }

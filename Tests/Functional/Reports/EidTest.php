@@ -12,12 +12,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class EidTest extends FunctionalTestCase
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-    }
-
-    public function testDisplay()
+    public function testDisplay(): void
     {
         self::assertSame('additional_reports', GeneralUtility::makeInstance(EidTargetResolver::class)->resolve(CallAjax::class . '::main')['extension']);
         $GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include'] = [
@@ -26,8 +21,8 @@ class EidTest extends FunctionalTestCase
             'callable' => [CallAjax::class, 'main'],
         ];
 
-        $report = new Eid(parent::getReportObject());
-        $output = $report->display();
+        $eid = new Eid(parent::getReportObject());
+        $output = $eid->display();
 
         self::assertStringContainsString('additional_reports', $output);
         self::assertStringContainsString('EXT:additional_reports/Classes/Eid/CallAjax.php', $output);

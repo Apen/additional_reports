@@ -96,11 +96,11 @@ final class DatabaseStatusRepositoryTest extends TestCase
             'index_length' => 0,
         ]]);
 
-        $schemaQuery = $this->createQueryBuilder(new Result($schemaResult, $connection));
+        $queryBuilder = $this->createQueryBuilder(new Result($schemaResult, $connection));
         $tableQuery = $this->createQueryBuilder(new Result($tableResult, $connection));
         $connection->expects(self::exactly(2))
             ->method('createQueryBuilder')
-            ->willReturnOnConsecutiveCalls($schemaQuery, $tableQuery);
+            ->willReturnOnConsecutiveCalls($queryBuilder, $tableQuery);
 
         $connectionPool = $this->createMock(ConnectionPool::class);
         $connectionPool->expects(self::once())
@@ -130,6 +130,7 @@ final class DatabaseStatusRepositoryTest extends TestCase
         foreach (['select', 'from', 'where', 'setParameter', 'orderBy'] as $method) {
             $queryBuilder->method($method)->willReturnSelf();
         }
+
         $queryBuilder->method('executeQuery')->willReturn($result);
         return $queryBuilder;
     }

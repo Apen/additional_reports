@@ -32,10 +32,12 @@ final readonly class EidTargetResolver
             $className = explode('::', $target, 2)[0];
             return class_exists($className) ? $className : null;
         }
+
         if (is_array($target) && isset($target[0])) {
             $className = is_object($target[0]) ? $target[0]::class : $target[0];
             return is_string($className) && class_exists($className) ? $className : null;
         }
+
         return is_object($target) ? $target::class : null;
     }
 
@@ -57,6 +59,7 @@ final readonly class EidTargetResolver
         } catch (\ReflectionException) {
             return '';
         }
+
         if (! is_string($fileName)) {
             return '';
         }
@@ -68,6 +71,7 @@ final readonly class EidTargetResolver
                 return $package->getPackageKey();
             }
         }
+
         return '';
     }
 }

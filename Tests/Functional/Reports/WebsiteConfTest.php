@@ -29,7 +29,7 @@ class WebsiteConfTest extends FunctionalTestCase
         ]);
     }
 
-    public function testDisplay()
+    public function testDisplay(): void
     {
         $output = (new WebsiteConf(parent::getReportObject()))->display();
 

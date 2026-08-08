@@ -18,11 +18,11 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class WebsiteConf extends AbstractReport
 {
-    private WebsiteConfigurationRepository $websiteConfigurationRepository;
+    private readonly WebsiteConfigurationRepository $websiteConfigurationRepository;
 
-    private PageStatisticsRepository $pageStatisticsRepository;
+    private readonly PageStatisticsRepository $pageStatisticsRepository;
 
-    private SiteDomainResolver $siteDomainResolver;
+    private readonly SiteDomainResolver $siteDomainResolver;
 
     public function __construct(
         ?object $reportObject = null,
@@ -51,7 +51,7 @@ class WebsiteConf extends AbstractReport
      *
      * @return string HTML code
      */
-    public function display()
+    public function display(): string
     {
         $websiteconf = [];
         foreach ($this->websiteConfigurationRepository->findVisibleRootPages() as $rootPage) {

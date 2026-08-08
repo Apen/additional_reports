@@ -9,14 +9,9 @@ use Sng\AdditionalReports\Tests\Functional\FunctionalTestCase;
 
 class CommandControllersTest extends FunctionalTestCase
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-    }
-
     public function testDisplay(): void
     {
-        $report = new CommandControllers(parent::getReportObject());
-        self::assertNotEmpty($report->display());
+        $commandControllers = new CommandControllers(parent::getReportObject());
+        self::assertNotEmpty($commandControllers->display());
     }
 }

@@ -22,10 +22,10 @@ final class ContentTypeResolverTest extends TestCase
 
     public function testUnsupportedOrEmptyContentTypeIsIgnored(): void
     {
-        $resolver = new ContentTypeResolver();
+        $contentTypeResolver = new ContentTypeResolver();
 
-        self::assertSame([], $resolver->resolve('plugin', ''));
-        self::assertSame([], $resolver->resolve('unknown', 'vendor_plugin'));
+        self::assertSame([], $contentTypeResolver->resolve('plugin', ''));
+        self::assertSame([], $contentTypeResolver->resolve('unknown', 'vendor_plugin'));
     }
 
     public function testContentTypeInformationUsesExtensionPrefix(): void

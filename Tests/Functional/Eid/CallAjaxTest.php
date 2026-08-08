@@ -12,14 +12,14 @@ final class CallAjaxTest extends FunctionalTestCase
 {
     public function testUnknownExtensionReturnsNotFoundResponse(): void
     {
-        $request = (new ServerRequest('GET', '/'))
+        $serverRequest = (new ServerRequest('GET', '/'))
             ->withQueryParams([
                 'mode' => 'compareExtension',
                 'extKey' => 'extension_that_does_not_exist',
                 'extVersion' => '1.0.0',
             ]);
 
-        $response = (new CallAjax())->main($request);
+        $response = (new CallAjax())->main($serverRequest);
 
         self::assertSame(404, $response->getStatusCode());
         self::assertSame('Extension not found.', (string) $response->getBody());

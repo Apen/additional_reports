@@ -20,16 +20,19 @@ final class TerArchiveService
         );
         $content = GeneralUtility::getURL($url);
         if (! is_string($content)) {
-            throw new \RuntimeException('The extension archive could not be downloaded.');
+            throw new \RuntimeException('The extension archive could not be downloaded.', 5579563496);
         }
+
         $archive = $this->extract($content);
         if ($file === null || $file === '') {
             return $archive;
         }
+
         $fileContent = $archive['FILES'][$file]['content'] ?? null;
         if (! is_string($fileContent)) {
-            throw new \UnexpectedValueException('The requested file does not exist in the extension archive.');
+            throw new \UnexpectedValueException('The requested file does not exist in the extension archive.', 9214589351);
         }
+
         return $fileContent;
     }
 
@@ -40,18 +43,22 @@ final class TerArchiveService
         if (($parts[1] ?? '') === 'gzcompress') {
             $uncompressedContent = gzuncompress($parts[2] ?? '');
             if (! is_string($uncompressedContent)) {
-                throw new \RuntimeException('Decoding Error: The compressed extension payload is invalid.');
+                throw new \RuntimeException('Decoding Error: The compressed extension payload is invalid.', 7778272186);
             }
+
             $parts[2] = $uncompressedContent;
         }
+
         $serializedContent = $parts[2] ?? '';
         if (! isset($parts[0]) || ! hash_equals($parts[0], md5($serializedContent))) {
-            throw new \UnexpectedValueException('Error: MD5 mismatch. Maybe the extension file was downloaded and saved as a text file by the browser and thereby corrupted!? (Always select "All" filetype when saving extensions)');
+            throw new \UnexpectedValueException('Error: MD5 mismatch. Maybe the extension file was downloaded and saved as a text file by the browser and thereby corrupted!? (Always select "All" filetype when saving extensions)', 9548493069);
         }
+
         $archive = unserialize($serializedContent, ['allowed_classes' => false]);
         if (! is_array($archive) || $this->containsObject($archive)) {
-            throw new \UnexpectedValueException('Error: Content could not be safely unserialized to an array.');
+            throw new \UnexpectedValueException('Error: Content could not be safely unserialized to an array.', 2240415517);
         }
+
         return $archive;
     }
 
@@ -63,6 +70,7 @@ final class TerArchiveService
                 return true;
             }
         }
+
         return false;
     }
 }

@@ -10,11 +10,11 @@ use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\PathUtility;
 
-final class ContentTypeResolver
+final readonly class ContentTypeResolver
 {
     public function __construct(
-        private readonly ?Typo3Version $typo3Version = null,
-        private readonly ?PublicResourceUriResolver $publicResourceUriResolver = null,
+        private ?Typo3Version $typo3Version = null,
+        private ?PublicResourceUriResolver $publicResourceUriResolver = null,
     ) {}
 
     /** @return array<string, string> */
@@ -33,15 +33,19 @@ final class ContentTypeResolver
             if (($item['value'] ?? '') !== $value) {
                 continue;
             }
+
             if ($type === 'plugin' && is_string($item['label'] ?? null)) {
                 $information['plugin'] = Utility::getLanguageService()->sL($item['label']) . ' (' . $value . ')';
             }
+
             $icon = $this->resolveIconPath($item['icon'] ?? null);
             if ($icon !== '') {
                 $information['iconext'] = $icon;
             }
+
             break;
         }
+
         return $information;
     }
 
@@ -64,6 +68,7 @@ final class ContentTypeResolver
                 $pluginContentTypes[] = $value;
             }
         }
+
         return array_values(array_unique($pluginContentTypes));
     }
 
@@ -78,6 +83,7 @@ final class ContentTypeResolver
         if (! is_string($icon) || $icon === '') {
             return '';
         }
+
         if (PathUtility::isExtensionPath($icon)) {
             return $this->publishExtensionResource($icon);
         }
@@ -86,11 +92,13 @@ final class ContentTypeResolver
         if (! $iconRegistry->isRegistered($icon)) {
             return '';
         }
+
         $configuration = $iconRegistry->getIconConfigurationByIdentifier($icon);
         $source = $configuration['options']['source'] ?? null;
         if (! is_string($source) || $source === '') {
             return '';
         }
+
         return PathUtility::isExtensionPath($source)
             ? $this->publishExtensionResource($source)
             : PathUtility::getAbsoluteWebPath($source);

@@ -100,6 +100,7 @@
       "@php:ecsdry",
       "@php:fixdry",
       "@php:phpstan",
+      "@php:rectordry",
       "@typoscript:lint",
       "@test"
     ],

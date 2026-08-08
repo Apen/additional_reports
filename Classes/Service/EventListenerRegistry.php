@@ -32,6 +32,7 @@ final readonly class EventListenerRegistry
                 ];
             }
         }
+
         usort($listeners, static fn(array $left, array $right): int => [$left['event'], $left['identifier']] <=> [$right['event'], $right['identifier']]);
         return $listeners;
     }
@@ -43,6 +44,7 @@ final readonly class EventListenerRegistry
         if ($separatorPosition === false) {
             return ['namespace' => '', 'name' => $className];
         }
+
         return [
             'namespace' => substr($className, 0, $separatorPosition + 1),
             'name' => substr($className, $separatorPosition + 1),

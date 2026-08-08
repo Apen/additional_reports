@@ -34,11 +34,12 @@ class CommandControllers extends AbstractReport
     public function display(): string
     {
         $view = $this->createView();
-        $commands = GeneralUtility::makeInstance(CommandRegistry::class);
+        $commandRegistry = GeneralUtility::makeInstance(CommandRegistry::class);
         $items = [];
-        foreach ($commands->getSchedulableCommands() as $cmd => $el) {
-            $items[$cmd] = get_class($el);
+        foreach ($commandRegistry->getSchedulableCommands() as $cmd => $schedulableCommand) {
+            $items[$cmd] = $schedulableCommand::class;
         }
+
         $view->assign('itemsNew', $items);
         return $view->render('commandcontrollers-fluid');
     }

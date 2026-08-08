@@ -9,14 +9,9 @@ use Sng\AdditionalReports\Tests\Functional\FunctionalTestCase;
 
 class XclassTest extends FunctionalTestCase
 {
-    protected function setUp(): void
+    public function testDisplay(): void
     {
-        parent::setUp();
-    }
-
-    public function testDisplay()
-    {
-        $report = new Xclass(parent::getReportObject());
-        self::assertNotEmpty($report->display());
+        $xclass = new Xclass(parent::getReportObject());
+        self::assertNotEmpty($xclass->display());
     }
 }

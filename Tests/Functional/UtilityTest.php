@@ -12,6 +12,7 @@ use TYPO3\CMS\Core\Cache\Backend\SimpleFileBackend;
 use TYPO3\CMS\Core\Cache\Frontend\VariableFrontend;
 use TYPO3\CMS\Core\Configuration\Loader\YamlFileLoader;
 use TYPO3\CMS\Core\Configuration\SiteConfiguration;
+use TYPO3\CMS\Core\Configuration\SiteWriter;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
@@ -84,7 +85,7 @@ class UtilityTest extends FunctionalTestCase
         $GLOBALS['TYPO3_REQUEST'] = $request;
     }
 
-    public function testGetExtensionListUsesRegisteredPackages()
+    public function testGetExtensionListUsesRegisteredPackages(): void
     {
         $extensions = Utility::getExtensionList();
         $activeExtensions = $extensions['ter'] + $extensions['dev'];
@@ -96,38 +97,40 @@ class UtilityTest extends FunctionalTestCase
         self::assertArrayNotHasKey('core', $activeExtensions + $extensions['unloaded']);
     }
 
-    public function testGetExtensionVersion()
+    public function testGetExtensionVersion(): void
     {
         self::assertEquals(GeneralUtility::makeInstance(Typo3Version::class)->getVersion(), Utility::getExtensionVersion('core'));
     }
 
-    public function testGetExtIcon()
+    public function testGetExtIcon(): void
     {
         self::assertNotEmpty(Utility::getExtIcon('core'));
     }
 
-    public function testGetJsonVersionInfos()
+    public function testGetJsonVersionInfos(): void
     {
         if (getenv('RUN_NETWORK_TESTS') !== '1') {
             self::markTestSkipped('Set RUN_NETWORK_TESTS=1 to run TYPO3 API integration tests.');
         }
+
         self::assertNotEmpty((new Typo3VersionInformationService())->fetch());
     }
 
-    public function testDownloadT3x()
+    public function testDownloadT3x(): void
     {
         if (getenv('RUN_NETWORK_TESTS') !== '1') {
             self::markTestSkipped('Set RUN_NETWORK_TESTS=1 to run TER integration tests.');
         }
+
         self::assertNotEmpty((new TerArchiveService())->download('additional_reports', '3.3.2'));
     }
 
-    public function testGetTreeList()
+    public function testGetTreeList(): void
     {
         self::assertEquals($this->pagesListProvider(), Utility::getTreeList(1, 99));
     }
 
-    public function testGetCountPagesUids()
+    public function testGetCountPagesUids(): void
     {
         if (self::isNotSqlite()) {
             self::assertEquals(0, Utility::getCountPagesUids($this->pagesListProvider(), 'hidden'));
@@ -137,7 +140,7 @@ class UtilityTest extends FunctionalTestCase
         }
     }
 
-    public function testGetDomain()
+    public function testGetDomain(): void
     {
         $this->writeSiteConfiguration(
             'acme-com',
@@ -149,7 +152,7 @@ class UtilityTest extends FunctionalTestCase
         self::assertEquals('acme.com', (new SiteDomainResolver())->resolve(1));
     }
 
-    public function testGetAllDifferentPlugins()
+    public function testGetAllDifferentPlugins(): void
     {
         $GLOBALS['TCA']['tt_content']['columns']['CType']['config']['items'][] = [
             'label' => 'Indexed search',
@@ -160,12 +163,12 @@ class UtilityTest extends FunctionalTestCase
         self::assertSame(['indexedsearch_pi2'], array_column(Utility::getAllDifferentPlugins(), 'CType'));
     }
 
-    public function testGetAllDifferentCtypes()
+    public function testGetAllDifferentCtypes(): void
     {
         self::assertNotEmpty(Utility::getAllDifferentCtypes());
     }
 
-    public function testGetAllPlugins()
+    public function testGetAllPlugins(): void
     {
         $GLOBALS['TCA']['tt_content']['columns']['CType']['config']['items'][] = [
             'label' => 'Indexed search',
@@ -176,7 +179,7 @@ class UtilityTest extends FunctionalTestCase
         self::assertSame(['indexedsearch_pi2'], array_values(array_unique(array_column(Utility::getAllPlugins(), 'CType'))));
     }
 
-    public function testGetAllCtypes()
+    public function testGetAllCtypes(): void
     {
         self::assertNotEmpty(Utility::getAllCtypes());
     }
@@ -201,22 +204,22 @@ class UtilityTest extends FunctionalTestCase
         Utility::getCountPagesUids($this->pagesListProvider(), 'uid');
     }
 
-    public function testGetLl()
+    public function testGetLl(): void
     {
         self::assertNotEmpty(Utility::getLl('domain'));
     }
 
-    public function testGetLanguageService()
+    public function testGetLanguageService(): void
     {
         self::assertNotEmpty(Utility::getLanguageService());
     }
 
-    public function pagesListProvider()
+    public function pagesListProvider(): string
     {
         return '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54';
     }
 
-    public static function isNotSqlite()
+    public static function isNotSqlite(): bool
     {
         return $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['driver'] !== 'pdo_sqlite';
     }
@@ -228,10 +231,11 @@ class UtilityTest extends FunctionalTestCase
         array $errorHandling = []
     ) {
         $configuration = $site;
-        if (! empty($languages)) {
+        if ($languages !== []) {
             $configuration['languages'] = $languages;
         }
-        if (! empty($errorHandling)) {
+
+        if ($errorHandling !== []) {
             $configuration['errorHandling'] = $errorHandling;
         }
 
@@ -253,7 +257,7 @@ class UtilityTest extends FunctionalTestCase
                 $siteConfiguration = GeneralUtility::makeInstance(SiteConfiguration::class);
                 GeneralUtility::rmdir($this->instancePath . '/typo3conf/sites/' . $identifier, true);
                 $siteWriter = GeneralUtility::makeInstance(
-                    \TYPO3\CMS\Core\Configuration\SiteWriter::class,
+                    SiteWriter::class,
                     $this->instancePath . '/typo3conf/sites/',
                     $this->getContainer()
                         ->get(EventDispatcher::class),

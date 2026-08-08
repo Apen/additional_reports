@@ -16,7 +16,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class EventDispatcher extends AbstractReport
 {
-    private EventListenerRegistry $eventListenerRegistry;
+    private readonly EventListenerRegistry $eventListenerRegistry;
 
     public function __construct(?object $reportObject = null, ?EventListenerRegistry $eventListenerRegistry = null)
     {
@@ -39,7 +39,7 @@ class EventDispatcher extends AbstractReport
      *
      * @return string HTML code
      */
-    public function display()
+    public function display(): string
     {
         $view = $this->createView();
         $view->assign('events', $this->eventListenerRegistry->findAll());

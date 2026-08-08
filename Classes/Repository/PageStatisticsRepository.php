@@ -20,18 +20,20 @@ final readonly class PageStatisticsRepository
     public function findPageIdsRecursive(int $pageId, int $depth): array
     {
         $pageRepository = $this->pageRepository ?? GeneralUtility::makeInstance(PageRepository::class);
-        return array_values(array_map('intval', $pageRepository->getPageIdsRecursive([$pageId], $depth)));
+        return array_values(array_map(intval(...), $pageRepository->getPageIdsRecursive([$pageId], $depth)));
     }
 
     /** @param list<int> $pageIds */
     public function countByFlag(array $pageIds, string $field): int
     {
         if (! in_array($field, ['hidden', 'no_search'], true)) {
-            throw new \InvalidArgumentException('Unsupported page field: ' . $field);
+            throw new \InvalidArgumentException('Unsupported page field: ' . $field, 9251298027);
         }
+
         if ($pageIds === []) {
             return 0;
         }
+
         $connectionPool = $this->connectionPool ?? GeneralUtility::makeInstance(ConnectionPool::class);
         $queryBuilder = $connectionPool->getQueryBuilderForTable('pages');
         return (int) $queryBuilder->count('uid')->from('pages')

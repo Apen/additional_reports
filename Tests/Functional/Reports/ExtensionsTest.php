@@ -11,15 +11,10 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class ExtensionsTest extends FunctionalTestCase
 {
-    protected function setUp(): void
+    public function testDisplay(): void
     {
-        parent::setUp();
-    }
-
-    public function testDisplay()
-    {
-        $report = new Extensions(parent::getReportObject());
-        $output = $report->display();
+        $extensions = new Extensions(parent::getReportObject());
+        $output = $extensions->display();
 
         self::assertNotEmpty($output);
         self::assertStringContainsString('class="notice col-xs-6"', $output);
@@ -30,14 +25,14 @@ class ExtensionsTest extends FunctionalTestCase
 
     public function testExtensionTablesAreParsedLikeTheDatabaseAnalyzer(): void
     {
-        $parser = GeneralUtility::makeInstance(ExtensionSchemaParser::class);
+        $extensionSchemaParser = GeneralUtility::makeInstance(ExtensionSchemaParser::class);
 
         self::assertSame([
             [
                 'name' => 'tx_example_domain_model_item',
                 'columns' => ['uid', 'pid', 'title'],
             ],
-        ], $parser->parse(<<<'SQL'
+        ], $extensionSchemaParser->parse(<<<'SQL'
             CREATE TABLE tx_example_domain_model_item (
                 uid int(11) NOT NULL auto_increment,
                 pid int(11) DEFAULT '0' NOT NULL,
@@ -49,9 +44,9 @@ class ExtensionsTest extends FunctionalTestCase
 
     public function testInvalidExtensionTableDefinitionDoesNotBreakTheReport(): void
     {
-        $parser = GeneralUtility::makeInstance(ExtensionSchemaParser::class);
+        $extensionSchemaParser = GeneralUtility::makeInstance(ExtensionSchemaParser::class);
 
-        self::assertSame([], $parser->parse('CREATE TABLE invalid syntax;'));
+        self::assertSame([], $extensionSchemaParser->parse('CREATE TABLE invalid syntax;'));
     }
 
     public function testExtensionInformationExposesStructuredUpdateData(): void

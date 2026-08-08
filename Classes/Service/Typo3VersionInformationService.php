@@ -14,6 +14,7 @@ final class Typo3VersionInformationService
         if (! is_string($response) || $response === '') {
             return [];
         }
+
         $versions = json_decode($response, true);
         return is_array($versions) ? $versions : [];
     }
@@ -24,6 +25,7 @@ final class Typo3VersionInformationService
         if ((int) $versionParts[0] >= 7) {
             return $versions[$versionParts[0]]['releases'][$version] ?? [];
         }
+
         return $versions[$versionParts[0] . '.' . ($versionParts[1] ?? '0')]['releases'][$version] ?? [];
     }
 
@@ -37,6 +39,7 @@ final class Typo3VersionInformationService
         if (! is_array($releases)) {
             return [];
         }
+
         $release = reset($releases);
         return is_array($release) ? $release : [];
     }

@@ -9,14 +9,9 @@ use Sng\AdditionalReports\Tests\Functional\FunctionalTestCase;
 
 class MiddlewaresTest extends FunctionalTestCase
 {
-    protected function setUp(): void
+    public function testDisplay(): void
     {
-        parent::setUp();
-    }
-
-    public function testDisplay()
-    {
-        $report = new Middlewares(parent::getReportObject());
-        self::assertNotEmpty($report->display());
+        $middlewares = new Middlewares(parent::getReportObject());
+        self::assertNotEmpty($middlewares->display());
     }
 }

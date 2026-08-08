@@ -11,10 +11,10 @@ final class ExtensionIconResolverTest extends FunctionalTestCase
 {
     public function testEmptyAndUnknownExtensionKeysHaveNoIcon(): void
     {
-        $resolver = new ExtensionIconResolver();
+        $extensionIconResolver = new ExtensionIconResolver();
 
-        self::assertSame('', $resolver->resolve(''));
-        self::assertSame('', $resolver->resolve('extension_that_does_not_exist'));
+        self::assertSame('', $extensionIconResolver->resolve(''));
+        self::assertSame('', $extensionIconResolver->resolve('extension_that_does_not_exist'));
     }
 
     public function testExtensionIconIsPublishedAsPublicResource(): void

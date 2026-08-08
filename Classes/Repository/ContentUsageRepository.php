@@ -34,9 +34,11 @@ final readonly class ContentUsageRepository
                 ->executeQuery()
                 ->fetchAllAssociative());
         }
+
         if (! $this->getContentTypeResolver()->hasLegacyListType()) {
             return $plugins;
         }
+
         $queryBuilder = $this->createQueryBuilder($includeHidden);
         $legacyPlugins = array_map(static function (array $row): array {
             $row['pluginIdentifier'] = (string) ($row['list_type'] ?? '');
@@ -60,10 +62,12 @@ final readonly class ContentUsageRepository
         if ($this->getContentTypeResolver()->hasLegacyListType()) {
             $queryBuilder->andWhere($queryBuilder->expr()->neq('tt_content.CType', $queryBuilder->createNamedParameter('list')));
         }
+
         $pluginContentTypes = $this->getContentTypeResolver()->getPluginContentTypes();
         if ($pluginContentTypes !== []) {
             $queryBuilder->andWhere($queryBuilder->expr()->notIn('tt_content.CType', $queryBuilder->createNamedParameter($pluginContentTypes, ArrayParameterType::STRING)));
         }
+
         $queryBuilder->orderBy('tt_content.CType');
         return $queryBuilder->executeQuery()->fetchAllAssociative();
     }
@@ -82,14 +86,17 @@ final readonly class ContentUsageRepository
             if ($filter !== null && $filter !== 'all') {
                 $queryBuilder->andWhere($queryBuilder->expr()->eq('tt_content.CType', $queryBuilder->createNamedParameter($filter)));
             }
+
             $plugins = array_map(static function (array $row): array {
                 $row['pluginIdentifier'] = (string) ($row['CType'] ?? '');
                 return $row;
             }, $queryBuilder->executeQuery()->fetchAllAssociative());
         }
+
         if (! $this->getContentTypeResolver()->hasLegacyListType()) {
             return $plugins;
         }
+
         $queryBuilder = $this->createQueryBuilder($includeHidden);
         $queryBuilder->select('tt_content.list_type', 'tt_content.pid', 'tt_content.uid', 'pages.title')
             ->addSelectLiteral('pages.hidden AS hiddenpages', 'tt_content.hidden AS hiddentt_content')
@@ -99,6 +106,7 @@ final readonly class ContentUsageRepository
         if ($filter !== null && $filter !== 'all') {
             $queryBuilder->andWhere($queryBuilder->expr()->eq('tt_content.list_type', $queryBuilder->createNamedParameter($filter)));
         }
+
         $legacyPlugins = array_map(static function (array $row): array {
             $row['pluginIdentifier'] = (string) ($row['list_type'] ?? '');
             return $row;
@@ -118,9 +126,11 @@ final readonly class ContentUsageRepository
         if ($pluginContentTypes !== []) {
             $queryBuilder->andWhere($queryBuilder->expr()->notIn('tt_content.CType', $queryBuilder->createNamedParameter($pluginContentTypes, ArrayParameterType::STRING)));
         }
+
         if ($filter !== null && $filter !== 'all') {
             $queryBuilder->andWhere($queryBuilder->expr()->eq('tt_content.CType', $queryBuilder->createNamedParameter($filter)));
         }
+
         return $queryBuilder->executeQuery()->fetchAllAssociative();
     }
 
@@ -151,6 +161,7 @@ final readonly class ContentUsageRepository
                 if (array_key_exists('list_type', $item)) {
                     $item['list_type'] = (string) $item['list_type'];
                 }
+
                 $item['count'] = (int) ($item['item_count'] ?? 0);
                 unset($item['item_count']);
                 return $item;
@@ -177,6 +188,7 @@ final readonly class ContentUsageRepository
             $queryBuilder->andWhere($queryBuilder->expr()->eq('tt_content.hidden', 0))
                 ->andWhere($queryBuilder->expr()->eq('pages.hidden', 0));
         }
+
         return $queryBuilder;
     }
 }

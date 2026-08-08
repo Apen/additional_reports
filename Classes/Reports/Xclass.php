@@ -31,7 +31,7 @@ class Xclass extends AbstractReport
      *
      * @return string HTML code
      */
-    public function display()
+    public function display(): string
     {
         $xclassList = [];
         $xclassList['objects'] = $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'];

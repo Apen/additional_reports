@@ -29,13 +29,15 @@ final readonly class ExtensionSchemaParser
             } catch (\Throwable) {
                 continue;
             }
-            foreach ($parsedTables as $table) {
+
+            foreach ($parsedTables as $parsedTable) {
                 $tables[] = [
-                    'name' => $table->getName(),
-                    'columns' => array_map(static fn($column): string => $column->getName(), $table->getColumns()),
+                    'name' => $parsedTable->getName(),
+                    'columns' => array_map(static fn($column): string => $column->getName(), $parsedTable->getColumns()),
                 ];
             }
         }
+
         return $tables;
     }
 }

@@ -12,28 +12,28 @@ final class HookResolverTest extends TestCase
 {
     public function testClassAndMethodHooksAreDetected(): void
     {
-        $resolver = new HookResolver();
+        $hookResolver = new HookResolver();
         $hook = EmailLoginNotification::class . '->emailAtLogin';
 
-        self::assertTrue($resolver->isHook($hook));
-        self::assertTrue($resolver->isHook('&' . EmailLoginNotification::class));
-        self::assertTrue($resolver->isHook(['unused', $hook]));
-        self::assertFalse($resolver->isHook(''));
-        self::assertFalse($resolver->isHook(123));
-        self::assertFalse($resolver->isHook(['unused', 123]));
-        self::assertFalse($resolver->isHook('Unknown\\MissingClass->method'));
+        self::assertTrue($hookResolver->isHook($hook));
+        self::assertTrue($hookResolver->isHook('&' . EmailLoginNotification::class));
+        self::assertTrue($hookResolver->isHook(['unused', $hook]));
+        self::assertFalse($hookResolver->isHook(''));
+        self::assertFalse($hookResolver->isHook(123));
+        self::assertFalse($hookResolver->isHook(['unused', 123]));
+        self::assertFalse($hookResolver->isHook('Unknown\\MissingClass->method'));
     }
 
     public function testNestedCandidatesAreFiltered(): void
     {
-        $resolver = new HookResolver();
+        $hookResolver = new HookResolver();
         $hook = EmailLoginNotification::class . '->emailAtLogin';
 
-        self::assertSame($hook, $resolver->resolve($hook));
-        self::assertNull($resolver->resolve('Unknown\\MissingClass'));
+        self::assertSame($hook, $hookResolver->resolve($hook));
+        self::assertNull($hookResolver->resolve('Unknown\\MissingClass'));
         self::assertSame(
             ['valid' => $hook, 'nested' => ['valid' => $hook]],
-            $resolver->resolve([
+            $hookResolver->resolve([
                 'valid' => $hook,
                 'invalid' => 'Unknown\\MissingClass',
                 'nested' => [

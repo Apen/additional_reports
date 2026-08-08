@@ -10,16 +10,16 @@ namespace Sng\AdditionalReports\Reports;
  * For the full copyright and license information, please read the
  * LICENSE.txt file that was distributed with this source code.
  */
-
 use Sng\AdditionalReports\Repository\LogErrorRepository;
 use Sng\AdditionalReports\Service\PaginationService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Reports\ReportInterface;
 
 class LogErrors extends AbstractReport
 {
-    private LogErrorRepository $logErrorRepository;
+    private readonly LogErrorRepository $logErrorRepository;
 
-    private PaginationService $paginationService;
+    private readonly PaginationService $paginationService;
 
     public function __construct(
         ?object $reportObject = null,
@@ -46,13 +46,14 @@ class LogErrors extends AbstractReport
      *
      * @return string HTML code
      */
-    public function display()
+    public function display(): string
     {
         $orderBy = $this->getRequestParameter('orderby');
 
         $view = $this->createView();
-        $view->assign('reportname', interface_exists(\TYPO3\CMS\Reports\ReportInterface::class) ? 'additionalreports_logerrors' : 'logerrors');
+        $view->assign('reportname', interface_exists(ReportInterface::class) ? 'additionalreports_logerrors' : 'logerrors');
         $view->assign('paginationRoute', $this->getCurrentRouteIdentifier());
+
         $this->paginationService->assign(
             $this->logErrorRepository->findGrouped(is_string($orderBy) ? $orderBy : null),
             (int) ($this->getRequestParameter('currentPage') ?? 1),

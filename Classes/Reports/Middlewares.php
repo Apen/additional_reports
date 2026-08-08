@@ -32,7 +32,7 @@ class Middlewares extends AbstractReport
      *
      * @return string HTML code
      */
-    public function display()
+    public function display(): string
     {
         $allMiddlewares = $this->getAllMiddlewares();
         $view = $this->createView();
@@ -54,6 +54,7 @@ class Middlewares extends AbstractReport
                 }
             }
         }
+
         return array_replace_recursive(...$allMiddlewares);
     }
 
@@ -68,10 +69,13 @@ class Middlewares extends AbstractReport
                 if (isset($middleware['disabled']) && $middleware['disabled'] === true) {
                     continue;
                 }
+
                 $sanitizedMiddlewares[$name] = $middleware['target'];
             }
+
             $middlewares[$stack] = $sanitizedMiddlewares;
         }
+
         return $middlewares;
     }
 

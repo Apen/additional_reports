@@ -32,6 +32,7 @@ final readonly class ExtensionRepository
             if (! $this->isThirdPartyExtension($package)) {
                 continue;
             }
+
             $extensionKey = $package->getPackageKey();
             $sqlFile = rtrim($package->getPackagePath(), '/\\') . DIRECTORY_SEPARATOR . 'ext_tables.sql';
             $extension = [
@@ -52,14 +53,16 @@ final readonly class ExtensionRepository
                 $list['dev'][$extensionKey] = $extension;
             }
         }
+
         return $list;
     }
 
     public function findVersion(string $extensionKey): ?string
     {
         if ($extensionKey === '') {
-            throw new \InvalidArgumentException('Extension key must be a non-empty string.');
+            throw new \InvalidArgumentException('Extension key must be a non-empty string.', 5673300155);
         }
+
         try {
             return $this->getPackageManager()->getPackage($extensionKey)->getPackageMetaData()->getVersion();
         } catch (UnknownPackageException) {

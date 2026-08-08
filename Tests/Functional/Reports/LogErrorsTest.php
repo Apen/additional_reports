@@ -11,15 +11,10 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class LogErrorsTest extends FunctionalTestCase
 {
-    protected function setUp(): void
+    public function testDisplay(): void
     {
-        parent::setUp();
-    }
-
-    public function testDisplay()
-    {
-        $report = new LogErrors(parent::getReportObject());
-        $output = $report->display();
+        $logErrors = new LogErrors(parent::getReportObject());
+        $output = $logErrors->display();
 
         self::assertStringContainsString('<code>DELETE FROM sys_log WHERE error &gt; 0;</code>', $output);
         self::assertStringContainsString('identifier="actions-sort-amount-down"', $output);
@@ -52,6 +47,7 @@ class LogErrorsTest extends FunctionalTestCase
         $connection->insert('sys_log', ['error' => 1, 'details' => 'Single error', 'tstamp' => 100]);
         $connection->insert('sys_log', ['error' => 1, 'details' => 'Repeated error', 'tstamp' => 200]);
         $connection->insert('sys_log', ['error' => 1, 'details' => 'Repeated error', 'tstamp' => 300]);
+
         $request = $GLOBALS['TYPO3_REQUEST'];
         $GLOBALS['TYPO3_REQUEST'] = $request->withQueryParams([
             ...$request->getQueryParams(),

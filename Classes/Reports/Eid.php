@@ -17,9 +17,9 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class Eid extends AbstractReport
 {
-    private ExtensionIconResolver $extensionIconResolver;
+    private readonly ExtensionIconResolver $extensionIconResolver;
 
-    private EidTargetResolver $eidTargetResolver;
+    private readonly EidTargetResolver $eidTargetResolver;
 
     public function __construct(
         ?object $reportObject = null,
@@ -46,7 +46,7 @@ class Eid extends AbstractReport
      *
      * @return string HTML code
      */
-    public function display()
+    public function display(): string
     {
         $items = $GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include'] ?? [];
         $eids = [];

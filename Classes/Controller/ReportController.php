@@ -30,72 +30,73 @@ final readonly class ReportController
         private ModuleTemplateFactory $moduleTemplateFactory,
     ) {}
 
-    public function eid(ServerRequestInterface $request): ResponseInterface
+    public function eid(ServerRequestInterface $serverRequest): ResponseInterface
     {
-        return $this->render($request, Eid::class, 'eid');
+        return $this->render($serverRequest, Eid::class, 'eid');
     }
 
-    public function commandControllers(ServerRequestInterface $request): ResponseInterface
+    public function commandControllers(ServerRequestInterface $serverRequest): ResponseInterface
     {
-        return $this->render($request, CommandControllers::class, 'commandcontrollers');
+        return $this->render($serverRequest, CommandControllers::class, 'commandcontrollers');
     }
 
-    public function plugins(ServerRequestInterface $request): ResponseInterface
+    public function plugins(ServerRequestInterface $serverRequest): ResponseInterface
     {
-        return $this->render($request, Plugins::class, 'plugins');
+        return $this->render($serverRequest, Plugins::class, 'plugins');
     }
 
-    public function xclass(ServerRequestInterface $request): ResponseInterface
+    public function xclass(ServerRequestInterface $serverRequest): ResponseInterface
     {
-        return $this->render($request, Xclass::class, 'xclass');
+        return $this->render($serverRequest, Xclass::class, 'xclass');
     }
 
-    public function hooks(ServerRequestInterface $request): ResponseInterface
+    public function hooks(ServerRequestInterface $serverRequest): ResponseInterface
     {
-        return $this->render($request, Hooks::class, 'hooks');
+        return $this->render($serverRequest, Hooks::class, 'hooks');
     }
 
-    public function status(ServerRequestInterface $request): ResponseInterface
+    public function status(ServerRequestInterface $serverRequest): ResponseInterface
     {
-        return $this->render($request, Status::class, 'status');
+        return $this->render($serverRequest, Status::class, 'status');
     }
 
-    public function logErrors(ServerRequestInterface $request): ResponseInterface
+    public function logErrors(ServerRequestInterface $serverRequest): ResponseInterface
     {
-        return $this->render($request, LogErrors::class, 'logerrors');
+        return $this->render($serverRequest, LogErrors::class, 'logerrors');
     }
 
-    public function websiteConf(ServerRequestInterface $request): ResponseInterface
+    public function websiteConf(ServerRequestInterface $serverRequest): ResponseInterface
     {
-        return $this->render($request, WebsiteConf::class, 'websitesconf');
+        return $this->render($serverRequest, WebsiteConf::class, 'websitesconf');
     }
 
-    public function extensions(ServerRequestInterface $request): ResponseInterface
+    public function extensions(ServerRequestInterface $serverRequest): ResponseInterface
     {
-        return $this->render($request, Extensions::class, 'extensions');
+        return $this->render($serverRequest, Extensions::class, 'extensions');
     }
 
-    public function eventDispatcher(ServerRequestInterface $request): ResponseInterface
+    public function eventDispatcher(ServerRequestInterface $serverRequest): ResponseInterface
     {
-        return $this->render($request, EventDispatcher::class, 'eventdispatcher');
+        return $this->render($serverRequest, EventDispatcher::class, 'eventdispatcher');
     }
 
-    public function middlewares(ServerRequestInterface $request): ResponseInterface
+    public function middlewares(ServerRequestInterface $serverRequest): ResponseInterface
     {
-        return $this->render($request, Middlewares::class, 'middlewares');
+        return $this->render($serverRequest, Middlewares::class, 'middlewares');
     }
 
     /**
      * @param class-string<AbstractReport> $reportClass
      */
-    private function render(ServerRequestInterface $request, string $reportClass, string $identifier): ResponseInterface
+    private function render(ServerRequestInterface $serverRequest, string $reportClass, string $identifier): ResponseInterface
     {
-        $queryParams = $request->getQueryParams();
+        $queryParams = $serverRequest->getQueryParams();
         $queryParams['report'] = $identifier;
-        $request = $request->withQueryParams($queryParams);
+        $serverRequest = $serverRequest->withQueryParams($queryParams);
         $report = GeneralUtility::makeInstance($reportClass);
-        $report->setRequest($request);
-        $moduleTemplate = $this->moduleTemplateFactory->create($request);
+        $report->setRequest($serverRequest);
+
+        $moduleTemplate = $this->moduleTemplateFactory->create($serverRequest);
         $moduleTemplate->setTitle(Utility::getLanguageService()->sL($report->getTitle()));
         $moduleTemplate->makeDocHeaderModuleMenu();
         $moduleTemplate->assign('reportContent', $report->getReport());

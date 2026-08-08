@@ -22,9 +22,9 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class CallAjax
 {
-    public function main(ServerRequestInterface $request): ResponseInterface
+    public function main(ServerRequestInterface $serverRequest): ResponseInterface
     {
-        $parameters = array_replace($request->getQueryParams(), (array) $request->getParsedBody());
+        $parameters = array_replace($serverRequest->getQueryParams(), (array) $serverRequest->getParsedBody());
         $mode = is_string($parameters['mode'] ?? null) ? $parameters['mode'] : 'compareFile';
         $extensionKey = is_string($parameters['extKey'] ?? null) ? $parameters['extKey'] : '';
         $extensionVersion = is_string($parameters['extVersion'] ?? null) ? $parameters['extVersion'] : '';
@@ -37,6 +37,7 @@ class CallAjax
         } catch (UnknownPackageException) {
             return new HtmlResponse('Extension not found.', 404);
         }
+
         $extensionPath = realpath($package->getPackagePath());
         if ($extensionPath === false) {
             return new HtmlResponse('Extension path not found.', 404);
@@ -50,6 +51,7 @@ class CallAjax
             if ($localFile === null) {
                 return new HtmlResponse('Access denied.', 403);
             }
+
             $terFileContent = $this->downloadT3x($extensionKey, $extensionVersion, $extensionFile);
             $content .= $this->renderDiff($this->readLocalFile($localFile), $terFileContent);
         } else {
@@ -60,6 +62,7 @@ class CallAjax
                 if ($localFile === null) {
                     continue;
                 }
+
                 $currentFileContent = $this->readLocalFile($localFile);
                 if ($file['content_md5'] !== md5($currentFileContent)) {
                     $diff++;
@@ -67,7 +70,8 @@ class CallAjax
                     $content .= $this->renderDiff($currentFileContent, $file['content']);
                 }
             }
-            if (empty($diff)) {
+
+            if ($diff === 0) {
                 $content .= 'No diff to show';
             }
         }
@@ -91,6 +95,7 @@ class CallAjax
         if ($relativeFile === '') {
             return null;
         }
+
         $file = realpath($extensionPath . DIRECTORY_SEPARATOR . ltrim($relativeFile, '/\\'));
         $extensionPath = rtrim($extensionPath, '/\\');
         return $file !== false && str_starts_with($file, $extensionPath . DIRECTORY_SEPARATOR) && is_file($file)

@@ -17,25 +17,25 @@ final class Typo3VersionInformationServiceTest extends TestCase
             'latest_stable' => '14.3.1',
             'latest_lts' => '6.2.31',
         ];
-        $service = new Typo3VersionInformationService();
+        $typo3VersionInformationService = new Typo3VersionInformationService();
 
-        self::assertSame(['version' => '14.3.1'], $service->getCurrentVersion($versions, '14.3.1'));
-        self::assertSame([], $service->getCurrentVersion($versions, '14.3.0'));
-        self::assertSame(['version' => '6.2.31'], $service->getCurrentVersion($versions, '6.2.31'));
-        self::assertSame(['version' => '14.3.1'], $service->getCurrentBranch($versions, '14.3.0'));
-        self::assertSame(['version' => '6.2.31'], $service->getCurrentBranch($versions, '6.2.0'));
-        self::assertSame(['version' => '14.3.1'], $service->getLatestStable($versions));
-        self::assertSame(['version' => '6.2.31'], $service->getLatestLts($versions));
+        self::assertSame(['version' => '14.3.1'], $typo3VersionInformationService->getCurrentVersion($versions, '14.3.1'));
+        self::assertSame([], $typo3VersionInformationService->getCurrentVersion($versions, '14.3.0'));
+        self::assertSame(['version' => '6.2.31'], $typo3VersionInformationService->getCurrentVersion($versions, '6.2.31'));
+        self::assertSame(['version' => '14.3.1'], $typo3VersionInformationService->getCurrentBranch($versions, '14.3.0'));
+        self::assertSame(['version' => '6.2.31'], $typo3VersionInformationService->getCurrentBranch($versions, '6.2.0'));
+        self::assertSame(['version' => '14.3.1'], $typo3VersionInformationService->getLatestStable($versions));
+        self::assertSame(['version' => '6.2.31'], $typo3VersionInformationService->getLatestLts($versions));
     }
 
     public function testUnavailableAndMalformedInformationReturnsEmptyResults(): void
     {
-        $service = new Typo3VersionInformationService();
+        $typo3VersionInformationService = new Typo3VersionInformationService();
 
-        self::assertSame([], $service->getCurrentVersion([], '14.3.0'));
-        self::assertSame([], $service->getCurrentBranch([], '14.3.0'));
-        self::assertSame([], $service->getCurrentBranch(['14' => ['releases' => 'invalid']], '14.3.0'));
-        self::assertSame([], $service->getLatestStable([]));
-        self::assertSame([], $service->getLatestLts([]));
+        self::assertSame([], $typo3VersionInformationService->getCurrentVersion([], '14.3.0'));
+        self::assertSame([], $typo3VersionInformationService->getCurrentBranch([], '14.3.0'));
+        self::assertSame([], $typo3VersionInformationService->getCurrentBranch(['14' => ['releases' => 'invalid']], '14.3.0'));
+        self::assertSame([], $typo3VersionInformationService->getLatestStable([]));
+        self::assertSame([], $typo3VersionInformationService->getLatestLts([]));
     }
 }

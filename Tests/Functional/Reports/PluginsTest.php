@@ -21,10 +21,10 @@ class PluginsTest extends FunctionalTestCase
         $this->importCSVDataSet(__DIR__ . '/../Fixtures/tt_content_v14.csv');
     }
 
-    public function testDisplay()
+    public function testDisplay(): void
     {
-        $report = new Plugins(parent::getReportObject());
-        $output = $report->display();
+        $plugins = new Plugins(parent::getReportObject());
+        $output = $plugins->display();
 
         self::assertNotEmpty($output);
         self::assertStringContainsString('class="notice col-xs-6"', $output);
@@ -91,9 +91,9 @@ class PluginsTest extends FunctionalTestCase
             'display' => $displayMode,
         ]);
 
-        $report = new Plugins(parent::getReportObject());
+        $plugins = new Plugins(parent::getReportObject());
 
-        $output = $report->display();
+        $output = $plugins->display();
 
         self::assertNotEmpty($output);
         self::assertSame(1, substr_count($output, 'checked="checked"'));

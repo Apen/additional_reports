@@ -23,6 +23,7 @@ final class StructuredDataNormalizer
                 'children' => is_array($value) ? $this->normalize($value) : [],
             ];
         }
+
         return $rows;
     }
 
@@ -31,15 +32,19 @@ final class StructuredDataNormalizer
         if ($value instanceof \Stringable) {
             return $value::class . ': ' . $value;
         }
+
         if (is_object($value)) {
             return $value::class;
         }
+
         if ($value === null) {
             return 'null';
         }
+
         if (is_bool($value)) {
             return $value ? 'true' : 'false';
         }
+
         return (string) $value;
     }
 }

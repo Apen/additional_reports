@@ -21,9 +21,9 @@ final class PackagistVersionServiceTest extends TestCase
 
     public function testLatestCompatibleStableVersionIsSelected(): void
     {
-        $subject = new PackagistVersionService();
+        $packagistVersionService = new PackagistVersionService();
 
-        $result = $subject->findLatestCompatibleStableVersion([
+        $result = $packagistVersionService->findLatestCompatibleStableVersion([
             '15.0.0' => ['version' => '15.0.0', 'require' => ['typo3/cms-core' => '^15']],
             '14.2.0-beta1' => ['version' => '14.2.0-beta1', 'require' => ['typo3/cms-core' => '^14']],
             '14.1.0' => ['version' => 'v14.1.0', 'time' => '2026-06-12T10:00:00+00:00', 'require' => ['typo3/cms-core' => '^14']],

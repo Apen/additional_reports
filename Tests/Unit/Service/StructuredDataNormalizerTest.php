@@ -38,17 +38,17 @@ final class StructuredDataNormalizerTest extends TestCase
             }
         };
 
-        $normalizer = new StructuredDataNormalizer();
+        $structuredDataNormalizer = new StructuredDataNormalizer();
 
-        self::assertSame([['key' => '', 'value' => 'null', 'children' => []]], $normalizer->normalize(null));
-        self::assertSame([['key' => '', 'value' => 'false', 'children' => []]], $normalizer->normalize(false));
+        self::assertSame([['key' => '', 'value' => 'null', 'children' => []]], $structuredDataNormalizer->normalize(null));
+        self::assertSame([['key' => '', 'value' => 'false', 'children' => []]], $structuredDataNormalizer->normalize(false));
         self::assertSame(
             [['key' => '', 'value' => $stringable::class . ': example', 'children' => []]],
-            $normalizer->normalize($stringable),
+            $structuredDataNormalizer->normalize($stringable),
         );
         self::assertSame(
             [['key' => '', 'value' => \stdClass::class, 'children' => []]],
-            $normalizer->normalize(new \stdClass()),
+            $structuredDataNormalizer->normalize(new \stdClass()),
         );
     }
 }

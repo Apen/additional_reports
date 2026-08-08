@@ -19,11 +19,11 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class Extensions extends AbstractReport
 {
-    private ExtensionRepository $extensionRepository;
+    private readonly ExtensionRepository $extensionRepository;
 
-    private UriBuilder $uriBuilder;
+    private readonly UriBuilder $uriBuilder;
 
-    private ExtensionSchemaParser $extensionSchemaParser;
+    private readonly ExtensionSchemaParser $extensionSchemaParser;
 
     public function __construct(
         ?object $reportObject = null,
@@ -52,7 +52,7 @@ class Extensions extends AbstractReport
      *
      * @return string HTML code
      */
-    public function display()
+    public function display(): string
     {
         $extensionsToUpdate = 0;
 
@@ -62,26 +62,21 @@ class Extensions extends AbstractReport
         $listExtensionsDev = [];
         $listExtensionsUnloaded = [];
 
-        if (! empty($allExtension['ter'])) {
-            foreach ($allExtension['ter'] as $itemValue) {
-                $currentExtension = $this->getExtensionInformations($itemValue);
-                if ($currentExtension['updateAvailable']) {
-                    $extensionsToUpdate++;
-                }
-                $listExtensionsTer[] = $currentExtension;
+        foreach ($allExtension['ter'] as $itemValue) {
+            $currentExtension = $this->getExtensionInformations($itemValue);
+            if ($currentExtension['updateAvailable']) {
+                $extensionsToUpdate++;
             }
+
+            $listExtensionsTer[] = $currentExtension;
         }
 
-        if (! empty($allExtension['dev'])) {
-            foreach ($allExtension['dev'] as $itemValue) {
-                $listExtensionsDev[] = $this->getExtensionInformations($itemValue);
-            }
+        foreach ($allExtension['dev'] as $itemValue) {
+            $listExtensionsDev[] = $this->getExtensionInformations($itemValue);
         }
 
-        if (! empty($allExtension['unloaded'])) {
-            foreach ($allExtension['unloaded'] as $itemValue) {
-                $listExtensionsUnloaded[] = $this->getExtensionInformations($itemValue);
-            }
+        foreach ($allExtension['unloaded'] as $itemValue) {
+            $listExtensionsUnloaded[] = $this->getExtensionInformations($itemValue);
         }
 
         $view = $this->createView();

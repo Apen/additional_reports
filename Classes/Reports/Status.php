@@ -23,17 +23,18 @@ use TYPO3\CMS\Core\View\ViewInterface;
 
 class Status extends AbstractReport
 {
-    private DatabaseStatusRepository $databaseStatusRepository;
-    private Typo3VersionInformationService $versionInformationService;
+    private readonly DatabaseStatusRepository $databaseStatusRepository;
+
+    private readonly Typo3VersionInformationService $typo3VersionInformationService;
 
     public function __construct(
         ?object $reportObject = null,
         ?DatabaseStatusRepository $databaseStatusRepository = null,
-        ?Typo3VersionInformationService $versionInformationService = null,
+        ?Typo3VersionInformationService $typo3VersionInformationService = null,
     ) {
         parent::__construct($reportObject);
         $this->databaseStatusRepository = $databaseStatusRepository ?? GeneralUtility::makeInstance(DatabaseStatusRepository::class);
-        $this->versionInformationService = $versionInformationService ?? GeneralUtility::makeInstance(Typo3VersionInformationService::class);
+        $this->typo3VersionInformationService = $typo3VersionInformationService ?? GeneralUtility::makeInstance(Typo3VersionInformationService::class);
     }
 
     /**
@@ -53,7 +54,7 @@ class Status extends AbstractReport
      *
      * @return string HTML code
      */
-    public function display()
+    public function display(): string
     {
         $view = $this->createView();
 
@@ -65,16 +66,16 @@ class Status extends AbstractReport
         return $view->render('status-fluid');
     }
 
-    public function displayTypo3(ViewInterface $view)
+    public function displayTypo3(ViewInterface $view): void
     {
         // infos about typo3 versions
         $datas = [];
-        $jsonVersions = $this->versionInformationService->fetch();
+        $jsonVersions = $this->typo3VersionInformationService->fetch();
         $typo3Version = GeneralUtility::makeInstance(Typo3Version::class)->getVersion();
-        $currentVersionInfos = $this->versionInformationService->getCurrentVersion($jsonVersions, $typo3Version);
-        $currentBranch = $this->versionInformationService->getCurrentBranch($jsonVersions, $typo3Version);
-        $latestStable = $this->versionInformationService->getLatestStable($jsonVersions);
-        $latestLts = $this->versionInformationService->getLatestLts($jsonVersions);
+        $currentVersionInfos = $this->typo3VersionInformationService->getCurrentVersion($jsonVersions, $typo3Version);
+        $currentBranch = $this->typo3VersionInformationService->getCurrentBranch($jsonVersions, $typo3Version);
+        $latestStable = $this->typo3VersionInformationService->getLatestStable($jsonVersions);
+        $latestLts = $this->typo3VersionInformationService->getLatestLts($jsonVersions);
 
         $extensions = [];
         $packageManager = GeneralUtility::makeInstance(PackageManager::class);
@@ -138,7 +139,7 @@ class Status extends AbstractReport
         $view->assign('datas_typo3', $datas);
     }
 
-    public function displayEnv(ViewInterface $view)
+    public function displayEnv(ViewInterface $view): void
     {
         $normalizedParams = $this->getRequest()->getAttribute('normalizedParams');
         $datas = $normalizedParams instanceof NormalizedParams ? [
@@ -175,7 +176,7 @@ class Status extends AbstractReport
         }
 
         if (function_exists('get_loaded_extensions')) {
-            $extensions = array_map('strtolower', get_loaded_extensions());
+            $extensions = array_map(strtolower(...), get_loaded_extensions());
             natcasesort($extensions);
             $data['extensions'] = $extensions;
         }

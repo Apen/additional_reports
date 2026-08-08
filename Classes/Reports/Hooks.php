@@ -18,7 +18,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class Hooks extends AbstractReport
 {
-    private HookResolver $hookResolver;
+    private readonly HookResolver $hookResolver;
 
     public function __construct(?object $reportObject = null, ?HookResolver $hookResolver = null)
     {
@@ -42,10 +42,10 @@ class Hooks extends AbstractReport
      *
      * @return string HTML code
      */
-    public function display()
+    public function display(): string
     {
         $hooks = [];
-        $normalizer = GeneralUtility::makeInstance(StructuredDataNormalizer::class);
+        $structuredDataNormalizer = GeneralUtility::makeInstance(StructuredDataNormalizer::class);
 
         // core hooks
         $items = $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS'];
@@ -58,7 +58,7 @@ class Hooks extends AbstractReport
                             $hooks['core'][] = [
                                 'corefile' => $itemKey,
                                 'name'     => $hookName,
-                                'file'     => $normalizer->normalize($hookList),
+                                'file'     => $structuredDataNormalizer->normalize($hookList),
                             ];
                         }
                     }
@@ -75,7 +75,7 @@ class Hooks extends AbstractReport
                         $hooks['extensions'][] = [
                             'corefile' => $itemKey,
                             'name'     => $hookName,
-                            'file'     => $normalizer->normalize($hookList),
+                            'file'     => $structuredDataNormalizer->normalize($hookList),
                         ];
                     }
                 }

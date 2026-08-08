@@ -25,10 +25,10 @@ final class PackagistVersionService implements PackageVersionProviderInterface
             return null;
         }
 
-        $cache = GeneralUtility::makeInstance(CacheManager::class)->getCache('hash');
+        $frontend = GeneralUtility::makeInstance(CacheManager::class)->getCache('hash');
         $cacheIdentifier = 'additional_reports_packagist_' . hash('xxh128', $packageName);
-        if ($cache->has($cacheIdentifier)) {
-            $cachedResult = $cache->get($cacheIdentifier);
+        if ($frontend->has($cacheIdentifier)) {
+            $cachedResult = $frontend->get($cacheIdentifier);
             if (is_array($cachedResult)
                 && is_string($cachedResult['version'] ?? null)
                 && is_string($cachedResult['updatedate'] ?? null)
@@ -40,6 +40,7 @@ final class PackagistVersionService implements PackageVersionProviderInterface
                     'alldownloadcounter' => $cachedResult['alldownloadcounter'],
                 ];
             }
+
             return null;
         }
 
@@ -59,7 +60,7 @@ final class PackagistVersionService implements PackageVersionProviderInterface
             // Private packages, unavailable repositories and network errors have no public update information.
         }
 
-        $cache->set($cacheIdentifier, $result ?? false, [], self::CACHE_LIFETIME);
+        $frontend->set($cacheIdentifier, $result ?? false, [], self::CACHE_LIFETIME);
         return $result;
     }
 
@@ -73,9 +74,16 @@ final class PackagistVersionService implements PackageVersionProviderInterface
         $latest = null;
         foreach ($versions as $versionData) {
             $version = $versionData['version'] ?? null;
-            if (! is_string($version) || VersionParser::parseStability($version) !== 'stable' || ! $this->isCompatible($versionData, $typo3Version)) {
+            if (! is_string($version)) {
                 continue;
             }
+            if (VersionParser::parseStability($version) !== 'stable') {
+                continue;
+            }
+            if (! $this->isCompatible($versionData, $typo3Version)) {
+                continue;
+            }
+
             if ($latest === null || version_compare(ltrim($version, 'v'), ltrim($latest['version'], 'v'), '>')) {
                 $time = is_string($versionData['time'] ?? null) ? strtotime($versionData['time']) : false;
                 $latest = [
@@ -85,6 +93,7 @@ final class PackagistVersionService implements PackageVersionProviderInterface
                 ];
             }
         }
+
         return $latest;
     }
 

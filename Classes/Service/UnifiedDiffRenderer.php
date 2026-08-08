@@ -29,6 +29,7 @@ final class UnifiedDiffRenderer
             };
             $output .= '<span style="display:block;' . $style . '">' . $escapedLine . '</span>';
         }
+
         return $output . '</pre>';
     }
 }

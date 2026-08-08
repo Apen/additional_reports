@@ -12,7 +12,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 final readonly class ExtensionUpdateService
 {
     public function __construct(
-        private ?PackageVersionProviderInterface $packagistVersionService = null,
+        private ?PackageVersionProviderInterface $packageVersionProvider = null,
         private ?ConnectionPool $connectionPool = null,
     ) {}
 
@@ -25,9 +25,11 @@ final readonly class ExtensionUpdateService
             if (! is_string($installedVersion) || VersionParser::parseStability($installedVersion) !== 'stable') {
                 return null;
             }
-            $service = $this->packagistVersionService ?? GeneralUtility::makeInstance(PackagistVersionService::class);
+
+            $service = $this->packageVersionProvider ?? GeneralUtility::makeInstance(PackagistVersionService::class);
             return $service->findLatestVersion($packageName);
         }
+
         if (Environment::isComposerMode()) {
             return null;
         }
@@ -41,6 +43,7 @@ final readonly class ExtensionUpdateService
         if (! is_array($lastVersion)) {
             return null;
         }
+
         $lastVersion['updatedate'] = date('d/m/Y', (int) $lastVersion['last_updated']);
         return $lastVersion;
     }

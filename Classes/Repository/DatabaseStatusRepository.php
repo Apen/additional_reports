@@ -106,6 +106,7 @@ final readonly class DatabaseStatusRepository
             ];
             $totalSize += $tableSize;
         }
+
         return [
             'tables' => $tables,
             'totalSize' => round($totalSize, 2),

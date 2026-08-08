@@ -27,10 +27,8 @@ class Utility
 {
     /**
      * Define all the reports
-     *
-     * @return array
      */
-    public static function getReportsList()
+    public static function getReportsList(): array
     {
         return [
             ['Eid', 'eid'],
@@ -54,32 +52,30 @@ class Utility
      * @param int $depth
      * @param int $begin
      * @param string $permsClause
-     * @return string
      */
-    public static function getTreeList($id, $depth, $begin = 0, $permsClause = '1=1')
+    public static function getTreeList($id, $depth, $begin = 0, $permsClause = '1=1'): string
     {
         if ((int) $begin !== 0 || $permsClause !== '1=1') {
-            throw new \InvalidArgumentException('Custom tree offsets and SQL permission clauses are no longer supported.');
+            throw new \InvalidArgumentException('Custom tree offsets and SQL permission clauses are no longer supported.', 3882860459);
         }
+
         return implode(',', GeneralUtility::makeInstance(PageStatisticsRepository::class)->findPageIdsRecursive((int) $id, (int) $depth));
     }
 
     /**
      * Count page uids in a list given (validating the condition)
-     *
-     * @param string $listOfUids
-     * @param string $field
-     * @return int
      */
     public static function getCountPagesUids(string $listOfUids, string $field = ''): int
     {
-        $pageUids = array_values(array_filter(array_map('intval', explode(',', $listOfUids))));
+        $pageUids = array_values(array_filter(array_map(intval(...), explode(',', $listOfUids))));
         if ($pageUids === []) {
             return 0;
         }
+
         if ($field === '') {
             return count($pageUids);
         }
+
         return GeneralUtility::makeInstance(PageStatisticsRepository::class)->countByFlag($pageUids, $field);
     }
 
@@ -99,9 +95,8 @@ class Utility
      * Get the HTTP icon path of an extension
      *
      * @param string $extKey
-     * @return string
      */
-    public static function getExtIcon($extKey)
+    public static function getExtIcon($extKey): string
     {
         return GeneralUtility::makeInstance(ExtensionIconResolver::class)->resolve(is_string($extKey) ? $extKey : '');
     }
@@ -113,9 +108,10 @@ class Utility
      */
     public static function getExtensionVersion($key): ?string
     {
-        if (! is_string($key) || empty($key)) {
-            throw new \InvalidArgumentException('Extension key must be a non-empty string.');
+        if (! is_string($key) || ($key === '' || $key === '0')) {
+            throw new \InvalidArgumentException('Extension key must be a non-empty string.', 2138750667);
         }
+
         return GeneralUtility::makeInstance(ExtensionRepository::class)->findVersion($key);
     }
 
@@ -131,8 +127,6 @@ class Utility
 
     /**
      * Get all the usage of a all the plugins
-     *
-     * @return array
      */
     public static function getAllPlugins(bool $displayHidden = false, ?string $filter = null): array
     {
@@ -163,8 +157,6 @@ class Utility
 
     /**
      * Return the display mode
-     *
-     * @return int
      */
     public static function getPluginsDisplayMode(mixed $requestedDisplay = null): int
     {
@@ -206,10 +198,12 @@ class Utility
         if (! empty($GLOBALS['LANG'])) {
             return $GLOBALS['LANG'];
         }
+
         // fe
         if (! empty($GLOBALS['TSFE'])) {
             return $GLOBALS['TSFE'];
         }
+
         $languageService = GeneralUtility::makeInstance(LanguageServiceFactory::class)->create($GLOBALS['BE_USER']->uc['lang'] ?? 'default');
         $GLOBALS['LANG'] = $languageService;
         return $languageService;

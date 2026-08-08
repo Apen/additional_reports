@@ -21,9 +21,9 @@ final readonly class PaginationService
             return;
         }
 
-        $paginator = new ArrayPaginator($items, max(1, $currentPage), $this->getItemsPerPage());
-        $view->assign('paginator', $paginator);
-        $view->assign('pagination', new SlidingWindowPagination($paginator, 5));
+        $arrayPaginator = new ArrayPaginator($items, max(1, $currentPage), $this->getItemsPerPage());
+        $view->assign('paginator', $arrayPaginator);
+        $view->assign('pagination', new SlidingWindowPagination($arrayPaginator, 5));
     }
 
     private function getItemsPerPage(): int

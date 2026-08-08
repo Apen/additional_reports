@@ -20,13 +20,13 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class Plugins extends AbstractReport
 {
-    private ContentUsageRepository $contentUsageRepository;
+    private readonly ContentUsageRepository $contentUsageRepository;
 
-    private ContentTypeResolver $contentTypeResolver;
+    private readonly ContentTypeResolver $contentTypeResolver;
 
-    private PaginationService $paginationService;
+    private readonly PaginationService $paginationService;
 
-    private SiteDomainResolver $siteDomainResolver;
+    private readonly SiteDomainResolver $siteDomainResolver;
 
     public function __construct(
         ?object $reportObject = null,
@@ -57,7 +57,7 @@ class Plugins extends AbstractReport
      *
      * @return string HTML code
      */
-    public function display()
+    public function display(): string
     {
         $view = $this->createView();
         $displayMode = Utility::getPluginsDisplayMode($this->getRequestParameter('display'));
@@ -106,10 +106,8 @@ class Plugins extends AbstractReport
 
     /**
      * Generate the summary of the plugins and ctypes report
-     *
-     * @return array
      */
-    public function getSummary()
+    public function getSummary(): array
     {
         $summary = $this->contentUsageRepository->summarizeVisibleContent();
         $hasLegacyListType = $this->contentTypeResolver->hasLegacyListType();
@@ -124,6 +122,7 @@ class Plugins extends AbstractReport
                 $itemTemp = array_merge($itemTemp, $this->contentTypeResolver->resolve('ctype', $itemValue['CType']));
                 $itemTemp['content'] = $itemTemp['ctype'] ?? '';
             }
+
             $itemTemp['references'] = $itemValue['count'];
             $itemTemp['pourc'] = $summary['total'] > 0 ? round((($itemValue['count'] * 100) / $summary['total']), 2) : 0.0;
             $allItems[] = $itemTemp;
@@ -149,6 +148,7 @@ class Plugins extends AbstractReport
             $item['pagetitle'] = (string) ($item['title'] ?? '');
             $item['preview'] = '/index.php?id=' . $pageId;
         }
+
         unset($item);
         return $items;
     }
