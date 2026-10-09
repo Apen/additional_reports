@@ -7,6 +7,7 @@ namespace Sng\AdditionalReports\Service;
 use Composer\Semver\VersionParser;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 final readonly class ExtensionUpdateService
@@ -22,8 +23,12 @@ final readonly class ExtensionUpdateService
      */
     public function findLatestVersion(array $extension): ?array
     {
-        $packageName = $extension['composerName'] ?? null;
-        if (is_string($packageName) && $packageName !== '') {
+        if (Environment::isComposerMode()) {
+            $packageName = $extension['composerName'] ?? null;
+            if (! is_string($packageName) || $packageName === '') {
+                return null;
+            }
+
             $installedVersion = $extension['version'] ?? null;
             if (! is_string($installedVersion) || VersionParser::parseStability($installedVersion) !== 'stable') {
                 return null;
@@ -33,7 +38,7 @@ final readonly class ExtensionUpdateService
             return $service->findLatestVersion($packageName);
         }
 
-        if (Environment::isComposerMode()) {
+        if (! ExtensionManagementUtility::isLoaded('extensionmanager')) {
             return null;
         }
 
