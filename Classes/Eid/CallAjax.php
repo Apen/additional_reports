@@ -55,29 +55,33 @@ class CallAjax
             $terFileContent = $this->downloadT3x($extensionKey, $extensionVersion, $extensionFile);
             $content .= $this->renderDiff($this->readLocalFile($localFile), $terFileContent);
         } else {
-            $t3xfiles = $this->downloadT3x($extensionKey, $extensionVersion);
-            $diff = 0;
-            foreach ($t3xfiles['FILES'] as $filePath => $file) {
-                $localFile = $this->resolveExtensionFile($extensionPath, $filePath);
-                if ($localFile === null) {
-                    continue;
-                }
-
-                $currentFileContent = $this->readLocalFile($localFile);
-                if ($file['content_md5'] !== md5($currentFileContent)) {
-                    $diff++;
-                    $content .= '<h2>' . $filePath . '</h2>';
-                    $content .= $this->renderDiff($currentFileContent, $file['content']);
-                }
-            }
-
-            if ($diff === 0) {
-                $content .= 'No diff to show';
-            }
+            $content .= $this->renderExtensionComparison($extensionPath, $extensionKey, $extensionVersion);
         }
 
         $content .= '</div>';
         return new HtmlResponse($content);
+    }
+
+    private function renderExtensionComparison(string $extensionPath, string $extensionKey, string $extensionVersion): string
+    {
+        $t3xfiles = $this->downloadT3x($extensionKey, $extensionVersion);
+        $content = '';
+        $diff = 0;
+        foreach ($t3xfiles['FILES'] as $filePath => $file) {
+            $localFile = $this->resolveExtensionFile($extensionPath, $filePath);
+            if ($localFile === null) {
+                continue;
+            }
+
+            $currentFileContent = $this->readLocalFile($localFile);
+            if ($file['content_md5'] !== md5($currentFileContent)) {
+                $diff++;
+                $content .= '<h2>' . $filePath . '</h2>';
+                $content .= $this->renderDiff($currentFileContent, $file['content']);
+            }
+        }
+
+        return $diff === 0 ? 'No diff to show' : $content;
     }
 
     protected function downloadT3x(string $extensionKey, string $extensionVersion, ?string $extensionFile = null): mixed
