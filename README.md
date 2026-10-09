@@ -1,3 +1,5 @@
+
+
 # Additional Reports for TYPO3
 
 [![Latest stable version](https://img.shields.io/packagist/v/apen/additional_reports?label=stable)](https://packagist.org/packages/apen/additional_reports)
@@ -14,7 +16,7 @@ diagnostics for maintenance, audits and migrations.
 | Component | Supported versions |
 | --- | --- |
 | TYPO3 | 13.4 and 14.x |
-| PHP | 8.2, 8.3 and 8.4 |
+| PHP | 8.2, 8.3, 8.4 and 8.5 |
 | Installation | Composer mode and classic mode |
 
 ## Reports
